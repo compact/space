@@ -3,7 +3,16 @@ extends layout
 block scripts
   script(src='/js/jquery.js')
   script(src='/js/three.js')
-  script(src='/js/three.FirstPersonControls.js')
+  script(src='/js/three.controls.js')
 
 block content
   script(src='/js/index.js')
+  #overlay
+    .notice Click to Start
+  #hud1.hud
+    ul
+      li W/S: Forward/Back
+      li A/D: Strafe Left/Right
+      li R/F: Up/Down
+      li Q/E: Rotate
+  #hud2.hud

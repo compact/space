@@ -7,28 +7,58 @@ Math.round2 = function (number, precision) {
 (function ($, THREE) {
 	var config;
 
-	// extensions
-	THREE.OrthographicCamera.prototype.update = function (width, height) {
-		this.left = -0.5 * width / config.zoom;
-		this.right = 0.5 * width / config.zoom;
-		this.top = 0.5 * height / config.zoom;
-		this.bottom = -0.5 * height / config.zoom;
-		this.near = config.near;
-		this.far = config.far;
-		this.updateProjectionMatrix();
+	config = {
+		'camera': { // for THREE.PerspectiveCamera
+			'fov': 30,
+			'near': 0.1,
+			'far': 10000
+		},
+		'controls': { // for THREE.Controls
+			'lookSpeed': 0.00025, // pitch/yaw with mouse
+			'moveSpeed': 1000, // move forward/backward/up/down with keyboard
+			'strafeSpeed': 1000, // move left/right with keyboard
+			'rollSpeed': 2 // yaw with keyboard
+		}
 	};
 
-	// constants
-	config = {
-		'zoom': 5,
-		'near': 0.1,
-		'far': 10000,
-		'controls': {
-			'lookSpeed': 0.00025,
-			'moveSpeed': 1000,
-			'strafeSpeed': 1000,
-			'rollSpeed': 2
-		}
+	// unit vectors
+	THREE.unitVectors = {
+		'x': new THREE.Vector3(1, 0, 0),
+		'y': new THREE.Vector3(0, 1, 0),
+		'z': new THREE.Vector3(0, 0, 1)
+	};
+	// extensions
+	THREE.PerspectiveCamera.prototype.update = function (width, height) {
+		this.fov = config.camera.fov;
+		this.aspect = width / height;
+		this.near = config.camera.near;
+		this.far = config.camera.far;
+		this.updateProjectionMatrix();
+	};
+	// revolve around the given Vector3, which is not local based on the object,
+	// but global in the world
+	THREE.Object3D.prototype.revolve = function (worldAxis, angle) {
+		var sin, cos, x, y, z, rotationMatrix;
+		sin = Math.sin(angle);
+		cos = Math.cos(angle);
+		worldAxis = worldAxis.normalize();
+		x = worldAxis.x;
+		y = worldAxis.y;
+		z = worldAxis.z;
+		rotationMatrix = new THREE.Matrix3();
+
+		rotationMatrix.set( // http://en.wikipedia.org/wiki/Rotation_matrix
+			cos + x * x * (1 - cos),
+			x * y * (1 - cos) - z * sin,
+			x * z * (1 - cos) + y * sin,
+			y * x * (1 - cos) + z * sin,
+			cos + y * y * (1 - cos),
+			y * z * (1 - cos) - x * sin,
+			z * x * (1 - cos) - y * sin,
+			z * y * (1 - cos) + x * sin,
+			cos + z * z * (1 - cos)
+		);
+		this.position.applyMatrix3(rotationMatrix);
 	};
 
 	$(function () {
@@ -49,9 +79,9 @@ Math.round2 = function (number, precision) {
 		scene = new THREE.Scene();
 
 		// camera
-		camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 10000);
+		camera = new THREE.PerspectiveCamera();
 //		camera = new THREE.OrthographicCamera();
-//		camera.update(width, height);
+		camera.update(width, height);
 		// canvas
 		renderer = new THREE.WebGLRenderer();
 		renderer.setSize(width, height);
@@ -65,14 +95,16 @@ Math.round2 = function (number, precision) {
 				new THREE.SphereGeometry(100, 32, 32),
 				new THREE.MeshLambertMaterial({
 					'color': 0xcc8844,
-					'wireframe': true
+					'wireframe': false,
+					'map': new THREE.ImageUtils.loadTexture('images/textures/0.jpg')
 				})
 			),
 			new THREE.Mesh(
-				new THREE.SphereGeometry(40, 32, 32),
+				new THREE.SphereGeometry(200, 32, 32),
 				new THREE.MeshPhongMaterial({
 					'color': 0x4488cc,
-					'wireframe': true
+					'wireframe': false,
+					'map': new THREE.ImageUtils.loadTexture('images/textures/1.jpg')
 				})
 			),
 			new THREE.Mesh(
@@ -85,7 +117,7 @@ Math.round2 = function (number, precision) {
 		];
 
 
-		spheres[1].position.set(-80, 120, 240);
+		spheres[1].position.set(-400, 400, 0);
 		spheres[2].position.set(450, -600, 2000);
 		$.each(spheres, function (i, sphere) {
 			scene.add(sphere);
@@ -118,16 +150,47 @@ Math.round2 = function (number, precision) {
 		function animate() {
 			window.requestAnimationFrame(animate);
 
-			controls.update(clock.getDelta());
+			if (!collision()) {
+				controls.update(clock.getDelta());
+			}
 
-			spheres[0].rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
-			spheres[1].rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-			spheres[2].rotateOnAxis(new THREE.Vector3(-5, -8, 4), 0.001);
+			moveSpheres();
+			updateHud();
 
 			renderer.render(scene, camera);
 		}
+		var collision = function () {
+/*			var ray, intersection;
+			ray = new THREE.Ray(camera.position, THREE.unitVectors.z);
+			intersection = ray.intersectObjects(spheres);
+			if (intersection.length > 1) {
+				$.each(intersection, function (i, object) {
+					if (camera.position.distanceTo(object.position) < object.geometry.radius + 200) {
+						collision = true;
+					}
+				});
+			}*/
+			return false;
+		};
+		var moveSpheres = function () {
+			spheres[0].rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
+			spheres[1].rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
+			spheres[1].revolve(new THREE.Vector3(1, 1, 1), 0.01);
+			spheres[2].rotateOnAxis(new THREE.Vector3(-5, -8, 4), 0.001);
+		};
+		var updateHud = function () {
+			$('#hud2').html(
+				'position (px): ' +
+					Math.round(camera.position.x) + ', ' +
+					Math.round(camera.position.y) + ', ' +
+					Math.round(camera.position.z) + '<br />' +
+				'rotation (deg): ' +
+					Math.round(camera.rotation.x * 180 / Math.PI) + ', ' +
+					Math.round(camera.rotation.y * 180 / Math.PI) + ', ' +
+					Math.round(camera.rotation.z * 180 / Math.PI)
+			);
+		};
 		animate();
-
 
 
 		// pointer lock
@@ -179,5 +242,6 @@ Math.round2 = function (number, precision) {
 			camera.update(width, height);
 			renderer.setSize(width, height);
 		});
+		console.log(spheres[0]);
 	});
 }(jQuery, THREE));

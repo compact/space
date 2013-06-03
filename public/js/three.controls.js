@@ -4,17 +4,28 @@
  */
 
 (function ($, THREE) {
+	// unit vectors
+	if (typeof THREE.unitVectors !== 'object') {
+		THREE.unitVectors = {
+			'x': new THREE.Vector3(1, 0, 0),
+			'y': new THREE.Vector3(0, 1, 0),
+			'z': new THREE.Vector3(0, 0, 1)
+		};
+	}
+
 	THREE.Controls = function (camera, options) {
 		options = $.extend({
-			'lookSpeed': 0.001,
-			'moveSpeed': 100,
-			'strafeSpeed': 100,
-			'rollSpeed': 1
+			'lookSpeed': 0.00025,
+			'moveSpeed': 1000,
+			'strafeSpeed': 1000,
+			'rollSpeed': 2
 		}, options);
 
 		var self, states, events, $document;
 
 		self = this;
+
+		$document = $(document);
 
 		states = {
 			'moveForward': false,
@@ -27,17 +38,6 @@
 			'rollRight': false
 		};
 
-		$document = $(document);
-
-		// unit vectors
-		if (typeof THREE.unitVectors !== 'object') {
-			THREE.unitVectors = {
-				'i': new THREE.Vector3(1, 0, 0),
-				'j': new THREE.Vector3(0, 1, 0),
-				'k': new THREE.Vector3(0, 0, 1)
-			};
-		}
-
 		events = {
 			'mousemove': function (event) {
 				var movementX, movementY;
@@ -49,8 +49,8 @@
 				movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 				movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-				camera.rotateOnAxis(THREE.unitVectors.j, -movementX * options.lookSpeed);
-				camera.rotateOnAxis(THREE.unitVectors.i, -movementY * options.lookSpeed);
+				camera.rotateOnAxis(THREE.unitVectors.y, -movementX * options.lookSpeed);
+				camera.rotateOnAxis(THREE.unitVectors.x, -movementY * options.lookSpeed);
 			},
 			'keydown': function (event) {
 				switch (event.which) {
@@ -121,32 +121,13 @@
 			camera.translateY(translationVector.y);
 			camera.translateZ(translationVector.z);
 
-
 			// rotate
 			if (states.rollLeft) {
-				camera.rotateOnAxis(THREE.unitVectors.k, -delta * options.rollSpeed);
+				camera.rotateOnAxis(THREE.unitVectors.z, -delta * options.rollSpeed);
 			}
 			if (states.rollRight) {
-				camera.rotateOnAxis(THREE.unitVectors.k, delta * options.rollSpeed);
+				camera.rotateOnAxis(THREE.unitVectors.z, delta * options.rollSpeed);
 			}
-
-
-			$('#hud2').html(
-				'position (px): ' +
-					Math.round(camera.position.x) + ', ' +
-					Math.round(camera.position.y) + ', ' +
-					Math.round(camera.position.z) + '<br />' +
-				'rotation (deg): ' +
-					Math.round(camera.rotation.x * 180 / Math.PI) + ', ' +
-					Math.round(camera.rotation.y * 180 / Math.PI) + ', ' +
-					Math.round(camera.rotation.z * 180 / Math.PI) + '<br />' +
-				'movement vector (px): ' +
-					Math.round(translationVector.x) + ', ' +
-					Math.round(translationVector.y) + ', ' +
-					Math.round(translationVector.z)
-			);
-
-			translationVector.set(0, 0, 0);
 		};
 	};
 }(jQuery, THREE));

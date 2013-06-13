@@ -8,7 +8,8 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , mongoose = require('mongoose');
+  , mongoose = require('mongoose')
+  , passport = require('passport');
 
 var app = express();
 
@@ -32,6 +33,7 @@ if ('development' == app.get('env')) {
 
 mongoose.connect('mongodb://kimchi:croshluison@ds029658.mongolab.com:29658/kimchi');
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
   console.log("connection worked");

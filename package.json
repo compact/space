@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "kimchi",
   "version": "0.0.1-1",
   "private": true,
   "scripts": {
@@ -7,7 +7,10 @@
   },
   "dependencies": {
     "express": "3.2.5",
-    "jade": "*"
+    "jade": "*",
+    "mongoose": "3.6.11",
+    "mongodb": "1.3.9",
+    "passport": "0.1.17"
   },
   "subdomain": "kimchi",
   "engines": {

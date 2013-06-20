@@ -14,18 +14,22 @@ Math.round2 = function (number, precision) {
 			'far': 10000
 		},
 		'controls': { // for THREE.Controls
-			'lookSpeed': 0.00025, // pitch/yaw with mouse
+			'lookSpeed': 0.0002, // pitch/yaw with mouse
 			'moveSpeed': 1000, // move forward/backward/up/down with keyboard
 			'strafeSpeed': 1000, // move left/right with keyboard
 			'rollSpeed': 2 // yaw with keyboard
-		}
+		},
+		'collisionDistance': 150
 	};
 
 	// unit vectors
 	THREE.unitVectors = {
 		'x': new THREE.Vector3(1, 0, 0),
 		'y': new THREE.Vector3(0, 1, 0),
-		'z': new THREE.Vector3(0, 0, 1)
+		'z': new THREE.Vector3(0, 0, 1),
+		'negX': new THREE.Vector3(-1, 0, 0),
+		'negY': new THREE.Vector3(0, -1, 0),
+		'negZ': new THREE.Vector3(0, 0, -1)
 	};
 	// extensions
 	THREE.PerspectiveCamera.prototype.update = function (width, height) {
@@ -35,8 +39,8 @@ Math.round2 = function (number, precision) {
 		this.far = config.camera.far;
 		this.updateProjectionMatrix();
 	};
-	// revolve around the given Vector3, which is not local based on the object,
-	// but global in the world
+	// Revolve around the given Vector3, which is not local based on the object,
+	// but global in the world.
 	THREE.Object3D.prototype.revolve = function (worldAxis, angle) {
 		var sin, cos, x, y, z, rotationMatrix;
 		sin = Math.sin(angle);
@@ -78,9 +82,8 @@ Math.round2 = function (number, precision) {
 		// scene
 		scene = new THREE.Scene();
 
-		// camera
+		// camera: don't use OrthographicCamera because it lacks perspective
 		camera = new THREE.PerspectiveCamera();
-//		camera = new THREE.OrthographicCamera();
 		camera.update(width, height);
 		// canvas
 		renderer = new THREE.WebGLRenderer();
@@ -140,7 +143,7 @@ Math.round2 = function (number, precision) {
 
 
 		// first person controls
-		controls = new THREE.Controls(camera, config.controls);
+		controls = new THREE.Controls(scene, camera, config.controls);
 
 
 
@@ -148,10 +151,13 @@ Math.round2 = function (number, precision) {
 		camera.position.z = -1000;
 		camera.lookAt(new THREE.Vector3(0, 0, 1000));
 		function animate() {
+			var delta;
+
 			window.requestAnimationFrame(animate);
 
-			if (!collision()) {
-				controls.update(clock.getDelta());
+			delta = clock.getDelta();
+			if (!colliding()) {
+				controls.update(delta);
 			}
 
 			moveSpheres();
@@ -159,18 +165,25 @@ Math.round2 = function (number, precision) {
 
 			renderer.render(scene, camera);
 		}
-		var collision = function () {
-/*			var ray, intersection;
-			ray = new THREE.Ray(camera.position, THREE.unitVectors.z);
-			intersection = ray.intersectObjects(spheres);
-			if (intersection.length > 1) {
-				$.each(intersection, function (i, object) {
-					if (camera.position.distanceTo(object.position) < object.geometry.radius + 200) {
-						collision = true;
-					}
-				});
-			}*/
-			return false;
+		var colliding = function () {
+//			return false;
+			var translationVector, raycaster, intersection;
+
+			translationVector = controls.getLocalTranslationVector();
+			if (translationVector.length() === 0) { // not moving, can't be colliding
+				return false;
+			}
+
+			raycaster = new THREE.Raycaster(
+				camera.position.clone(),
+				// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
+				camera.localToWorld(translationVector).sub(camera.position),
+//				camera.position.clone().sub(translationVector.applyMatrix4(camera.matrix)),
+				0,
+				config.collisionDistance
+			);
+			intersection = raycaster.intersectObjects(spheres);
+			return intersection.length > 0;
 		};
 		var moveSpheres = function () {
 			spheres[0].rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
@@ -179,6 +192,7 @@ Math.round2 = function (number, precision) {
 			spheres[2].rotateOnAxis(new THREE.Vector3(-5, -8, 4), 0.001);
 		};
 		var updateHud = function () {
+			var m = controls.getLocalTranslationVector();
 			$('#hud2').html(
 				'position (px): ' +
 					Math.round(camera.position.x) + ', ' +
@@ -187,7 +201,11 @@ Math.round2 = function (number, precision) {
 				'rotation (deg): ' +
 					Math.round(camera.rotation.x * 180 / Math.PI) + ', ' +
 					Math.round(camera.rotation.y * 180 / Math.PI) + ', ' +
-					Math.round(camera.rotation.z * 180 / Math.PI)
+					Math.round(camera.rotation.z * 180 / Math.PI) + '<br />' +
+				'movement: ' +
+					m.x + ', ' +
+					m.y + ', ' +
+					m.z
 			);
 		};
 		animate();
@@ -242,6 +260,6 @@ Math.round2 = function (number, precision) {
 			camera.update(width, height);
 			renderer.setSize(width, height);
 		});
-		console.log(spheres[0]);
+//		console.log(spheres[0]);
 	});
 }(jQuery, THREE));

@@ -1,19 +1,11 @@
 /**
  * @author mrdoob / http://mrdoob.com/
  * Based on PointerLockControls.js. Edited by Chris.
+ * Requires THREE.unitVectors, as defined in index.js.
  */
 
 (function ($, THREE) {
-	// unit vectors
-	if (typeof THREE.unitVectors !== 'object') {
-		THREE.unitVectors = {
-			'x': new THREE.Vector3(1, 0, 0),
-			'y': new THREE.Vector3(0, 1, 0),
-			'z': new THREE.Vector3(0, 0, 1)
-		};
-	}
-
-	THREE.Controls = function (camera, options) {
+	THREE.Controls = function (scene, camera, options) {
 		options = $.extend({
 			'lookSpeed': 0.00025,
 			'moveSpeed': 1000,
@@ -21,13 +13,22 @@
 			'rollSpeed': 2
 		}, options);
 
-		var self, states, events, $document;
+		var self, events, $document;
 
 		self = this;
 
+/* used in PointerLockControls, but doesn't seem necessary
+		yawObject takes the place of the camera object
+		var pitchObject = new THREE.Object3D();
+		pitchObject.add(camera);
+		var yawObject = new THREE.Object3D();
+		yawObject.add(pitchObject);
+		scene.add(yawObject);
+*/
+
 		$document = $(document);
 
-		states = {
+		this.states = {
 			'moveForward': false,
 			'moveBackward': false,
 			'moveLeft': false,
@@ -49,31 +50,32 @@
 				movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 				movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-				camera.rotateOnAxis(THREE.unitVectors.y, -movementX * options.lookSpeed);
+				// TODO perform the rotation in update() instead of here -Chris
 				camera.rotateOnAxis(THREE.unitVectors.x, -movementY * options.lookSpeed);
+				camera.rotateOnAxis(THREE.unitVectors.y, -movementX * options.lookSpeed);
 			},
 			'keydown': function (event) {
 				switch (event.which) {
-					case 38: case 87: states.moveForward = true; break; // up, W
-					case 40: case 83: states.moveBackward = true; break; // down, S
-					case 37: case 65: states.moveLeft = true; break; // left, A
-					case 39: case 68: states.moveRight = true; break; // right, D
-					case 82: states.moveUp = true; break; // R
-					case 70: states.moveDown = true; break; // F
-					case 81: states.rollLeft = true; break; // Q
-					case 69: states.rollRight = true; break; // E
+					case 38: case 87: self.states.moveForward = true; break; // up, W
+					case 40: case 83: self.states.moveBackward = true; break; // down, S
+					case 37: case 65: self.states.moveLeft = true; break; // left, A
+					case 39: case 68: self.states.moveRight = true; break; // right, D
+					case 82: self.states.moveUp = true; break; // R
+					case 70: self.states.moveDown = true; break; // F
+					case 81: self.states.rollLeft = true; break; // Q
+					case 69: self.states.rollRight = true; break; // E
 				}
 			},
 			'keyup': function (event) {
 				switch(event.which) {
-					case 38: case 87: states.moveForward = false; break; // up, W
-					case 40: case 83: states.moveBackward = false; break; // down, S
-					case 37: case 65: states.moveLeft = false; break; // left, A
-					case 39: case 68: states.moveRight = false; break; // right, D
-					case 82: states.moveUp = false; break; // R
-					case 70: states.moveDown = false; break; // F
-					case 81: states.rollLeft = false; break; // Q
-					case 69: states.rollRight = false; break; // E
+					case 38: case 87: self.states.moveForward = false; break; // up, W
+					case 40: case 83: self.states.moveBackward = false; break; // down, S
+					case 37: case 65: self.states.moveLeft = false; break; // left, A
+					case 39: case 68: self.states.moveRight = false; break; // right, D
+					case 82: self.states.moveUp = false; break; // R
+					case 70: self.states.moveDown = false; break; // F
+					case 81: self.states.rollLeft = false; break; // Q
+					case 69: self.states.rollRight = false; break; // E
 				}
 			}
 		};
@@ -101,33 +103,62 @@
 		};
 
 		this.update = function (delta) {
-			var translationVector = new THREE.Vector3();
+			var translationVector = new THREE.Vector3(), angle = 0;
 
 			if (!self.enabled) {
 				return;
 			}
 
 			// translate
-			if (states.moveForward) translationVector.z -= delta * options.moveSpeed;
-			if (states.moveBackward) translationVector.z += delta * options.moveSpeed;
-
-			if (states.moveLeft) translationVector.x -= delta * options.strafeSpeed;
-			if (states.moveRight) translationVector.x += delta * options.strafeSpeed;
-
-			if (states.moveUp) translationVector.y += delta * options.strafeSpeed;
-			if (states.moveDown) translationVector.y -= delta * options.strafeSpeed;
-
-			camera.translateX(translationVector.x);
-			camera.translateY(translationVector.y);
-			camera.translateZ(translationVector.z);
+			var translationVector = this.getLocalTranslationVector();
+			camera.translateX(translationVector.x * delta * options.strafeSpeed);
+			camera.translateY(translationVector.y * delta * options.strafeSpeed);
+			camera.translateZ(translationVector.z * delta * options.moveSpeed);
 
 			// rotate
-			if (states.rollLeft) {
-				camera.rotateOnAxis(THREE.unitVectors.z, -delta * options.rollSpeed);
+			if (self.states.rollLeft) {
+				angle -= delta * options.rollSpeed;
 			}
-			if (states.rollRight) {
-				camera.rotateOnAxis(THREE.unitVectors.z, delta * options.rollSpeed);
+			if (self.states.rollRight) {
+				angle += delta * options.rollSpeed;
 			}
+			camera.rotateOnAxis(THREE.unitVectors.z, angle);
+		};
+
+		// Return a Vector3 object corresponding to the current local movement
+		// direction(s).
+		// To check whether the camera is currently moving, call
+		// .getTranslationVector().length() > 0
+		this.getLocalTranslationVector = function () {
+			var vector = new THREE.Vector3();
+
+			if (!self.enabled) {
+				return vector;
+			}
+
+			if (self.states.moveForward) {
+				vector.add(THREE.unitVectors.negZ);
+			}
+			if (self.states.moveBackward) {
+				vector.add(THREE.unitVectors.z);
+			}
+			if (self.states.moveLeft) {
+				vector.add(THREE.unitVectors.negX);
+			}
+			if (self.states.moveRight) {
+				vector.add(THREE.unitVectors.x);
+			}
+			if (self.states.moveUp) {
+				vector.add(THREE.unitVectors.y);
+			}
+			if (self.states.moveDown) {
+				vector.add(THREE.unitVectors.negY);
+			}
+			return vector;
+		};
+		// Not used.
+		this.getWorldTranslationVector = function () {
+			return camera.localToWorld(this.getLocalTranslationVector());
 		};
 	};
 }(jQuery, THREE));

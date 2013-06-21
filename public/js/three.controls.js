@@ -5,11 +5,13 @@
  */
 
 (function ($, THREE) {
-	THREE.Controls = function (scene, camera, options) {
+	'use strict';
+
+	THREE.Controls = function (camera, options) {
 		options = $.extend({
 			'lookSpeed': 0.00025,
-			'moveSpeed': 1000,
-			'strafeSpeed': 1000,
+			'moveSpeed': 500,
+			'strafeSpeed': 500,
 			'rollSpeed': 2
 		}, options);
 

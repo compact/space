@@ -16,11 +16,12 @@ a {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #cfc;
-	opacity: .5;
-	filter: alpha(opacity=50);
+	background-color: #fff;
+	opacity: .75;
+	filter: alpha(opacity=25);
 	text-align: center;
 	font-size: 48px;
+	color: #000;
 	z-index: 999;
 }
 

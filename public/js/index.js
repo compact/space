@@ -1,3 +1,8 @@
+/**
+ * Bugs:
+ * Sometimes pointerlock is disabled on start, don't know why.
+ */
+
 // precision is the number of decimals
 Math.round2 = function (number, precision) {
 	var multiplier = Math.pow(10, precision);
@@ -5,22 +10,98 @@ Math.round2 = function (number, precision) {
 };
 
 (function ($, THREE) {
-	var config;
+	'use strict';
+
+	var config, astronomicalBodies;
 
 	config = {
 		'camera': { // for THREE.PerspectiveCamera
 			'fov': 30,
-			'near': 0.1,
-			'far': 10000
+			'near': 1,
+			'far': 1000000000
 		},
 		'controls': { // for THREE.Controls
 			'lookSpeed': 0.0002, // pitch/yaw with mouse
-			'moveSpeed': 1000, // move forward/backward/up/down with keyboard
-			'strafeSpeed': 1000, // move left/right with keyboard
+			'moveSpeed': 2000000000, // move forward/backward/up/down with keyboard
+			'strafeSpeed': 10000000, // move left/right with keyboard
 			'rollSpeed': 2 // yaw with keyboard
 		},
-		'collisionDistance': 150
+		'collisionDistance': 10000001
 	};
+
+	/**
+	 * radius: in km
+	 * position: starting position
+	 * move: given an Object3D (Mesh), perform rotations and revolutions
+	 *
+	 */
+	astronomicalBodies = {
+		'sun': {
+			'radius': 696000 * 100,
+			'position': new THREE.Vector3(0, 0, 0),
+			'move': function () {},
+			'createMesh': function () { // custom function
+//			mesh.material.transparent = false;
+//			mesh.material.opacity = 0.5;
+				return new THREE.Mesh(
+					new THREE.SphereGeometry(this.radius, 64, 64),
+					new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
+						'map': new THREE.ImageUtils.loadTexture('images/textures/sun2.jpg')
+					})
+				);
+			}
+		},
+		'earth': {
+			'radius': 6378 * 1000,
+			'position': new THREE.Vector3(0, 149597870, 0),
+			'move': function () {
+				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
+				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+			}
+		},
+		'moon': {
+			'radius': 1737 * 1000,
+			'position': new THREE.Vector3(10000, 149597890, 20000),
+			'move': function () {
+				this.mesh.rotateOnAxis(new THREE.Vector3(-5, -8, 4), 0.001);
+				this.mesh.revolve(new THREE.Vector3(1, 1, 1), 0.025);
+			}
+		},
+		'mars': {
+			'radius': 3397 * 1000,
+			'position': new THREE.Vector3(227936640, 0, 0),
+			'move': function () {
+				this.mesh.rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
+				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+			}
+		},
+		'jupiter': {
+			'radius': 71492 * 1000,
+			'position': new THREE.Vector3(0, 778412010, 0),
+			'move': function () {
+				this.mesh.rotateOnAxis(new THREE.Vector3(-1, -1, -1), 0.001);
+				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+			}
+		},
+		'saturn': {
+			'radius': 60267 * 1000,
+			'position': new THREE.Vector3(0, 1426725400, 0),
+			'move': function () {
+				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
+				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+			}
+		},
+		'neptune': {
+			'radius': 24766 * 1000,
+			'position': new THREE.Vector3(0, 4498252900, 0),
+			'move': function () {
+				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
+				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+			}
+		}
+	};
+
+
 
 	// unit vectors
 	THREE.unitVectors = {
@@ -65,9 +146,11 @@ Math.round2 = function (number, precision) {
 		this.position.applyMatrix3(rotationMatrix);
 	};
 
+
+
 	$(function () {
-		var $window, width, height,
-			clock, scene, camera, renderer, spheres, controls;
+		var $window, $overlay, width, height,
+			clock, scene, camera, renderer, collideableMeshes, controls, lights = {};
 
 		$window = $(window);
 		$overlay = $('#overlay');
@@ -92,64 +175,53 @@ Math.round2 = function (number, precision) {
 
 
 
-		// construct objects
-		spheres = [
-			new THREE.Mesh(
-				new THREE.SphereGeometry(100, 32, 32),
-				new THREE.MeshLambertMaterial({
-					'color': 0xcc8844,
-					'wireframe': false,
-					'map': new THREE.ImageUtils.loadTexture('images/textures/0.jpg')
-				})
-			),
-			new THREE.Mesh(
-				new THREE.SphereGeometry(200, 32, 32),
-				new THREE.MeshPhongMaterial({
-					'color': 0x4488cc,
-					'wireframe': false,
-					'map': new THREE.ImageUtils.loadTexture('images/textures/1.jpg')
-				})
-			),
-			new THREE.Mesh(
-				new THREE.SphereGeometry(350, 48, 48),
-				new THREE.MeshLambertMaterial({
-					'color': 0xcc8866,
-					'wireframe': true
-				})
-			)
-		];
-
-
-		spheres[1].position.set(-400, 400, 0);
-		spheres[2].position.set(450, -600, 2000);
-		$.each(spheres, function (i, sphere) {
-			scene.add(sphere);
+		// add astronomical objects
+		collideableMeshes = [];
+		$.each(astronomicalBodies, function (name, body) {
+			var mesh;
+			if (typeof body.createMesh === 'function') { // optional function
+				mesh = body.createMesh();
+			} else {
+				mesh = new THREE.Mesh(
+					new THREE.SphereGeometry(body.radius, 48, 48),
+					new THREE.MeshLambertMaterial({
+						'map': new THREE.ImageUtils.loadTexture('images/textures/' + name + '.jpg')
+					})
+				);
+			}
+			mesh.position = body.position;
+			scene.add(mesh);
+			// perhaps some astronomical meshes will not be collideable
+			collideableMeshes.push(mesh);
+			body.mesh = mesh;
 		});
-
+		// add background stars
+/*		var stars = new THREE.Stars();
+		// TODO overload Object3D.add() to handle arrays of objects to add
+		$.each(stars.particleSystems, function (i, particleSystem) {
+			scene.add(particleSystem);
+		});
+*/
 
 
 		// lighting
-//		light = new THREE.HemisphereLight(0xffffff, 0x000000, 1);
-		light = new THREE.PointLight(0x88ffcc, 5, 600);
-		light.position.set(-70, 200, -70);
-		scene.add(light);
-		light2 = new THREE.PointLight(0xaaccff, 10, 1500);
-		light2.position.set(-400, -300, 50);
-		scene.add(light2);
-		light3 = new THREE.PointLight(0xffffff, 1, 2000);
-		light3.position.set(200, -250, 1000);
-		scene.add(light3);
+		// sunlight
+		lights.sun = new THREE.PointLight(0xffffee, 10, 2500000010);
+		lights.sun.position.set(0, 0, 0);
+		scene.add(lights.sun);
+		lights.ambient = new THREE.AmbientLight(0x888888);
+		scene.add(lights.ambient);
 
 
 
 		// first person controls
-		controls = new THREE.Controls(scene, camera, config.controls);
+		controls = new THREE.Controls(camera, config.controls);
 
 
 
 		// animate: render repeatedly
-		camera.position.z = -1000;
-		camera.lookAt(new THREE.Vector3(0, 0, 1000));
+		camera.position.z = -4495978700;
+		camera.lookAt(new THREE.Vector3(0, 0, 0));
 		function animate() {
 			var delta;
 
@@ -160,7 +232,7 @@ Math.round2 = function (number, precision) {
 				controls.update(delta);
 			}
 
-			moveSpheres();
+			moveastronomicalBodies();
 			updateHud();
 
 			renderer.render(scene, camera);
@@ -182,14 +254,13 @@ Math.round2 = function (number, precision) {
 				0,
 				config.collisionDistance
 			);
-			intersection = raycaster.intersectObjects(spheres);
+			intersection = raycaster.intersectObjects(collideableMeshes);
 			return intersection.length > 0;
 		};
-		var moveSpheres = function () {
-			spheres[0].rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
-			spheres[1].rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-			spheres[1].revolve(new THREE.Vector3(1, 1, 1), 0.01);
-			spheres[2].rotateOnAxis(new THREE.Vector3(-5, -8, 4), 0.001);
+		var moveastronomicalBodies = function () {
+			$.each(astronomicalBodies, function (i, body) {
+				body.move();
+			});
 		};
 		var updateHud = function () {
 			var m = controls.getLocalTranslationVector();
@@ -260,6 +331,5 @@ Math.round2 = function (number, precision) {
 			camera.update(width, height);
 			renderer.setSize(width, height);
 		});
-//		console.log(spheres[0]);
 	});
 }(jQuery, THREE));

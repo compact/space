@@ -14,6 +14,8 @@ Math.round2 = function (number, precision) {
 
 	var config, astronomicalBodies;
 
+
+
 	config = {
 		'camera': { // for THREE.PerspectiveCamera
 			'fov': 30,
@@ -23,17 +25,19 @@ Math.round2 = function (number, precision) {
 		'controls': { // for THREE.Controls
 			'lookSpeed': 0.0002, // pitch/yaw with mouse
 			'moveSpeed': 2000000000, // move forward/backward/up/down with keyboard
-			'strafeSpeed': 10000000, // move left/right with keyboard
+			'strafeSpeed': 500000000, // move left/right with keyboard
 			'rollSpeed': 2 // yaw with keyboard
 		},
-		'collisionDistance': 10000001
+		'collisionDistance': 200000000
 	};
+
+
 
 	/**
 	 * radius: in km
 	 * position: starting position
 	 * move: given an Object3D (Mesh), perform rotations and revolutions
-	 *
+	 * createMesh: optional replacement of the general constructor
 	 */
 	astronomicalBodies = {
 		'sun': {
@@ -52,27 +56,27 @@ Math.round2 = function (number, precision) {
 			}
 		},
 		'earth': {
-			'radius': 6378 * 1000,
+			'radius': 6378 * 10000,
 			'position': new THREE.Vector3(0, 149597870, 0),
 			'move': function () {
 				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 			}
 		},
 		'moon': {
-			'radius': 1737 * 1000,
+			'radius': 1737 * 10000,
 			'position': new THREE.Vector3(10000, 149597890, 20000),
 			'move': function () {
 				this.mesh.rotateOnAxis(new THREE.Vector3(-5, -8, 4), 0.001);
-				this.mesh.revolve(new THREE.Vector3(1, 1, 1), 0.025);
+				this.mesh.orbit(new THREE.Vector3(1, 1, 1), 0.025);
 			}
 		},
 		'mars': {
-			'radius': 3397 * 1000,
+			'radius': 3397 * 10000,
 			'position': new THREE.Vector3(227936640, 0, 0),
 			'move': function () {
 				this.mesh.rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
-				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 			}
 		},
 		'jupiter': {
@@ -80,7 +84,7 @@ Math.round2 = function (number, precision) {
 			'position': new THREE.Vector3(0, 778412010, 0),
 			'move': function () {
 				this.mesh.rotateOnAxis(new THREE.Vector3(-1, -1, -1), 0.001);
-				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 			}
 		},
 		'saturn': {
@@ -88,7 +92,7 @@ Math.round2 = function (number, precision) {
 			'position': new THREE.Vector3(0, 1426725400, 0),
 			'move': function () {
 				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 			}
 		},
 		'neptune': {
@@ -96,7 +100,7 @@ Math.round2 = function (number, precision) {
 			'position': new THREE.Vector3(0, 4498252900, 0),
 			'move': function () {
 				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-				this.mesh.revolve(new THREE.Vector3(0, 0, 1), 0.025);
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 			}
 		}
 	};
@@ -122,7 +126,8 @@ Math.round2 = function (number, precision) {
 	};
 	// Revolve around the given Vector3, which is not local based on the object,
 	// but global in the world.
-	THREE.Object3D.prototype.revolve = function (worldAxis, angle) {
+	// TODO provide a translation vector for cases where the world axis doesn't pass the origin
+/*	THREE.Object3D.prototype.revolve = function (worldAxis, angle) {
 		var sin, cos, x, y, z, rotationMatrix;
 		sin = Math.sin(angle);
 		cos = Math.cos(angle);
@@ -144,6 +149,57 @@ Math.round2 = function (number, precision) {
 			cos + z * z * (1 - cos)
 		);
 		this.position.applyMatrix3(rotationMatrix);
+	};*/
+	// getInverse() also sets and requires a Matrix4
+	THREE.Matrix3.prototype.inverse = function () {
+		var determinant = this.determinant(), inverse, e = this.elements;
+		if (determinant === 0) {
+			throw new Error('Matrix3.getInverse(): Matrix not invertible.');
+		}
+		inverse = new THREE.Matrix3(
+			e[4] * e[8] - e[5] * e[7],
+			e[2] * e[7] - e[1] * e[8],
+			e[1] * e[5] - e[2] * e[4],
+			e[5] * e[6] - e[3] * e[8],
+			e[0] * e[8] - e[2] * e[6],
+			e[2] * e[3] - e[0] * e[5],
+			e[3] * e[7] - e[4] * e[6],
+			e[1] * e[6] - e[0] * e[7],
+			e[0] * e[4] - e[1] * e[3]
+		);
+		return inverse.multiplyScalar(1 / determinant);
+	};
+	THREE.Object3D.prototype.orbit = function (worldAxis, angle) {
+		var sin, cos, x, y, z, rotationMatrix, scalingMatrix;
+		sin = Math.sin(angle);
+		cos = Math.cos(angle);
+		worldAxis = worldAxis.normalize();
+		x = worldAxis.x;
+		y = worldAxis.y;
+		z = worldAxis.z;
+		rotationMatrix = new THREE.Matrix3();
+		scalingMatrix = new THREE.Matrix3();
+
+		scalingMatrix.set(
+			1, 0, 0,
+			0, 2, 0,
+			0, 0, 1
+		);
+		rotationMatrix.set( // http://en.wikipedia.org/wiki/Rotation_matrix
+			cos + x * x * (1 - cos),
+			x * y * (1 - cos) - z * sin,
+			x * z * (1 - cos) + y * sin,
+			y * x * (1 - cos) + z * sin,
+			cos + y * y * (1 - cos),
+			y * z * (1 - cos) - x * sin,
+			z * x * (1 - cos) - y * sin,
+			z * y * (1 - cos) + x * sin,
+			cos + z * z * (1 - cos)
+		);
+		this.position
+			.applyMatrix3(scalingMatrix)
+			.applyMatrix3(rotationMatrix)
+			.applyMatrix3(scalingMatrix.inverse());
 	};
 
 
@@ -185,7 +241,9 @@ Math.round2 = function (number, precision) {
 				mesh = new THREE.Mesh(
 					new THREE.SphereGeometry(body.radius, 48, 48),
 					new THREE.MeshLambertMaterial({
-						'map': new THREE.ImageUtils.loadTexture('images/textures/' + name + '.jpg')
+						'map': new THREE.ImageUtils.loadTexture('images/textures/' + name + '.jpg'),
+						'transparent': false,
+						'opacity': 1
 					})
 				);
 			}
@@ -222,7 +280,7 @@ Math.round2 = function (number, precision) {
 		// animate: render repeatedly
 		camera.position.z = -4495978700;
 		camera.lookAt(new THREE.Vector3(0, 0, 0));
-		function animate() {
+		var animate = function () {
 			var delta;
 
 			window.requestAnimationFrame(animate);
@@ -242,6 +300,8 @@ Math.round2 = function (number, precision) {
 			var translationVector, raycaster, intersection;
 
 			translationVector = controls.getLocalTranslationVector();
+			// TODO collision bugs out without this scaling, where all movement directions lead are found as collide with the same mesh
+			translationVector.multiplyScalar(1000);
 			if (translationVector.length() === 0) { // not moving, can't be colliding
 				return false;
 			}
@@ -255,6 +315,7 @@ Math.round2 = function (number, precision) {
 				config.collisionDistance
 			);
 			intersection = raycaster.intersectObjects(collideableMeshes);
+console.log(camera.localToWorld(translationVector).sub(camera.position));
 			return intersection.length > 0;
 		};
 		var moveastronomicalBodies = function () {

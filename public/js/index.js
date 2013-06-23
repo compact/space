@@ -4,110 +4,308 @@
  */
 
 // precision is the number of decimals
-Math.round2 = function (number, precision) {
-	var multiplier = Math.pow(10, precision);
-	return Math.round(number * multiplier) / multiplier;
+Math.roundDecimals = function (number, precision, trailingZeroes) {
+	var multiplier, result;
+	multiplier = Math.pow(10, precision);
+	result = Math.round(number * multiplier) / multiplier;
+	if (typeof trailingZeroes === 'boolean' && trailingZeroes) {
+		result = result.toFixed(precision);
+	}
+	return result;
 };
 
-(function ($, THREE) {
+var kimchi = (function ($, THREE) {
 	'use strict';
 
-	var config, astronomicalBodies;
+	var kimchi = {};
 
 
 
-	config = {
+	kimchi.config = {
 		'camera': { // for THREE.PerspectiveCamera
 			'fov': 30,
-			'near': 1,
-			'far': 1000000000
+			'near': 0.01,
+			'far': 10000000
 		},
 		'controls': { // for THREE.Controls
 			'lookSpeed': 0.0002, // pitch/yaw with mouse
-			'moveSpeed': 2000000000, // move forward/backward/up/down with keyboard
-			'strafeSpeed': 500000000, // move left/right with keyboard
+			'moveSpeed': 100, // move forward/backward/up/down with keyboard
+			'strafeSpeed': 5, // move left/right with keyboard
 			'rollSpeed': 2 // yaw with keyboard
 		},
-		'collisionDistance': 200000000
+		'collisionDistance': 0.25,
+		'scales': {
+			'radius': 1000 / 149597871, // radii are given in km
+			'position': 1, // positions are given in AU
+			'stars': 100000
+		},
+		'orbits': {
+			'color': 0xffff00,
+			'opacity': 0.5
+		},
+		'sphereSegments': 48,
+		'startingZ': -10
 	};
 
 
 
-	/**
-	 * radius: in km
-	 * position: starting position
-	 * move: given an Object3D (Mesh), perform rotations and revolutions
-	 * createMesh: optional replacement of the general constructor
-	 */
-	astronomicalBodies = {
-		'sun': {
-			'radius': 696000 * 100,
-			'position': new THREE.Vector3(0, 0, 0),
-			'move': function () {},
-			'createMesh': function () { // custom function
-//			mesh.material.transparent = false;
-//			mesh.material.opacity = 0.5;
-				return new THREE.Mesh(
-					new THREE.SphereGeometry(this.radius, 64, 64),
+	kimchi.space = {
+		'data': [
+			{
+				'name': 'Sun',
+				'radius': 696000,
+				'position': new THREE.Vector3(0, 0, 0),
+				'move': function () {},
+				'mesh': new THREE.Mesh(
+					new THREE.SphereGeometry(696000 * kimchi.config.scales.radius / 10, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
 					new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
 						'map': new THREE.ImageUtils.loadTexture('images/textures/sun2.jpg')
 					})
+				)
+			},
+			{
+				'name': 'Earth',
+				'radius': 6378,
+				'position': new THREE.Vector3(0, 1.00000011, 0),
+				'move': function () {
+					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.001);
+//				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+				},
+				'children': [
+					{
+						'name': 'Moon',
+						'radius': 1737,
+						'position': new THREE.Vector3(0, 1.00000011, 0),
+						'move': function () {
+							this.mesh.rotateOnAxis(new THREE.Vector3(1, 1, 1), 0.001);
+							this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+						}
+					}
+				]
+			},
+			{
+				'name': 'Mars',
+				'radius': 3397,
+				'position': new THREE.Vector3(0, 1.52366231, 0),
+				'move': function () {
+					this.mesh.rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+				}
+			},
+			{
+				'name': 'Jupiter',
+				'radius': 71492,
+				'position': new THREE.Vector3(0, 5.20336301, 0),
+				'move': function () {
+					this.mesh.rotateOnAxis(new THREE.Vector3(-1, -1, -1), 0.001);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+				}
+			}, {
+				'name': 'Saturn',
+				'radius': 60267,
+				'position': new THREE.Vector3(0, 9.53707032, 0),
+				'move': function () {
+					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+				}
+			},
+			{
+				'name': 'Neptune',
+				'radius': 24766,
+				'position': new THREE.Vector3(0, 30.06896348, 0),
+				'move': function () {
+					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+				}
+			}
+		],
+		/**
+		 * Class for astronomical bodies. All spheres for now.
+		 * Currently not extensible; set the functions in the prototype to do that.
+		 * name: Required. Label displayed to users.
+		 * radius: In km.
+		 * position: Vector3 of the starting position in AU.
+		 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
+		 * texturePath: Optional path to the texture image. The default is name.jpg.
+		 */
+		'Body': function (options) {
+			var length, curve;
+
+			$.extend(this, { // default options
+				'name': '',
+				'radius': 0,
+				'position': new THREE.Vector3(),
+				'collideable': true,
+				'move': function () {},
+				'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
+			}, options);
+
+			this.radius *= kimchi.config.scales.radius;
+
+			// create mesh; it can already be set in space.data
+			if (typeof this.mesh !== 'object') { 
+				this.mesh = new THREE.Mesh(
+					new THREE.SphereGeometry(this.radius, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
+					new THREE.MeshLambertMaterial({
+						'map': new THREE.ImageUtils.loadTexture(this.texturePath)
+					})
 				);
 			}
+			this.position = this.position.multiplyScalar(kimchi.config.scales.position);
+			this.mesh.position = this.position;
+			length = this.position.length();
+
+			// create a Curve for the orbit, which can be used to create a Line
+			curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI, true);
+			this.line = curve.createLine();
 		},
-		'earth': {
-			'radius': 6378 * 10000,
-			'position': new THREE.Vector3(0, 149597870, 0),
-			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
-			}
+		// contains instances of space.Body
+		'bodies': [],
+		'setBodies': function () {
+			$.each(kimchi.space.data, function (i, options) {
+				kimchi.space.bodies.push(new kimchi.space.Body(options));
+			});
 		},
-		'moon': {
-			'radius': 1737 * 10000,
-			'position': new THREE.Vector3(10000, 149597890, 20000),
-			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(-5, -8, 4), 0.001);
-				this.mesh.orbit(new THREE.Vector3(1, 1, 1), 0.025);
-			}
+		// return an array of Object3Ds objects for each spaces.bodies
+		'getObject3Ds': function () {
+			var objects = [];
+			$.each(kimchi.space.bodies, function (i, body) {
+				objects.push(body.mesh, this.line);
+			});
+			return objects;
 		},
-		'mars': {
-			'radius': 3397 * 10000,
-			'position': new THREE.Vector3(227936640, 0, 0),
-			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
-				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
-			}
+		'moveMeshes': function () {
+			$.each(kimchi.space.bodies, function (i, body) {
+				body.move();
+			});
 		},
-		'jupiter': {
-			'radius': 71492 * 1000,
-			'position': new THREE.Vector3(0, 778412010, 0),
-			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(-1, -1, -1), 0.001);
-				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
-			}
-		},
-		'saturn': {
-			'radius': 60267 * 1000,
-			'position': new THREE.Vector3(0, 1426725400, 0),
-			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
-			}
-		},
-		'neptune': {
-			'radius': 24766 * 1000,
-			'position': new THREE.Vector3(0, 4498252900, 0),
-			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+		// returns an array of Mesh objects set to be collideable with the camera
+		'getCollideableMeshes': function () {
+			var meshes = [];
+			$.each(kimchi.space.bodies, function (i, body) {
+				if (body.collideable) {
+					meshes.push(body.mesh);
+				}
+			});
+			return meshes;
+		}
+	};
+	kimchi.animate = function () {
+		var delta;
+
+		window.requestAnimationFrame(kimchi.animate);
+
+		delta = kimchi.clock.getDelta();
+		if (!kimchi.colliding()) {
+			kimchi.controls.update(delta);
+		}
+
+		kimchi.space.moveMeshes();
+		kimchi.hud.update();
+
+		kimchi.renderer.render(kimchi.scene, kimchi.camera);
+	}
+	kimchi.colliding = function () {
+		var translationVector, raycaster, intersection;
+
+		translationVector = kimchi.controls.getLocalTranslationVector();
+
+		// TODO collision bugs out without this scaling, where all movement directions lead are found as collide with the same mesh
+//			translationVector.multiplyScalar(1000);
+
+		if (translationVector.length() === 0) { // not moving, can't be colliding
+			return false;
+		}
+
+		raycaster = new THREE.Raycaster(
+			kimchi.camera.position.clone(),
+			// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
+			kimchi.camera.localToWorld(translationVector).sub(kimchi.camera.position),
+//				kimchi.camera.position.clone().sub(translationVector.applyMatrix4(kimchi.camera.matrix)),
+			0,
+			kimchi.config.collisionDistance
+		);
+		intersection = raycaster.intersectObjects(kimchi.space.getCollideableMeshes());
+		return intersection.length > 0;
+	};
+	kimchi.hud = {};
+	kimchi.hud.update = function () {
+		var translation = kimchi.controls.getLocalTranslationVector();
+		$('#hud2').html(
+			'Distance from the sun: ' + Math.roundDecimals(kimchi.camera.position.length(), 2, true) + ' AU'
+		);
+		$('#hud4').html(
+			'position (px): ' +
+				Math.round(kimchi.camera.position.x) + ', ' +
+				Math.round(kimchi.camera.position.y) + ', ' +
+				Math.round(kimchi.camera.position.z) + '<br />' +
+			'rotation (deg): ' +
+				Math.round(kimchi.camera.rotation.x * 180 / Math.PI) + ', ' +
+				Math.round(kimchi.camera.rotation.y * 180 / Math.PI) + ', ' +
+				Math.round(kimchi.camera.rotation.z * 180 / Math.PI) + '<br />' +
+			'movement: ' +
+				translation.x + ', ' +
+				translation.y + ', ' +
+				translation.z
+		);
+	};
+	kimchi.resize = function (width, height) {
+		var width = kimchi.$window.width(), height = kimchi.$window.height() - 5;
+		kimchi.camera.update(width, height);
+		kimchi.renderer.setSize(width, height);
+	};
+	kimchi.setPointerLock = function () {
+		var havePointerLock, body, change, error;
+
+		havePointerLock = 'pointerLockElement' in document ||
+			'mozPointerLockElement' in document ||
+			'webkitPointerLockElement' in document;
+		if (!havePointerLock) {
+			// we can use FirstPersonControls here instead
+			console.log('Your browser does not support Pointer Lock API.');
+			return;
+		}
+
+		body = document.body;
+
+		change = function (event) {
+			if (document.pointerLockElement === body || document.mozPointerLockElement === body || document.webkitPointerLockElement === body) {
+				kimchi.controls.enable();
+				kimchi.$overlay.hide();
+			} else {
+				kimchi.controls.disable();
+				kimchi.$overlay.find('.notice').text('Click to Continue');
+				kimchi.$overlay.show();
 			}
 		}
+
+		error = function (event) {
+			console.log('Pointer Lock error:');
+			console.log(event);
+		}
+
+		// Hook pointer lock state change events
+		document.addEventListener('pointerlockchange', change, false);
+		document.addEventListener('mozpointerlockchange', change, false);
+		document.addEventListener('webkitpointerlockchange', change, false);
+
+		document.addEventListener('pointerlockerror', error, false);
+		document.addEventListener('mozpointerlockerror', error, false);
+		document.addEventListener('webkitpointerlockerror', error, false);
+
+		kimchi.$overlay.on('click', function () {
+			// Ask the browser to lock the pointer
+			body.requestPointerLock = body.requestPointerLock || body.mozRequestPointerLock || body.webkitRequestPointerLock;
+			body.requestPointerLock();
+
+			kimchi.$overlay.hide();
+		});
 	};
 
 
-
-	// unit vectors
+	// three.js extensions
+	// "constant" vectors
+	THREE.zeroVector = new THREE.Vector3(0, 0, 0);
 	THREE.unitVectors = {
 		'x': new THREE.Vector3(1, 0, 0),
 		'y': new THREE.Vector3(0, 1, 0),
@@ -116,12 +314,17 @@ Math.round2 = function (number, precision) {
 		'negY': new THREE.Vector3(0, -1, 0),
 		'negZ': new THREE.Vector3(0, 0, -1)
 	};
-	// extensions
+	THREE.Object3D.prototype.addMultiple = function (objects) {
+		var self = this;
+		$.each(objects, function (i, object) {
+			self.add(object);
+		});
+	};
 	THREE.PerspectiveCamera.prototype.update = function (width, height) {
-		this.fov = config.camera.fov;
+		this.fov = kimchi.config.camera.fov;
 		this.aspect = width / height;
-		this.near = config.camera.near;
-		this.far = config.camera.far;
+		this.near = kimchi.config.camera.near;
+		this.far = kimchi.config.camera.far;
 		this.updateProjectionMatrix();
 	};
 	// Revolve around the given Vector3, which is not local based on the object,
@@ -201,196 +404,142 @@ Math.round2 = function (number, precision) {
 			.applyMatrix3(rotationMatrix)
 			.applyMatrix3(scalingMatrix.inverse());
 	};
+	// based on http://mrdoob.github.io/three.js/examples/webgl_geometry_shapes.html
+/*	THREE.Object3D.prototype.addCurve = function (options) {
+		var curvePath, geometry, line, particleSystem;
+
+		options = $.extend({
+			'curve': new THREE.Curve(),
+			'color': 0x000000,
+			'position': new THREE.Vector3(),
+			'rotation': new THREE.Vector3(),
+			'divisions': 180,
+			'scale': new THREE.Vector3(1, 1, 1)
+		}, options);
+
+		curvePath = new THREE.CurvePath();
+		curvePath.add(options.curve);
+		geometry = curvePath.createSpacedPointsGeometry(options.divisions);
+
+		// transparent line from real points
+		line = new THREE.Line(geometry, new THREE.LineBasicMaterial({
+			'color': options.color,
+			'opacity': 0.25
+		}));
+		line.position = options.position;
+		line.rotation = options.rotation;
+		line.scale = options.scale;
+		this.add(line);
+
+		// vertices from real points
+		// particleSystem = new THREE.ParticleSystem(geometry.clone(), new THREE.ParticleBasicMaterial({
+		// 	'color': options.color,
+		// 	'size': 1,
+		// 	'opacity': 0.5
+		// }));
+		// particleSystem.position = options.position;
+		// particleSystem.rotation = options.rotation;
+		// particleSystem.scale = options.scale;
+		// this.add(particleSystem);
+	};*/
+	// based on http://mrdoob.github.io/three.js/examples/webgl_geometry_shapes.html
+	THREE.Curve.prototype.createLine = function (options) {
+		var curvePath, geometry, line, particleSystem;
+
+		options = $.extend({
+			'color': kimchi.config.orbits.color,
+			'opacity': kimchi.config.orbits.opacity,
+			'position': new THREE.Vector3(),
+			'rotation': new THREE.Vector3(),
+			'divisions': 20,
+			'scale': new THREE.Vector3(1, 1, 1)
+		}, options);
+
+		curvePath = new THREE.CurvePath();
+		curvePath.add(this);
+		geometry = curvePath.createSpacedPointsGeometry(options.divisions);
+
+		// transparent line from real points
+		line = new THREE.Line(geometry, new THREE.LineBasicMaterial({
+			'color': options.color,
+			'transparent': options.opacity < 1,
+			'opacity': options.opacity,
+			'linewidth': 1
+		}));
+		line.position = options.position;
+		line.rotation = options.rotation;
+		line.scale = options.scale;
+		return line;
+	};
 
 
 
 	$(function () {
-		var $window, $overlay, width, height,
-			clock, scene, camera, renderer, collideableMeshes, controls, lights = {};
-
-		$window = $(window);
-		$overlay = $('#overlay');
-
-		// canvas dimensions
-		width = $window.width();
-		height = $window.height() - 5;
+		kimchi.$window = $(window);
+		kimchi.$overlay = $('#overlay');
 
 		// clock: for movement speed
-		clock = new THREE.Clock();
+		kimchi.clock = new THREE.Clock();
 
 		// scene
-		scene = new THREE.Scene();
+		kimchi.scene = new THREE.Scene();
 
 		// camera: don't use OrthographicCamera because it lacks perspective
-		camera = new THREE.PerspectiveCamera();
-		camera.update(width, height);
-		// canvas
-		renderer = new THREE.WebGLRenderer();
-		renderer.setSize(width, height);
-		$('body').append(renderer.domElement);
+		kimchi.camera = new THREE.PerspectiveCamera();
+
+		// renderer
+		kimchi.renderer = new THREE.WebGLRenderer();
+
+		// set camera size and renderer size
+		kimchi.resize();
+
+		// TODO put this at the bottom, after adding all objects?
+		$('body').append(kimchi.renderer.domElement);
 
 
 
 		// add astronomical objects
-		collideableMeshes = [];
-		$.each(astronomicalBodies, function (name, body) {
-			var mesh;
-			if (typeof body.createMesh === 'function') { // optional function
-				mesh = body.createMesh();
-			} else {
-				mesh = new THREE.Mesh(
-					new THREE.SphereGeometry(body.radius, 48, 48),
-					new THREE.MeshLambertMaterial({
-						'map': new THREE.ImageUtils.loadTexture('images/textures/' + name + '.jpg'),
-						'transparent': false,
-						'opacity': 1
-					})
-				);
-			}
-			mesh.position = body.position;
-			scene.add(mesh);
-			// perhaps some astronomical meshes will not be collideable
-			collideableMeshes.push(mesh);
-			body.mesh = mesh;
-		});
+		kimchi.space.setBodies();
+		kimchi.scene.addMultiple(kimchi.space.getObject3Ds());
+
+
+
 		// add background stars
-/*		var stars = new THREE.Stars();
-		// TODO overload Object3D.add() to handle arrays of objects to add
-		$.each(stars.particleSystems, function (i, particleSystem) {
-			scene.add(particleSystem);
-		});
-*/
+		kimchi.stars = new THREE.Stars(kimchi.config.scales.stars);
+		kimchi.scene.addMultiple(kimchi.stars.particleSystems);
+
 
 
 		// lighting
+		kimchi.lights = {};
 		// sunlight
-		lights.sun = new THREE.PointLight(0xffffee, 10, 2500000010);
-		lights.sun.position.set(0, 0, 0);
-		scene.add(lights.sun);
-		lights.ambient = new THREE.AmbientLight(0x888888);
-		scene.add(lights.ambient);
+		kimchi.lights.sun = new THREE.PointLight(0xffffee, 10, 123456);
+		kimchi.lights.sun.position.set(0, 0, 0);
+		kimchi.scene.add(kimchi.lights.sun);
+		// ambient light
+		kimchi.lights.ambient = new THREE.AmbientLight(0x888888);
+		kimchi.scene.add(kimchi.lights.ambient);
 
 
 
 		// first person controls
-		controls = new THREE.Controls(camera, config.controls);
+		kimchi.controls = new THREE.Controls(kimchi.camera, kimchi.config.controls);
 
 
 
 		// animate: render repeatedly
-		camera.position.z = -4495978700;
-		camera.lookAt(new THREE.Vector3(0, 0, 0));
-		var animate = function () {
-			var delta;
-
-			window.requestAnimationFrame(animate);
-
-			delta = clock.getDelta();
-			if (!colliding()) {
-				controls.update(delta);
-			}
-
-			moveastronomicalBodies();
-			updateHud();
-
-			renderer.render(scene, camera);
-		}
-		var colliding = function () {
-//			return false;
-			var translationVector, raycaster, intersection;
-
-			translationVector = controls.getLocalTranslationVector();
-			// TODO collision bugs out without this scaling, where all movement directions lead are found as collide with the same mesh
-			translationVector.multiplyScalar(1000);
-			if (translationVector.length() === 0) { // not moving, can't be colliding
-				return false;
-			}
-
-			raycaster = new THREE.Raycaster(
-				camera.position.clone(),
-				// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
-				camera.localToWorld(translationVector).sub(camera.position),
-//				camera.position.clone().sub(translationVector.applyMatrix4(camera.matrix)),
-				0,
-				config.collisionDistance
-			);
-			intersection = raycaster.intersectObjects(collideableMeshes);
-console.log(camera.localToWorld(translationVector).sub(camera.position));
-			return intersection.length > 0;
-		};
-		var moveastronomicalBodies = function () {
-			$.each(astronomicalBodies, function (i, body) {
-				body.move();
-			});
-		};
-		var updateHud = function () {
-			var m = controls.getLocalTranslationVector();
-			$('#hud2').html(
-				'position (px): ' +
-					Math.round(camera.position.x) + ', ' +
-					Math.round(camera.position.y) + ', ' +
-					Math.round(camera.position.z) + '<br />' +
-				'rotation (deg): ' +
-					Math.round(camera.rotation.x * 180 / Math.PI) + ', ' +
-					Math.round(camera.rotation.y * 180 / Math.PI) + ', ' +
-					Math.round(camera.rotation.z * 180 / Math.PI) + '<br />' +
-				'movement: ' +
-					m.x + ', ' +
-					m.y + ', ' +
-					m.z
-			);
-		};
-		animate();
+		kimchi.camera.position.z = kimchi.config.startingZ;
+		kimchi.camera.lookAt(new THREE.Vector3(0, 0, 0));
+		kimchi.animate();
 
 
-		// pointer lock
-		var havePointerLock = 'pointerLockElement' in document ||
-			'mozPointerLockElement' in document ||
-			'webkitPointerLockElement' in document;
-		if (!havePointerLock) {
-			// we can use FirstPersonControls here instead
-			console.log('Your browser does not support Pointer Lock API.');
-		} else {
-			var element = document.body;
 
-			var pointerlockchange = function (event) {
-				if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-					controls.enable();
-					$overlay.hide();
-				} else {
-					controls.disable();
-					$overlay.find('.notice').text('Click to Continue');
-					$overlay.show();
-				}
-			}
-
-			var pointerlockerror = function (event) {
-				console.log('Pointer Lock error:');
-				console.log(event);
-			}
-
-			// Hook pointer lock state change events
-			document.addEventListener('pointerlockchange', pointerlockchange, false);
-			document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-			document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-
-			document.addEventListener('pointerlockerror', pointerlockerror, false);
-			document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-			document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
-
-			$overlay.on('click', function () {
-				// Ask the browser to lock the pointer
-				element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-				element.requestPointerLock();
-
-				$overlay.hide();
-			});
-		}
-
-		$window.on('resize', function () {
-			var width = $window.width(), height = $window.height();
-			camera.update(width, height);
-			renderer.setSize(width, height);
-		});
+		// bind
+		kimchi.setPointerLock();
+		kimchi.$window.on('resize', kimchi.resize);
 	});
+
+	kimchi.$ = $;
+	kimchi.THREE = THREE;
+	return kimchi;
 }(jQuery, THREE));

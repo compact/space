@@ -1,19 +1,20 @@
 /**
  * Based on http://threejs.org/examples/misc_controls_fly.html
- * Bug: Many stars are visible and flicker through astronomical bodies.
  */
 
 (function (THREE) {
 	'use strict';
 
-	THREE.Stars = function () {
-		var particleSystemScale, // options
-			i, vertex, scale, // iterators
+	THREE.Stars = function (particleSystemScale) {
+		var i, vertex, scale, // iterators
 			geometries, materials, particleSystem;
 
 		this.particleSystems = [];
 
-		particleSystemScale = 30000000000;
+		if (typeof particleSystemScale === 'undefined') {
+			particleSystemScale = 1000;
+		}
+
 		geometries = [new THREE.Geometry(), new THREE.Geometry()];
 
 		for (i = 0; i < 500; i++) {

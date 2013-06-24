@@ -3,11 +3,14 @@ extends layout
 block scripts
   script(src='/js/jquery.js')
   script(src='/js/three.js')
+  script(src='/js/three.kimchi.js')
   script(src='/js/three.controls.js')
   script(src='/js/three.stars.js')
+  script(src='/js/kimchi.js')
+  script(src='/js/index.js')
+  script(src='/js/fonts/helvetiker_regular.typeface.js')
 
 block content
-  script(src='/js/index.js')
   #overlay
     .notice Click to Start
   #hud1.hud
@@ -18,3 +21,5 @@ block content
       li R/F: Up/Down
       li Q/E: Rotate
   #hud2.hud
+  #hud3.hud
+  #hud4.hud

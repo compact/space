@@ -6,6 +6,12 @@ body {
   overflow: hidden;
 }
 
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
 a {
   color: #00b7ff;
 }
@@ -35,6 +41,15 @@ a {
 }
 #hud2 {
 	top: 0;
+	right: 0;
+	text-align: right;
+}
+#hud3 {
+	bottom: 0;
+	left: 0;
+}
+#hud4 {
+	bottom: 0;
 	right: 0;
 	text-align: right;
 }

@@ -123,7 +123,9 @@ var kimchi = (function (jQuery, THREE) {
 		 * Currently not extensible; set the functions in the prototype to do that.
 		 * name: Required. Label displayed to users.
 		 * radius: In km.
-		 * position: Vector3 of the starting position in AU.
+		 * position: Vector3 of the starting position in AU. Not to be confused with
+		 *   Mesh.position, which gives the current position.
+		 * rotation: Vector3 of the starting rotation.
 		 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
 		 * texturePath: Optional path to the texture image. The default is name.jpg.
 		 */
@@ -134,6 +136,7 @@ var kimchi = (function (jQuery, THREE) {
 				'name': '',
 				'radius': 0,
 				'position': new THREE.Vector3(),
+				'rotation': new THREE.Vector3(),
 				'collideable': true,
 				'move': function () {},
 				'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
@@ -141,7 +144,7 @@ var kimchi = (function (jQuery, THREE) {
 
 			this.radius *= kimchi.config.scales.radius;
 
-			// create mesh; it can already be set in space.data
+			// create a Mesh for the body; it can already be set in space.data
 			if (typeof this.mesh !== 'object') { 
 				this.mesh = new THREE.Mesh(
 					new THREE.SphereGeometry(this.radius, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
@@ -150,13 +153,33 @@ var kimchi = (function (jQuery, THREE) {
 					})
 				);
 			}
-			this.position = this.position.multiplyScalar(kimchi.config.scales.position);
-			this.mesh.position = this.position;
+			this.position.multiplyScalar(kimchi.config.scales.position);
+			this.mesh.position.copy(this.position);
+			this.mesh.rotation.copy(this.rotation);
 			length = this.position.length();
 
 			// create a Curve for the orbit, which can be used to create a Line
 			curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI, true);
 			this.line = curve.createLine();
+
+			/**
+			 * Create a Mesh for the text label. We could do
+			 *   this.mesh.add(this.textMesh);
+			 * but then the text Mesh rotates with the body and it is nontrivial to
+			 * rotate it back.
+			 */
+			this.textMesh = new THREE.Mesh(
+				new THREE.TextGeometry(this.name, {
+					'size': 10,
+					'height': 0.02,
+					'curveSegments': 10,
+					'font': 'helvetiker'
+				}),
+				new THREE.MeshBasicMaterial({
+					'color': 0xffffff,
+					'overdraw': true
+				})
+			);
 		},
 		// contains instances of space.Body
 		'bodies': [],
@@ -169,13 +192,18 @@ var kimchi = (function (jQuery, THREE) {
 		'getObject3Ds': function () {
 			var objects = [];
 			$.each(kimchi.space.bodies, function (i, body) {
-				objects.push(body.mesh, this.line);
+				objects.push(body.mesh, body.line, body.textMesh);
 			});
 			return objects;
 		},
 		'moveMeshes': function () {
 			$.each(kimchi.space.bodies, function (i, body) {
 				body.move();
+//				body.textMesh.rotation.copy(body.mesh.rotation.clone().multiplyScalar(-1));
+				body.textMesh.rotation.copy(kimchi.camera.rotation.clone());
+				body.textMesh.position.copy(body.mesh.position);
+				var scale = kimchi.camera.position.length() / 1000;
+				body.textMesh.scale.set(scale, scale, scale);
 			});
 		},
 		// returns an array of Mesh objects set to be collideable with the camera

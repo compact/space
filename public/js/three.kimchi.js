@@ -61,7 +61,7 @@
 		rotationMatrix = new THREE.Matrix3();
 		scalingMatrix = new THREE.Matrix3();
 
-		scalingMatrix.set(
+		scalingMatrix.set( // TODO
 			1, 0, 0,
 			0, 2, 0,
 			0, 0, 1
@@ -109,8 +109,8 @@
 			'opacity': options.opacity,
 			'linewidth': 1
 		}));
-		line.position = options.position;
-		line.rotation = options.rotation;
+		line.position.copy(options.position);
+		line.rotation.copy(options.rotation);
 		line.scale = options.scale;
 		return line;
 	};

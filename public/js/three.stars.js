@@ -16,7 +16,7 @@
 			'scale': 1000,
 			'count': 1000
 		}, options);
-console.log(options);
+
 		geometries = [new THREE.Geometry(), new THREE.Geometry()];
 
 		// number of stars in each geometry

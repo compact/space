@@ -91,9 +91,9 @@
 		options = $.extend({
 			'position': new THREE.Vector3(),
 			'rotation': new THREE.Vector3(),
-			'color': kimchi.config.orbits.color,
-			'opacity': kimchi.config.orbits.opacity,
-			'lineSegments': kimchi.config.orbits.lineSegments,
+			'color': 0x888888,
+			'opacity': 1,
+			'lineSegments': 360,
 			'scale': new THREE.Vector3(1, 1, 1)
 		}, options);
 

@@ -23,11 +23,11 @@ var kimchi = (function (jQuery, THREE) {
 		},
 		'controls': { // for THREE.Controls
 			'lookSpeed': 0.0002, // pitch/yaw with mouse
-			'moveSpeed': 100, // move forward/backward/up/down with keyboard
-			'strafeSpeed': 5, // move left/right with keyboard
-			'rollSpeed': 2 // yaw with keyboard
+			'zSpeed': 1, // move forward/backward with keyboard
+			'strafeSpeed': 0.5, // move left/right/up/down with keyboard
+			'rollSpeed': 2 // roll with keyboard
 		},
-		'collisionDistance': 0.25,
+		'collisionDistance': 0.05,
 		'scales': {
 			'radius': 1000 / 149597871, // radii are given in km
 			'position': 1 // positions are given in AU
@@ -35,7 +35,7 @@ var kimchi = (function (jQuery, THREE) {
 		'orbits': {
 			'color': 0xffff00,
 			'opacity': 0.5,
-			'lineSegments': 90 // how many lines make up each orbit?
+			'lineSegments': 360 // how many lines make up each orbit?
 		},
 		'sphereSegments': 48,
 		'startingZ': -10,
@@ -88,7 +88,7 @@ var kimchi = (function (jQuery, THREE) {
 				'position': new THREE.Vector3(0, 1.52366231, 0),
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
-					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 				}
 			},
 			{
@@ -97,7 +97,7 @@ var kimchi = (function (jQuery, THREE) {
 				'position': new THREE.Vector3(0, 5.20336301, 0),
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(-1, -1, -1), 0.001);
-					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 				}
 			}, {
 				'name': 'Saturn',
@@ -105,7 +105,7 @@ var kimchi = (function (jQuery, THREE) {
 				'position': new THREE.Vector3(0, 9.53707032, 0),
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 				}
 			},
 			{
@@ -114,7 +114,7 @@ var kimchi = (function (jQuery, THREE) {
 				'position': new THREE.Vector3(0, 30.06896348, 0),
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
-					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 				}
 			}
 		],
@@ -160,7 +160,11 @@ var kimchi = (function (jQuery, THREE) {
 
 			// create a Curve for the orbit, which can be used to create a Line
 			curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI, true);
-			this.line = curve.createLine();
+			this.line = curve.createLine({
+				'color': kimchi.config.orbits.color,
+				'opacity': kimchi.config.orbits.opacity,
+				'lineSegments': kimchi.config.orbits.lineSegments,
+			});
 
 			/**
 			 * Create a Mesh for the text label. We could do
@@ -222,19 +226,21 @@ var kimchi = (function (jQuery, THREE) {
 
 	// three.js rendering functions
 	kimchi.animate = function () {
-		var delta;
+		setTimeout(function () { // TODO: remove for production
+			var delta;
 
-		window.requestAnimationFrame(kimchi.animate);
+			window.requestAnimationFrame(kimchi.animate);
 
-		delta = kimchi.clock.getDelta();
-		if (!kimchi.colliding()) {
-			kimchi.controls.update(delta);
-		}
+			delta = kimchi.clock.getDelta();
+			if (!kimchi.colliding()) {
+				kimchi.controls.moveCamera(delta, kimchi.getTranslationSpeedMultiplier());
+			}
 
-		kimchi.space.moveMeshes();
-		kimchi.hud.update();
+			kimchi.space.moveMeshes();
+			kimchi.hud.update(delta);
 
-		kimchi.renderer.render(kimchi.scene, kimchi.camera);
+			kimchi.renderer.render(kimchi.scene, kimchi.camera);
+		}, 50); // TODO
 	}
 	// return whether the camera is colliding with an object along the current
 	// movement direction
@@ -243,7 +249,8 @@ var kimchi = (function (jQuery, THREE) {
 
 		translationVector = kimchi.controls.getLocalTranslationVector();
 
-		// TODO collision bugs out without this scaling, where all movement directions lead are found as collide with the same mesh
+		// scaling may be necessary if translationVector's magnitude is much larger
+		// or smaller than the camera position
 //			translationVector.multiplyScalar(1000);
 
 		if (translationVector.length() === 0) { // not moving, can't be colliding
@@ -261,29 +268,47 @@ var kimchi = (function (jQuery, THREE) {
 		intersection = raycaster.intersectObjects(kimchi.space.getCollideableMeshes());
 		return intersection.length > 0;
 	};
+	// return a number for scaling the camera speed (in each direction) depending
+	// on how close the camera is to collideable meshes
+	kimchi.getTranslationSpeedMultiplier = function () {
+		var distances = [];
+
+		$.each(kimchi.space.getCollideableMeshes(), function (i, mesh) {
+			distances.push(kimchi.camera.position.distanceTo(mesh.position));
+		});
+		distances.sort(function (a, b) { // sort numerically
+			return a - b;
+		});
+		return distances[0];
+	};
 
 
 
 	// hud
 	kimchi.hud = {};
-	kimchi.hud.update = function () {
+	kimchi.hud.update = function (delta) {
 		var translation = kimchi.controls.getLocalTranslationVector();
-		$('#hud2').html(
-			'Distance from the sun: ' + Math.roundDecimals(kimchi.camera.position.length(), 2, true) + ' AU'
-		);
+		$('#hud-distance-from-sun').text(Math.roundDecimals(kimchi.camera.position.length(), 2, true));
+		$('#hud-speed').text(Math.roundDecimals((new THREE.Vector3(
+			translation.x * kimchi.config.controls.strafeSpeed,
+			translation.y * kimchi.config.controls.strafeSpeed,
+			translation.z * kimchi.config.controls.zSpeed
+		)).length() * kimchi.getTranslationSpeedMultiplier(), 2));
 		$('#hud4').html(
-			'position (px): ' +
+			'Delta: ' +
+				Math.roundDecimals(delta, 4) + '<br />' +
+			'Camera position (px): ' +
 				Math.round(kimchi.camera.position.x) + ', ' +
 				Math.round(kimchi.camera.position.y) + ', ' +
 				Math.round(kimchi.camera.position.z) + '<br />' +
-			'rotation (deg): ' +
+			'Camera rotation (deg): ' +
 				Math.round(kimchi.camera.rotation.x * 180 / Math.PI) + ', ' +
 				Math.round(kimchi.camera.rotation.y * 180 / Math.PI) + ', ' +
-				Math.round(kimchi.camera.rotation.z * 180 / Math.PI) + '<br />' +
-			'movement: ' +
+				Math.round(kimchi.camera.rotation.z * 180 / Math.PI) + '<br />'
+/*			'movement: ' +
 				translation.x + ', ' +
 				translation.y + ', ' +
-				translation.z
+				translation.z + '<br />' +*/
 		);
 	};
 

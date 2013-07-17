@@ -2,7 +2,6 @@
  * Based on http://threejs.org/examples/misc_controls_fly.html
  * Multiple geometries and materials are used for variability in the stars.
  */
-
 (function (THREE) {
 	'use strict';
 

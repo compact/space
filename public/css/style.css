@@ -35,6 +35,16 @@ a {
 	position: absolute;
 	z-index: 333;
 }
+.hud-value {
+	display: inline-block;
+	width: 75px;
+	text-align: right;
+}
+.hud-unit {
+	display: inline-block;
+	width: 50px;
+	text-align: left;
+}
 #hud1 {
 	top: 0;
 	left: 0;

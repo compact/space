@@ -10,7 +10,7 @@
 	THREE.Controls = function (camera, options) {
 		options = $.extend({
 			'lookSpeed': 0.00025,
-			'moveSpeed': 500,
+			'zSpeed': 500,
 			'strafeSpeed': 500,
 			'rollSpeed': 2
 		}, options);
@@ -104,7 +104,9 @@
 			this.enabled = false;
 		};
 
-		this.update = function (delta) {
+		// speedMultiplier is delta, applies to all movements (translations and
+		// rotations
+		this.moveCamera = function (speedMultiplier, translationSpeedMultiplier) {
 			var translationVector = new THREE.Vector3(), angle = 0;
 
 			if (!self.enabled) {
@@ -113,16 +115,19 @@
 
 			// translate
 			var translationVector = this.getLocalTranslationVector();
-			camera.translateX(translationVector.x * delta * options.strafeSpeed);
-			camera.translateY(translationVector.y * delta * options.strafeSpeed);
-			camera.translateZ(translationVector.z * delta * options.moveSpeed);
+			camera.translateX(translationVector.x * options.strafeSpeed *
+				speedMultiplier * translationSpeedMultiplier);
+			camera.translateY(translationVector.y * options.strafeSpeed *
+				speedMultiplier * translationSpeedMultiplier);
+			camera.translateZ(translationVector.z * options.zSpeed *
+				speedMultiplier * translationSpeedMultiplier);
 
 			// rotate
 			if (self.states.rollLeft) {
-				angle -= delta * options.rollSpeed;
+				angle -= options.rollSpeed * speedMultiplier;
 			}
 			if (self.states.rollRight) {
-				angle += delta * options.rollSpeed;
+				angle += options.rollSpeed * speedMultiplier;
 			}
 			camera.rotateOnAxis(THREE.unitVectors.z, angle);
 		};

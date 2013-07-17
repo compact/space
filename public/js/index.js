@@ -47,11 +47,11 @@ var kimchi = (function (kimchi) {
 		// lighting
 		kimchi.lights = {};
 		// sunlight
-		kimchi.lights.sun = new THREE.PointLight(0xffffee, 10, 123456);
+		kimchi.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
 		kimchi.lights.sun.position.set(0, 0, 0);
 		kimchi.scene.add(kimchi.lights.sun);
-		// ambient light: remove for production
-		kimchi.scene.add(new THREE.AmbientLight(0x888888));
+		// ambient light: remove for production TODO
+		kimchi.scene.add(new THREE.AmbientLight(0x660000));
 
 
 

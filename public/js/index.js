@@ -22,7 +22,7 @@ var kimchi = (function (kimchi) {
 			'antialias': true
 		});
 		// set camera size and renderer size
-		kimchi.resize();
+		kimchi.setSize();
 
 
 
@@ -54,6 +54,7 @@ var kimchi = (function (kimchi) {
 		// animate: render repeatedly
 		kimchi.camera.position.z = kimchi.config.startingZ;
 		kimchi.camera.lookAt(new THREE.Vector3(0, 0, 0));
+		kimchi.renderer.render(kimchi.scene, kimchi.camera);//TODO remove
 		kimchi.animate();
 
 
@@ -63,7 +64,7 @@ var kimchi = (function (kimchi) {
 		kimchi.date = new Date();
 		// bind
 		kimchi.state.init();
-		kimchi.$window.on('resize', kimchi.resize);
+		kimchi.$window.on('resize', kimchi.setSize);
 	});
 
 	return kimchi;

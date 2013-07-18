@@ -52,7 +52,7 @@ var kimchi = (function (jQuery, THREE) {
 		'orbits': {
 			'color': 0xffffcc,
 			'opacity': 0.5,
-			'lineSegments': 360 // how many lines make up each orbit?
+			'lineSegments': 720 // how many lines make up each orbit?
 		},
 		'sphereSegments': 48,
 		'startingZ': -10,
@@ -71,7 +71,7 @@ var kimchi = (function (jQuery, THREE) {
 				'name': 'Sun',
 				'radius': 696000 / 10,
 				'position': new THREE.Vector3(0, 0, 0),
-				'visibleDistance': 100000,
+				'visibleDistance': 1000000,
 				'move': function () {},
 				'mesh': new THREE.Mesh(
 					new THREE.SphereGeometry(696000 * kimchi.config.scales.radius / 10, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
@@ -199,20 +199,22 @@ var kimchi = (function (jQuery, THREE) {
 			 * but then the text Mesh rotates with the body and it is nontrivial to
 			 * rotate it back.
 			 */
-			this.textMesh = new THREE.Mesh(
+/*			this.textMesh = new THREE.Mesh(
 				new THREE.TextGeometry(this.name, {
 					'size': 10,
 					'height': 0.1,
 					'curveSegments': 10,
-					'font': 'helvetiker'/*,
+					'font': 'helvetiker',
 					'bevelEnabled': true,
 					'bevelThickness': 0.5,
-					'bevelSize': 0.5*/
+					'bevelSize': 0.5
 				}),
 				new THREE.MeshBasicMaterial({
 					'color': 0xeeeeff
 				})
 			);
+*/
+			this.$label = $('<div class="label">').text(this.name).appendTo('body');
 		},
 		// contains instances of space.Body
 		'bodies': [],
@@ -225,7 +227,7 @@ var kimchi = (function (jQuery, THREE) {
 		'getObject3Ds': function () {
 			var objects = [];
 			$.each(kimchi.space.bodies, function (i, body) {
-				objects.push(body.mesh, body.line, body.textMesh);
+				objects.push(body.mesh, body.line); // , body.textMesh
 			});
 			return objects;
 		},
@@ -237,8 +239,8 @@ var kimchi = (function (jQuery, THREE) {
 				body.move();
 
 				// move the text mesh
-				distance = kimchi.camera.position.distanceTo(body.textMesh.position);
-				if (distance > body.visibleDistance) {
+				distance = kimchi.camera.position.distanceTo(body.mesh.position);
+/*				if (distance > body.visibleDistance) {
 					body.textMesh.visible = false;
 				} else {
 					body.textMesh.visible = true;
@@ -247,20 +249,33 @@ var kimchi = (function (jQuery, THREE) {
 					body.textMesh.scale.set(scale, scale, scale);
 
 					// the text mesh always face the camera
-//				body.textMesh.rotation.copy(body.mesh.rotation.clone().multiplyScalar(-1));
 					body.textMesh.rotation.copy(kimchi.camera.rotation.clone());
 
 					// move it in front of the associated mesh so it's not hidden inside
 					body.textMesh.geometry.computeBoundingSphere();
 					var v = kimchi.camera.position.clone().sub(body.mesh.position)
-						.normalize().multiplyScalar(body.radius + 0.1);
+						.normalize().multiplyScalar(body.radius + 0.01);
 					var w = body.mesh.position.clone().add(v);
 					var x = body.mesh.position.clone().cross(v).cross(v)
 						.normalize().multiplyScalar(
 							body.textMesh.geometry.boundingSphere.radius / 100
 						);
-					body.textMesh.position.copy(w);
-						//.add(x));
+					body.textMesh.position.copy(w);//.add(x));
+				}
+*/
+
+				// overlay text labels on top of the canvas
+				if (distance > body.visibleDistance) {
+					body.$label.hide();
+				} else {
+					var projector = new THREE.Projector();
+					var v = projector.projectVector(body.mesh.position.clone(), kimchi.camera);
+					var left = (v.x + 1) / 2 * kimchi.width;
+					var top = (1 - v.y) / 2 * kimchi.height;
+					body.$label.css({
+						'left': left - body.$label.width() / 2,
+						'top': top - body.$label.height() / 2,
+					}).show();
 				}
 			});
 		},
@@ -451,10 +466,11 @@ var kimchi = (function (jQuery, THREE) {
 	};
 
 	// binds
-	kimchi.resize = function (width, height) {
-		var width = kimchi.$window.width(), height = kimchi.$window.height() - 5;
-		kimchi.camera.update(width, height);
-		kimchi.renderer.setSize(width, height);
+	kimchi.setSize = function () {
+		kimchi.width = kimchi.$window.width();
+		kimchi.height = kimchi.$window.height() - 5;
+		kimchi.camera.update(kimchi.width, kimchi.height);
+		kimchi.renderer.setSize(kimchi.width, kimchi.height);
 	};
 
 

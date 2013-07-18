@@ -1,13 +1,13 @@
 extends layout
 
 block scripts
-  script(src='/js/jquery.js')
-  script(src='/js/three.js')
+  script(src='/lib/jquery.js')
+  script(src='/lib/three.js')
+  script(src='/lib/fonts/helvetiker_regular.typeface.js')
   script(src='/js/three.kimchi.js')
   script(src='/js/three.controls.js')
   script(src='/js/three.stars.js')
   script(src='/js/kimchi.js')
-  script(src='/js/fonts/helvetiker_regular.typeface.js')
   script(src='/js/index.js')
 
 block content
@@ -23,6 +23,10 @@ block content
       li Q/E: Roll
   #hud2.hud
     ul
+      li
+        strong Time: 
+        #hud-time.hud-value
+        .hud-unit
       li
         strong Distance from the sun: 
         #hud-distance-from-sun.hud-value

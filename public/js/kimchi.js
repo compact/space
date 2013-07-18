@@ -7,6 +7,23 @@
  * }(kimchi));
  */
 
+// precision is the number of decimals
+Math.roundDecimals = function (number, precision, trailingZeroes) {
+	var multiplier, result;
+	multiplier = Math.pow(10, precision);
+	result = Math.round(number * multiplier) / multiplier;
+	if (typeof trailingZeroes === 'boolean' && trailingZeroes) {
+		result = result.toFixed(precision);
+	}
+	return result;
+};
+
+Date.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+	'Oct', 'Nov', 'Dec'];
+Date.prototype.format = function () {
+	return Date.months[this.getMonth()] + ' ' + this.getDate() + ', ' + this.getFullYear();
+};
+
 var kimchi = (function (jQuery, THREE) {
 	'use strict';
 
@@ -33,7 +50,7 @@ var kimchi = (function (jQuery, THREE) {
 			'position': 1 // positions are given in AU
 		},
 		'orbits': {
-			'color': 0xffff00,
+			'color': 0xffffcc,
 			'opacity': 0.5,
 			'lineSegments': 360 // how many lines make up each orbit?
 		},
@@ -52,8 +69,9 @@ var kimchi = (function (jQuery, THREE) {
 		'data': [
 			{
 				'name': 'Sun',
-				'radius': 696000,
+				'radius': 696000 / 10,
 				'position': new THREE.Vector3(0, 0, 0),
+				'visibleDistance': 100000,
 				'move': function () {},
 				'mesh': new THREE.Mesh(
 					new THREE.SphereGeometry(696000 * kimchi.config.scales.radius / 10, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
@@ -66,8 +84,9 @@ var kimchi = (function (jQuery, THREE) {
 				'name': 'Earth',
 				'radius': 6378,
 				'position': new THREE.Vector3(0, 1.00000011, 0),
+				'visibleDistance': 50,
 				'move': function () {
-					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.001);
+//					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.001);
 //				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 				},
 				'children': [
@@ -75,6 +94,7 @@ var kimchi = (function (jQuery, THREE) {
 						'name': 'Moon',
 						'radius': 1737,
 						'position': new THREE.Vector3(0, 1.00000011, 0),
+						'visibleDistance': 20,
 						'move': function () {
 							this.mesh.rotateOnAxis(new THREE.Vector3(1, 1, 1), 0.001);
 							this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
@@ -86,6 +106,7 @@ var kimchi = (function (jQuery, THREE) {
 				'name': 'Mars',
 				'radius': 3397,
 				'position': new THREE.Vector3(0, 1.52366231, 0),
+				'visibleDistance': 50,
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
 					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
@@ -95,6 +116,7 @@ var kimchi = (function (jQuery, THREE) {
 				'name': 'Jupiter',
 				'radius': 71492,
 				'position': new THREE.Vector3(0, 5.20336301, 0),
+				'visibleDistance': 250,
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(-1, -1, -1), 0.001);
 					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
@@ -103,6 +125,7 @@ var kimchi = (function (jQuery, THREE) {
 				'name': 'Saturn',
 				'radius': 60267,
 				'position': new THREE.Vector3(0, 9.53707032, 0),
+				'visibleDistance': 250,
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
 					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
@@ -112,6 +135,7 @@ var kimchi = (function (jQuery, THREE) {
 				'name': 'Neptune',
 				'radius': 24766,
 				'position': new THREE.Vector3(0, 30.06896348, 0),
+				'visibleDistance': 1000,
 				'move': function () {
 					this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
 					this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
@@ -126,6 +150,8 @@ var kimchi = (function (jQuery, THREE) {
 		 * position: Vector3 of the starting position in AU. Not to be confused with
 		 *   Mesh.position, which gives the current position.
 		 * rotation: Vector3 of the starting rotation.
+		 * visibleDistance: How far away the text mesh remains visible.
+		 *   TODO rename to textMeshDistance or something.
 		 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
 		 * texturePath: Optional path to the texture image. The default is name.jpg.
 		 */
@@ -138,6 +164,7 @@ var kimchi = (function (jQuery, THREE) {
 				'position': new THREE.Vector3(),
 				'rotation': new THREE.Vector3(),
 				'collideable': true,
+				'visibleDistance': 100,
 				'move': function () {},
 				'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
 			}, options);
@@ -175,13 +202,15 @@ var kimchi = (function (jQuery, THREE) {
 			this.textMesh = new THREE.Mesh(
 				new THREE.TextGeometry(this.name, {
 					'size': 10,
-					'height': 0.02,
+					'height': 0.1,
 					'curveSegments': 10,
-					'font': 'helvetiker'
+					'font': 'helvetiker'/*,
+					'bevelEnabled': true,
+					'bevelThickness': 0.5,
+					'bevelSize': 0.5*/
 				}),
 				new THREE.MeshBasicMaterial({
-					'color': 0xffffff,
-					'overdraw': true
+					'color': 0xeeeeff
 				})
 			);
 		},
@@ -200,14 +229,39 @@ var kimchi = (function (jQuery, THREE) {
 			});
 			return objects;
 		},
-		'moveMeshes': function () {
+		'moveMeshes': function (delta) { // TODO use delta
 			$.each(kimchi.space.bodies, function (i, body) {
+				var distance, scale;
+
+				// move the body mesh (custom function)
 				body.move();
+
+				// move the text mesh
+				distance = kimchi.camera.position.distanceTo(body.textMesh.position);
+				if (distance > body.visibleDistance) {
+					body.textMesh.visible = false;
+				} else {
+					body.textMesh.visible = true;
+
+					scale = distance / 1000;
+					body.textMesh.scale.set(scale, scale, scale);
+
+					// the text mesh always face the camera
 //				body.textMesh.rotation.copy(body.mesh.rotation.clone().multiplyScalar(-1));
-				body.textMesh.rotation.copy(kimchi.camera.rotation.clone());
-				body.textMesh.position.copy(body.mesh.position);
-				var scale = kimchi.camera.position.length() / 1000;
-				body.textMesh.scale.set(scale, scale, scale);
+					body.textMesh.rotation.copy(kimchi.camera.rotation.clone());
+
+					// move it in front of the associated mesh so it's not hidden inside
+					body.textMesh.geometry.computeBoundingSphere();
+					var v = kimchi.camera.position.clone().sub(body.mesh.position)
+						.normalize().multiplyScalar(body.radius + 0.1);
+					var w = body.mesh.position.clone().add(v);
+					var x = body.mesh.position.clone().cross(v).cross(v)
+						.normalize().multiplyScalar(
+							body.textMesh.geometry.boundingSphere.radius / 100
+						);
+					body.textMesh.position.copy(w);
+						//.add(x));
+				}
 			});
 		},
 		// returns an array of Mesh objects set to be collideable with the camera
@@ -229,15 +283,24 @@ var kimchi = (function (jQuery, THREE) {
 		setTimeout(function () { // TODO: remove for production
 			var delta;
 
-			window.requestAnimationFrame(kimchi.animate);
+			// stop the next frame if the user has paused
+			if (kimchi.state.enabled) {
+				window.requestAnimationFrame(function () {
+					kimchi.animate();
+				});
+			}
 
 			delta = kimchi.clock.getDelta();
 			if (!kimchi.colliding()) {
-				kimchi.controls.moveCamera(delta, kimchi.getTranslationSpeedMultiplier());
+				kimchi.controls.moveCamera(
+					delta,
+					kimchi.getTranslationSpeedMultiplier()
+				);
 			}
 
-			kimchi.space.moveMeshes();
+			kimchi.space.moveMeshes(delta);
 			kimchi.hud.update(delta);
+			kimchi.date.setDate(kimchi.date.getDate() + 1);
 
 			kimchi.renderer.render(kimchi.scene, kimchi.camera);
 		}, 50); // TODO
@@ -265,7 +328,9 @@ var kimchi = (function (jQuery, THREE) {
 			0,
 			kimchi.config.collisionDistance
 		);
-		intersection = raycaster.intersectObjects(kimchi.space.getCollideableMeshes());
+		intersection = raycaster.intersectObjects(
+			kimchi.space.getCollideableMeshes()
+		);
 		return intersection.length > 0;
 	};
 	// return a number for scaling the camera speed (in each direction) depending
@@ -294,6 +359,8 @@ var kimchi = (function (jQuery, THREE) {
 			translation.y * kimchi.config.controls.strafeSpeed,
 			translation.z * kimchi.config.controls.zSpeed
 		)).length() * kimchi.getTranslationSpeedMultiplier(), 2));
+		$('#hud-time').text(kimchi.date.format());
+
 		$('#hud4').html(
 			'Delta: ' +
 				Math.roundDecimals(delta, 4) + '<br />' +
@@ -314,58 +381,80 @@ var kimchi = (function (jQuery, THREE) {
 
 
 
+	// state
+	kimchi.state = {
+		'enabled': false,
+		'start': function () {
+			kimchi.$overlay.hide();
+			kimchi.clock.start();
+			kimchi.state.enabled = true;
+			kimchi.animate();
+			kimchi.controls.enable();
+		},
+		'stop': function () {
+			kimchi.controls.disable();
+			kimchi.state.enabled = false;
+			kimchi.clock.stop();
+			kimchi.$overlay.find('.notice').text('Click to Continue');
+			kimchi.$overlay.show();
+		},
+		'toggle': function (enable) {
+			if (enable) {
+				kimchi.state.start();
+			} else {
+				kimchi.state.stop();
+			}
+		},
+		'init': function () {
+			var havePointerLock, body, change, error;
+
+			havePointerLock = 'pointerLockElement' in document ||
+				'mozPointerLockElement' in document ||
+				'webkitPointerLockElement' in document;
+			if (!havePointerLock) {
+				// TODO we can use FirstPersonControls here instead
+				console.log('Your browser does not support Pointer Lock API.');
+				return;
+			}
+
+			body = document.body;
+
+			change = function (event) {
+				kimchi.state.toggle(document.pointerLockElement === body ||
+					document.mozPointerLockElement === body ||
+					document.webkitPointerLockElement === body);
+			}
+
+			error = function (event) {
+				console.log('Pointer Lock error:');
+				console.log(event);
+			}
+
+			// Hook pointer lock state change events
+			document.addEventListener('pointerlockchange', change, false);
+			document.addEventListener('mozpointerlockchange', change, false);
+			document.addEventListener('webkitpointerlockchange', change, false);
+
+			document.addEventListener('pointerlockerror', error, false);
+			document.addEventListener('mozpointerlockerror', error, false);
+			document.addEventListener('webkitpointerlockerror', error, false);
+
+			kimchi.$overlay.on('click', function () {
+				// Ask the browser to lock the pointer
+				body.requestPointerLock = body.requestPointerLock || body.mozRequestPointerLock || body.webkitRequestPointerLock;
+				body.requestPointerLock();
+
+//				kimchi.$overlay.hide();
+//				kimchi.state.start();
+			});
+		}
+	};
+
 	// binds
 	kimchi.resize = function (width, height) {
 		var width = kimchi.$window.width(), height = kimchi.$window.height() - 5;
 		kimchi.camera.update(width, height);
 		kimchi.renderer.setSize(width, height);
-	};
-	kimchi.setPointerLock = function () {
-		var havePointerLock, body, change, error;
-
-		havePointerLock = 'pointerLockElement' in document ||
-			'mozPointerLockElement' in document ||
-			'webkitPointerLockElement' in document;
-		if (!havePointerLock) {
-			// we can use FirstPersonControls here instead
-			console.log('Your browser does not support Pointer Lock API.');
-			return;
-		}
-
-		body = document.body;
-
-		change = function (event) {
-			if (document.pointerLockElement === body || document.mozPointerLockElement === body || document.webkitPointerLockElement === body) {
-				kimchi.controls.enable();
-				kimchi.$overlay.hide();
-			} else {
-				kimchi.controls.disable();
-				kimchi.$overlay.find('.notice').text('Click to Continue');
-				kimchi.$overlay.show();
-			}
-		}
-
-		error = function (event) {
-			console.log('Pointer Lock error:');
-			console.log(event);
-		}
-
-		// Hook pointer lock state change events
-		document.addEventListener('pointerlockchange', change, false);
-		document.addEventListener('mozpointerlockchange', change, false);
-		document.addEventListener('webkitpointerlockchange', change, false);
-
-		document.addEventListener('pointerlockerror', error, false);
-		document.addEventListener('mozpointerlockerror', error, false);
-		document.addEventListener('webkitpointerlockerror', error, false);
-
-		kimchi.$overlay.on('click', function () {
-			// Ask the browser to lock the pointer
-			body.requestPointerLock = body.requestPointerLock || body.mozRequestPointerLock || body.webkitRequestPointerLock;
-			body.requestPointerLock();
-
-			kimchi.$overlay.hide();
-		});
 	};
 
 

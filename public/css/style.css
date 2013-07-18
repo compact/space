@@ -37,7 +37,7 @@ a {
 }
 .hud-value {
 	display: inline-block;
-	width: 75px;
+	width: 100px;
 	text-align: right;
 }
 .hud-unit {

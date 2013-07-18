@@ -15,7 +15,7 @@
 			'rollSpeed': 2
 		}, options);
 
-		var self, events, $document;
+		var self, events, $document, resetStates;
 
 		self = this;
 
@@ -30,16 +30,20 @@
 
 		$document = $(document);
 
-		this.states = {
-			'moveForward': false,
-			'moveBackward': false,
-			'moveLeft': false,
-			'moveRight': false,
-			'moveUp': false,
-			'moveDown': false,
-			'rollLeft': false,
-			'rollRight': false
+		resetStates = function () {
+			self.states = {
+				'moveForward': false,
+				'moveBackward': false,
+				'moveLeft': false,
+				'moveRight': false,
+				'moveUp': false,
+				'moveDown': false,
+				'rollLeft': false,
+				'rollRight': false
+			};
 		};
+
+		resetStates();
 
 		events = {
 			'mousemove': function (event) {
@@ -96,6 +100,7 @@
 			this.enabled = true;
 		};
 		this.disable = function () {
+			resetStates();
 			$document.off({
 				'mousemove': events.mousemove,
 				'keydown': events.keydown,

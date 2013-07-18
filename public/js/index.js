@@ -3,17 +3,6 @@
  * Sometimes pointerlock is disabled on start, don't know why.
  */
 
-// precision is the number of decimals
-Math.roundDecimals = function (number, precision, trailingZeroes) {
-	var multiplier, result;
-	multiplier = Math.pow(10, precision);
-	result = Math.round(number * multiplier) / multiplier;
-	if (typeof trailingZeroes === 'boolean' && trailingZeroes) {
-		result = result.toFixed(precision);
-	}
-	return result;
-};
-
 var kimchi = (function (kimchi) {
 	'use strict';
 
@@ -22,14 +11,16 @@ var kimchi = (function (kimchi) {
 		kimchi.$overlay = $('#overlay');
 
 		// clock used for movement speed
-		kimchi.clock = new THREE.Clock();
+		kimchi.clock = new THREE.Clock(false); // do not autostart
 
 		// scene
 		kimchi.scene = new THREE.Scene();
 		// camera: don't use OrthographicCamera because it lacks perspective
 		kimchi.camera = new THREE.PerspectiveCamera();
 		// renderer
-		kimchi.renderer = new THREE.WebGLRenderer();
+		kimchi.renderer = new THREE.WebGLRenderer({
+			'antialias': true
+		});
 		// set camera size and renderer size
 		kimchi.resize();
 
@@ -69,8 +60,9 @@ var kimchi = (function (kimchi) {
 
 		// add renderer to DOM
 		$('body').append(kimchi.renderer.domElement);
+		kimchi.date = new Date();
 		// bind
-		kimchi.setPointerLock();
+		kimchi.state.init();
 		kimchi.$window.on('resize', kimchi.resize);
 	});
 

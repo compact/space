@@ -16,7 +16,14 @@ var kimchi = (function (kimchi) {
 		// scene
 		kimchi.scene = new THREE.Scene();
 		// camera: don't use OrthographicCamera because it lacks perspective
-		kimchi.camera = new THREE.PerspectiveCamera();
+		kimchi.camera = new THREE.PerspectiveCamera(
+			kimchi.config.camera.fov,
+			1,
+			kimchi.config.camera.near,
+			kimchi.config.camera.far
+		);
+		// needed for kimchi.flight.auto.panTo()
+		kimchi.camera.useQuaternion = true;
 		// renderer
 		kimchi.renderer = new THREE.WebGLRenderer({
 			'antialias': true
@@ -54,10 +61,10 @@ var kimchi = (function (kimchi) {
 		// initialize camera position and rotation
 		kimchi.camera.position.copy(kimchi.config.initVector);
 		kimchi.camera.lookAt(new THREE.Vector3(0, 0, 0));
-		// render() has to be called to set the camera position for the text labels to appear in animate()
+		// render() has to be called to set the camera position for objects and
+		// elements to appear in animate()
 		kimchi.rendering.render();
-		// animate: render repeatedly
-		kimchi.rendering.animate(kimchi.flight.auto.animate);
+		kimchi.rendering.animate(kimchi.flight.auto.animationFrame);
 
 
 

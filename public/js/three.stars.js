@@ -2,7 +2,7 @@
  * Based on http://threejs.org/examples/misc_controls_fly.html
  * Multiple geometries and materials are used for variability in the stars.
  */
-(function (THREE) {
+(function ($, THREE) {
 	'use strict';
 
 	THREE.Stars = function (options) {
@@ -64,4 +64,4 @@
 
 		return particleSystems;
 	};
-}(THREE));
+}(jQuery, THREE));

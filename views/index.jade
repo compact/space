@@ -8,6 +8,10 @@ block scripts
   script(src='/js/three.controls.js')
   script(src='/js/three.stars.js')
   script(src='/js/kimchi.js')
+  script(src='/js/kimchi.config.js')
+  script(src='/js/kimchi.pointerlock.js')
+  script(src='/js/kimchi.space.js')
+  script(src='/js/kimchi.flight.js')
   script(src='/js/index.js')
 
 block content
@@ -19,9 +23,15 @@ block content
       strong Fly to:
       ul#nav-fly-to
         li
-          a(data-name="Sun") The Sun
+          a(data-name="Sun") Sun
         li
           a(data-name="Earth") Earth
+        li
+          a(data-name="Mars") Mars
+        li
+          a(data-name="Jupiter") Jupiter
+        li
+          a(data-name="Saturn") Saturn
         li
           a(data-name="Neptune") Neptune
   #hud1.hud

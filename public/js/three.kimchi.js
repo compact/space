@@ -1,7 +1,7 @@
 /**
  * three.js extensions for kimchi.
  */
-(function (THREE) {
+(function ($, THREE) {
 	// "constant" vectors; don't use as objects that can be changed, such as location or rotation
 	THREE.unitVectors = {
 		'x': new THREE.Vector3(1, 0, 0),
@@ -20,10 +20,7 @@
 	};
 
 	THREE.PerspectiveCamera.prototype.update = function (width, height) {
-		this.fov = kimchi.config.camera.fov;
 		this.aspect = width / height;
-		this.near = kimchi.config.camera.near;
-		this.far = kimchi.config.camera.far;
 		this.updateProjectionMatrix();
 	};
 
@@ -114,4 +111,4 @@
 		line.scale = options.scale;
 		return line;
 	};
-}(THREE));
+}(jQuery, THREE));

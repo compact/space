@@ -11,13 +11,25 @@ block scripts
   script(src='/js/index.js')
 
 block content
+  #notice
   #overlay
-    .notice Click to Start
+    div(style="text-align: center;")
+      a Fly freely (Esc)
+    .nav
+      strong Fly to:
+      ul#nav-fly-to
+        li
+          a(data-name="Sun") The Sun
+        li
+          a(data-name="Earth") Earth
+        li
+          a(data-name="Neptune") Neptune
   #hud1.hud
+    strong Controls
     ul
-      li Esc: Pause
+      li Esc: Menu
       li Mouse: Yaw/Pitch
-      li W/S: Forward/Back
+      li W/S: Move Forward/Back
       li A/D: Strafe Left/Right
       li R/F: Strafe Up/Down
       li Q/E: Roll
@@ -28,7 +40,7 @@ block content
         #hud-time.hud-value
         .hud-unit
       li
-        strong Distance from the sun: 
+        strong Distance from the Sun: 
         #hud-distance-from-sun.hud-value
         .hud-unit &nbsp;AU
       li

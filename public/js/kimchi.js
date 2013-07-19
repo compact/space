@@ -55,7 +55,7 @@ var kimchi = (function (jQuery, THREE) {
 			'lineSegments': 720 // how many lines make up each orbit?
 		},
 		'sphereSegments': 48,
-		'startingZ': -10,
+		'initVector': new THREE.Vector3(0, 0, -10),
 		'stars': {
 			'scale': 100000,
 			'count': 2000
@@ -217,30 +217,37 @@ var kimchi = (function (jQuery, THREE) {
 			this.$label = $('<div class="label">').text(this.name).appendTo('body');
 		},
 		// contains instances of space.Body
-		'bodies': [],
+		'bodies': {},
 		'setBodies': function () {
 			$.each(kimchi.space.data, function (i, options) {
-				kimchi.space.bodies.push(new kimchi.space.Body(options));
+				kimchi.space.bodies[options.name] = new kimchi.space.Body(options);
 			});
 		},
 		// return an array of Object3Ds objects for each spaces.bodies
 		'getObject3Ds': function () {
 			var objects = [];
-			$.each(kimchi.space.bodies, function (i, body) {
+			$.each(kimchi.space.bodies, function (name, body) {
 				objects.push(body.mesh, body.line); // , body.textMesh
 			});
 			return objects;
 		},
-		'moveMeshes': function (delta) { // TODO use delta
-			$.each(kimchi.space.bodies, function (i, body) {
+		'move': function (delta) { // TODO use delta
+			$.each(kimchi.space.bodies, function (name, body) {
 				var distance, scale;
 
 				// move the body mesh (custom function)
 				body.move();
 
+				kimchi.space.update();
+			});
+		},
+		'update': function () {
+			// update the positioning of all elements that don't move in move()
+			$.each(kimchi.space.bodies, function (name, body) {
+				var distance = kimchi.camera.position.distanceTo(body.mesh.position);
+
 				// move the text mesh
-				distance = kimchi.camera.position.distanceTo(body.mesh.position);
-/*				if (distance > body.visibleDistance) {
+/*			if (distance > body.visibleDistance) {
 					body.textMesh.visible = false;
 				} else {
 					body.textMesh.visible = true;
@@ -265,61 +272,61 @@ var kimchi = (function (jQuery, THREE) {
 */
 
 				// overlay text labels on top of the canvas
-				if (distance > body.visibleDistance) {
+				if (distance > body.visibleDistance) { // too far away
 					body.$label.hide();
 				} else {
 					var projector = new THREE.Projector();
 					var v = projector.projectVector(body.mesh.position.clone(), kimchi.camera);
-					var left = (v.x + 1) / 2 * kimchi.width;
-					var top = (1 - v.y) / 2 * kimchi.height;
-					body.$label.css({
-						'left': left - body.$label.width() / 2,
-						'top': top - body.$label.height() / 2,
-					}).show();
+					var left = (v.x + 1) / 2 * kimchi.size.width;
+					var top = (1 - v.y) / 2 * kimchi.size.height;
+
+					if (left < -body.$label.outerWidth() || left > kimchi.size.width || top < -body.$label.outerHeight() || top > kimchi.size.height) {
+						// the body is not visible on screen
+						body.$label.hide();
+					} else {
+						body.$label.css({
+							'left': left - body.$label.outerWidth() / 2,
+							'top': top - body.$label.outerHeight() / 2,
+						}).show();
+					}
 				}
 			});
 		},
 		// returns an array of Mesh objects set to be collideable with the camera
-		'getCollideableMeshes': function () {
-			var meshes = [];
-			$.each(kimchi.space.bodies, function (i, body) {
+		'getCollideableObject3Ds': function () {
+			var object3Ds = [];
+			$.each(kimchi.space.bodies, function (name, body) {
 				if (body.collideable) {
-					meshes.push(body.mesh);
+					object3Ds.push(body.mesh);
 				}
 			});
-			return meshes;
+			return object3Ds;
 		}
 	};
 
 
 
-	// three.js rendering functions
-	kimchi.animate = function () {
-		setTimeout(function () { // TODO: remove for production
-			var delta;
-
-			// stop the next frame if the user has paused
-			if (kimchi.state.enabled) {
-				window.requestAnimationFrame(function () {
-					kimchi.animate();
-				});
-			}
-
-			delta = kimchi.clock.getDelta();
-			if (!kimchi.colliding()) {
-				kimchi.controls.moveCamera(
-					delta,
-					kimchi.getTranslationSpeedMultiplier()
-				);
-			}
-
-			kimchi.space.moveMeshes(delta);
-			kimchi.hud.update(delta);
-			kimchi.date.setDate(kimchi.date.getDate() + 1);
-
+	// functions for rendering, animating using the three.js renderer
+	kimchi.rendering = {
+		'render': function () {
 			kimchi.renderer.render(kimchi.scene, kimchi.camera);
-		}, 50); // TODO
-	}
+		},
+		// callback is called before rendering. If it returns false, stop animating.
+		'animate': function (callback) {
+			setTimeout(function () { // TODO: remove for production
+				var proceed = callback(kimchi.clock.getDelta());
+
+				kimchi.rendering.render();
+
+				// stop the next frame if the user has paused
+				if (proceed !== false && kimchi.flight.mode !== false) {
+					window.requestAnimationFrame(function () {
+						kimchi.rendering.animate(callback);
+					});
+				}
+			}, 50);
+		}
+	};
 	// return whether the camera is colliding with an object along the current
 	// movement direction
 	kimchi.colliding = function () {
@@ -329,7 +336,7 @@ var kimchi = (function (jQuery, THREE) {
 
 		// scaling may be necessary if translationVector's magnitude is much larger
 		// or smaller than the camera position
-//			translationVector.multiplyScalar(1000);
+//		translationVector.multiplyScalar(1000);
 
 		if (translationVector.length() === 0) { // not moving, can't be colliding
 			return false;
@@ -339,22 +346,22 @@ var kimchi = (function (jQuery, THREE) {
 			kimchi.camera.position.clone(),
 			// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
 			kimchi.camera.localToWorld(translationVector).sub(kimchi.camera.position),
-//				kimchi.camera.position.clone().sub(translationVector.applyMatrix4(kimchi.camera.matrix)),
+//			kimchi.camera.position.clone().sub(translationVector.applyMatrix4(kimchi.camera.matrix)),
 			0,
 			kimchi.config.collisionDistance
 		);
 		intersection = raycaster.intersectObjects(
-			kimchi.space.getCollideableMeshes()
+			kimchi.space.getCollideableObject3Ds()
 		);
 		return intersection.length > 0;
 	};
 	// return a number for scaling the camera speed (in each direction) depending
-	// on how close the camera is to collideable meshes
+	// on how close the camera is to collideable objects
 	kimchi.getTranslationSpeedMultiplier = function () {
 		var distances = [];
 
-		$.each(kimchi.space.getCollideableMeshes(), function (i, mesh) {
-			distances.push(kimchi.camera.position.distanceTo(mesh.position));
+		$.each(kimchi.space.getCollideableObject3Ds(), function (i, object3D) {
+			distances.push(kimchi.camera.position.distanceTo(object3D.position));
 		});
 		distances.sort(function (a, b) { // sort numerically
 			return a - b;
@@ -377,6 +384,7 @@ var kimchi = (function (jQuery, THREE) {
 		$('#hud-time').text(kimchi.date.format());
 
 		$('#hud4').html(
+			'<strong>Debug</strong><br />' +
 			'Delta: ' +
 				Math.roundDecimals(delta, 4) + '<br />' +
 			'Camera position (px): ' +
@@ -396,29 +404,151 @@ var kimchi = (function (jQuery, THREE) {
 
 
 
-	// state
-	kimchi.state = {
-		'enabled': false,
-		'start': function () {
-			kimchi.$overlay.hide();
-			kimchi.clock.start();
-			kimchi.state.enabled = true;
-			kimchi.animate();
-			kimchi.controls.enable();
-		},
-		'stop': function () {
-			kimchi.controls.disable();
-			kimchi.state.enabled = false;
-			kimchi.clock.stop();
-			kimchi.$overlay.find('.notice').text('Click to Continue');
-			kimchi.$overlay.show();
-		},
-		'toggle': function (enable) {
-			if (enable) {
-				kimchi.state.start();
-			} else {
-				kimchi.state.stop();
+	kimchi.flight = {
+		'mode': false, // possible values are 'free', 'auto', and false
+		'free': {
+			'start': function () {
+				kimchi.pointerLock.unbind();
+				kimchi.$overlay.hide();
+				$('#hud1').show();
+
+				kimchi.clock.start();
+				kimchi.flight.mode = 'free';
+				kimchi.rendering.animate(kimchi.flight.free.animate);
+				kimchi.controls.enable();
+			},
+			'stop': function () {
+				kimchi.controls.disable();
+				kimchi.flight.mode = false;
+				kimchi.clock.stop();
+
+				$('#hud1').hide();
+				kimchi.$overlay.show();
+
+				kimchi.pointerLock.bind();
+			},
+			'toggle': function (enable) {
+				if (enable) {
+					kimchi.flight.free.start();
+				} else {
+					kimchi.flight.free.stop();
+				}
+			},
+			'animate': function (delta) {
+				if (!kimchi.colliding()) {
+					kimchi.controls.moveCamera(
+						delta,
+						kimchi.getTranslationSpeedMultiplier()
+					);
+				}
+
+				kimchi.space.move(delta);
+				kimchi.hud.update(delta);
+				kimchi.date.setDate(kimchi.date.getDate() + 1);
 			}
+		},
+		'auto': {
+			'init': function () {
+				$('.nav').on('click', 'a', function (event) {
+					var name;
+
+					// prevent the overlay from being clicked to trigger free flight mode
+					event.stopPropagation();
+
+					name = $(this).data('name');
+					if (typeof kimchi.space.bodies[name] === 'object') {
+						kimchi.flight.auto.flyTo(kimchi.space.bodies[name]);
+					} else {
+						console.log(name + ' not found in kimchi.flight.auto')
+					}
+				});
+			},
+			'flyTo': function (body) {
+				// set notice
+				kimchi.notice.set('Flying to ' + body.name + '...');
+
+				kimchi.flight.auto.panTo(body);
+				kimchi.flight.auto.translateTo(body);
+			},
+			'panTo': function (body) {
+				var rotationMatrix, initQuaternion, targetQuaternion, t;
+
+				rotationMatrix = new THREE.Matrix4();
+				rotationMatrix.lookAt(kimchi.camera.position, body.mesh.position, kimchi.camera.up);
+
+				kimchi.camera.useQuaternion = true;
+				initQuaternion = kimchi.camera.quaternion.clone();
+
+				targetQuaternion = new THREE.Quaternion();
+				targetQuaternion.setFromRotationMatrix(rotationMatrix);
+
+				t = 0;
+				kimchi.flight.mode = 'auto';
+				kimchi.rendering.animate(function (delta) {
+					// avoid rounding imprecision because we want the final rotation to be
+					// centered exactly onto the target body (t = 1)
+					if (t > 1 && t < 1 + 0.05) {
+						t = 1;
+					}
+
+					if (t <= 1) {
+						kimchi.camera.quaternion.copy(
+							initQuaternion.slerp(targetQuaternion, t)
+						);
+						kimchi.flight.auto.animate(delta);
+
+						t += 0.05;
+					} else {
+						return false;
+					}
+				});
+			},
+			'translateTo': function (body) {
+
+			},
+			'animate': function (delta) {
+				kimchi.space.update();
+				kimchi.hud.update(delta);
+			}
+		}
+	};
+
+
+
+	// pointer lock
+	kimchi.pointerLock = {
+		'request': function () {
+			document.body.requestPointerLock();
+			console.log((new Date()) + ' pointer lock requested');
+			console.log(document.pointerLockElement ||
+					document.mozPointerLockElement ||
+					document.webkitPointerLockElement);
+		},
+		'bind': function () {
+			kimchi.$document.on('keydown', kimchi.pointerLock.keydown);
+		},
+		'unbind': function () {
+			kimchi.$document.off('keydown', kimchi.pointerLock.keydown);
+		},
+		'keydownInProgress': false,
+		'keydown': function (event) {
+			// Request pointer lock only on keyup; otherwise, the continued Escape
+			// keydown event causes the pointer lock to disable immediately, even
+			// if one lets go of the Escape key asap. Also, the flag
+			// kimchi.pointerLock.keydownInProgress prevents multiple handlers of
+			// .one('keyup') from being binded.
+			if (event.which === 27) { // Esc
+				kimchi.pointerLock.keydownInProgress = true;
+				$(this).one('keyup', function (event) {
+					if (event.which === 27 && kimchi.pointerLock.keydownInProgress) {
+						kimchi.pointerLock.request();
+						kimchi.pointerLock.keydownInProgress = false;
+					}
+				});
+			}
+		},
+		'click': function (event) {
+			kimchi.pointerLock.request();
 		},
 		'init': function () {
 			var havePointerLock, body, change, error;
@@ -434,44 +564,73 @@ var kimchi = (function (jQuery, THREE) {
 
 			body = document.body;
 
+//			kimchi.pointerLock.request = body.requestPointerLock ||
+//				body.mozRequestPointerLock || body.webkitRequestPointerLock;
+
 			change = function (event) {
-				kimchi.state.toggle(document.pointerLockElement === body ||
+				kimchi.flight.free.toggle(document.pointerLockElement === body ||
 					document.mozPointerLockElement === body ||
 					document.webkitPointerLockElement === body);
 			}
+			document.addEventListener('pointerlockchange', change, false);
+			document.addEventListener('mozpointerlockchange', change, false);
+			document.addEventListener('webkitpointerlockchange', change, false);
 
 			error = function (event) {
 				console.log('Pointer Lock error:');
 				console.log(event);
 			}
-
-			// Hook pointer lock state change events
-			document.addEventListener('pointerlockchange', change, false);
-			document.addEventListener('mozpointerlockchange', change, false);
-			document.addEventListener('webkitpointerlockchange', change, false);
-
 			document.addEventListener('pointerlockerror', error, false);
 			document.addEventListener('mozpointerlockerror', error, false);
 			document.addEventListener('webkitpointerlockerror', error, false);
 
-			kimchi.$overlay.on('click', function () {
-				// Ask the browser to lock the pointer
-				body.requestPointerLock = body.requestPointerLock || body.mozRequestPointerLock || body.webkitRequestPointerLock;
-				body.requestPointerLock();
+			// used in request()
+			// don't set this function to another var since the caller has to be body
+			body.requestPointerLock = body.requestPointerLock ||
+				body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
-//				kimchi.$overlay.hide();
-//				kimchi.state.start();
-			});
+			// the initial flight state is false, so bind the relevant event handlers
+			kimchi.$overlay.on('click', kimchi.pointerLock.click);
+			kimchi.pointerLock.bind();
 		}
 	};
 
-	// binds
-	kimchi.setSize = function () {
-		kimchi.width = kimchi.$window.width();
-		kimchi.height = kimchi.$window.height() - 5;
-		kimchi.camera.update(kimchi.width, kimchi.height);
-		kimchi.renderer.setSize(kimchi.width, kimchi.height);
+
+
+	kimchi.size = {
+		'width': 9,
+		'height': 9,
+		'init': function () {
+			kimchi.size.set();
+			kimchi.$window.on('resize', function () {
+				kimchi.size.set();
+				kimchi.rendering.animate(kimchi.flight.auto.animate);
+			});
+		},
+		'set': function () {
+			kimchi.size.width = kimchi.$window.width();
+			kimchi.size.height = kimchi.$window.height() - 5;
+			kimchi.camera.update(kimchi.size.width, kimchi.size.height);
+			kimchi.renderer.setSize(kimchi.size.width, kimchi.size.height);
+		}
 	};
+
+
+
+	// a notice box that appears to users
+	kimchi.notice = {
+		'$notice': $(),
+		'init': function () {
+			kimchi.notice.$notice = $('#notice');
+		},
+		'set': function (message) {
+			kimchi.notice.$notice.html(message).fadeIn();
+		},
+		'hide': function () {
+			kimchi.notice.$notice.text('').fadeOut();
+		}
+	}
+
 
 
 

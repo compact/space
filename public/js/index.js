@@ -7,10 +7,10 @@ var kimchi = (function (kimchi) {
 	'use strict';
 
 	$(function () {
+		kimchi.$document = $(document);
 		kimchi.$window = $(window);
 		kimchi.$overlay = $('#overlay');
 
-		// clock used for movement speed
 		kimchi.clock = new THREE.Clock(false); // do not autostart
 
 		// scene
@@ -22,7 +22,7 @@ var kimchi = (function (kimchi) {
 			'antialias': true
 		});
 		// set camera size and renderer size
-		kimchi.setSize();
+		kimchi.size.init();
 
 
 
@@ -51,11 +51,13 @@ var kimchi = (function (kimchi) {
 
 
 
-		// animate: render repeatedly
-		kimchi.camera.position.z = kimchi.config.startingZ;
+		// initialize camera position and rotation
+		kimchi.camera.position.copy(kimchi.config.initVector);
 		kimchi.camera.lookAt(new THREE.Vector3(0, 0, 0));
-		kimchi.renderer.render(kimchi.scene, kimchi.camera);//TODO remove
-		kimchi.animate();
+		// render() has to be called to set the camera position for the text labels to appear in animate()
+		kimchi.rendering.render();
+		// animate: render repeatedly
+		kimchi.rendering.animate(kimchi.flight.auto.animate);
 
 
 
@@ -63,8 +65,9 @@ var kimchi = (function (kimchi) {
 		$('body').append(kimchi.renderer.domElement);
 		kimchi.date = new Date();
 		// bind
-		kimchi.state.init();
-		kimchi.$window.on('resize', kimchi.setSize);
+		kimchi.pointerLock.init();
+		kimchi.flight.auto.init();
+		kimchi.notice.init();
 	});
 
 	return kimchi;

@@ -13,24 +13,18 @@ ul {
 }
 
 a {
-  color: #00b7ff;
+  cursor: pointer;
+  color: #006600;
 }
 
-#overlay {
+#notice {
 	position: absolute;
 	top: 0;
 	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #fff;
-	opacity: .75;
-	filter: alpha(opacity=25);
-	text-align: center;
-	font-size: 48px;
-	color: #000;
-	z-index: 999;
+	font-size: 24px;
 }
 
+/************************************************************************ hud */
 .hud {
 	position: absolute;
 	z-index: 333;
@@ -48,6 +42,7 @@ a {
 #hud1 {
 	top: 0;
 	left: 0;
+	display: none;
 }
 #hud2 {
 	top: 0;
@@ -64,6 +59,7 @@ a {
 	text-align: right;
 }
 
+/***************************** other elements overlaid on the three.js canvas */
 .label {
 	position: absolute;
 	padding: 2px 4px;
@@ -72,4 +68,23 @@ a {
 	color: #000;
 	font-size: 16px;
 	font-weight: bold;
+	z-index: 200;
+}
+
+/********************************* overlay that appears when flying is paused */
+#overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(224, 255, 224, 0.75);
+	color: #000;
+	z-index: 100;
+}
+.nav {
+	margin: 200px 100px;
+}
+.nav a {
+	background-color: rgba(224, 255, 224, 0.75);
 }

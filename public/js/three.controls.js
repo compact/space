@@ -73,7 +73,7 @@
 				}
 			},
 			'keyup': function (event) {
-				switch(event.which) {
+				switch (event.which) {
 					case 38: case 87: self.states.moveForward = false; break; // up, W
 					case 40: case 83: self.states.moveBackward = false; break; // down, S
 					case 37: case 65: self.states.moveLeft = false; break; // left, A

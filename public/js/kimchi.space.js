@@ -202,7 +202,9 @@ var kimchi = (function (kimchi) {
 	kimchi.space.update = function () {
 		// update the positioning of all elements that don't move in move()
 		$.each(kimchi.space.bodies, function (name, body) {
-			var distance = kimchi.camera.position.distanceTo(body.mesh.position);
+			var distance, projector, label;
+
+			distance = kimchi.camera.position.distanceTo(body.mesh.position);
 
 			// move the text mesh
 /*		if (distance > body.visibleDistance) {
@@ -233,18 +235,24 @@ var kimchi = (function (kimchi) {
 			if (distance > body.visibleDistance) { // too far away
 				body.$label.hide();
 			} else {
-				var projector = new THREE.Projector();
-				var v = projector.projectVector(body.mesh.position.clone(), kimchi.camera);
-				var left = (v.x + 1) / 2 * kimchi.size.width;
-				var top = (1 - v.y) / 2 * kimchi.size.height;
+				projector = new THREE.Projector();
+				label = {};
+				label.width = body.$label.outerWidth();
+				label.height = body.$label.outerHeight();
+				label.position = projector.projectVector(body.mesh.position.clone(), kimchi.camera); // [-1, -1] to [1, 1]
+				label.left = (label.position.x + 1) / 2 * kimchi.size.width;
+				label.left -= label.width / 2; // center over body
+				label.top = (1 - label.position.y) / 2 * kimchi.size.height;
+				label.top -= label.height / 2;
 
-				if (left < -body.$label.outerWidth() || left > kimchi.size.width || top < -body.$label.outerHeight() || top > kimchi.size.height) {
+				if (label.left < -label.width || label.left > kimchi.size.width ||
+						label.top < -label.height || label.top > kimchi.size.height) {
 					// the body is not visible on screen
 					body.$label.hide();
 				} else {
 					body.$label.css({
-						'left': left - body.$label.outerWidth() / 2,
-						'top': top - body.$label.outerHeight() / 2,
+						'left': label.left,
+						'top': label.top,
 					}).show();
 				}
 			}

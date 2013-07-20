@@ -6,7 +6,7 @@ var kimchi = (function (kimchi) {
 	kimchi.config = {
 		'debug': true,
 		'camera': { // for THREE.PerspectiveCamera
-			'fov': 30,
+			'fov': 45,
 			'near': 0.001,
 			'far': 10000000
 		},
@@ -18,7 +18,7 @@ var kimchi = (function (kimchi) {
 		},
 		'collisionDistance': 0.1,
 		'scales': {
-			'radius': 1000 / 149597871, // radii are given in km
+			'radius': 3000 / 149597871, // radii are given in km
 			'position': 1 // positions are given in AU
 		},
 		'orbits': {

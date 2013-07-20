@@ -12,12 +12,12 @@ var kimchi = (function (kimchi) {
 	kimchi.space.data = [
 		{
 			'name': 'Sun',
-			'radius': 696000 / 100,
+			'radius': 696000,
 			'position': new THREE.Vector3(0, 0, 0),
 			'visibleDistance': 1000000,
 			'move': function () {},
 			'mesh': new THREE.Mesh(
-				new THREE.SphereGeometry(696000 * kimchi.config.scales.radius / 100, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
+				new THREE.SphereGeometry(696000 * kimchi.config.scales.radius, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
 				new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
 					'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
 				})
@@ -47,7 +47,7 @@ var kimchi = (function (kimchi) {
 			'position': new THREE.Vector3(0, 1.00000011, 0),
 			'visibleDistance': 50,
 			'move': function () {
-//		this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.001);
+			this.mesh.rotateOnAxis((new THREE.Vector3(1, 2, 3)).normalize(), 0.1);
 //		this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 			},
 			'children': [
@@ -57,7 +57,6 @@ var kimchi = (function (kimchi) {
 					'position': new THREE.Vector3(0, 1.00000011, 0),
 					'visibleDistance': 20,
 					'move': function () {
-						this.mesh.rotateOnAxis(new THREE.Vector3(1, 1, 1), 0.001);
 						this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
 					}
 				}
@@ -69,7 +68,6 @@ var kimchi = (function (kimchi) {
 			'position': new THREE.Vector3(0, 1.52366231, 0),
 			'visibleDistance': 50,
 			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(-1, 1, 0.5), 0.02);
 				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 			}
 		},
@@ -79,7 +77,6 @@ var kimchi = (function (kimchi) {
 			'position': new THREE.Vector3(0, 5.20336301, 0),
 			'visibleDistance': 250,
 			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(-1, -1, -1), 0.001);
 				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 			}
 		},
@@ -89,7 +86,6 @@ var kimchi = (function (kimchi) {
 			'position': new THREE.Vector3(0, 9.53707032, 0),
 			'visibleDistance': 250,
 			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
 				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 			}
 		},
@@ -108,7 +104,6 @@ var kimchi = (function (kimchi) {
 			'position': new THREE.Vector3(0, 30.06896348, 0),
 			'visibleDistance': 1000,
 			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
 				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 			}
 		},
@@ -118,7 +113,6 @@ var kimchi = (function (kimchi) {
 			'position': new THREE.Vector3(0, 39.482, 0),
 			'visibleDistance': 1000,
 			'move': function () {
-				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
 				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
 			}
 		}

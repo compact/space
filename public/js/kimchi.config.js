@@ -18,7 +18,7 @@ var kimchi = (function (kimchi) {
 		},
 		'collisionDistance': 0.1,
 		'scales': {
-			'radius': 3000 / 149597871, // radii are given in km
+			'radius': 1 / 149597871, // radii are given in km
 			'position': 1 // positions are given in AU
 		},
 		'orbits': {
@@ -27,7 +27,7 @@ var kimchi = (function (kimchi) {
 			'lineSegments': 720 // how many lines make up each orbit?
 		},
 		'sphereSegments': 48,
-		'initVector': new THREE.Vector3(0, 0, -10),
+		'initVector': new THREE.Vector3(0, 0, -30),
 		'stars': {
 			'scale': 100000,
 			'count': 2000

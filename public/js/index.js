@@ -54,7 +54,7 @@ kimchi.scene.add(m);
 		kimchi.lights.sun.position.set(0, 0, -5);
 		kimchi.scene.add(kimchi.lights.sun);
 		// ambient light: remove for production TODO
-		kimchi.scene.add(new THREE.AmbientLight(0xff8800));
+		kimchi.scene.add(new THREE.AmbientLight(0xff0000));
 
 
 

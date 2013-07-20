@@ -129,7 +129,7 @@ var kimchi = (function (kimchi) {
 	 *   confused with Mesh.position, which gives the current position.
 	 * rotation: Vector3 of the body's initial Euler rotation.
 	 * visibleDistance: How far away the text mesh remains visible.
-	 *   TODO rename to textMeshDistance or something.
+	 *   TODO rename to labelMeshDistance or something.
 	 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
 	 * texturePath: Optional path to the texture image. The default is name.jpg.
 	 */
@@ -173,11 +173,11 @@ var kimchi = (function (kimchi) {
 
 		/**
 		 * Create a Mesh for the text label. We could do
-		 *   this.mesh.add(this.textMesh);
+		 *   this.mesh.add(this.labelMesh);
 		 * but then the text Mesh rotates with the body and it is nontrivial to
 		 * rotate it back.
 		 */
-		this.textMesh = new THREE.Mesh(
+		this.labelMesh = new THREE.Mesh(
 			new THREE.TextGeometry(this.name, {
 				'size': 10,
 				'height': 0.1,
@@ -211,7 +211,7 @@ var kimchi = (function (kimchi) {
 	kimchi.space.getObject3Ds = function () {
 		var objects = [];
 		$.each(kimchi.space.bodies, function (name, body) {
-			objects.push(body.mesh, body.line, body.textMesh);
+			objects.push(body.mesh, body.line, body.labelMesh);
 		});
 		return objects;
 	};
@@ -249,26 +249,26 @@ var kimchi = (function (kimchi) {
 
 			// move the text mesh
 			if (distance > body.visibleDistance) {
-				body.textMesh.visible = false;
+				body.labelMesh.visible = false;
 			} else {
-				body.textMesh.visible = true;
+				body.labelMesh.visible = true;
 
 				scale = distance / 1000;
-				body.textMesh.scale.set(scale, scale, scale);
+				body.labelMesh.scale.set(scale, scale, scale);
 
 				// the text mesh always face the camera
-				body.textMesh.quaternion.copy(kimchi.camera.quaternion.clone());
+				body.labelMesh.quaternion.copy(kimchi.camera.quaternion.clone());
 
 				// move it in front of the associated mesh so it's not hidden inside
-				body.textMesh.geometry.computeBoundingSphere();
+				body.labelMesh.geometry.computeBoundingSphere();
 				var v = kimchi.camera.position.clone().sub(body.mesh.position)
 					.normalize().multiplyScalar(body.radius + 0.01);
 				var w = body.mesh.position.clone().add(v);
 				var x = body.mesh.position.clone().cross(v).cross(v)
 					.normalize().multiplyScalar(
-						body.textMesh.geometry.boundingSphere.radius / 100
+						body.labelMesh.geometry.boundingSphere.radius / 100
 					);
-				body.textMesh.position.copy(w);//.add(x));
+				body.labelMesh.position.copy(w);//.add(x);
 			}
 
 /*

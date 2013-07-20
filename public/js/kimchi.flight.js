@@ -116,7 +116,7 @@ var kimchi = (function (kimchi) {
 			kimchi.flight.auto.start();
 			kimchi.flight.auto.panTo(body);
 			// translateTo(body) is called when panTo(body) ends
-			// end() is called when translateTo(body) ends
+			// stop() is called when translateTo(body) ends
 			// TODO make function queue for successive setTimeout() calls
 		},
 		// requires kimchi.camera.useQuaternion = true;

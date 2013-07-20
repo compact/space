@@ -138,8 +138,7 @@
 		};
 
 		// Return a Vector3 object corresponding to the current local movement
-		// direction(s).
-		// To check whether the camera is currently moving, call
+		// direction(s). To check whether the camera is currently moving, call
 		// .getTranslationVector().length() > 0
 		this.getLocalTranslationVector = function () {
 			var vector = new THREE.Vector3();

@@ -88,6 +88,13 @@ var kimchi = (function (jQuery, THREE) {
 			);
 		}
 	};
+	kimchi.nav = {};
+	kimchi.nav.updateFlyTo = function () {
+		$.each(kimchi.space.bodies, function (name, body) {
+			$('#nav-fly-to').html(''
+			);
+		});
+	};
 
 
 

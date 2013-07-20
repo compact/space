@@ -19,9 +19,27 @@ var kimchi = (function (kimchi) {
 			'mesh': new THREE.Mesh(
 				new THREE.SphereGeometry(696000 * kimchi.config.scales.radius / 10, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
 				new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
-					'map': new THREE.ImageUtils.loadTexture('images/textures/sun2.jpg')
+					'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
 				})
 			)
+		},
+		{
+			'name': 'Mercury',
+			'radius': 2439.64,
+			'position': new THREE.Vector3(0, 0.38709893, 0),
+			'visibleDistance': 20,
+			'move': function () {
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+			}
+		},
+		{
+			'name': 'Venus',
+			'radius': 6051.59,
+			'position': new THREE.Vector3(0, 0.72333199, 0),
+			'visibleDistance': 20,
+			'move': function () {
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+			}
 		},
 		{
 			'name': 'Earth',
@@ -76,9 +94,28 @@ var kimchi = (function (kimchi) {
 			}
 		},
 		{
+			'name': 'Uranus',
+			'radius': 25557.25,
+			'position': new THREE.Vector3(0, 19.19126393, 0),
+			'visibleDistance': 30,
+			'move': function () {
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+			}
+		},
+		{
 			'name': 'Neptune',
 			'radius': 24766,
 			'position': new THREE.Vector3(0, 30.06896348, 0),
+			'visibleDistance': 1000,
+			'move': function () {
+				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
+				this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+			}
+		},
+		{
+			'name': 'Pluto',
+			'radius': 1148.07,
+			'position': new THREE.Vector3(0, 39.482, 0),
 			'visibleDistance': 1000,
 			'move': function () {
 				this.mesh.rotateOnAxis(new THREE.Vector3(1, 2, -3), 0.01);
@@ -204,7 +241,7 @@ var kimchi = (function (kimchi) {
 		$.each(kimchi.space.bodies, function (name, body) {
 			var distance, projector, label;
 
-			distance = kimchi.camera.position.distanceTo(body.mesh.position);
+			distance = THREE.Object3D.distance(kimchi.camera, body.mesh);
 
 			// move the text mesh
 /*		if (distance > body.visibleDistance) {

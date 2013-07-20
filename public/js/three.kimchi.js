@@ -12,6 +12,10 @@
 		'negZ': new THREE.Vector3(0, 0, -1)
 	};
 
+	THREE.Object3D.distance = function (object1, object2) {
+		return object1.position.distanceTo(object2.position);
+	};
+
 	THREE.Object3D.prototype.addMultiple = function (objects) {
 		var self = this;
 		$.each(objects, function (i, object) {

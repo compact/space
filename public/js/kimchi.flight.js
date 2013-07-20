@@ -97,7 +97,7 @@ var kimchi = (function (kimchi) {
 				name = $(this).data('name');
 				if (typeof kimchi.space.bodies[name] === 'object') {
 					kimchi.flight.auto.flyTo(kimchi.space.bodies[name]);
-				} else {
+				} else { // TODO write a general function to get a body
 					console.log(name + ' not found in kimchi.flight.auto')
 				}
 			});
@@ -158,8 +158,7 @@ var kimchi = (function (kimchi) {
 		},
 		'translateTo': function (body) {
 			kimchi.rendering.animate(function (delta) {
-				console.log(body.radius);
-				if (kimchi.camera.position.distanceTo(body.mesh.position) >=
+				if (THREE.Object3D.distance(kimchi.camera, body.mesh) >=
 						body.radius + kimchi.config.collisionDistance) {
 					kimchi.camera.translateZ(-kimchi.config.controls.zSpeed * delta *
 						kimchi.flight.getTranslationSpeedMultiplier([body.mesh]));
@@ -188,7 +187,7 @@ var kimchi = (function (kimchi) {
 		}
 
 		$.each(object3Ds, function (i, object3D) {
-			distances.push(kimchi.camera.position.distanceTo(object3D.position));
+			distances.push(THREE.Object3D.distance(kimchi.camera, object3D));
 		});
 		distances.sort(function (a, b) { // sort numerically
 			return a - b;

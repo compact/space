@@ -71,10 +71,11 @@ var kimchi = (function (kimchi) {
 			raycaster = new THREE.Raycaster(
 				kimchi.camera.position.clone(),
 				// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
-				kimchi.camera.localToWorld(translationVector).sub(kimchi.camera.position),
+				kimchi.camera.localToWorld(translationVector)
+					.sub(kimchi.camera.position),
 //			kimchi.camera.position.clone().sub(translationVector.applyMatrix4(kimchi.camera.matrix)),
 				0,
-				kimchi.config.collisionDistance
+				kimchi.config.collisionDistance // TODO make this variably dependent on body radius
 			);
 			intersection = raycaster.intersectObjects(
 				kimchi.space.getCollideableObject3Ds()
@@ -101,11 +102,22 @@ var kimchi = (function (kimchi) {
 				}
 			});
 		},
+		'start': function () {
+			kimchi.clock.start();
+			kimchi.flight.mode = 'auto';
+		},
+		'stop': function () {
+			kimchi.clock.stop();
+			kimchi.flight.mode = false;
+			kimchi.notice.clear(); // TODO move this
+		},
 		'flyTo': function (body) {
 			kimchi.notice.set('Flying to ' + body.name + '...');
+			kimchi.flight.auto.start();
 			kimchi.flight.auto.panTo(body);
-			kimchi.flight.auto.translateTo(body);
-			kimchi.notice.clear();
+			// translateTo(body) is called when panTo(body) ends
+			// end() is called when translateTo(body) ends
+			// TODO make function queue for successive setTimeout() calls
 		},
 		// requires kimchi.camera.useQuaternion = true;
 		'panTo': function (body) {
@@ -124,7 +136,6 @@ var kimchi = (function (kimchi) {
 			targetQuaternion.setFromRotationMatrix(rotationMatrix);
 
 			t = 0;
-			kimchi.flight.mode = 'auto';
 			kimchi.rendering.animate(function (delta) {
 				// avoid rounding imprecision because we want the final rotation to be
 				// centered exactly onto the target body (t = 1)
@@ -140,12 +151,23 @@ var kimchi = (function (kimchi) {
 
 					t += 0.05;
 				} else {
-					return false;
+					kimchi.flight.auto.translateTo(body);
+					return false; // stop
 				}
 			});
 		},
 		'translateTo': function (body) {
-
+			kimchi.rendering.animate(function (delta) {
+				console.log(body.radius);
+				if (kimchi.camera.position.distanceTo(body.mesh.position) >=
+						body.radius + kimchi.config.collisionDistance) {
+					kimchi.camera.translateZ(-kimchi.config.controls.zSpeed * delta *
+						kimchi.flight.getTranslationSpeedMultiplier([body.mesh]));
+					kimchi.flight.auto.animationFrame(delta);
+				} else {
+					kimchi.flight.auto.stop();
+				}
+			});
 		},
 		'animationFrame': function (delta) {
 			kimchi.space.update();
@@ -156,11 +178,16 @@ var kimchi = (function (kimchi) {
 
 
 	// Return a number for scaling the camera speed (in each direction) depending
-	// on how close the camera is to collideable objects.
-	kimchi.flight.getTranslationSpeedMultiplier = function () {
+	// on how close the camera is to collideable objects. If the parameter is not
+	// given, consider all collideable objects.
+	kimchi.flight.getTranslationSpeedMultiplier = function (object3Ds) {
 		var distances = [];
 
-		$.each(kimchi.space.getCollideableObject3Ds(), function (i, object3D) {
+		if (typeof object3Ds === 'undefined') {
+			object3Ds = kimchi.space.getCollideableObject3Ds();
+		}
+
+		$.each(object3Ds, function (i, object3D) {
 			distances.push(kimchi.camera.position.distanceTo(object3D.position));
 		});
 		distances.sort(function (a, b) { // sort numerically

@@ -16,7 +16,7 @@ var kimchi = (function (kimchi) {
 			'strafeSpeed': 0.5, // move left/right/up/down with keyboard
 			'rollSpeed': 2 // roll with keyboard
 		},
-		'collisionDistance': 0.05,
+		'collisionDistance': 0.1,
 		'scales': {
 			'radius': 1000 / 149597871, // radii are given in km
 			'position': 1 // positions are given in AU

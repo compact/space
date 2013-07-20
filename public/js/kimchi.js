@@ -8,6 +8,15 @@ Math.roundDecimals = function (number, precision, trailingZeroes) {
 	}
 	return result;
 };
+Math.roundForUser = function (number) {
+	if (number < 1) {
+		return Math.roundDecimals(number, 2);
+	} else if (number < 10) {
+		return Math.roundDecimals(number, 1);
+	} else {
+		return Math.round(number);
+	}
+};
 
 Date.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
 	'Oct', 'Nov', 'Dec'];
@@ -65,14 +74,14 @@ var kimchi = (function (jQuery, THREE) {
 			translation.x * kimchi.config.controls.strafeSpeed,
 			translation.y * kimchi.config.controls.strafeSpeed,
 			translation.z * kimchi.config.controls.zSpeed
-		)).length() * kimchi.flight.getTranslationSpeedMultiplier(), 2));
+		)).length() * kimchi.flight.getTranslationSpeedMultiplier(), 2, true));
 		$('#hud-time').text(kimchi.date.format());
 
 		if (kimchi.config.debug) {
 			$('#hud4').html(
 				'<strong>Debug</strong><br />' +
 				'Delta: ' +
-					Math.roundDecimals(delta, 4) + '<br />' +
+					Math.roundDecimals(delta, 4, true) + '<br />' +
 				'Camera position (px): ' +
 					Math.round(kimchi.camera.position.x) + ', ' +
 					Math.round(kimchi.camera.position.y) + ', ' +
@@ -100,7 +109,7 @@ var kimchi = (function (jQuery, THREE) {
 			$('#nav-fly-to').append(
 				$('<li>').append(
 					$('<a>').text(body.name).data('name', body.name),
-					$('<span>').text(' (' + Math.roundDecimals(body.distance, 2) + ' AU away)')
+					$('<span>').text(' (' + Math.roundForUser(body.distance) + ' AU)')
 				)
 			);
 		});

@@ -12,12 +12,12 @@ var kimchi = (function (kimchi) {
 	kimchi.space.data = [
 		{
 			'name': 'Sun',
-			'radius': 696000 / 10,
+			'radius': 696000 / 100,
 			'position': new THREE.Vector3(0, 0, 0),
 			'visibleDistance': 1000000,
 			'move': function () {},
 			'mesh': new THREE.Mesh(
-				new THREE.SphereGeometry(696000 * kimchi.config.scales.radius / 10, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
+				new THREE.SphereGeometry(696000 * kimchi.config.scales.radius / 100, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
 				new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
 					'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
 				})
@@ -221,6 +221,16 @@ var kimchi = (function (kimchi) {
 		});
 		return objects;
 	};
+	// returns an array of Mesh objects set to be collideable with the camera
+	kimchi.space.getCollideableObject3Ds = function () {
+		var object3Ds = [];
+		$.each(kimchi.space.bodies, function (name, body) {
+			if (body.collideable) {
+				object3Ds.push(body.mesh);
+			}
+		});
+		return object3Ds;
+	};
 
 
 
@@ -298,17 +308,20 @@ var kimchi = (function (kimchi) {
 
 
 
-	// returns an array of Mesh objects set to be collideable with the camera
-	kimchi.space.getCollideableObject3Ds = function () {
-		var object3Ds = [];
+	// Return an array of all bodies sorted by distance from the camera.
+	kimchi.space.getBodiesByDistance = function () {
+		var bodies = [];
 		$.each(kimchi.space.bodies, function (name, body) {
-			if (body.collideable) {
-				object3Ds.push(body.mesh);
-			}
+			bodies.push({
+				'name': name,
+				'distance': THREE.Object3D.distance(kimchi.camera, body.mesh)
+			});
 		});
-		return object3Ds;
+		bodies.sort(function (body1, body2) { // sort numerically
+			return body1.distance - body2.distance;
+		});
+		return bodies;
 	};
-
 
 
 	return kimchi;

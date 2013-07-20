@@ -31,6 +31,7 @@ var kimchi = (function (kimchi) {
 
 			$('#hud1').hide();
 			kimchi.$overlay.show();
+			kimchi.nav.update();
 
 			kimchi.pointerLock.bind();
 		},
@@ -171,6 +172,7 @@ var kimchi = (function (kimchi) {
 		'animationFrame': function (delta) {
 			kimchi.space.update();
 			kimchi.hud.update(delta);
+			kimchi.nav.update(); // TODO remove
 		}
 	};
 
@@ -186,6 +188,7 @@ var kimchi = (function (kimchi) {
 			object3Ds = kimchi.space.getCollideableObject3Ds();
 		}
 
+		// TODO maybe use kimchi.space.getBodiesByDistance() as a helper here
 		$.each(object3Ds, function (i, object3D) {
 			distances.push(THREE.Object3D.distance(kimchi.camera, object3D));
 		});

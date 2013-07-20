@@ -88,10 +88,20 @@ var kimchi = (function (jQuery, THREE) {
 			);
 		}
 	};
+	// nav is the navigation that appears when free flight is paused
 	kimchi.nav = {};
-	kimchi.nav.updateFlyTo = function () {
-		$.each(kimchi.space.bodies, function (name, body) {
-			$('#nav-fly-to').html(''
+	kimchi.nav.update = function () {
+		kimchi.nav.updateFlyToList();
+	};
+	kimchi.nav.updateFlyToList = function () {
+		var bodies = kimchi.space.getBodiesByDistance();
+		$('#nav-fly-to').empty();
+		$.each(bodies, function (i, body) {
+			$('#nav-fly-to').append(
+				$('<li>').append(
+					$('<a>').text(body.name).data('name', body.name),
+					$('<span>').text(' (' + Math.roundDecimals(body.distance, 2) + ' AU away)')
+				)
 			);
 		});
 	};

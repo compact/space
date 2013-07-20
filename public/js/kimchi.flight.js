@@ -89,6 +89,8 @@ var kimchi = (function (kimchi) {
 
 	kimchi.flight.auto = {
 		'init': function () {
+			kimchi.nav.update(); // maybe shouldn't be here
+
 			$('.nav').on('click', 'a', function (event) {
 				var name;
 
@@ -104,6 +106,7 @@ var kimchi = (function (kimchi) {
 			});
 		},
 		'start': function () {
+			kimchi.$overlay.hide();
 			kimchi.clock.start();
 			kimchi.flight.mode = 'auto';
 		},
@@ -111,6 +114,8 @@ var kimchi = (function (kimchi) {
 			kimchi.clock.stop();
 			kimchi.flight.mode = false;
 			kimchi.notice.clear(); // TODO move this
+			kimchi.$overlay.show();
+			kimchi.nav.update();
 		},
 		'flyTo': function (body) {
 			kimchi.notice.set('Flying to ' + body.name + '...');
@@ -120,7 +125,6 @@ var kimchi = (function (kimchi) {
 			// stop() is called when translateTo(body) ends
 			// TODO make function queue for successive setTimeout() calls
 		},
-		// requires kimchi.camera.useQuaternion = true;
 		'panTo': function (body) {
 			var initQuaternion, rotationMatrix, targetQuaternion, t;
 
@@ -172,7 +176,7 @@ var kimchi = (function (kimchi) {
 		'animationFrame': function (delta) {
 			kimchi.space.update();
 			kimchi.hud.update(delta);
-			kimchi.nav.update(); // TODO remove
+//			kimchi.nav.update(); // TODO remove
 		}
 	};
 

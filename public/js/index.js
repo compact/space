@@ -22,8 +22,6 @@ var kimchi = (function (kimchi) {
 			kimchi.config.camera.near,
 			kimchi.config.camera.far
 		);
-		// needed for kimchi.flight.auto.panTo()
-		kimchi.camera.useQuaternion = true;
 		// renderer
 		kimchi.renderer = new THREE.WebGLRenderer({
 			'antialias': true
@@ -39,17 +37,24 @@ var kimchi = (function (kimchi) {
 
 		// add background stars, an array of ParticleSystems
 		kimchi.scene.addMultiple(new THREE.Stars(kimchi.config.stars));
-
-
+/*var m = new THREE.Mesh(
+	new THREE.SphereGeometry(0.1, 45, 45),
+	new THREE.MeshBasicMaterial({
+		'color': 0xffffff
+	})
+);
+m.position.copy(new THREE.Vector3(0, 0.38709893, 0));
+kimchi.scene.add(m);
+*/
 
 		// lighting
 		kimchi.lights = {};
 		// sunlight
 		kimchi.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
-		kimchi.lights.sun.position.set(0, 0, 0);
+		kimchi.lights.sun.position.set(0, 0, -5);
 		kimchi.scene.add(kimchi.lights.sun);
 		// ambient light: remove for production TODO
-		kimchi.scene.add(new THREE.AmbientLight(0x660000));
+		kimchi.scene.add(new THREE.AmbientLight(0xff8800));
 
 
 

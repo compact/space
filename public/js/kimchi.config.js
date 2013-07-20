@@ -7,7 +7,7 @@ var kimchi = (function (kimchi) {
 		'debug': true,
 		'camera': { // for THREE.PerspectiveCamera
 			'fov': 30,
-			'near': 0.01,
+			'near': 0.001,
 			'far': 10000000
 		},
 		'controls': { // for THREE.Controls

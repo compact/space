@@ -129,11 +129,11 @@ var kimchi = (function (kimchi) {
 	/**
 	 * Class for astronomical bodies. All spheres for now.
 	 * Currently not extensible; set the functions in the prototype to do that.
-	 * name: Required. Label displayed to users.
+	 * name: Required. Displayed to users.
 	 * radius: In km.
-	 * position: Vector3 of the starting position in AU. Not to be confused with
-	 *   Mesh.position, which gives the current position.
-	 * rotation: Vector3 of the starting rotation.
+	 * position: Vector3 of the body's initial position, in AU. Not to be
+	 *   confused with Mesh.position, which gives the current position.
+	 * rotation: Vector3 of the body's initial Euler rotation.
 	 * visibleDistance: How far away the text mesh remains visible.
 	 *   TODO rename to textMeshDistance or something.
 	 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
@@ -146,7 +146,7 @@ var kimchi = (function (kimchi) {
 			'name': '',
 			'radius': 0,
 			'position': new THREE.Vector3(),
-			'rotation': new THREE.Vector3(),
+			'rotation': new THREE.Euler(),
 			'collideable': true,
 			'visibleDistance': 100,
 			'move': function () {},
@@ -183,7 +183,7 @@ var kimchi = (function (kimchi) {
 		 * but then the text Mesh rotates with the body and it is nontrivial to
 		 * rotate it back.
 		 */
-/*		this.textMesh = new THREE.Mesh(
+		this.textMesh = new THREE.Mesh(
 			new THREE.TextGeometry(this.name, {
 				'size': 10,
 				'height': 0.1,
@@ -197,8 +197,8 @@ var kimchi = (function (kimchi) {
 				'color': 0xeeeeff
 			})
 		);
-*/
-		this.$label = $('<div class="label">').text(this.name).appendTo('body');
+
+//	this.$label = $('<div class="label">').text(this.name).appendTo('body');
 	};
 
 
@@ -217,7 +217,7 @@ var kimchi = (function (kimchi) {
 	kimchi.space.getObject3Ds = function () {
 		var objects = [];
 		$.each(kimchi.space.bodies, function (name, body) {
-			objects.push(body.mesh, body.line); // , body.textMesh
+			objects.push(body.mesh, body.line, body.textMesh);
 		});
 		return objects;
 	};
@@ -254,7 +254,7 @@ var kimchi = (function (kimchi) {
 			distance = THREE.Object3D.distance(kimchi.camera, body.mesh);
 
 			// move the text mesh
-/*		if (distance > body.visibleDistance) {
+			if (distance > body.visibleDistance) {
 				body.textMesh.visible = false;
 			} else {
 				body.textMesh.visible = true;
@@ -263,7 +263,7 @@ var kimchi = (function (kimchi) {
 				body.textMesh.scale.set(scale, scale, scale);
 
 				// the text mesh always face the camera
-				body.textMesh.rotation.copy(kimchi.camera.rotation.clone());
+				body.textMesh.quaternion.copy(kimchi.camera.quaternion.clone());
 
 				// move it in front of the associated mesh so it's not hidden inside
 				body.textMesh.geometry.computeBoundingSphere();
@@ -276,8 +276,8 @@ var kimchi = (function (kimchi) {
 					);
 				body.textMesh.position.copy(w);//.add(x));
 			}
-*/
 
+/*
 			// overlay text labels on top of the canvas
 			if (distance > body.visibleDistance) { // too far away
 				body.$label.hide();
@@ -302,7 +302,7 @@ var kimchi = (function (kimchi) {
 						'top': label.top,
 					}).show();
 				}
-			}
+			}*/
 		});
 	};
 

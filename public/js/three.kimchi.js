@@ -91,7 +91,7 @@
 
 		options = $.extend({
 			'position': new THREE.Vector3(),
-			'rotation': new THREE.Vector3(),
+			'rotation': new THREE.Euler(),
 			'color': 0x888888,
 			'opacity': 1,
 			'lineSegments': 360,

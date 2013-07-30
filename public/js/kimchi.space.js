@@ -4,7 +4,9 @@
  */
 
 var kimchi = (function (kimchi) {
-	var $ = kimchi.jQuery;
+	'use strict';
+
+	var $ = kimchi.jQuery, THREE = kimchi.THREE;
 
 	kimchi.space = {};
 
@@ -243,7 +245,7 @@ var kimchi = (function (kimchi) {
 	kimchi.space.update = function () {
 		// update the positioning of all elements that don't move in move()
 		$.each(kimchi.space.bodies, function (name, body) {
-			var distance, projector, label;
+			var distance, scale, projector, label;
 
 			distance = THREE.Object3D.distance(kimchi.camera, body.mesh);
 

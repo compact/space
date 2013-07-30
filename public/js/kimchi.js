@@ -149,7 +149,7 @@ var kimchi = (function (jQuery, THREE) {
 		'clear': function () {
 			kimchi.notice.$notice.text('').fadeOut();
 		}
-	}
+	};
 
 
 

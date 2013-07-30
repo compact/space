@@ -119,7 +119,7 @@
 		}
 
 		// translate
-		var translationVector = this.getLocalTranslationVector();
+		translationVector = this.getLocalTranslationVector();
 		this.camera.translateX(translationVector.x * this.options.strafeSpeed *
 			speedMultiplier * translationSpeedMultiplier);
 		this.camera.translateY(translationVector.y * this.options.strafeSpeed *

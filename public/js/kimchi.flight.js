@@ -5,7 +5,9 @@
  */
 
 var kimchi = (function (kimchi) {
-	var $ = kimchi.jQuery;
+	'use strict';
+
+	var $ = kimchi.jQuery, THREE = kimchi.THREE;
 
 	kimchi.flight = {};
 	kimchi.flight.mode = false; // possible values are 'free', 'auto', and false
@@ -101,7 +103,7 @@ var kimchi = (function (kimchi) {
 				if (typeof kimchi.space.bodies[name] === 'object') {
 					kimchi.flight.auto.flyTo(kimchi.space.bodies[name]);
 				} else { // TODO write a general function to get a body
-					console.log(name + ' not found in kimchi.flight.auto')
+					console.log(name + ' not found in kimchi.flight.auto');
 				}
 			});
 		},

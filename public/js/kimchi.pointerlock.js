@@ -3,6 +3,8 @@
  */
 
 var kimchi = (function (kimchi) {
+	'use strict';
+
 	var $ = kimchi.jQuery;
 
 	kimchi.pointerLock = {};
@@ -37,11 +39,11 @@ var kimchi = (function (kimchi) {
 		body.requestPointerLock = body.requestPointerLock ||
 			body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
-		change = function (event) {
+		change = function () {
 			kimchi.flight.free.toggle(document.pointerLockElement === body ||
 				document.mozPointerLockElement === body ||
 				document.webkitPointerLockElement === body);
-		}
+		};
 		document.addEventListener('pointerlockchange', change, false);
 		document.addEventListener('mozpointerlockchange', change, false);
 		document.addEventListener('webkitpointerlockchange', change, false);
@@ -49,7 +51,7 @@ var kimchi = (function (kimchi) {
 		error = function (event) {
 			console.log('Pointer Lock error:');
 			console.log(event);
-		}
+		};
 		document.addEventListener('pointerlockerror', error, false);
 		document.addEventListener('mozpointerlockerror', error, false);
 		document.addEventListener('webkitpointerlockerror', error, false);
@@ -68,7 +70,7 @@ var kimchi = (function (kimchi) {
 	kimchi.pointerLock.unbind = function () {
 		kimchi.$document.off('keydown', kimchi.pointerLock.keydown);
 	};
-	kimchi.pointerLock.keydownInProgress = false,
+	kimchi.pointerLock.keydownInProgress = false;
 	kimchi.pointerLock.keydown = function (event) {
 		// Request pointer lock only on keyup; otherwise, the continued Escape
 		// keydown event causes the pointer lock to disable immediately, even
@@ -85,7 +87,7 @@ var kimchi = (function (kimchi) {
 			});
 		}
 	};
-	kimchi.pointerLock.click = function (event) {
+	kimchi.pointerLock.click = function () {
 		kimchi.pointerLock.request();
 	};
 

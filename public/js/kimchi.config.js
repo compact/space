@@ -3,6 +3,10 @@
  */
 
 var kimchi = (function (kimchi) {
+	'use strict';
+
+	var THREE = kimchi.THREE;
+
 	kimchi.config = {
 		'debug': true,
 		'camera': { // for THREE.PerspectiveCamera
@@ -36,5 +40,6 @@ var kimchi = (function (kimchi) {
 			'pointerLockNotSupported': 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.'
 		}
 	};
+
 	return kimchi;
 }(kimchi));

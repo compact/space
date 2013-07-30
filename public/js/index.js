@@ -6,6 +6,8 @@
 var kimchi = (function (kimchi) {
 	'use strict';
 
+	var $ = kimchi.jQuery, THREE = kimchi.THREE;
+
 	$(function () {
 		kimchi.$document = $(document);
 		kimchi.$window = $(window);

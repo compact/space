@@ -2,6 +2,8 @@
  * three.js extensions for kimchi.
  */
 (function ($, THREE) {
+	'use strict';
+
 	// "constant" vectors; don't use as objects that can be changed, such as location or rotation
 	THREE.unitVectors = {
 		'x': new THREE.Vector3(1, 0, 0),

@@ -97,6 +97,9 @@ var KIMCHI = (function ($, THREE) {
 			);
 		}
 	};
+
+
+
 	// nav is the navigation that appears when free flight is paused
 	KIMCHI.nav = {};
 	KIMCHI.nav.update = function () {
@@ -118,16 +121,16 @@ var KIMCHI = (function ($, THREE) {
 
 
 	KIMCHI.size = {
-		'width': 1,
-		'height': 6,
+		'width': 0,
+		'height': 0,
 		'init': function () {
-			KIMCHI.size.set();
+			KIMCHI.size.update();
 			KIMCHI.$window.on('resize', function () {
-				KIMCHI.size.set();
+				KIMCHI.size.update();
 				KIMCHI.rendering.animate(KIMCHI.flight.auto.animationFrame);
 			});
 		},
-		'set': function () {
+		'update': function () {
 			KIMCHI.size.width = KIMCHI.$window.width();
 			KIMCHI.size.height = KIMCHI.$window.height() - 5; // TODO
 			KIMCHI.camera.update(KIMCHI.size.width, KIMCHI.size.height);

@@ -1,17 +1,15 @@
 /**
- * kimchi configuration options.
+ * KIMCHI configuration options.
  */
 
-var kimchi = (function (kimchi) {
+var KIMCHI = (function (KIMCHI, THREE) {
 	'use strict';
 
-	var THREE = kimchi.THREE;
-
-	kimchi.config = {
+	KIMCHI.config = {
 		'debug': true,
 		'camera': { // for THREE.PerspectiveCamera
 			'fov': 45,
-			'near': 0.001,
+			'near': 0.000001,
 			'far': 10000000
 		},
 		'controls': { // for THREE.Controls
@@ -41,5 +39,5 @@ var kimchi = (function (kimchi) {
 		}
 	};
 
-	return kimchi;
-}(kimchi));
+	return KIMCHI;
+}(KIMCHI, THREE));

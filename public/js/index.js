@@ -3,42 +3,40 @@
  * Sometimes pointerlock is disabled on start, don't know why.
  */
 
-var kimchi = (function (kimchi) {
+var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	var $ = kimchi.jQuery, THREE = kimchi.THREE;
-
 	$(function () {
-		kimchi.$document = $(document);
-		kimchi.$window = $(window);
-		kimchi.$overlay = $('#overlay');
+		KIMCHI.$document = $(document);
+		KIMCHI.$window = $(window);
+		KIMCHI.$overlay = $('#overlay');
 
-		kimchi.clock = new THREE.Clock(false); // do not autostart
+		KIMCHI.clock = new THREE.Clock(false); // do not autostart
 
 		// scene
-		kimchi.scene = new THREE.Scene();
+		KIMCHI.scene = new THREE.Scene();
 		// camera: don't use OrthographicCamera because it lacks perspective
-		kimchi.camera = new THREE.PerspectiveCamera(
-			kimchi.config.camera.fov,
+		KIMCHI.camera = new THREE.PerspectiveCamera(
+			KIMCHI.config.camera.fov,
 			1,
-			kimchi.config.camera.near,
-			kimchi.config.camera.far
+			KIMCHI.config.camera.near,
+			KIMCHI.config.camera.far
 		);
 		// renderer
-		kimchi.renderer = new THREE.WebGLRenderer({
+		KIMCHI.renderer = new THREE.WebGLRenderer({
 			'antialias': true
 		});
 		// set camera size and renderer size
-		kimchi.size.init();
+		KIMCHI.size.init();
 
 
 
 		// add astronomical objects
-		kimchi.space.setBodies();
-		kimchi.scene.addMultiple(kimchi.space.getObject3Ds());
+		KIMCHI.space.setBodies();
+		KIMCHI.scene.addMultiple(KIMCHI.space.getObject3Ds());
 
 		// add background stars, an array of ParticleSystems
-		kimchi.scene.addMultiple(new THREE.Stars(kimchi.config.stars));
+		KIMCHI.scene.addMultiple(new THREE.Stars(KIMCHI.config.stars));
 /*var m = new THREE.Mesh(
 	new THREE.SphereGeometry(0.1, 45, 45),
 	new THREE.MeshBasicMaterial({
@@ -46,43 +44,43 @@ var kimchi = (function (kimchi) {
 	})
 );
 m.position.copy(new THREE.Vector3(0, 0.38709893, 0));
-kimchi.scene.add(m);
+KIMCHI.scene.add(m);
 */
 
 		// lighting
-		kimchi.lights = {};
+		KIMCHI.lights = {};
 		// sunlight
-		kimchi.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
-		kimchi.lights.sun.position.set(0, 0, -5);
-		kimchi.scene.add(kimchi.lights.sun);
+		KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
+		KIMCHI.lights.sun.position.set(0, 0, -5);
+		KIMCHI.scene.add(KIMCHI.lights.sun);
 		// ambient light: remove for production TODO
-		kimchi.scene.add(new THREE.AmbientLight(0xff0000));
+		KIMCHI.scene.add(new THREE.AmbientLight(0xff0000));
 
 
 
 		// first person controls
-		kimchi.controls = new THREE.Controls(kimchi.camera, kimchi.config.controls);
+		KIMCHI.controls = new THREE.Controls(KIMCHI.camera, KIMCHI.config.controls);
 
 
 
 		// initialize camera position and rotation
-		kimchi.camera.position.copy(kimchi.config.initVector);
-		kimchi.camera.lookAt(new THREE.Vector3(0, 0, 0));
+		KIMCHI.camera.position.copy(KIMCHI.config.initVector);
+		KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
 		// render() has to be called to set the camera position for objects and
 		// elements to appear in animate()
-		kimchi.rendering.render();
-		kimchi.rendering.animate(kimchi.flight.auto.animationFrame);
+		KIMCHI.rendering.render();
+		KIMCHI.rendering.animate(KIMCHI.flight.auto.animationFrame);
 
 
 
 		// add renderer to DOM
-		$('body').append(kimchi.renderer.domElement);
-		kimchi.date = new Date();
+		$('body').append(KIMCHI.renderer.domElement);
+		KIMCHI.date = new Date();
 		// bind
-		kimchi.pointerLock.init();
-		kimchi.flight.auto.init();
-		kimchi.notice.init();
+		KIMCHI.pointerLock.init();
+		KIMCHI.flight.auto.init();
+		KIMCHI.notice.init();
 	});
 
-	return kimchi;
-}(kimchi));
+	return KIMCHI;
+}(KIMCHI, jQuery, THREE));

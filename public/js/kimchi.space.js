@@ -1,17 +1,15 @@
 /**
- * kimchi.space contains astronomical bodies (called 'bodies' for short) and
+ * KIMCHI.space contains astronomical bodies (called 'bodies' for short) and
  * their Object3Ds.
  */
 
-var kimchi = (function (kimchi) {
+var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	var $ = kimchi.jQuery, THREE = kimchi.THREE;
-
-	kimchi.space = {};
+	KIMCHI.space = {};
 
 	// raw data of each body
-	kimchi.space.data = [
+	KIMCHI.space.data = [
 		{
 			'name': 'Sun',
 			'radius': 696000,
@@ -19,7 +17,7 @@ var kimchi = (function (kimchi) {
 			'visibleDistance': 1000000,
 			'move': function () {},
 			'mesh': new THREE.Mesh(
-				new THREE.SphereGeometry(696000 * kimchi.config.scales.radius, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
+				new THREE.SphereGeometry(696000 * KIMCHI.config.scales.radius, KIMCHI.config.sphereSegments, KIMCHI.config.sphereSegments),
 				new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
 					'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
 				})
@@ -135,7 +133,7 @@ var kimchi = (function (kimchi) {
 	 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
 	 * texturePath: Optional path to the texture image. The default is name.jpg.
 	 */
-	kimchi.space.Body = function (options) {
+	KIMCHI.space.Body = function (options) {
 		var length, curve;
 
 		$.extend(this, { // default options
@@ -149,18 +147,18 @@ var kimchi = (function (kimchi) {
 			'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
 		}, options);
 
-		this.radius *= kimchi.config.scales.radius;
+		this.radius *= KIMCHI.config.scales.radius;
 
 		// create a Mesh for the body; it can already be set in space.data
 		if (typeof this.mesh !== 'object') { 
 			this.mesh = new THREE.Mesh(
-				new THREE.SphereGeometry(this.radius, kimchi.config.sphereSegments, kimchi.config.sphereSegments),
+				new THREE.SphereGeometry(this.radius, KIMCHI.config.sphereSegments, KIMCHI.config.sphereSegments),
 				new THREE.MeshLambertMaterial({
 					'map': new THREE.ImageUtils.loadTexture(this.texturePath)
 				})
 			);
 		}
-		this.position.multiplyScalar(kimchi.config.scales.position);
+		this.position.multiplyScalar(KIMCHI.config.scales.position);
 		this.mesh.position.copy(this.position);
 		this.mesh.rotation.copy(this.rotation);
 		length = this.position.length();
@@ -168,9 +166,9 @@ var kimchi = (function (kimchi) {
 		// create a Curve for the orbit, which can be used to create a Line
 		curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI, true);
 		this.line = curve.createLine({
-			'color': kimchi.config.orbits.color,
-			'opacity': kimchi.config.orbits.opacity,
-			'lineSegments': kimchi.config.orbits.lineSegments,
+			'color': KIMCHI.config.orbits.color,
+			'opacity': KIMCHI.config.orbits.opacity,
+			'lineSegments': KIMCHI.config.orbits.lineSegments,
 		});
 
 		/**
@@ -200,27 +198,27 @@ var kimchi = (function (kimchi) {
 
 
 	// contains instances of space.Body
-	kimchi.space.bodies = {};
-	kimchi.space.setBodies = function () {
-		$.each(kimchi.space.data, function (i, options) {
-			kimchi.space.bodies[options.name] = new kimchi.space.Body(options);
+	KIMCHI.space.bodies = {};
+	KIMCHI.space.setBodies = function () {
+		$.each(KIMCHI.space.data, function (i, options) {
+			KIMCHI.space.bodies[options.name] = new KIMCHI.space.Body(options);
 		});
 	};
 
 
 
 	// return an array of Object3Ds objects for each spaces.bodies
-	kimchi.space.getObject3Ds = function () {
+	KIMCHI.space.getObject3Ds = function () {
 		var objects = [];
-		$.each(kimchi.space.bodies, function (name, body) {
+		$.each(KIMCHI.space.bodies, function (name, body) {
 			objects.push(body.mesh, body.line, body.labelMesh);
 		});
 		return objects;
 	};
 	// returns an array of Mesh objects set to be collideable with the camera
-	kimchi.space.getCollideableObject3Ds = function () {
+	KIMCHI.space.getCollideableObject3Ds = function () {
 		var object3Ds = [];
-		$.each(kimchi.space.bodies, function (name, body) {
+		$.each(KIMCHI.space.bodies, function (name, body) {
 			if (body.collideable) {
 				object3Ds.push(body.mesh);
 			}
@@ -232,22 +230,22 @@ var kimchi = (function (kimchi) {
 
 	// update() updates the position of HTML elements which attach to Meshes
 	// move() updates the position of Meshes as well
-	kimchi.space.move = function (delta) { // TODO use delta
-		$.each(kimchi.space.bodies, function (name, body) {
+	KIMCHI.space.move = function (delta) { // TODO use delta
+		$.each(KIMCHI.space.bodies, function (name, body) {
 			var distance, scale;
 
 			// move the body mesh (custom function)
 			body.move();
 
-			kimchi.space.update();
+			KIMCHI.space.update();
 		});
 	};
-	kimchi.space.update = function () {
+	KIMCHI.space.update = function () {
 		// update the positioning of all elements that don't move in move()
-		$.each(kimchi.space.bodies, function (name, body) {
+		$.each(KIMCHI.space.bodies, function (name, body) {
 			var distance, scale, projector, label;
 
-			distance = THREE.Object3D.distance(kimchi.camera, body.mesh);
+			distance = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
 
 			// move the text mesh
 			if (distance > body.visibleDistance) {
@@ -259,11 +257,11 @@ var kimchi = (function (kimchi) {
 				body.labelMesh.scale.set(scale, scale, scale);
 
 				// the text mesh always face the camera
-				body.labelMesh.quaternion.copy(kimchi.camera.quaternion.clone());
+				body.labelMesh.quaternion.copy(KIMCHI.camera.quaternion.clone());
 
 				// move it in front of the associated mesh so it's not hidden inside
 				body.labelMesh.geometry.computeBoundingSphere();
-				var v = kimchi.camera.position.clone().sub(body.mesh.position)
+				var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
 					.normalize().multiplyScalar(body.radius + 0.01);
 				var w = body.mesh.position.clone().add(v);
 				var x = body.mesh.position.clone().cross(v).cross(v)
@@ -282,14 +280,14 @@ var kimchi = (function (kimchi) {
 				label = {};
 				label.width = body.$label.outerWidth();
 				label.height = body.$label.outerHeight();
-				label.position = projector.projectVector(body.mesh.position.clone(), kimchi.camera); // [-1, -1] to [1, 1]
-				label.left = (label.position.x + 1) / 2 * kimchi.size.width;
+				label.position = projector.projectVector(body.mesh.position.clone(), KIMCHI.camera); // [-1, -1] to [1, 1]
+				label.left = (label.position.x + 1) / 2 * KIMCHI.size.width;
 				label.left -= label.width / 2; // center over body
-				label.top = (1 - label.position.y) / 2 * kimchi.size.height;
+				label.top = (1 - label.position.y) / 2 * KIMCHI.size.height;
 				label.top -= label.height / 2;
 
-				if (label.left < -label.width || label.left > kimchi.size.width ||
-						label.top < -label.height || label.top > kimchi.size.height) {
+				if (label.left < -label.width || label.left > KIMCHI.size.width ||
+						label.top < -label.height || label.top > KIMCHI.size.height) {
 					// the body is not visible on screen
 					body.$label.hide();
 				} else {
@@ -305,12 +303,12 @@ var kimchi = (function (kimchi) {
 
 
 	// Return an array of all bodies sorted by distance from the camera.
-	kimchi.space.getBodiesByDistance = function () {
+	KIMCHI.space.getBodiesByDistance = function () {
 		var bodies = [];
-		$.each(kimchi.space.bodies, function (name, body) {
+		$.each(KIMCHI.space.bodies, function (name, body) {
 			bodies.push({
 				'name': name,
-				'distance': THREE.Object3D.distance(kimchi.camera, body.mesh)
+				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
 			});
 		});
 		bodies.sort(function (body1, body2) { // sort numerically
@@ -320,5 +318,5 @@ var kimchi = (function (kimchi) {
 	};
 
 
-	return kimchi;
-}(kimchi));
+	return KIMCHI;
+}(KIMCHI, $, THREE));

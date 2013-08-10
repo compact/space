@@ -27,36 +27,36 @@ Date.prototype.format = function () {
 
 
 /**
- * Extensible module for kimchi. Extend like this:
+ * Extensible module for KIMCHI. Extend like this:
  *
- * var kimchi = (function (kimchi) {
- *   kimchi.foo = ...;
- *   return kimchi;
- * }(kimchi));
+ * var KIMCHI = (function (KIMCHI) {
+ *   KIMCHI.foo = ...;
+ *   return KIMCHI;
+ * }(KIMCHI));
  */
-var kimchi = (function (jQuery, THREE) {
+var KIMCHI = (function ($, THREE) {
 	'use strict';
 
-	var kimchi = {};
+	var KIMCHI = {};
 
 
 
 	// functions for rendering, animating using the three.js renderer
-	kimchi.rendering = {
+	KIMCHI.rendering = {
 		'render': function () {
-			kimchi.renderer.render(kimchi.scene, kimchi.camera);
+			KIMCHI.renderer.render(KIMCHI.scene, KIMCHI.camera);
 		},
 		// callback is called before rendering. If it returns false, stop animating.
 		'animate': function (callback) {
 			setTimeout(function () { // TODO: remove for production
-				var proceed = callback(kimchi.clock.getDelta());
+				var proceed = callback(KIMCHI.clock.getDelta());
 
-				kimchi.rendering.render();
+				KIMCHI.rendering.render();
 
 				// stop the next frame if the user has paused
-				if (proceed !== false && kimchi.flight.mode !== false) {
+				if (proceed !== false && KIMCHI.flight.mode !== false) {
 					window.requestAnimationFrame(function () {
-						kimchi.rendering.animate(callback);
+						KIMCHI.rendering.animate(callback);
 					});
 				}
 			}, 50);
@@ -66,30 +66,30 @@ var kimchi = (function (jQuery, THREE) {
 
 
 	// hud
-	kimchi.hud = {};
-	kimchi.hud.update = function (delta) {
-		var translation = kimchi.controls.getLocalTranslationVector();
-		$('#hud-distance-from-sun').text(Math.roundDecimals(kimchi.camera.position.length(), 2, true));
+	KIMCHI.hud = {};
+	KIMCHI.hud.update = function (delta) {
+		var translation = KIMCHI.controls.getLocalTranslationVector();
+		$('#hud-distance-from-sun').text(Math.roundDecimals(KIMCHI.camera.position.length(), 2, true));
 		$('#hud-speed').text(Math.roundDecimals((new THREE.Vector3(
-			translation.x * kimchi.config.controls.strafeSpeed,
-			translation.y * kimchi.config.controls.strafeSpeed,
-			translation.z * kimchi.config.controls.zSpeed
-		)).length() * kimchi.flight.getTranslationSpeedMultiplier(), 2, true));
-		$('#hud-time').text(kimchi.date.format());
+			translation.x * KIMCHI.config.controls.strafeSpeed,
+			translation.y * KIMCHI.config.controls.strafeSpeed,
+			translation.z * KIMCHI.config.controls.zSpeed
+		)).length() * KIMCHI.flight.getTranslationSpeedMultiplier(), 2, true));
+		$('#hud-time').text(KIMCHI.date.format());
 
-		if (kimchi.config.debug) {
+		if (KIMCHI.config.debug) {
 			$('#hud4').html(
 				'<strong>Debug</strong><br />' +
 				'Delta: ' +
 					Math.roundDecimals(delta, 4, true) + '<br />' +
 				'Camera position (px): ' +
-					Math.round(kimchi.camera.position.x) + ', ' +
-					Math.round(kimchi.camera.position.y) + ', ' +
-					Math.round(kimchi.camera.position.z) + '<br />' +
+					Math.round(KIMCHI.camera.position.x) + ', ' +
+					Math.round(KIMCHI.camera.position.y) + ', ' +
+					Math.round(KIMCHI.camera.position.z) + '<br />' +
 				'Camera rotation (deg): ' +
-					Math.round(kimchi.camera.rotation.x * 180 / Math.PI) + ', ' +
-					Math.round(kimchi.camera.rotation.y * 180 / Math.PI) + ', ' +
-					Math.round(kimchi.camera.rotation.z * 180 / Math.PI) + '<br />'
+					Math.round(KIMCHI.camera.rotation.x * 180 / Math.PI) + ', ' +
+					Math.round(KIMCHI.camera.rotation.y * 180 / Math.PI) + ', ' +
+					Math.round(KIMCHI.camera.rotation.z * 180 / Math.PI) + '<br />'
 /*			'movement: ' +
 					translation.x + ', ' +
 					translation.y + ', ' +
@@ -98,12 +98,12 @@ var kimchi = (function (jQuery, THREE) {
 		}
 	};
 	// nav is the navigation that appears when free flight is paused
-	kimchi.nav = {};
-	kimchi.nav.update = function () {
-		kimchi.nav.updateFlyToList();
+	KIMCHI.nav = {};
+	KIMCHI.nav.update = function () {
+		KIMCHI.nav.updateFlyToList();
 	};
-	kimchi.nav.updateFlyToList = function () {
-		var bodies = kimchi.space.getBodiesByDistance();
+	KIMCHI.nav.updateFlyToList = function () {
+		var bodies = KIMCHI.space.getBodiesByDistance();
 		$('#nav-fly-to').empty();
 		$.each(bodies, function (i, body) {
 			$('#nav-fly-to').append(
@@ -117,44 +117,41 @@ var kimchi = (function (jQuery, THREE) {
 
 
 
-	kimchi.size = {
+	KIMCHI.size = {
 		'width': 1,
 		'height': 6,
 		'init': function () {
-			kimchi.size.set();
-			kimchi.$window.on('resize', function () {
-				kimchi.size.set();
-				kimchi.rendering.animate(kimchi.flight.auto.animationFrame);
+			KIMCHI.size.set();
+			KIMCHI.$window.on('resize', function () {
+				KIMCHI.size.set();
+				KIMCHI.rendering.animate(KIMCHI.flight.auto.animationFrame);
 			});
 		},
 		'set': function () {
-			kimchi.size.width = kimchi.$window.width();
-			kimchi.size.height = kimchi.$window.height() - 5; // TODO
-			kimchi.camera.update(kimchi.size.width, kimchi.size.height);
-			kimchi.renderer.setSize(kimchi.size.width, kimchi.size.height);
+			KIMCHI.size.width = KIMCHI.$window.width();
+			KIMCHI.size.height = KIMCHI.$window.height() - 5; // TODO
+			KIMCHI.camera.update(KIMCHI.size.width, KIMCHI.size.height);
+			KIMCHI.renderer.setSize(KIMCHI.size.width, KIMCHI.size.height);
 		}
 	};
 
 
 
 	// a notice box that appears to users
-	kimchi.notice = {
+	KIMCHI.notice = {
 		'$notice': $(),
 		'init': function () {
-			kimchi.notice.$notice = $('#notice');
+			KIMCHI.notice.$notice = $('#notice');
 		},
 		'set': function (message) {
-			kimchi.notice.$notice.html(message).fadeIn();
+			KIMCHI.notice.$notice.html(message).fadeIn();
 		},
 		'clear': function () {
-			kimchi.notice.$notice.text('').fadeOut();
+			KIMCHI.notice.$notice.text('').fadeOut();
 		}
 	};
 
 
 
-	kimchi.jQuery = $;
-	kimchi.THREE = THREE;
-
-	return kimchi;
+	return KIMCHI;
 }(jQuery, THREE));

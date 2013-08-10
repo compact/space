@@ -2,16 +2,14 @@
  * Pointer lock state (not controls, which is handled by three.controls.js).
  */
 
-var kimchi = (function (kimchi) {
+var KIMCHI = (function (KIMCHI, $) {
 	'use strict';
 
-	var $ = kimchi.jQuery;
-
-	kimchi.pointerLock = {};
+	KIMCHI.pointerLock = {};
 
 	// request pointer lock from the browser, called whenever the user enters free
 	// flight mode
-	kimchi.pointerLock.request = function () {
+	KIMCHI.pointerLock.request = function () {
 		document.body.requestPointerLock();
 		console.log((new Date()) + ' pointer lock requested');
 		console.log(document.pointerLockElement ||
@@ -20,7 +18,7 @@ var kimchi = (function (kimchi) {
 	};
 
 	// has to be called once, before any pointer lock requests
-	kimchi.pointerLock.init = function () {
+	KIMCHI.pointerLock.init = function () {
 		var havePointerLock, body, change, error;
 
 		havePointerLock = 'pointerLockElement' in document ||
@@ -28,7 +26,7 @@ var kimchi = (function (kimchi) {
 			'webkitPointerLockElement' in document;
 		if (!havePointerLock) {
 			// TODO we can use FirstPersonControls here instead
-			kimchi.notice.set(kimchi.config.notices.pointerLockNotSupported);
+			KIMCHI.notice.set(KIMCHI.config.notices.pointerLockNotSupported);
 			return;
 		}
 
@@ -40,7 +38,7 @@ var kimchi = (function (kimchi) {
 			body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
 		change = function () {
-			kimchi.flight.free.toggle(document.pointerLockElement === body ||
+			KIMCHI.flight.free.toggle(document.pointerLockElement === body ||
 				document.mozPointerLockElement === body ||
 				document.webkitPointerLockElement === body);
 		};
@@ -57,39 +55,39 @@ var kimchi = (function (kimchi) {
 		document.addEventListener('webkitpointerlockerror', error, false);
 
 		// the initial flight state is false, so bind the relevant event handlers
-		kimchi.$overlay.on('click', kimchi.pointerLock.click);
-		kimchi.pointerLock.bind();
+		KIMCHI.$overlay.on('click', KIMCHI.pointerLock.click);
+		KIMCHI.pointerLock.bind();
 	};
 
 
 
 	// events
-	kimchi.pointerLock.bind = function () {
-		kimchi.$document.on('keydown', kimchi.pointerLock.keydown);
+	KIMCHI.pointerLock.bind = function () {
+		KIMCHI.$document.on('keydown', KIMCHI.pointerLock.keydown);
 	};
-	kimchi.pointerLock.unbind = function () {
-		kimchi.$document.off('keydown', kimchi.pointerLock.keydown);
+	KIMCHI.pointerLock.unbind = function () {
+		KIMCHI.$document.off('keydown', KIMCHI.pointerLock.keydown);
 	};
-	kimchi.pointerLock.keydownInProgress = false;
-	kimchi.pointerLock.keydown = function (event) {
+	KIMCHI.pointerLock.keydownInProgress = false;
+	KIMCHI.pointerLock.keydown = function (event) {
 		// Request pointer lock only on keyup; otherwise, the continued Escape
 		// keydown event causes the pointer lock to disable immediately, even
 		// if one lets go of the Escape key asap. Also, the flag
-		// kimchi.pointerLock.keydownInProgress prevents multiple handlers of
+		// KIMCHI.pointerLock.keydownInProgress prevents multiple handlers of
 		// .one('keyup') from being binded.
 		if (event.which === 27) { // Esc
-			kimchi.pointerLock.keydownInProgress = true;
+			KIMCHI.pointerLock.keydownInProgress = true;
 			$(this).one('keyup', function (event) {
-				if (event.which === 27 && kimchi.pointerLock.keydownInProgress) {
-					kimchi.pointerLock.request();
-					kimchi.pointerLock.keydownInProgress = false;
+				if (event.which === 27 && KIMCHI.pointerLock.keydownInProgress) {
+					KIMCHI.pointerLock.request();
+					KIMCHI.pointerLock.keydownInProgress = false;
 				}
 			});
 		}
 	};
-	kimchi.pointerLock.click = function () {
-		kimchi.pointerLock.request();
+	KIMCHI.pointerLock.click = function () {
+		KIMCHI.pointerLock.request();
 	};
 
-	return kimchi;
-}(kimchi));
+	return KIMCHI;
+}(KIMCHI, jQuery));

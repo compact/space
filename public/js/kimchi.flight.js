@@ -1,67 +1,65 @@
 /**
- * kimchi.flight contains the different flight modes:
+ * KIMCHI.flight contains the different flight modes:
  *   free: User-controlled flight.
  *   auto: Automatically guided flight.
  */
 
-var kimchi = (function (kimchi) {
+var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	var $ = kimchi.jQuery, THREE = kimchi.THREE;
-
-	kimchi.flight = {};
-	kimchi.flight.mode = false; // possible values are 'free', 'auto', and false
+	KIMCHI.flight = {};
+	KIMCHI.flight.mode = false; // possible values are 'free', 'auto', and false
 
 
 
 	// free flight
-	kimchi.flight.free = {
+	KIMCHI.flight.free = {
 		'start': function () {
-			kimchi.pointerLock.unbind();
-			kimchi.$overlay.hide();
+			KIMCHI.pointerLock.unbind();
+			KIMCHI.$overlay.hide();
 			$('#hud1').show();
 
-			kimchi.clock.start();
-			kimchi.flight.mode = 'free';
-			kimchi.rendering.animate(kimchi.flight.free.animationFrame);
-			kimchi.controls.enable();
+			KIMCHI.clock.start();
+			KIMCHI.flight.mode = 'free';
+			KIMCHI.rendering.animate(KIMCHI.flight.free.animationFrame);
+			KIMCHI.controls.enable();
 		},
 		'stop': function () {
-			kimchi.controls.disable();
-			kimchi.flight.mode = false;
-			kimchi.clock.stop();
+			KIMCHI.controls.disable();
+			KIMCHI.flight.mode = false;
+			KIMCHI.clock.stop();
 
 			$('#hud1').hide();
-			kimchi.$overlay.show();
-			kimchi.nav.update();
+			KIMCHI.$overlay.show();
+			KIMCHI.nav.update();
 
-			kimchi.pointerLock.bind();
+			KIMCHI.pointerLock.bind();
 		},
 		'toggle': function (enable) {
 			if (enable) {
-				kimchi.flight.free.start();
+				KIMCHI.flight.free.start();
 			} else {
-				kimchi.flight.free.stop();
+				KIMCHI.flight.free.stop();
 			}
 		},
 		'animationFrame': function (delta) {
-			if (!kimchi.flight.free.colliding()) {
-				kimchi.controls.moveCamera(
+			if (!KIMCHI.flight.free.colliding()) {
+				KIMCHI.controls.moveCamera(
 					delta,
-					kimchi.flight.getTranslationSpeedMultiplier()
+					KIMCHI.flight.getTranslationSpeedMultiplier()
 				);
 			}
 
-			kimchi.space.move(delta);
-			kimchi.hud.update(delta);
-			kimchi.date.setDate(kimchi.date.getDate() + 1);
+			KIMCHI.space.move(delta);
+			KIMCHI.hud.update(delta);
+			KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
 		},
 		// Return whether the camera is colliding with an object along the current
 		// movement direction.
 		'colliding': function () {
 			var translationVector, raycaster, intersection;
 
-			translationVector = kimchi.controls.getLocalTranslationVector();
+			translationVector = KIMCHI.controls.getLocalTranslationVector();
 
 			// scaling may be necessary if translationVector's magnitude is much larger
 			// or smaller than the camera position
@@ -72,16 +70,16 @@ var kimchi = (function (kimchi) {
 			}
 
 			raycaster = new THREE.Raycaster(
-				kimchi.camera.position.clone(),
+				KIMCHI.camera.position.clone(),
 				// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
-				kimchi.camera.localToWorld(translationVector)
-					.sub(kimchi.camera.position),
-//			kimchi.camera.position.clone().sub(translationVector.applyMatrix4(kimchi.camera.matrix)),
+				KIMCHI.camera.localToWorld(translationVector)
+					.sub(KIMCHI.camera.position),
+//			KIMCHI.camera.position.clone().sub(translationVector.applyMatrix4(KIMCHI.camera.matrix)),
 				0,
-				kimchi.config.collisionDistance // TODO make this variably dependent on body radius
+				KIMCHI.config.collisionDistance // TODO make this variably dependent on body radius
 			);
 			intersection = raycaster.intersectObjects(
-				kimchi.space.getCollideableObject3Ds()
+				KIMCHI.space.getCollideableObject3Ds()
 			);
 			return intersection.length > 0;
 		}
@@ -89,9 +87,9 @@ var kimchi = (function (kimchi) {
 
 
 
-	kimchi.flight.auto = {
+	KIMCHI.flight.auto = {
 		'init': function () {
-			kimchi.nav.update(); // maybe shouldn't be here
+			KIMCHI.nav.update(); // maybe shouldn't be here
 
 			$('.nav').on('click', 'a', function (event) {
 				var name;
@@ -100,29 +98,29 @@ var kimchi = (function (kimchi) {
 				event.stopPropagation();
 
 				name = $(this).data('name');
-				if (typeof kimchi.space.bodies[name] === 'object') {
-					kimchi.flight.auto.flyTo(kimchi.space.bodies[name]);
+				if (typeof KIMCHI.space.bodies[name] === 'object') {
+					KIMCHI.flight.auto.flyTo(KIMCHI.space.bodies[name]);
 				} else { // TODO write a general function to get a body
-					console.log(name + ' not found in kimchi.flight.auto');
+					console.log(name + ' not found in KIMCHI.flight.auto');
 				}
 			});
 		},
 		'start': function () {
-			kimchi.$overlay.hide();
-			kimchi.clock.start();
-			kimchi.flight.mode = 'auto';
+			KIMCHI.$overlay.hide();
+			KIMCHI.clock.start();
+			KIMCHI.flight.mode = 'auto';
 		},
 		'stop': function () {
-			kimchi.clock.stop();
-			kimchi.flight.mode = false;
-			kimchi.notice.clear(); // TODO move this
-			kimchi.$overlay.show();
-			kimchi.nav.update();
+			KIMCHI.clock.stop();
+			KIMCHI.flight.mode = false;
+			KIMCHI.notice.clear(); // TODO move this
+			KIMCHI.$overlay.show();
+			KIMCHI.nav.update();
 		},
 		'flyTo': function (body) {
-			kimchi.notice.set('Flying to ' + body.name + '...');
-			kimchi.flight.auto.start();
-			kimchi.flight.auto.panTo(body);
+			KIMCHI.notice.set('Flying to ' + body.name + '...');
+			KIMCHI.flight.auto.start();
+			KIMCHI.flight.auto.panTo(body);
 			// translateTo(body) is called when panTo(body) ends
 			// stop() is called when translateTo(body) ends
 			// TODO make function queue for successive setTimeout() calls
@@ -130,20 +128,20 @@ var kimchi = (function (kimchi) {
 		'panTo': function (body) {
 			var initQuaternion, rotationMatrix, targetQuaternion, t;
 
-			initQuaternion = kimchi.camera.quaternion.clone();
+			initQuaternion = KIMCHI.camera.quaternion.clone();
 
 			rotationMatrix = new THREE.Matrix4();
 			rotationMatrix.lookAt(
-				kimchi.camera.position,
+				KIMCHI.camera.position,
 				body.mesh.position,
-				kimchi.camera.up
+				KIMCHI.camera.up
 			);
 
 			targetQuaternion = new THREE.Quaternion();
 			targetQuaternion.setFromRotationMatrix(rotationMatrix);
 
 			t = 0;
-			kimchi.rendering.animate(function (delta) {
+			KIMCHI.rendering.animate(function (delta) {
 				// avoid rounding imprecision because we want the final rotation to be
 				// centered exactly onto the target body (t = 1)
 				if (t > 1 && t < 1 + 0.05) {
@@ -151,34 +149,34 @@ var kimchi = (function (kimchi) {
 				}
 
 				if (t <= 1) {
-					kimchi.camera.quaternion.copy(
+					KIMCHI.camera.quaternion.copy(
 						initQuaternion.slerp(targetQuaternion, t)
 					);
-					kimchi.flight.auto.animationFrame(delta);
+					KIMCHI.flight.auto.animationFrame(delta);
 
 					t += 0.05;
 				} else {
-					kimchi.flight.auto.translateTo(body);
+					KIMCHI.flight.auto.translateTo(body);
 					return false; // stop
 				}
 			});
 		},
 		'translateTo': function (body) {
-			kimchi.rendering.animate(function (delta) {
-				if (THREE.Object3D.distance(kimchi.camera, body.mesh) >=
-						body.radius + kimchi.config.collisionDistance) {
-					kimchi.camera.translateZ(-kimchi.config.controls.zSpeed * delta *
-						kimchi.flight.getTranslationSpeedMultiplier([body.mesh]));
-					kimchi.flight.auto.animationFrame(delta);
+			KIMCHI.rendering.animate(function (delta) {
+				if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) >=
+						body.radius + KIMCHI.config.collisionDistance) {
+					KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
+						KIMCHI.flight.getTranslationSpeedMultiplier([body.mesh]));
+					KIMCHI.flight.auto.animationFrame(delta);
 				} else {
-					kimchi.flight.auto.stop();
+					KIMCHI.flight.auto.stop();
 				}
 			});
 		},
 		'animationFrame': function (delta) {
-			kimchi.space.update();
-			kimchi.hud.update(delta);
-//			kimchi.nav.update(); // TODO remove
+			KIMCHI.space.update();
+			KIMCHI.hud.update(delta);
+//			KIMCHI.nav.update(); // TODO remove
 		}
 	};
 
@@ -187,16 +185,16 @@ var kimchi = (function (kimchi) {
 	// Return a number for scaling the camera speed (in each direction) depending
 	// on how close the camera is to collideable objects. If the parameter is not
 	// given, consider all collideable objects.
-	kimchi.flight.getTranslationSpeedMultiplier = function (object3Ds) {
+	KIMCHI.flight.getTranslationSpeedMultiplier = function (object3Ds) {
 		var distances = [];
 
 		if (typeof object3Ds === 'undefined') {
-			object3Ds = kimchi.space.getCollideableObject3Ds();
+			object3Ds = KIMCHI.space.getCollideableObject3Ds();
 		}
 
-		// TODO maybe use kimchi.space.getBodiesByDistance() as a helper here
+		// TODO maybe use KIMCHI.space.getBodiesByDistance() as a helper here
 		$.each(object3Ds, function (i, object3D) {
-			distances.push(THREE.Object3D.distance(kimchi.camera, object3D));
+			distances.push(THREE.Object3D.distance(KIMCHI.camera, object3D));
 		});
 		distances.sort(function (a, b) { // sort numerically
 			return a - b;
@@ -206,5 +204,5 @@ var kimchi = (function (kimchi) {
 
 
 
-	return kimchi;
-}(kimchi));
+	return KIMCHI;
+}(KIMCHI, jQuery, THREE));

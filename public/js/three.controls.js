@@ -111,62 +111,72 @@
 
 	// speedMultiplier is delta, applies to all movements (translations and
 	// rotations
-	THREE.Controls.prototype.moveCamera = function (speedMultiplier, translationSpeedMultiplier) {
-		var translationVector = new THREE.Vector3(), angle = 0;
+	THREE.Controls.prototype.moveCamera = (function () {
+		var translationVector = new THREE.Vector3(), angle;
 
-		if (!this.enabled) {
-			return;
-		}
+		return function (speedMultiplier, translationSpeedMultiplier) {
+			translationVector.set(0, 0, 0);
+			angle = 0;
 
-		// translate
-		translationVector = this.getLocalTranslationVector();
-		this.camera.translateX(translationVector.x * this.options.strafeSpeed *
-			speedMultiplier * translationSpeedMultiplier);
-		this.camera.translateY(translationVector.y * this.options.strafeSpeed *
-			speedMultiplier * translationSpeedMultiplier);
-		this.camera.translateZ(translationVector.z * this.options.zSpeed *
-			speedMultiplier * translationSpeedMultiplier);
+			if (!this.enabled) {
+				return;
+			}
 
-		// rotate
-		if (this.states.rollLeft) {
-			angle -= this.options.rollSpeed * speedMultiplier;
-		}
-		if (this.states.rollRight) {
-			angle += this.options.rollSpeed * speedMultiplier;
-		}
-		this.camera.rotateOnAxis(THREE.unitVectors.z, angle);
-	};
+			// translate
+			translationVector = this.getLocalTranslationVector();
+			this.camera.translateX(translationVector.x * this.options.strafeSpeed *
+				speedMultiplier * translationSpeedMultiplier);
+			this.camera.translateY(translationVector.y * this.options.strafeSpeed *
+				speedMultiplier * translationSpeedMultiplier);
+			this.camera.translateZ(translationVector.z * this.options.zSpeed *
+				speedMultiplier * translationSpeedMultiplier);
+
+			// rotate
+			if (this.states.rollLeft) {
+				angle -= this.options.rollSpeed * speedMultiplier;
+			}
+			if (this.states.rollRight) {
+				angle += this.options.rollSpeed * speedMultiplier;
+			}
+			this.camera.rotateOnAxis(THREE.unitVectors.z, angle);
+		};
+	}());
 
 	// Return a Vector3 object corresponding to the current local movement
 	// direction(s). To check whether the camera is currently moving, call
 	// .getTranslationVector().length() > 0
-	THREE.Controls.prototype.getLocalTranslationVector = function () {
+	THREE.Controls.prototype.getLocalTranslationVector = (function () {
 		var vector = new THREE.Vector3();
 
-		if (!this.enabled) {
-			return vector;
-		}
+		return function () {
+			vector.set(0, 0, 0);
 
-		if (this.states.moveForward) {
-			vector.add(THREE.unitVectors.negZ);
-		}
-		if (this.states.moveBackward) {
-			vector.add(THREE.unitVectors.z);
-		}
-		if (this.states.moveLeft) {
-			vector.add(THREE.unitVectors.negX);
-		}
-		if (this.states.moveRight) {
-			vector.add(THREE.unitVectors.x);
-		}
-		if (this.states.moveUp) {
-			vector.add(THREE.unitVectors.y);
-		}
-		if (this.states.moveDown) {
-			vector.add(THREE.unitVectors.negY);
-		}
-		return vector;
-	};
+			if (!this.enabled) {
+				return vector;
+			}
+
+			if (this.states.moveForward) {
+				vector.add(THREE.unitVectors.negZ);
+			}
+			if (this.states.moveBackward) {
+				vector.add(THREE.unitVectors.z);
+			}
+			if (this.states.moveLeft) {
+				vector.add(THREE.unitVectors.negX);
+			}
+			if (this.states.moveRight) {
+				vector.add(THREE.unitVectors.x);
+			}
+			if (this.states.moveUp) {
+				vector.add(THREE.unitVectors.y);
+			}
+			if (this.states.moveDown) {
+				vector.add(THREE.unitVectors.negY);
+			}
+
+			return vector;
+		};
+	}());
 	// Not used.
 	THREE.Controls.prototype.getWorldTranslationVector = function () {
 		return this.camera.localToWorld(this.getLocalTranslationVector());

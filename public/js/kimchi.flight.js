@@ -56,33 +56,39 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 		},
 		// Return whether the camera is colliding with an object along the current
 		// movement direction.
-		'colliding': function () {
+		'colliding': (function () {
 			var translationVector, raycaster, intersection;
 
-			translationVector = KIMCHI.controls.getLocalTranslationVector();
+			raycaster = new THREE.Raycaster();
 
-			// scaling may be necessary if translationVector's magnitude is much larger
-			// or smaller than the camera position
-//		translationVector.multiplyScalar(1000);
+			return function () {
+				translationVector = KIMCHI.controls.getLocalTranslationVector();
 
-			if (translationVector.length() === 0) { // not moving, can't be colliding
-				return false;
-			}
+				// scaling may be necessary if translationVector's magnitude is much larger
+				// or smaller than the camera position
+	//		translationVector.multiplyScalar(1000);
 
-			raycaster = new THREE.Raycaster(
-				KIMCHI.camera.position.clone(),
-				// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
-				KIMCHI.camera.localToWorld(translationVector)
-					.sub(KIMCHI.camera.position),
-//			KIMCHI.camera.position.clone().sub(translationVector.applyMatrix4(KIMCHI.camera.matrix)),
-				0,
-				KIMCHI.config.collisionDistance // TODO make this variably dependent on body radius
-			);
-			intersection = raycaster.intersectObjects(
-				KIMCHI.space.getCollideableObject3Ds()
-			);
-			return intersection.length > 0;
-		}
+				if (translationVector.length() === 0) { // not moving, can't be colliding
+					return false;
+				}
+
+				raycaster.set(
+					KIMCHI.camera.position.clone(),
+					// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
+					KIMCHI.camera.localToWorld(translationVector)
+						.sub(KIMCHI.camera.position)
+//				KIMCHI.camera.position.clone().sub(translationVector.applyMatrix4(KIMCHI.camera.matrix)),
+				);
+
+				// TODO make this variably dependent on body radius
+				raycaster.far = KIMCHI.config.collisionDistance;
+
+				intersection = raycaster.intersectObjects(
+					KIMCHI.space.getCollideableObject3Ds()
+				);
+				return intersection.length > 0;
+			};
+		}())
 	};
 
 
@@ -125,42 +131,45 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			// stop() is called when translateTo(body) ends
 			// TODO make function queue for successive setTimeout() calls
 		},
-		'panTo': function (body) {
+		'panTo': (function () {
 			var initQuaternion, rotationMatrix, targetQuaternion, t;
 
-			initQuaternion = KIMCHI.camera.quaternion.clone();
-
 			rotationMatrix = new THREE.Matrix4();
-			rotationMatrix.lookAt(
-				KIMCHI.camera.position,
-				body.mesh.position,
-				KIMCHI.camera.up
-			);
-
 			targetQuaternion = new THREE.Quaternion();
-			targetQuaternion.setFromRotationMatrix(rotationMatrix);
 
-			t = 0;
-			KIMCHI.rendering.animate(function (delta) {
-				// avoid rounding imprecision because we want the final rotation to be
-				// centered exactly onto the target body (t = 1)
-				if (t > 1 && t < 1 + 0.05) {
-					t = 1;
-				}
+			return function (body) {
+				initQuaternion = KIMCHI.camera.quaternion.clone();
 
-				if (t <= 1) {
-					KIMCHI.camera.quaternion.copy(
-						initQuaternion.slerp(targetQuaternion, t)
-					);
-					KIMCHI.flight.auto.animationFrame(delta);
+				rotationMatrix.lookAt(
+					KIMCHI.camera.position,
+					body.mesh.position,
+					KIMCHI.camera.up
+				);
 
-					t += 0.05;
-				} else {
-					KIMCHI.flight.auto.translateTo(body);
-					return false; // stop
-				}
-			});
-		},
+				targetQuaternion.setFromRotationMatrix(rotationMatrix);
+
+				t = 0;
+				KIMCHI.rendering.animate(function (delta) {
+					// avoid rounding imprecision because we want the final rotation to be
+					// centered exactly onto the target body (t = 1)
+					if (t > 1 && t < 1 + 0.05) {
+						t = 1;
+					}
+
+					if (t <= 1) {
+						KIMCHI.camera.quaternion.copy(
+							initQuaternion.slerp(targetQuaternion, t)
+						);
+						KIMCHI.flight.auto.animationFrame(delta);
+
+						t += 0.05;
+					} else {
+						KIMCHI.flight.auto.translateTo(body);
+						return false; // stop
+					}
+				});
+			};
+		}()),
 		'translateTo': function (body) {
 			KIMCHI.rendering.animate(function (delta) {
 				if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) >=

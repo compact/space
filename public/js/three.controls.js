@@ -112,11 +112,13 @@
 	// speedMultiplier is delta, applies to all movements (translations and
 	// rotations
 	THREE.Controls.prototype.moveCamera = (function () {
-		var translationVector = new THREE.Vector3(), angle;
+		var translationVector = new THREE.Vector3(), angle, camera, options;
 
 		return function (speedMultiplier, translationSpeedMultiplier) {
 			translationVector.set(0, 0, 0);
 			angle = 0;
+			camera = this.camera;
+			options = this.options;
 
 			if (!this.enabled) {
 				return;
@@ -124,21 +126,21 @@
 
 			// translate
 			translationVector = this.getLocalTranslationVector();
-			this.camera.translateX(translationVector.x * this.options.strafeSpeed *
+			camera.translateX(translationVector.x * options.strafeSpeed *
 				speedMultiplier * translationSpeedMultiplier);
-			this.camera.translateY(translationVector.y * this.options.strafeSpeed *
+			camera.translateY(translationVector.y * options.strafeSpeed *
 				speedMultiplier * translationSpeedMultiplier);
-			this.camera.translateZ(translationVector.z * this.options.zSpeed *
+			camera.translateZ(translationVector.z * options.zSpeed *
 				speedMultiplier * translationSpeedMultiplier);
 
 			// rotate
 			if (this.states.rollLeft) {
-				angle -= this.options.rollSpeed * speedMultiplier;
+				angle -= options.rollSpeed * speedMultiplier;
 			}
 			if (this.states.rollRight) {
-				angle += this.options.rollSpeed * speedMultiplier;
+				angle += options.rollSpeed * speedMultiplier;
 			}
-			this.camera.rotateOnAxis(THREE.unitVectors.z, angle);
+			camera.rotateOnAxis(THREE.unitVectors.z, angle);
 		};
 	}());
 

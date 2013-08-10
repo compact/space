@@ -305,15 +305,19 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	// Return an array of all bodies sorted by distance from the camera.
 	KIMCHI.space.getBodiesByDistance = function () {
 		var bodies = [];
+
 		$.each(KIMCHI.space.bodies, function (name, body) {
 			bodies.push({
 				'name': name,
 				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
 			});
 		});
-		bodies.sort(function (body1, body2) { // sort numerically
+
+		// sort numerically
+		bodies.sort(function (body1, body2) {
 			return body1.distance - body2.distance;
 		});
+
 		return bodies;
 	};
 

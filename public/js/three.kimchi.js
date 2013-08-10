@@ -4,7 +4,9 @@
 (function ($, THREE) {
 	'use strict';
 
-	// "constant" vectors; don't use as objects that can be changed, such as location or rotation
+	// "Constant" vectors. Take care to not set other variables to these objects
+	// directly lest their coordinates change (for example, position or rotation).
+	// Clone them instead.
 	THREE.unitVectors = {
 		'x': new THREE.Vector3(1, 0, 0),
 		'y': new THREE.Vector3(0, 1, 0),

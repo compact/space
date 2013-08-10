@@ -1,5 +1,5 @@
 /**
- * three.js extensions for kimchi.
+ * three.js extensions for KIMCHI.
  */
 (function ($, THREE) {
 	'use strict';

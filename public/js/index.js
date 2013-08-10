@@ -3,7 +3,7 @@
  * Sometimes pointerlock is disabled on start, don't know why.
  */
 
-var KIMCHI = (function (KIMCHI, $, THREE) {
+(function (KIMCHI, $, THREE) {
 	'use strict';
 
 	$(function () {
@@ -81,6 +81,4 @@ KIMCHI.scene.add(m);
 		KIMCHI.flight.auto.init();
 		KIMCHI.notice.init();
 	});
-
-	return KIMCHI;
 }(KIMCHI, jQuery, THREE));

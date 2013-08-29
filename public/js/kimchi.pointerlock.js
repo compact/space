@@ -5,11 +5,11 @@
 var KIMCHI = (function (KIMCHI, $) {
 	'use strict';
 
-	KIMCHI.pointerLock = {};
+	var pointerLock = {};
 
 	// request pointer lock from the browser, called whenever the user enters free
 	// flight mode
-	KIMCHI.pointerLock.request = function () {
+	pointerLock.request = function () {
 		document.body.requestPointerLock();
 		console.log((new Date()) + ' pointer lock requested');
 		console.log(document.pointerLockElement ||
@@ -18,7 +18,7 @@ var KIMCHI = (function (KIMCHI, $) {
 	};
 
 	// has to be called once, before any pointer lock requests
-	KIMCHI.pointerLock.init = function () {
+	pointerLock.init = function () {
 		var havePointerLock, body, change, error;
 
 		havePointerLock = 'pointerLockElement' in document ||
@@ -55,39 +55,41 @@ var KIMCHI = (function (KIMCHI, $) {
 		document.addEventListener('webkitpointerlockerror', error, false);
 
 		// the initial flight state is false, so bind the relevant event handlers
-		KIMCHI.$overlay.on('click', KIMCHI.pointerLock.click);
-		KIMCHI.pointerLock.bind();
+		KIMCHI.$overlay.on('click', pointerLock.click);
+		pointerLock.bind();
 	};
 
 
 
 	// events
-	KIMCHI.pointerLock.bind = function () {
-		KIMCHI.$document.on('keydown', KIMCHI.pointerLock.keydown);
+	pointerLock.bind = function () {
+		KIMCHI.$document.on('keydown', pointerLock.keydown);
 	};
-	KIMCHI.pointerLock.unbind = function () {
-		KIMCHI.$document.off('keydown', KIMCHI.pointerLock.keydown);
+	pointerLock.unbind = function () {
+		KIMCHI.$document.off('keydown', pointerLock.keydown);
 	};
-	KIMCHI.pointerLock.keydownInProgress = false;
-	KIMCHI.pointerLock.keydown = function (event) {
+	pointerLock.keydownInProgress = false;
+	pointerLock.keydown = function (event) {
 		// Request pointer lock only on keyup; otherwise, the continued Escape
 		// keydown event causes the pointer lock to disable immediately, even
 		// if one lets go of the Escape key asap. Also, the flag
-		// KIMCHI.pointerLock.keydownInProgress prevents multiple handlers of
+		// pointerLock.keydownInProgress prevents multiple handlers of
 		// .one('keyup') from being binded.
 		if (event.which === 27) { // Esc
-			KIMCHI.pointerLock.keydownInProgress = true;
+			pointerLock.keydownInProgress = true;
 			$(this).one('keyup', function (event) {
-				if (event.which === 27 && KIMCHI.pointerLock.keydownInProgress) {
-					KIMCHI.pointerLock.request();
-					KIMCHI.pointerLock.keydownInProgress = false;
+				if (event.which === 27 && pointerLock.keydownInProgress) {
+					pointerLock.request();
+					pointerLock.keydownInProgress = false;
 				}
 			});
 		}
 	};
-	KIMCHI.pointerLock.click = function () {
-		KIMCHI.pointerLock.request();
+	pointerLock.click = function () {
+		pointerLock.request();
 	};
 
+	KIMCHI.pointerLock = pointerLock;
+
 	return KIMCHI;
-}(KIMCHI, jQuery));
+}(KIMCHI || {}, jQuery));

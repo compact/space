@@ -6,10 +6,10 @@
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	KIMCHI.space = {};
+	var space = {};
 
 	// raw data of each body
-	KIMCHI.space.data = [
+	space.data = [
 		{
 			'name': 'Sun',
 			'radius': 696000,
@@ -133,7 +133,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
 	 * texturePath: Optional path to the texture image. The default is name.jpg.
 	 */
-	KIMCHI.space.Body = function (options) {
+	space.Body = function (options) {
 		var length, curve;
 
 		$.extend(this, { // default options
@@ -198,27 +198,27 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	// contains instances of space.Body
-	KIMCHI.space.bodies = {};
-	KIMCHI.space.setBodies = function () {
-		$.each(KIMCHI.space.data, function (i, options) {
-			KIMCHI.space.bodies[options.name] = new KIMCHI.space.Body(options);
+	space.bodies = {};
+	space.setBodies = function () {
+		$.each(space.data, function (i, options) {
+			space.bodies[options.name] = new space.Body(options);
 		});
 	};
 
 
 
 	// return an array of Object3Ds objects for each spaces.bodies
-	KIMCHI.space.getObject3Ds = function () {
+	space.getObject3Ds = function () {
 		var objects = [];
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			objects.push(body.mesh, body.line, body.labelMesh);
 		});
 		return objects;
 	};
 	// returns an array of Mesh objects set to be collideable with the camera
-	KIMCHI.space.getCollideableObject3Ds = function () {
+	space.getCollideableObject3Ds = function () {
 		var object3Ds = [];
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			if (body.collideable) {
 				object3Ds.push(body.mesh);
 			}
@@ -230,19 +230,19 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	// update() updates the position of HTML elements which attach to Meshes
 	// move() updates the position of Meshes as well
-	KIMCHI.space.move = function (delta) { // TODO use delta
-		$.each(KIMCHI.space.bodies, function (name, body) {
+	space.move = function (delta) { // TODO use delta
+		$.each(space.bodies, function (name, body) {
 			var distance, scale;
 
 			// move the body mesh (custom function)
 			body.move();
 
-			KIMCHI.space.update();
+			space.update();
 		});
 	};
-	KIMCHI.space.update = function () {
+	space.update = function () {
 		// update the positioning of all elements that don't move in move()
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			var distance, scale, projector, label;
 
 			distance = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
@@ -303,10 +303,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	// Return an array of all bodies sorted by distance from the camera.
-	KIMCHI.space.getBodiesByDistance = function () {
+	space.getBodiesByDistance = function () {
 		var bodies = [];
 
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			bodies.push({
 				'name': name,
 				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
@@ -322,5 +322,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 
 
+
+	KIMCHI.space = space;
 	return KIMCHI;
-}(KIMCHI, $, THREE));
+}(KIMCHI || {}, $, THREE));

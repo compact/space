@@ -40,4 +40,4 @@ var KIMCHI = (function (KIMCHI, THREE) {
 	};
 
 	return KIMCHI;
-}(KIMCHI, THREE));
+}(KIMCHI || {}, THREE));

@@ -33,10 +33,10 @@
 
 		// add astronomical objects
 		KIMCHI.space.setBodies();
-		KIMCHI.scene.addMultiple(KIMCHI.space.getObject3Ds());
+		KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
 
 		// add background stars, an array of ParticleSystems
-		KIMCHI.scene.addMultiple(new THREE.Stars(KIMCHI.config.stars));
+		KIMCHI.scene.add(new THREE.Stars(KIMCHI.config.stars));
 /*var m = new THREE.Mesh(
 	new THREE.SphereGeometry(0.1, 45, 45),
 	new THREE.MeshBasicMaterial({

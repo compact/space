@@ -20,12 +20,20 @@
 		return object1.position.distanceTo(object2.position);
 	};
 
-	THREE.Object3D.prototype.addMultiple = function (objects) {
-		var self = this;
-		$.each(objects, function (i, object) {
-			self.add(object);
-		});
-	};
+	THREE.Object3D.prototype.add = (function () {
+		var addSingle = THREE.Object3D.prototype.add;
+		return function (param) {
+			var self = this;
+
+			if (Object.prototype.toString.call(param) === '[object Array]') { // add multiple Object3Ds
+				$.each(param, function (i, object) {
+					self.add(object);
+				});
+			} else { // add a single Object3D
+				addSingle.call(self, param);
+			}
+		};
+	}());
 
 	THREE.PerspectiveCamera.prototype.update = function (width, height) {
 		this.aspect = width / height;

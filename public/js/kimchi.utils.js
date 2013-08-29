@@ -34,10 +34,8 @@ Date.prototype.format = function () {
  *   return KIMCHI;
  * }(KIMCHI));
  */
-var KIMCHI = (function ($, THREE) {
+var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
-
-	var KIMCHI = {};
 
 
 
@@ -157,4 +155,4 @@ var KIMCHI = (function ($, THREE) {
 
 
 	return KIMCHI;
-}(jQuery, THREE));
+}(KIMCHI || {}, jQuery, THREE));

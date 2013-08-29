@@ -5,6 +5,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 * Contains astronomical bodies, which are represented by instances of the
 	 * {@link space.Body} class, and their associated Object3Ds.
 	 * @namespace space
+	 * @memberOf KIMCHI
 	 */
 	var space = {};
 	KIMCHI.space = space;

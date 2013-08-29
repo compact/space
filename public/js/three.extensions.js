@@ -4,9 +4,12 @@
 (function ($, THREE) {
 	'use strict';
 
-	// "Constant" vectors. Take care to not set other variables to these objects
-	// directly lest their coordinates change (for example, position or rotation).
-	// Clone them instead.
+	/**
+	 * "Constant" vectors. Take care to not set other variables to these objects
+	 *   directly lest their coordinates change (e.g. position or rotation). Clone
+	 *   them instead.
+	 * @memberOf THREE
+	 */
 	THREE.unitVectors = {
 		'x': new THREE.Vector3(1, 0, 0),
 		'y': new THREE.Vector3(0, 1, 0),
@@ -16,10 +19,22 @@
 		'negZ': new THREE.Vector3(0, 0, -1)
 	};
 
+	/**
+	 * @param    {THREE.Object3D} object1
+	 * @param    {THREE.Object3D} object2
+	 * @return   {Number}         The distance between the two objects.
+	 * @memberOf THREE
+	 */
 	THREE.Object3D.distance = function (object1, object2) {
 		return object1.position.distanceTo(object2.position);
 	};
 
+	/**
+	 * "Overload" the original function of THREE.Object3D.prototype.add.
+	 * @param {(THREE.Object3D|Array)} param
+	 *   Either an Object3D or an array of Object3Ds to be added.
+	 * @memberOf THREE
+	 */
 	THREE.Object3D.prototype.add = (function () {
 		var addSingle = THREE.Object3D.prototype.add;
 		return function (param) {
@@ -35,12 +50,22 @@
 		};
 	}());
 
+	/**
+	 * Update the camera given dimensions.
+	 * @param    {Number} width
+	 * @param    {Number} height
+	 * @memberOf THREE
+	 */
 	THREE.PerspectiveCamera.prototype.update = function (width, height) {
 		this.aspect = width / height;
 		this.updateProjectionMatrix();
 	};
 
-	// getInverse() also sets and requires a Matrix4
+	/**
+	 * We use this function instead of getInverse() because getInverse() also
+	 *   sets this and requires a Matrix4.
+	 * @returns {Matrix3} The inverse.
+	 */
 	THREE.Matrix3.prototype.inverse = (function () {
 		var determinant, e, inverse = new THREE.Matrix3();
 

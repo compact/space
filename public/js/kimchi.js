@@ -1,8 +1,3 @@
-/**
- * Bugs:
- * Sometimes pointerlock is disabled on start, don't know why.
- */
-
 (function (KIMCHI, $, THREE) {
 	'use strict';
 

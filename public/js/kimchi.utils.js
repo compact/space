@@ -1,3 +1,7 @@
+/** @namespace THREE */
+
+
+
 /** @namespace Math */
 /**
  * @param  {Number}  number         The number to round.
@@ -59,13 +63,17 @@ Date.prototype.format = function () {
  * <br>   KIMCHI.foo = ...;
  * <br>   return KIMCHI;
  * <br> }(KIMCHI));
+ * @namespace KIMCHI
  */
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
 
 
-	// functions for rendering, animating using the three.js renderer
+	/**
+	 * Functions for rendering and animating using the three.js renderer.
+	 * @memberOf KIMCHI
+	 */
 	KIMCHI.rendering = {
 		'render': function () {
 			KIMCHI.renderer.render(KIMCHI.scene, KIMCHI.camera);
@@ -89,7 +97,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	// hud
+	/**
+	 * Heads up display during free flight.
+	 * @memberOf KIMCHI
+	 */
 	KIMCHI.hud = {};
 	KIMCHI.hud.update = function (delta) {
 		var translation = KIMCHI.controls.getLocalTranslationVector();
@@ -122,9 +133,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 		}
 	};
 
-
-
-	// nav is the navigation that appears when free flight is paused
+	/**
+	 * The navigation that appears when free flight is paused.
+	 * @memberOf KIMCHI
+	 */
 	KIMCHI.nav = {};
 	KIMCHI.nav.update = function () {
 		KIMCHI.nav.updateFlyToList();
@@ -144,6 +156,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
+	/**
+	 * Camera and renderer dimensions.
+	 * @memberOf KIMCHI
+	 */
 	KIMCHI.size = {
 		'width': 0,
 		'height': 0,
@@ -164,7 +180,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	// a notice box that appears to users
+	/**
+	 * Notice box.
+	 * @memberOf KIMCHI
+	 */
 	KIMCHI.notice = {
 		'$notice': $(),
 		'init': function () {

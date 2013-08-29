@@ -4,6 +4,7 @@ var KIMCHI = (function (KIMCHI, THREE) {
 	/**
 	 * KIMCHI configuration options.
 	 * @namespace config
+	 * @memberOf KIMCHI
 	 */
 	KIMCHI.config = {
 		'debug': true,

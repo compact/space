@@ -4,6 +4,7 @@ var KIMCHI = (function (KIMCHI, $) {
 	/**
 	 * Pointer lock state (not controls, which are handled by three.controls.js).
 	 * @namespace pointerLock
+	 * @memberOf KIMCHI
 	 */
 	var pointerLock = {};
 	KIMCHI.pointerLock = pointerLock;

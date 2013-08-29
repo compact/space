@@ -7,6 +7,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 * <br> free: User-controlled flight.
 	 * <br> auto: Automatically guided flight.
 	 * @namespace flight
+	 * @memberOf KIMCHI
 	 */
 	KIMCHI.flight = flight;
 

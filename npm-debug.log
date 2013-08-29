@@ -1,0 +1,294 @@
+info it worked if it ends with ok
+verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'install' ]
+info using npm@1.1.4
+info using node@v0.6.19
+verbose config file /home/josh/.npmrc
+verbose config file /usr/etc/npmrc
+verbose config file /usr/share/npm/npmrc
+verbose caching /var/www/package.json
+verbose loadDefaults kimchi@0.0.1-5
+verbose readDependencies: using package.json deps
+verbose where, deps [ '/var/www',
+verbose where, deps   [ 'express', 'jade', 'html', 'mongoose', 'mongodb', 'passport' ] ]
+verbose from cache /var/www/package.json
+info preinstall kimchi@0.0.1-5
+verbose caching /var/www/node_modules/express/package.json
+verbose loadDefaults express@3.2.5
+verbose caching /var/www/node_modules/jade/package.json
+verbose loadDefaults jade@0.30.0
+verbose caching /var/www/node_modules/mongodb/package.json
+verbose loadDefaults mongodb@1.3.9
+verbose caching /var/www/node_modules/mongoose/package.json
+verbose loadDefaults mongoose@3.6.11
+verbose caching /var/www/node_modules/passport/package.json
+verbose loadDefaults passport@0.1.17
+verbose from cache /var/www/package.json
+verbose readDependencies: using package.json deps
+verbose from cache /var/www/node_modules/express/package.json
+verbose from cache /var/www/node_modules/jade/package.json
+verbose from cache /var/www/node_modules/mongodb/package.json
+verbose from cache /var/www/node_modules/mongoose/package.json
+verbose from cache /var/www/node_modules/passport/package.json
+verbose already installed in /var/www skipping mongodb@1.3.9
+verbose already installed in /var/www skipping passport@0.1.17
+verbose already installed in /var/www skipping express@3.2.5
+verbose already installed in /var/www skipping jade@*
+verbose cache add [ 'html@*', null ]
+silly cache add: name, spec, args [ undefined, 'html@*', [ 'html@*', null ] ]
+verbose parsed url { pathname: 'html@*', path: 'html@*', href: 'html@*' }
+silly cache add: name, spec, args [ 'html', '*', [ 'html', '*' ] ]
+verbose parsed url { pathname: '*', path: '*', href: '*' }
+verbose addNamed [ 'html', '*' ]
+verbose addNamed [ null, '' ]
+silly name, range, hasData [ 'html', '', false ]
+verbose raw, before any munging html
+verbose url resolving [ 'https://registry.npmjs.org/', './html' ]
+verbose url resolved https://registry.npmjs.org/html
+verbose etag "2ZMCLAPP0O0N6VLJ5M3TLFDBJ"
+http GET https://registry.npmjs.org/html
+verbose already installed in /var/www skipping mongoose@3.6.11
+http 304 https://registry.npmjs.org/html
+silly get cb [ 304,
+silly get cb   { server: 'CouchDB/1.3.1 (Erlang OTP/R15B03)',
+silly get cb     etag: '"2ZMCLAPP0O0N6VLJ5M3TLFDBJ"',
+silly get cb     date: 'Thu, 29 Aug 2013 20:59:00 GMT',
+silly get cb     'content-length': '0' } ]
+verbose etag html from cache
+silly name, range, hasData 2 [ 'html', '', true ]
+silly versions [ 'html',
+silly versions   [ '0.0.1', '0.0.2', '0.0.3', '0.0.4', '0.0.5', '0.0.6', '0.0.7' ] ]
+verbose bin dist [ '0.6-ares1.9.1-evundefined-openssl1.0.1c-v83.8.9.20-linux-x64-3.8.0-19-generic',
+verbose bin dist   { shasum: '572980bb55a2ff3fe92fb394723f04f9d48d3773',
+verbose bin dist     tarball: 'http://registry.npmjs.org/html/-/html-0.0.7.tgz' } ]
+verbose addRemoteTarball [ 'https://registry.npmjs.org/html/-/html-0.0.7.tgz',
+verbose addRemoteTarball   '572980bb55a2ff3fe92fb394723f04f9d48d3773' ]
+verbose mkdir (expected) error ENOENT, stat '/tmp/npm-1377809936332'
+verbose mkdir (expected) error ENOENT, stat '/tmp/npm-1377809936332/1377809936332-0.7446584636345506'
+verbose mkdir done: /tmp/npm-1377809936332/1377809936332-0.7446584636345506 755
+verbose fetch to /tmp/npm-1377809936332/1377809936332-0.7446584636345506/tmp.tgz
+http GET https://registry.npmjs.org/html/-/html-0.0.7.tgz
+http 200 https://registry.npmjs.org/html/-/html-0.0.7.tgz
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 28033
+info shasum 572980bb55a2ff3fe92fb394723f04f9d48d3773
+info shasum /tmp/npm-1377809936332/1377809936332-0.7446584636345506/tmp.tgz
+verbose mkdir (expected) error ENOENT, stat '/tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm'
+verbose mkdir done: /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm 755
+verbose unpack_ uid, gid [ 1000, 1000 ]
+verbose unpackTarget /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package
+silly gunzTarPerm modes [ '755', '644' ]
+silly afterUntar ok
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/package.json
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/.npmignore
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/readme.md
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/bin
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/bin/html.js
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/src
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/src/html.js
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/lib
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/lib/html.js
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/img
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/img/after.png
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/img/copyashtml.png
+silly asyncMap in gTP /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package/img/before.png
+verbose gunzed /tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package
+verbose rm'ed /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package
+verbose renamed [ '/tmp/npm-1377809936332/1377809936332-0.7446584636345506/___package.npm/package',
+verbose renamed   '/tmp/npm-1377809936332/1377809936332-0.7446584636345506/package' ]
+verbose caching /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package/package.json
+verbose loadDefaults html@0.0.7
+verbose tarball contents [ 'tmp.tgz', 'package' ]
+verbose from cache /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package/package.json
+verbose pack /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package
+verbose pack /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package /home/josh/.npm/html/0.0.7/package.tgz
+silly makeList /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package
+silly dir, dirLen [ '/tmp/npm-1377809936332/1377809936332-0.7446584636345506/package',
+silly dir, dirLen   64 ]
+verbose tarball /home/josh/.npm/html/0.0.7/package.tgz
+verbose parent /tmp/npm-1377809936332/1377809936332-0.7446584636345506/package
+verbose mkdir (expected) error ENOENT, stat '/home/josh/.npm/html/0.0.7/___package.npm'
+verbose mkdir done: /home/josh/.npm/html/0.0.7/___package.npm 755
+verbose unpack_ uid, gid [ 1000, 1000 ]
+verbose unpackTarget /home/josh/.npm/html/0.0.7/package
+silly gunzTarPerm modes [ '755', '644' ]
+silly afterUntar ok
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/package.json
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/.npmignore
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/readme.md
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/bin
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/bin/html.js
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/src
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/src/html.js
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/lib
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/lib/html.js
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/img
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/img/after.png
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/img/copyashtml.png
+silly asyncMap in gTP /home/josh/.npm/html/0.0.7/___package.npm/package/img/before.png
+verbose gunzed /home/josh/.npm/html/0.0.7/___package.npm/package
+verbose rm'ed /home/josh/.npm/html/0.0.7/package
+verbose renamed [ '/home/josh/.npm/html/0.0.7/___package.npm/package',
+verbose renamed   '/home/josh/.npm/html/0.0.7/package' ]
+verbose caching /home/josh/.npm/html/0.0.7/package/package.json
+verbose loadDefaults html@0.0.7
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 27941
+info shasum abf66ba0b126b54a32856ac390d8cd15cab9a121
+info shasum /home/josh/.npm/html/0.0.7/package.tgz
+verbose from cache /home/josh/.npm/html/0.0.7/package/package.json
+verbose chmod /home/josh/.npm/html/0.0.7/package.tgz 644
+verbose chown [ '/home/josh/.npm/html/0.0.7/package.tgz', 1000, 1000 ]
+silly resolved [ { name: 'html',
+silly resolved     version: '0.0.7',
+silly resolved     engines: [ 'node >=0.4.0', node: ' >=0.4.0' ],
+silly resolved     description: 'HTML pretty printer.',
+silly resolved     author: 
+silly resolved      { name: 'Max Ogden',
+silly resolved        email: 'max@maxogden.com',
+silly resolved        url: 'http://maxogden.com' },
+silly resolved     contributors: 
+silly resolved      [ { name: 'Nochum Sossonko', email: 'nsossonko@hotmail.com' },
+silly resolved        { name: 'Einar Lielmanis', email: 'elfz@laacz.lv' } ],
+silly resolved     keywords: 
+silly resolved      [ 'html',
+silly resolved        'tabifier',
+silly resolved        'beautifier',
+silly resolved        'prettyprinter',
+silly resolved        'prettifier',
+silly resolved        'pretty',
+silly resolved        'command',
+silly resolved        'shell' ],
+silly resolved     repository: 
+silly resolved      { type: 'git',
+silly resolved        url: 'git://github.com/maxogden/commonjs-html-prettyprinter.git' },
+silly resolved     bin: { html: './bin/html.js' },
+silly resolved     main: 'lib/html.js',
+silly resolved     _id: 'html@0.0.7',
+silly resolved     dependencies: {},
+silly resolved     devDependencies: {},
+silly resolved     optionalDependencies: {},
+silly resolved     _engineSupported: true,
+silly resolved     _npmVersion: '1.1.4',
+silly resolved     _nodeVersion: 'v0.6.19',
+silly resolved     _defaultsLoaded: true,
+silly resolved     dist: { shasum: 'abf66ba0b126b54a32856ac390d8cd15cab9a121' },
+silly resolved     _from: 'html@*',
+silly resolved     scripts: {} } ]
+info into /var/www html@0.0.7
+info installOne html@0.0.7
+verbose from cache /home/josh/.npm/html/0.0.7/package/package.json
+info unbuild /var/www/node_modules/html
+verbose mkdir (expected) error ENOENT, stat '/var/www/node_modules/___html.npm'
+verbose mkdir done: /var/www/node_modules/___html.npm 755
+verbose unpack_ uid, gid [ 1000, 1000 ]
+verbose unpackTarget /var/www/node_modules/html
+silly gunzTarPerm modes [ '755', '644' ]
+silly afterUntar ok
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/.npmignore
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/package.json
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/readme.md
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/bin
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/bin/html.js
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/img
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/img/after.png
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/img/before.png
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/img/copyashtml.png
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/lib
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/lib/html.js
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/src
+silly asyncMap in gTP /var/www/node_modules/___html.npm/package/src/html.js
+silly chmod package 755
+silly chmod .npmignore 755
+silly chmod package.json 755
+silly chmod readme.md 755
+silly chmod bin 755
+silly chmod html.js 755
+silly chmod img 755
+silly chmod after.png 755
+silly chmod before.png 755
+silly chmod copyashtml.png 755
+silly chmod lib 755
+silly chmod src 755
+silly chmod html.js 755
+silly chmod html.js 755
+verbose gunzed /var/www/node_modules/___html.npm/package
+verbose rm'ed /var/www/node_modules/html
+verbose renamed [ '/var/www/node_modules/___html.npm/package',
+verbose renamed   '/var/www/node_modules/html' ]
+verbose caching /var/www/node_modules/html/package.json
+verbose loadDefaults html@0.0.7
+info preinstall html@0.0.7
+verbose from cache /var/www/node_modules/html/package.json
+verbose readDependencies: using package.json deps
+verbose from cache /var/www/node_modules/html/package.json
+verbose readDependencies: using package.json deps
+silly resolved []
+verbose about to build /var/www/node_modules/html
+info build /var/www/node_modules/html
+verbose from cache /var/www/node_modules/html/package.json
+verbose linkStuff [ false, false, false, '/var/www/node_modules' ]
+info linkStuff html@0.0.7
+verbose linkBins html@0.0.7
+verbose bins linking [ { html: './bin/html.js' },
+verbose bins linking   '/var/www/node_modules/.bin',
+verbose bins linking   false ]
+verbose linkMans html@0.0.7
+verbose rebuildBundles html@0.0.7
+ERR! error installing html@0.0.7
+info unbuild /var/www/node_modules/html
+verbose from cache /var/www/node_modules/html/package.json
+info preuninstall html@0.0.7
+info uninstall html@0.0.7
+verbose unbuild html@0.0.7 [ true, '/var/www/node_modules', '/var/www/node_modules' ]
+verbose binRoot [ '/var/www/node_modules/.bin', { html: './bin/html.js' } ]
+info postuninstall html@0.0.7
+verbose installOne cb html@0.0.7
+ERR! Error: EROFS, symlink '../html/bin/html.js'
+ERR! You may report this log at:
+ERR!     <http://bugs.debian.org/npm>
+ERR! or use
+ERR!     reportbug --attach /var/www/npm-debug.log npm
+ERR! 
+ERR! System Linux 3.8.0-19-generic
+ERR! command "/usr/bin/nodejs" "/usr/bin/npm" "install"
+ERR! cwd /var/www
+ERR! node -v v0.6.19
+ERR! npm -v 1.1.4
+ERR! path ../html/bin/html.js
+ERR! code EROFS
+ERR! message EROFS, symlink '../html/bin/html.js'
+ERR! errno {}
+verbose exit [ 1, true ]

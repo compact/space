@@ -1,4 +1,12 @@
-// precision is the number of decimals
+/** @namespace Math */
+/**
+ * @param  {Number}  number         The number to round.
+ * @param  {Number}  precision      The number of decimal places to round to.
+ * @param  {Boolean} trailingZeroes Whether to include trailing zeroes.
+ *                                    Defaults true.
+ * @return {Number}                 The rounded result..
+ * @memberOf Math
+ */
 Math.roundDecimals = function (number, precision, trailingZeroes) {
 	var multiplier, result;
 	multiplier = Math.pow(10, precision);
@@ -8,7 +16,14 @@ Math.roundDecimals = function (number, precision, trailingZeroes) {
 	}
 	return result;
 };
-Math.roundForUser = function (number) {
+/**
+ * Round the given number "nicely", as in determine the number of decimals based
+ * on the number of digits.
+ * @param  {Number} number The number to round.
+ * @return {Number}        The rounded result.
+ * @memberOf Math
+ */
+Math.roundNicely = function (number) {
 	if (number < 1) {
 		return Math.roundDecimals(number, 2);
 	} else if (number < 10) {
@@ -18,10 +33,22 @@ Math.roundForUser = function (number) {
 	}
 };
 
+
+
+/** @namespace Date */
+/**
+ * Month Strings for {@link Date.prototype.format}.
+ * @memberOf Date
+ */
 Date.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
 	'Oct', 'Nov', 'Dec'];
+/**
+ * @return {String} Date custom formatted for the KIMCHI hud.
+ * @memberOf Date
+ */
 Date.prototype.format = function () {
-	return Date.months[this.getMonth()] + ' ' + this.getDate() + ', ' + this.getFullYear();
+	return Date.months[this.getMonth()] + ' ' + this.getDate() + ', ' +
+		this.getFullYear();
 };
 
 
@@ -110,7 +137,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			$('#nav-fly-to').append(
 				$('<li>').append(
 					$('<a>').text(body.name).data('name', body.name),
-					$('<span>').text(' (' + Math.roundForUser(body.distance) + ' AU)')
+					$('<span>').text(' (' + Math.roundNicely(body.distance) + ' AU)')
 				)
 			);
 		});

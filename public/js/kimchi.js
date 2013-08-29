@@ -18,7 +18,7 @@
 		// camera: don't use OrthographicCamera because it lacks perspective
 		KIMCHI.camera = new THREE.PerspectiveCamera(
 			KIMCHI.config.camera.fov,
-			1,
+			1, // placeholder, set with KIMCHI.size.init()
 			KIMCHI.config.camera.near,
 			KIMCHI.config.camera.far
 		);

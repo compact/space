@@ -55,11 +55,10 @@ Date.prototype.format = function () {
 
 /**
  * Extensible module for KIMCHI. Extend like this:
- *
- * var KIMCHI = (function (KIMCHI) {
- *   KIMCHI.foo = ...;
- *   return KIMCHI;
- * }(KIMCHI));
+ * <br> var KIMCHI = (function (KIMCHI) {
+ * <br>   KIMCHI.foo = ...;
+ * <br>   return KIMCHI;
+ * <br> }(KIMCHI));
  */
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';

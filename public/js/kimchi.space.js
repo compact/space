@@ -127,16 +127,19 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Class for astronomical bodies. All spheres for now.
-	 * @param {Object} options
-	 *   name: Required. Displayed to users.<br>
-	 *   radius: In km.<br>
-	 *   position: Vector3 of the body's initial position, in AU. Not to be
-	 *     confused with Mesh.position, which gives the current position.<br>
-	 *   rotation: Vector3 of the body's initial Euler rotation.<br>
-	 *   visibleDistance: How far away the text mesh remains visible.
-	 *     TODO rename to labelMeshDistance or something.<br>
-	 *   move: Optional. Given an Object3D, perform rotations and revolutions.<br>
-	 *   texturePath: Optional path to the texture image. The default is name.jpg.
+	 * @param {Object} options Options.
+	 * <br> name:            Required. Displayed to users.
+	 * <br> radius:          In km.
+	 * <br> position:        Vector3 of the body's initial position, in AU. Not to
+	 *                       be confused with Mesh.position, which gives the
+	 *                       current position.
+	 * <br> rotation:        Vector3 of the body's initial Euler rotation.
+	 * <br> visibleDistance: How far away the text mesh remains visible.
+	 * <br>                  TODO rename to labelMeshDistance or something.
+	 * <br> move:            Optional. Given an Object3D, perform rotations and
+	 *                       revolutions.
+	 * <br> texturePath:     Optional path to the texture image. Defaults to
+	 *                       'name.jpg'.
 	 * @memberOf space
 	 */
 	space.Body = function (options) {

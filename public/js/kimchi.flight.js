@@ -3,9 +3,9 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	var flight = {};
 	/**
-	 * The different flight modes:<br>
-	 *   free: User-controlled flight.<br>
-	 *   auto: Automatically guided flight.
+	 * The different flight modes:
+	 * <br> free: User-controlled flight.
+	 * <br> auto: Automatically guided flight.
 	 * @namespace flight
 	 */
 	KIMCHI.flight = flight;

@@ -26,7 +26,7 @@
 			var self = this;
 
 			if (Object.prototype.toString.call(param) === '[object Array]') { // add multiple Object3Ds
-				$.each(param, function (i, object) {
+				_.forEach(param, function (object, i) {
 					self.add(object);
 				});
 			} else { // add a single Object3D
@@ -112,7 +112,7 @@
 	THREE.Curve.prototype.createLine = function (options) {
 		var curvePath, geometry, line;
 
-		options = $.extend({
+		options = _.assign({
 			'position': new THREE.Vector3(),
 			'rotation': new THREE.Euler(),
 			'color': 0x888888,

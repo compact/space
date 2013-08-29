@@ -203,8 +203,16 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	// contains instances of space.Body
+	/**
+	 * Contains instances of space.Body
+	 * @memberOf  space
+	 */
 	space.bodies = {};
+
+	/**
+	 * Populate {@link space.bodies}.
+	 * @memberOf  space
+	 */
 	space.setBodies = function () {
 		$.each(space.data, function (i, options) {
 			space.bodies[options.name] = new space.Body(options);

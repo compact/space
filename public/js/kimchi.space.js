@@ -234,6 +234,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 		});
 		return object3Ds;
 	};
+
 	/**
 	 * @returns {Array} Object3Ds set to be collideable with the camera.
 	 * @memberOf space
@@ -301,33 +302,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 					);
 				body.labelMesh.position.copy(w);//.add(x);
 			}
-
-/*
-			// overlay text labels on top of the canvas
-			if (distance > body.visibleDistance) { // too far away
-				body.$label.hide();
-			} else {
-				projector = new THREE.Projector();
-				label = {};
-				label.width = body.$label.outerWidth();
-				label.height = body.$label.outerHeight();
-				label.position = projector.projectVector(body.mesh.position.clone(), KIMCHI.camera); // [-1, -1] to [1, 1]
-				label.left = (label.position.x + 1) / 2 * KIMCHI.size.width;
-				label.left -= label.width / 2; // center over body
-				label.top = (1 - label.position.y) / 2 * KIMCHI.size.height;
-				label.top -= label.height / 2;
-
-				if (label.left < -label.width || label.left > KIMCHI.size.width ||
-						label.top < -label.height || label.top > KIMCHI.size.height) {
-					// the body is not visible on screen
-					body.$label.hide();
-				} else {
-					body.$label.css({
-						'left': label.left,
-						'top': label.top,
-					}).show();
-				}
-			}*/
 		});
 	};
 

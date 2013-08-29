@@ -1,16 +1,15 @@
-
 /**
  * Module dependencies.
  */
-
- // push test;
 
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
   , mongoose = require('mongoose')
-  , passport = require('passport');
+  , passport = require('passport')
+  , docs = require('./routes/docs')
+  , db = require('./modules/db')(mongoose);
 
 var app = express();
 
@@ -32,16 +31,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-mongoose.connect('mongodb://kimchi:croshluison@ds029658.mongolab.com:29658/kimchi');
-var db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-  console.log("db connection worked");
-});
-
+// route maps
 app.get('/', routes.index);
+app.get('/docs', docs.index);
 
+//init server
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

@@ -14,7 +14,7 @@ var KIMCHI = (function (KIMCHI, $) {
 	 * @memberOf pointerLock
 	 */
 	pointerLock.request = function () {
-		document.body.requestPointerLock();
+		pointerLock.requestPointerLock.call(document.body);
 		console.log((new Date()) + ' pointer lock requested');
 		console.log(document.pointerLockElement ||
 				document.mozPointerLockElement ||
@@ -39,9 +39,12 @@ var KIMCHI = (function (KIMCHI, $) {
 
 		body = document.body;
 
-		// used in request()
-		// don't set this function to another var since the caller has to be body
-		body.requestPointerLock = body.requestPointerLock ||
+		/**
+		 * The browser's requestPointerLock function, used in
+		 * {@link pointerLock.request}.
+		 * @memberOf pointerLock
+		 */
+		pointerLock.requestPointerLock = body.requestPointerLock ||
 			body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
 		change = function () {

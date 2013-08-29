@@ -1,7 +1,3 @@
-/** @namespace THREE */
-
-
-
 /** @namespace Math */
 /**
  * @param  {Number}  number         The number to round.

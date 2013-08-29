@@ -4,8 +4,9 @@
 	/**
 	 * Based on PointerLockControls.js.
 	 * Requires THREE.unitVectors, as defined in three.extensions.js.
-	 * @author mrdoob / http://mrdoob.com/ Edited by Chris.
-	 * @memberOf THREE
+	 * @author    mrdoob / http://mrdoob.com/ Edited by Chris.
+	 * @namespace THREE.Controls
+	 * @memberOf  THREE
 	 */
 	THREE.Controls = function (camera, options) {
 		var self = this;
@@ -73,6 +74,12 @@
 		};
 	};
 
+
+
+	/**
+	 * Reset all movement states to false.
+	 * @memberOf THREE.Controls
+	 */
 	THREE.Controls.prototype.resetStates = function () {
 		this.states = {
 			'moveForward': false,
@@ -86,8 +93,18 @@
 		};
 	};
 
-	// enable/disable
+
+
+	/**
+	 * Whether the controls are currently enabled.
+	 * @memberOf THREE.Controls
+	 */
 	THREE.Controls.prototype.enabled = false;
+
+	/**
+	 * Enable the controls.
+	 * @memberOf THREE.Controls
+	 */
 	THREE.Controls.prototype.enable = function () {
 		this.$document.on({
 			'keydown': this.events.keydown,
@@ -99,6 +116,11 @@
 
 		this.enabled = true;
 	};
+
+	/**
+	 * Disable the controls.
+	 * @memberOf THREE.Controls
+	 */
 	THREE.Controls.prototype.disable = function () {
 		this.resetStates();
 		this.$document.off({
@@ -109,8 +131,16 @@
 		this.enabled = false;
 	};
 
-	// speedMultiplier is delta, applies to all movements (translations and
-	// rotations
+
+
+	/**
+	 * Move the camera based on the current states.
+	 * @param    {Number} speedMultiplier            Delta which applies to all
+	 *   movements (both translations and rotations).
+	 * @param    {Number} translationSpeedMultiplier Additional multiplier which
+	 *   applies only to translations.
+	 * @memberOf THREE.Controls
+	 */
 	THREE.Controls.prototype.moveCamera = (function () {
 		var translationVector = new THREE.Vector3(), angle, camera, options;
 
@@ -144,9 +174,15 @@
 		};
 	}());
 
-	// Return a Vector3 object corresponding to the current local movement
-	// direction(s). To check whether the camera is currently moving, call
-	// .getTranslationVector().length() > 0
+
+
+	/**
+	 * To check whether the camera is currently moving, check
+	 *   .getTranslationVector().length() > 0.
+	 * @returns  {THREE.Vector3} A vector corresponding to the current local
+	 *                           movement direction(s).
+	 * @memberOf THREE.Controls
+	 */
 	THREE.Controls.prototype.getLocalTranslationVector = (function () {
 		var vector = new THREE.Vector3();
 
@@ -179,7 +215,12 @@
 			return vector;
 		};
 	}());
-	// Not used.
+
+	/**
+	 * Not used; can delete.
+	 * @returns  {THREE.Vector3}
+	 * @memberOf THREE.Controls
+	 */
 	THREE.Controls.prototype.getWorldTranslationVector = function () {
 		return this.camera.localToWorld(this.getLocalTranslationVector());
 	};

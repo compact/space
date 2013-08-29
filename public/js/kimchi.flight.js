@@ -209,7 +209,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 		}
 
 		// TODO maybe use KIMCHI.space.getBodiesByDistance() as a helper here
-		_.forEach(object3Ds, function (object3D, i) {
+		_.forEach(object3Ds, function (object3D) {
 			distances.push(THREE.Object3D.distance(KIMCHI.camera, object3D));
 		});
 		distances.sort(function (a, b) { // sort numerically

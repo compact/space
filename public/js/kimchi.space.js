@@ -214,7 +214,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 * @memberOf space
 	 */
 	space.init = function () {
-		_.forEach(space.data, function (options, i) {
+		_.forEach(space.data, function (options) {
 			space.bodies[options.name] = new space.Body(options);
 		});
 	};

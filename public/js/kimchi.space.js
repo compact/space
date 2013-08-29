@@ -1,14 +1,18 @@
-/**
- * KIMCHI.space contains astronomical bodies (called 'bodies' for short) and
- * their Object3Ds.
- */
-
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
+	/**
+	 * Contains astronomical bodies, which are represented by instances of the
+	 * space.Body class, and their associated Object3Ds.
+	 * @namespace  space
+	 */
 	var space = {};
+	KIMCHI.space = space;
 
-	// raw data of each body
+	/**
+	 * Raw data for each body, to be passed into the space.Body() constructor.
+	 * @memberOf  space
+	 */
 	space.data = [
 		{
 			'name': 'Sun',
@@ -123,15 +127,17 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	/**
 	 * Class for astronomical bodies. All spheres for now.
 	 * Currently not extensible; set the functions in the prototype to do that.
-	 * name: Required. Displayed to users.
-	 * radius: In km.
-	 * position: Vector3 of the body's initial position, in AU. Not to be
-	 *   confused with Mesh.position, which gives the current position.
-	 * rotation: Vector3 of the body's initial Euler rotation.
-	 * visibleDistance: How far away the text mesh remains visible.
-	 *   TODO rename to labelMeshDistance or something.
-	 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
-	 * texturePath: Optional path to the texture image. The default is name.jpg.
+	 * @param {Object} options
+	 *   name: Required. Displayed to users.<br>
+	 *   radius: In km.<br>
+	 *   position: Vector3 of the body's initial position, in AU. Not to be
+	 *     confused with Mesh.position, which gives the current position.<br>
+	 *   rotation: Vector3 of the body's initial Euler rotation.<br>
+	 *   visibleDistance: How far away the text mesh remains visible.
+	 *     TODO rename to labelMeshDistance or something.<br>
+	 *   move: Optional. Given an Object3D, perform rotations and revolutions.<br>
+	 *   texturePath: Optional path to the texture image. The default is name.jpg.
+	 * @memberOf  space
 	 */
 	space.Body = function (options) {
 		var length, curve;
@@ -323,6 +329,5 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	KIMCHI.space = space;
 	return KIMCHI;
 }(KIMCHI || {}, $, THREE));

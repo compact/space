@@ -25,18 +25,22 @@
     
     <section>
         <article>
-            <pre class="prettyprint source"><code>/**
- * KIMCHI.space contains astronomical bodies (called 'bodies' for short) and
- * their Object3Ds.
- */
-
-var KIMCHI = (function (KIMCHI, $, THREE) {
+            <pre class="prettyprint source"><code>var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	KIMCHI.space = {};
+	/**
+	 * Contains astronomical bodies, which are represented by instances of the
+	 * space.Body class, and their associated Object3Ds.
+	 * @namespace  space
+	 */
+	var space = {};
+	KIMCHI.space = space;
 
-	// raw data of each body
-	KIMCHI.space.data = [
+	/**
+	 * Raw data for each body, to be passed into the space.Body() constructor.
+	 * @memberOf  space
+	 */
+	space.data = [
 		{
 			'name': 'Sun',
 			'radius': 696000,
@@ -150,17 +154,19 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	/**
 	 * Class for astronomical bodies. All spheres for now.
 	 * Currently not extensible; set the functions in the prototype to do that.
-	 * name: Required. Displayed to users.
-	 * radius: In km.
-	 * position: Vector3 of the body's initial position, in AU. Not to be
-	 *   confused with Mesh.position, which gives the current position.
-	 * rotation: Vector3 of the body's initial Euler rotation.
-	 * visibleDistance: How far away the text mesh remains visible.
-	 *   TODO rename to labelMeshDistance or something.
-	 * move: Optional. Given an Object3D (Mesh), perform rotations and revolutions.
-	 * texturePath: Optional path to the texture image. The default is name.jpg.
+	 * @param {Object} options
+	 *   name: Required. Displayed to users.&lt;br>
+	 *   radius: In km.&lt;br>
+	 *   position: Vector3 of the body's initial position, in AU. Not to be
+	 *     confused with Mesh.position, which gives the current position.&lt;br>
+	 *   rotation: Vector3 of the body's initial Euler rotation.&lt;br>
+	 *   visibleDistance: How far away the text mesh remains visible.
+	 *     TODO rename to labelMeshDistance or something.&lt;br>
+	 *   move: Optional. Given an Object3D, perform rotations and revolutions.&lt;br>
+	 *   texturePath: Optional path to the texture image. The default is name.jpg.
+	 * @memberOf  space
 	 */
-	KIMCHI.space.Body = function (options) {
+	space.Body = function (options) {
 		var length, curve;
 
 		$.extend(this, { // default options
@@ -225,27 +231,27 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	// contains instances of space.Body
-	KIMCHI.space.bodies = {};
-	KIMCHI.space.setBodies = function () {
-		$.each(KIMCHI.space.data, function (i, options) {
-			KIMCHI.space.bodies[options.name] = new KIMCHI.space.Body(options);
+	space.bodies = {};
+	space.setBodies = function () {
+		$.each(space.data, function (i, options) {
+			space.bodies[options.name] = new space.Body(options);
 		});
 	};
 
 
 
 	// return an array of Object3Ds objects for each spaces.bodies
-	KIMCHI.space.getObject3Ds = function () {
+	space.getObject3Ds = function () {
 		var objects = [];
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			objects.push(body.mesh, body.line, body.labelMesh);
 		});
 		return objects;
 	};
 	// returns an array of Mesh objects set to be collideable with the camera
-	KIMCHI.space.getCollideableObject3Ds = function () {
+	space.getCollideableObject3Ds = function () {
 		var object3Ds = [];
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			if (body.collideable) {
 				object3Ds.push(body.mesh);
 			}
@@ -257,19 +263,19 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	// update() updates the position of HTML elements which attach to Meshes
 	// move() updates the position of Meshes as well
-	KIMCHI.space.move = function (delta) { // TODO use delta
-		$.each(KIMCHI.space.bodies, function (name, body) {
+	space.move = function (delta) { // TODO use delta
+		$.each(space.bodies, function (name, body) {
 			var distance, scale;
 
 			// move the body mesh (custom function)
 			body.move();
 
-			KIMCHI.space.update();
+			space.update();
 		});
 	};
-	KIMCHI.space.update = function () {
+	space.update = function () {
 		// update the positioning of all elements that don't move in move()
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			var distance, scale, projector, label;
 
 			distance = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
@@ -330,10 +336,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	// Return an array of all bodies sorted by distance from the camera.
-	KIMCHI.space.getBodiesByDistance = function () {
+	space.getBodiesByDistance = function () {
 		var bodies = [];
 
-		$.each(KIMCHI.space.bodies, function (name, body) {
+		$.each(space.bodies, function (name, body) {
 			bodies.push({
 				'name': name,
 				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
@@ -349,8 +355,9 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 
 
+
 	return KIMCHI;
-}(KIMCHI, $, THREE));</code></pre>
+}(KIMCHI || {}, $, THREE));</code></pre>
         </article>
     </section>
 
@@ -360,13 +367,13 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Global</h3><ul><li><a href="global.html#KIMCHI">KIMCHI</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="space.html">space</a></li></ul><h3>Global</h3><ul><li><a href="global.html#KIMCHI">KIMCHI</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Aug 29 2013 00:32:05 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Aug 29 2013 14:30:54 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

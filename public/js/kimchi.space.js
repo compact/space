@@ -3,15 +3,16 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Contains astronomical bodies, which are represented by instances of the
-	 * space.Body class, and their associated Object3Ds.
+	 * {@link space.Body} class, and their associated Object3Ds.
 	 * @namespace  space
 	 */
 	var space = {};
 	KIMCHI.space = space;
 
 	/**
-	 * Raw data for each body, to be passed into the space.Body() constructor.
-	 * @memberOf  space
+	 * Raw data for each body, to be passed into the {@link space.Body}
+	 * constructor.
+	 * @memberOf space
 	 */
 	space.data = [
 		{
@@ -126,7 +127,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Class for astronomical bodies. All spheres for now.
-	 * Currently not extensible; set the functions in the prototype to do that.
 	 * @param {Object} options
 	 *   name: Required. Displayed to users.<br>
 	 *   radius: In km.<br>
@@ -137,7 +137,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 *     TODO rename to labelMeshDistance or something.<br>
 	 *   move: Optional. Given an Object3D, perform rotations and revolutions.<br>
 	 *   texturePath: Optional path to the texture image. The default is name.jpg.
-	 * @memberOf  space
+	 * @memberOf space
 	 */
 	space.Body = function (options) {
 		var length, curve;
@@ -177,7 +177,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			'lineSegments': KIMCHI.config.orbits.lineSegments,
 		});
 
-		/**
+		/***
 		 * Create a Mesh for the text label. We could do
 		 *   this.mesh.add(this.labelMesh);
 		 * but then the text Mesh rotates with the body and it is nontrivial to
@@ -204,14 +204,14 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	/**
-	 * Contains instances of space.Body
-	 * @memberOf  space
+	 * Contains instances of {@link space.Body}.
+	 * @memberOf space
 	 */
 	space.bodies = {};
 
 	/**
 	 * Populate {@link space.bodies}.
-	 * @memberOf  space
+	 * @memberOf space
 	 */
 	space.init = function () {
 		$.each(space.data, function (i, options) {
@@ -221,15 +221,23 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	// return an array of Object3Ds objects for each spaces.bodies
+	/**
+	 * @returns {Array} Object3Ds from {@link space.bodies}. Note that each
+	 *   {@link space.Body} may have more than one Object3D, e.g. for orbit lines
+	 *   and text labels.
+	 * @memberOf space
+	 */
 	space.getObject3Ds = function () {
-		var objects = [];
+		var object3Ds = [];
 		$.each(space.bodies, function (name, body) {
-			objects.push(body.mesh, body.line, body.labelMesh);
+			object3Ds.push(body.mesh, body.line, body.labelMesh);
 		});
-		return objects;
+		return object3Ds;
 	};
-	// returns an array of Mesh objects set to be collideable with the camera
+	/**
+	 * @returns {Array} Object3Ds set to be collideable with the camera.
+	 * @memberOf space
+	 */
 	space.getCollideableObject3Ds = function () {
 		var object3Ds = [];
 		$.each(space.bodies, function (name, body) {
@@ -242,20 +250,26 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	// update() updates the position of HTML elements which attach to Meshes
-	// move() updates the position of Meshes as well
-	space.move = function (delta) { // TODO use delta
+	/**
+	 * Move the {@link space.bodies}. TODO use delta
+	 * @memberOf space
+	 */
+	space.moveBodies = function (delta) {
 		$.each(space.bodies, function (name, body) {
-			var distance, scale;
-
 			// move the body mesh (custom function)
 			body.move();
 
-			space.update();
+			space.moveBodyChildren();
 		});
 	};
-	space.update = function () {
-		// update the positioning of all elements that don't move in move()
+	/**
+	 * Without moving the {@link space.Body} Meshes themselves, update the
+	 * visibility, position, and size of all Object3Ds associated with the
+	 * {@link space.bodies} (such as text label Meshes). This function should be
+	 * called whenever the camera moves.
+	 * @memberOf space
+	 */
+	space.moveBodyChildren = function () {
 		$.each(space.bodies, function (name, body) {
 			var distance, scale, projector, label;
 
@@ -316,7 +330,12 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	// Return an array of all bodies sorted by distance from the camera.
+	/**
+	 * @returns {Array} All bodies sorted by current distance from the camera.
+	 *   Each element is not a {@link space.Body}, but rather an object with
+	 *   properties 'name' and 'distance'.
+	 * @memberOf space
+	 */
 	space.getBodiesByDistance = function () {
 		var bodies = [];
 

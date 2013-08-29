@@ -50,7 +50,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 				);
 			}
 
-			KIMCHI.space.move(delta);
+			KIMCHI.space.moveBodies(delta);
 			KIMCHI.hud.update(delta);
 			KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
 		},
@@ -183,7 +183,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			});
 		},
 		'animationFrame': function (delta) {
-			KIMCHI.space.update();
+			KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
 			KIMCHI.hud.update(delta);
 //			KIMCHI.nav.update(); // TODO remove
 		}

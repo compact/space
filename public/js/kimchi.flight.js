@@ -1,13 +1,19 @@
-/**
- * KIMCHI.flight contains the different flight modes:
- *   free: User-controlled flight.
- *   auto: Automatically guided flight.
- */
+
 
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
 	var flight = {};
+	/**
+	 * The different flight modes:<br>
+	 *   free: User-controlled flight.<br>
+	 *   auto: Automatically guided flight.
+	 * @namespace flight
+	 */
+	KIMCHI.flight = flight;
+
+
+
 	flight.mode = false; // possible values are 'free', 'auto', and false
 
 
@@ -213,6 +219,5 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	KIMCHI.flight = flight;
 	return KIMCHI;
 }(KIMCHI || {}, jQuery, THREE));

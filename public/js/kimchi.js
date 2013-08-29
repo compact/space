@@ -64,7 +64,7 @@ KIMCHI.scene.add(m);
 
 
 		// initialize camera position and rotation
-		KIMCHI.camera.position.copy(KIMCHI.config.initVector);
+		KIMCHI.camera.position.copy(KIMCHI.config.camera.initialPosition);
 		KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
 		// render() has to be called to set the camera position for objects and
 		// elements to appear in animate()

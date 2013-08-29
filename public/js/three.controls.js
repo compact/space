@@ -11,7 +11,7 @@
 		var self = this;
 
 		this.camera = camera;
-		this.options = $.extend({
+		this.options = _.assign({
 			'lookSpeed': 0.00025,
 			'zSpeed': 500,
 			'strafeSpeed': 500,

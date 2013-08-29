@@ -11,7 +11,7 @@
 
 		particleSystems = [];
 
-		options = $.extend({
+		options = _.assign({
 			'scale': 1000,
 			'count': 1000
 		}, options);

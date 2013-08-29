@@ -106,7 +106,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	KIMCHI.nav.updateFlyToList = function () {
 		var bodies = KIMCHI.space.getBodiesByDistance();
 		$('#nav-fly-to').empty();
-		$.each(bodies, function (i, body) {
+		_.forEach(bodies, function (i, body) {
 			$('#nav-fly-to').append(
 				$('<li>').append(
 					$('<a>').text(body.name).data('name', body.name),

@@ -142,7 +142,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	space.Body = function (options) {
 		var length, curve;
 
-		$.extend(this, { // default options
+		_.assign(this, { // default options
 			'name': '',
 			'radius': 0,
 			'position': new THREE.Vector3(),
@@ -206,7 +206,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	// contains instances of space.Body
 	space.bodies = {};
 	space.setBodies = function () {
-		$.each(space.data, function (i, options) {
+		_.forEach(space.data, function (i, options) {
 			space.bodies[options.name] = new space.Body(options);
 		});
 	};
@@ -216,7 +216,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	// return an array of Object3Ds objects for each spaces.bodies
 	space.getObject3Ds = function () {
 		var objects = [];
-		$.each(space.bodies, function (name, body) {
+		_.forEach(space.bodies, function (name, body) {
 			objects.push(body.mesh, body.line, body.labelMesh);
 		});
 		return objects;
@@ -224,7 +224,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	// returns an array of Mesh objects set to be collideable with the camera
 	space.getCollideableObject3Ds = function () {
 		var object3Ds = [];
-		$.each(space.bodies, function (name, body) {
+		_.forEach(space.bodies, function (name, body) {
 			if (body.collideable) {
 				object3Ds.push(body.mesh);
 			}
@@ -237,7 +237,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	// update() updates the position of HTML elements which attach to Meshes
 	// move() updates the position of Meshes as well
 	space.move = function (delta) { // TODO use delta
-		$.each(space.bodies, function (name, body) {
+		_.forEach(space.bodies, function (name, body) {
 			var distance, scale;
 
 			// move the body mesh (custom function)
@@ -248,7 +248,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 	space.update = function () {
 		// update the positioning of all elements that don't move in move()
-		$.each(space.bodies, function (name, body) {
+		_.forEach(space.bodies, function (name, body) {
 			var distance, scale, projector, label;
 
 			distance = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
@@ -312,7 +312,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	space.getBodiesByDistance = function () {
 		var bodies = [];
 
-		$.each(space.bodies, function (name, body) {
+		_.forEach(space.bodies, function (name, body) {
 			bodies.push({
 				'name': name,
 				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)

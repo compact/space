@@ -4,5 +4,9 @@
  */
 
 exports.index = function(req, res){
-  console.log("HI IDIOT");
+  res.render('../doc/index.html');
 };
+
+exports.page = function(req, res){
+  res.render('../doc/index.html');
+}

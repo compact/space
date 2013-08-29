@@ -316,7 +316,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	space.getBodiesByDistance = function () {
 		var bodies = [];
 
-		_.forEach(space.bodies, function (body) {
+		_.forEach(space.bodies, function (body, name) {
 			bodies.push({
 				'name': name,
 				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)

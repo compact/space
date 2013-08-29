@@ -1,14 +1,18 @@
-/**
- * Pointer lock state (not controls, which is handled by three.controls.js).
- */
-
 var KIMCHI = (function (KIMCHI, $) {
 	'use strict';
 
+	/**
+	 * Pointer lock state (not controls, which are handled by three.controls.js).
+	 * @namespace pointerLock
+	 */
 	var pointerLock = {};
+	KIMCHI.pointerLock = pointerLock;
 
-	// request pointer lock from the browser, called whenever the user enters free
-	// flight mode
+	/**
+	 * Request pointer lock from the browser. This is called whenever the user
+	 * enters free flight mode.
+	 * @memberOf pointerLock
+	 */
 	pointerLock.request = function () {
 		document.body.requestPointerLock();
 		console.log((new Date()) + ' pointer lock requested');
@@ -17,7 +21,10 @@ var KIMCHI = (function (KIMCHI, $) {
 				document.webkitPointerLockElement);
 	};
 
-	// has to be called once, before any pointer lock requests
+	/**
+	 * Has to be called once, before any pointer lock requests.
+	 * @memberOf pointerLock
+	 */
 	pointerLock.init = function () {
 		var havePointerLock, body, change, error;
 
@@ -61,20 +68,29 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
 
-	// events
+	/**
+	 * Bind the event handlers for triggering the request of pointer lock.
+	 * @memberOf pointerLock
+	 */
 	pointerLock.bind = function () {
 		KIMCHI.$document.on('keydown', pointerLock.keydown);
 	};
+	/**
+	 * Unbind the event handlers for triggering the request of pointer lock.
+	 * @memberOf pointerLock
+	 */
 	pointerLock.unbind = function () {
 		KIMCHI.$document.off('keydown', pointerLock.keydown);
 	};
-	pointerLock.keydownInProgress = false;
+	/**
+	 * The event handler for pressing Escape to request pointer lock. We request
+	 * pointer lock only on keyup; otherwise, the continued Escape keydown event
+	 * causes the pointer lock to disable immediately, even if one lets go of the
+	 * Escape key asap. Also, the flag pointerLock.keydownInProgress prevents
+	 * multiple handlers of .one('keyup') from being binded.
+	 * @memberOf pointerLock
+	 */
 	pointerLock.keydown = function (event) {
-		// Request pointer lock only on keyup; otherwise, the continued Escape
-		// keydown event causes the pointer lock to disable immediately, even
-		// if one lets go of the Escape key asap. Also, the flag
-		// pointerLock.keydownInProgress prevents multiple handlers of
-		// .one('keyup') from being binded.
 		if (event.which === 27) { // Esc
 			pointerLock.keydownInProgress = true;
 			$(this).one('keyup', function (event) {
@@ -85,11 +101,20 @@ var KIMCHI = (function (KIMCHI, $) {
 			});
 		}
 	};
+	/**
+	 * Whether the keydown key (Escape, in our case) is currently being pressed.
+	 * @memberOf pointerLock
+	 */
+	pointerLock.keydownInProgress = false;
+	/**
+	 * The event handler for clicking to request pointer lock.
+	 * @memberOf pointerLock
+	 */
 	pointerLock.click = function () {
 		pointerLock.request();
 	};
 
-	KIMCHI.pointerLock = pointerLock;
+
 
 	return KIMCHI;
 }(KIMCHI || {}, jQuery));

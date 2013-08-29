@@ -1,5 +1,3 @@
-
-
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
@@ -13,7 +11,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	KIMCHI.flight = flight;
 
 
-
+	/**
+	 * The current flight mode.
+	 * @memberOf flight
+	 */
 	flight.mode = false; // possible values are 'free', 'auto', and false
 
 

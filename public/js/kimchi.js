@@ -32,7 +32,7 @@
 
 
 		// add astronomical objects
-		KIMCHI.space.setBodies();
+		KIMCHI.space.init();
 		KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
 
 		// add background stars, an array of ParticleSystems

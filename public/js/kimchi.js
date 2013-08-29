@@ -37,15 +37,8 @@
 
 		// add background stars, an array of ParticleSystems
 		KIMCHI.scene.add(new THREE.Stars(KIMCHI.config.stars));
-/*var m = new THREE.Mesh(
-	new THREE.SphereGeometry(0.1, 45, 45),
-	new THREE.MeshBasicMaterial({
-		'color': 0xffffff
-	})
-);
-m.position.copy(new THREE.Vector3(0, 0.38709893, 0));
-KIMCHI.scene.add(m);
-*/
+
+
 
 		// lighting
 		KIMCHI.lights = {};

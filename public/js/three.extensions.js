@@ -1,8 +1,5 @@
 /**
  * three.js extensions for KIMCHI.
- */
-
-/**
  * @namespace THREE
  */
 /**

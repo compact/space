@@ -1,7 +1,7 @@
 /**
  * @author mrdoob / http://mrdoob.com/
  * Based on PointerLockControls.js. Edited by Chris.
- * Requires THREE.unitVectors, as defined in index.js.
+ * Requires THREE.unitVectors, as defined in kimchi.js.
  */
 
 (function ($, THREE) {

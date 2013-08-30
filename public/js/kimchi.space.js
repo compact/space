@@ -38,7 +38,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'visibleDistance': 1000000,
       'mesh': (function () {
         jsonLoader.load('js/testconvert.js', function (geometry, materials) {
-          data[1].mesh = new THREE.Mesh(geometry, materials[0]);
+          data[1].mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+            'map': new THREE.ImageUtils.loadTexture('images/textures/lolwtf.jpg')
+          }));
         });
       }())
     },
@@ -170,6 +172,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
 
+    // the radius is scaled
     this.radius *= KIMCHI.config.scales.radius;
 
     // create a Mesh for the body; it can already be set in data
@@ -181,6 +184,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         })
       );
     }
+
+    // so when given the Mesh only, the Body can be identified
+    this.mesh.name = this.name;
+
     this.position.multiplyScalar(KIMCHI.config.scales.position);
     this.mesh.position.copy(this.position);
     this.mesh.rotation.copy(this.rotation);
@@ -225,6 +232,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Body
    */
   Body.prototype.move = function () {};
+  /**
+   * @returns {Number} The collision distance between the camera and this Body.
+   */
+  Body.prototype.getCollisionDistance = function () {
+    return this.radius;
+  };
 
 
 
@@ -250,6 +263,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   space.getBodies = function () {
     return bodies;
+  };
+  /**
+   * TODO check bodies[name] actually exists
+   * @param   {String} name
+   * @returns {Body}
+   */
+  space.getBody = function (name) {
+    return bodies[name];
   };
 
   /**

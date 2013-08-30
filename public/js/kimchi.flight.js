@@ -89,7 +89,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     var mode, colliding;
 
     /**
-     * @returns {Boolean} Whether the camera is current in collision.
+     * @returns {Boolean} Whether the camera is current in collision, i.e.
+     *   within any Body's collision distance.
      * @private
      */
     colliding = (function () {
@@ -129,11 +130,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         returnValue = false;
         _.forEach(intersects, function (intersect) {
           // TODO take into account the object's Body's radius
-          console.log(KIMCHI.config.getCollisionDistance());
-          if (intersect.distance < KIMCHI.config.getCollisionDistance()) {
+          var body = KIMCHI.space.getBody(intersect.object.name);
+          if (intersect.distance < body.getCollisionDistance()) {
             returnValue = true;
           }
         });
+console.log(returnValue);
         return returnValue;
       };
     }());

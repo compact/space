@@ -275,12 +275,15 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
-	// Return a number for scaling the camera speed (in each direction) depending
-	// on how close the camera is to collideable objects. If the parameter is not
-	// given, consider all collideable objects.
+	/**
+	 * Return a number for scaling the camera translation speed (in every
+	 *   direction) depending on how close the camera is to the closest of the
+	 *   given collideable objects; if not given, consider all collideable
+	 *   objects.
+	 * @param   {Array}  object3Ds
+	 * @returns {Number}
+	 */
 	flight.getTranslationSpeedMultiplier = function (object3Ds) {
-		var distances = [];
-
 		if (typeof object3Ds === 'undefined') {
 			object3Ds = KIMCHI.space.getCollideableObject3Ds();
 		}

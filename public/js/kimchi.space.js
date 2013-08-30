@@ -21,7 +21,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			'radius': 696000,
 			'position': new THREE.Vector3(0, 0, 0),
 			'visibleDistance': 1000000,
-			'move': function () {},
 			'mesh': new THREE.Mesh(
 				new THREE.SphereGeometry(696000 * KIMCHI.config.scales.radius, KIMCHI.config.sphereSegments, KIMCHI.config.sphereSegments),
 				new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
@@ -205,6 +204,12 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 //	this.$label = $('<div class="label">').text(this.name).appendTo('body');
 	};
+	/**
+	 * Bodies do not move by default; this function is to be overwritten by Body
+	 *   instances.
+	 * @param {Number} delta
+	 */
+	Body.prototype.move = function (delta) {};
 
 
 
@@ -265,7 +270,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			var distance, scale;
 
 			// move the body mesh (custom function)
-			body.move();
+			body.move(delta);
 
 			space.moveBodyChildren();
 		});

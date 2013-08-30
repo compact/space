@@ -21,7 +21,7 @@ var KIMCHI = (function (KIMCHI, THREE) {
       'rollSpeed': 2 // roll with keyboard
     },
     'scales': {
-      'radius': 100 / 149597871, // radii are given in km
+      'radius': 10 / 149597871, // radii are given in km
       'position': 1 // positions are given in AU
     },
     'orbits': {

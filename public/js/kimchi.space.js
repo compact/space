@@ -172,6 +172,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
 
+    // the radius and position are scaled
+    this.radius *= KIMCHI.config.scales.radius;
+    this.position.multiplyScalar(KIMCHI.config.scales.position);
+
     // create a Mesh for the body; it can already be set in data
     if (typeof this.mesh !== 'object') { 
       this.mesh = new THREE.Mesh(
@@ -185,10 +189,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // store the name in the Mesh, so in situations where we are given the Mesh
     // only, the Body can be identified
     this.mesh.name = this.name;
-
-    // the radius and position are scaled
-    this.radius *= KIMCHI.config.scales.radius;
-    this.position.multiplyScalar(KIMCHI.config.scales.position);
 
     // set the Mesh position and rotation
     this.mesh.position.copy(this.position);

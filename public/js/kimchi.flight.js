@@ -132,10 +132,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
           // TODO take into account the object's Body's radius
           var body = KIMCHI.space.getBody(intersect.object.name);
           if (intersect.distance < body.getCollisionDistance()) {
+console.log(intersect.distance + ' < ' + body.getCollisionDistance());
             returnValue = true;
+            return false; // break the loop
           }
         });
-console.log(returnValue);
         return returnValue;
       };
     }());

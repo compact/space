@@ -10,6 +10,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   var space = {}, data, Body, bodies;
   KIMCHI.space = space;
+  var jsonLoader = new THREE.JSONLoader();
+
 
   /**
    * Raw data for each body, to be passed into the Body constructor.
@@ -28,6 +30,19 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
           'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
         })
       )
+    },
+    {
+      'name': 'LOLWTF',
+      'radius': 696000,
+      'position': new THREE.Vector3(0.2, 0.2, 0.2),
+      'visibleDistance': 1000000,
+      'mesh': function(){
+        var built = jsonLoader.load('testconvert.js', function(geometry, materials){
+          var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+          return mesh;
+        });
+        return built;
+      }
     },
     {
       'name': 'Mercury',

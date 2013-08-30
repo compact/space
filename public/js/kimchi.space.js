@@ -9,6 +9,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
 	var space = {}, Body, bodies;
+	KIMCHI.space = space;
 
 	/**
 	 * Raw data for each body, to be passed into the {@link
@@ -208,6 +209,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 * Bodies do not move by default; this function is to be overwritten by Body
 	 *   instances.
 	 * @param {Number} delta
+	 * @private
 	 */
 	Body.prototype.move = function (delta) {};
 
@@ -216,6 +218,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	/**
 	 * Contains instances of {@link module:KIMCHI.space.Body Body}.
 	 * @memberOf module:KIMCHI.space
+	 * @private
 	 */
 	bodies = {};
 
@@ -229,7 +232,12 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 		});
 	};
 
-
+	/**
+	 * @returns {Object} Bodies.
+	 */
+	space.getBodies = function () {
+		return bodies;
+	};
 
 	/**
 	 * @returns {Array} Object3Ds from {@link module:KIMCHI.space.bodies
@@ -343,9 +351,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 
 
-
-	space.bodies = bodies;
-	KIMCHI.space = space;
 
 	return KIMCHI;
 }(KIMCHI || {}, $, THREE));

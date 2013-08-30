@@ -23,6 +23,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	/**
 	 * Flight mode.
 	 * @param {String} name
+	 * @constructor
 	 * @memberOf module:KIMCHI.flight
 	 */
 	Mode = function (name) {
@@ -244,14 +245,15 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			KIMCHI.nav.update(); // maybe shouldn't be here
 
 			$('.nav').on('click', 'a', function (event) {
-				var name;
+				var name, body;
 
 				// prevent the overlay from being clicked to trigger free flight mode
 				event.stopPropagation();
 
 				name = $(this).data('name');
-				if (typeof KIMCHI.space.bodies[name] === 'object') {
-					mode.flyTo(KIMCHI.space.bodies[name]);
+				body = KIMCHI.space.getBodies()[name];
+				if (typeof body === 'object') {
+					mode.flyTo(body);
 				} else { // TODO write a general function to get a body
 					console.log(name + ' not found in KIMCHI.flight.auto');
 				}

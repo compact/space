@@ -1,18 +1,13 @@
 /**
  * Contains astronomical bodies, which are represented by instances of the
- * {@link Body} class, and their associated Object3Ds.
+ * {@link module:KIMCHI.space.Body} class, and their associated Object3Ds.
  * @namespace space
  * @memberOf module:KIMCHI
  */
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	var space, Body, bodies;
-	space = {
-		'Body': Body,
-		'bodies': bodies
-	};
-	KIMCHI.space = space;
+	var space = {}, Body = function () {}, bodies = {};
 
 	/**
 	 * Raw data for each body, to be passed into the {@link Body}
@@ -341,6 +336,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 
 
+
+	space.Body = Body;
+	space.bodies = bodies;
+	KIMCHI.space = space;
 
 	return KIMCHI;
 }(KIMCHI || {}, $, THREE));

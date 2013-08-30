@@ -22,9 +22,8 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Flight mode.
-	 * @param {String} name
-	 * @constructor
-	 * @memberOf module:KIMCHI.flight
+	 * @param       {String} name
+	 * @constructor Mode
 	 */
 	Mode = function (name) {
 		this.name = name;
@@ -32,7 +31,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 	/**
 	 * Enable.
-	 * @memberOf module:KIMCHI.flight.Mode
+	 * @memberOf Mode
 	 */
 	Mode.prototype.enable = function () {
 		KIMCHI.$overlay.hide();
@@ -41,7 +40,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 	/**
 	 * Disable.
-	 * @memberOf module:KIMCHI.flight.Mode
+	 * @memberOf Mode
 	 */
 	Mode.prototype.disable = function () {
 		KIMCHI.clock.stop();
@@ -51,7 +50,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 	/**
 	 * Toggle.
-	 * @memberOf module:KIMCHI.flight.Mode
+	 * @memberOf Mode
 	 */
 	Mode.prototype.toggle = function (enable) {
 		if (typeof enable === 'boolean') {
@@ -69,12 +68,12 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	/**
 	 * In this mode, what happens in each animation frame?
 	 * @param    {Number} delta
-	 * @memberOf module:KIMCHI.flight.Mode
+	 * @memberOf Mode
 	 */
 	Mode.prototype.animationFrame = function (delta) {};
 	/**
 	 * Shortcut for KIMCHI.rendering.animate(this.animationFrame).
-	 * @memberOf module:KIMCHI.flight.Mode
+	 * @memberOf Mode
 	 */
 	Mode.prototype.animate = function () {
 		KIMCHI.rendering.animate(this.animationFrame);

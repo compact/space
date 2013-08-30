@@ -1,9 +1,9 @@
 /**
  * Based on PointerLockControls.js. Requires THREE.unitVectors, as defined in
  *   three.extensions.js.
- * @author    mrdoob / http://mrdoob.com/ Edited by Chris.
- * @class     THREE.Controls
- * @memberOf  THREE
+ * @author      mrdoob / http://mrdoob.com/ Edited by Chris.
+ * @constructor THREE.Controls
+ * @memberOf    THREE
  */
 (function ($, THREE) {
 	'use strict';

@@ -1,8 +1,8 @@
 /**
  * Based on {@link http://threejs.org/examples/misc_controls_fly.html}
  *   Multiple geometries and materials are used for variability in the stars.
- * @class    THREE.Stars
- * @memberOf THREE
+ * @constructor THREE.Stars
+ * @memberOf    THREE
  */
 (function ($, THREE) {
 	'use strict';

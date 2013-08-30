@@ -1,22 +1,22 @@
 /**
  * three.js extensions for KIMCHI.
- * @namespace THREE
+ * @external    THREE
  */
 /**
- * @class     THREE.Object3D
- * @memberOf  THREE
+ * @constructor Object3D
+ * @memberOf    external:THREE
  */
 /**
- * @class     THREE.PerspectiveCamera
- * @memberOf  THREE
+ * @constructor PerspectiveCamera
+ * @memberOf    external:THREE
  */
 /**
- * @class     THREE.Matrix3
- * @memberOf  THREE
+ * @constructor Matrix3
+ * @memberOf    external:THREE
  */
 /**
- * @class     THREE.Curve
- * @memberOf  THREE
+ * @constructor Curve
+ * @memberOf    external:THREE
  */
 
 (function ($, THREE) {
@@ -26,7 +26,7 @@
 	 * "Constant" vectors. Take care to not set other variables to these objects
 	 *   directly lest their coordinates change (e.g. position or rotation). Clone
 	 *   them instead.
-	 * @memberOf THREE
+	 * @memberOf external:THREE
 	 */
 	THREE.unitVectors = {
 		'x': new THREE.Vector3(1, 0, 0),
@@ -43,18 +43,22 @@
 	 * @param    {THREE.Object3D} object1
 	 * @param    {THREE.Object3D} object2
 	 * @return   {Number}         The distance between the two objects.
-	 * @memberOf THREE.Object3D
+	 * @alias    distance
+	 * @memberOf external:THREE.Object3D
 	 */
 	THREE.Object3D.distance = function (object1, object2) {
 		return object1.position.distanceTo(object2.position);
 	};
 
 	/**
-	 * "Overload" the original function of THREE.Object3D.prototype.add.
+	 * "Overload" the original function of THREE.Object3D.prototype.add to
+	 *   accept arrays as well.
 	 * @param    {(THREE.Object3D|Array)} param
 	 *   Either an Object3D or an array of Object3Ds to be added.
+	 * @alias    add
+	 * @instance
 	 * @function
-	 * @memberOf THREE.Object3D
+	 * @memberOf external:THREE.Object3D
 	 */
 	THREE.Object3D.prototype.add = (function () {
 		var addSingle = THREE.Object3D.prototype.add;
@@ -77,8 +81,10 @@
 	 * @param    {THREE.Vector3} worldAxis Not local based on the object, but
 	 *                                     but global in the world.
 	 * @param    {Number}        angle     In Radians.
+	 * @alias    orbit
+	 * @instance
 	 * @function
-	 * @memberOf THREE.Object3D
+	 * @memberOf external:THREE.Object3D
 	 */
 	THREE.Object3D.prototype.orbit = (function () {
 		var sin, cos, x, y, z, rotationMatrix, scalingMatrix;
@@ -122,7 +128,9 @@
 	 * Update the camera given dimensions.
 	 * @param    {Number} width
 	 * @param    {Number} height
-	 * @memberOf THREE.PerspectiveCamera
+	 * @alias    update
+	 * @instance
+	 * @memberOf external:THREE.PerspectiveCamera
 	 */
 	THREE.PerspectiveCamera.prototype.update = function (width, height) {
 		this.aspect = width / height;
@@ -132,11 +140,13 @@
 
 
 	/**
-	 * We overwrite getInverse() because the original function also sets this and
+	 * We overwrite this function because the original also sets this and
 	 *   requires a Matrix4.
 	 * @returns  {Matrix3} The inverse matrix.
+	 * @alias    getInverse
+	 * @instance
 	 * @function
-	 * @memberOf THREE.Matrix3
+	 * @memberOf external:THREE.Matrix3
 	 */
 	THREE.Matrix3.prototype.getInverse = (function () {
 		var determinant, e, inverse = new THREE.Matrix3();
@@ -179,7 +189,9 @@
 	 * <br>      lineSegments: Number of line segments to make up the Line.
 	 * <br>      scale:        THREE.Vector3.
 	 * @returns  {THREE.Line}
-	 * @memberOf THREE.Curve
+	 * @alias    createLine
+	 * @instance
+	 * @memberOf external:THREE.Curve
 	 */
 	THREE.Curve.prototype.createLine = function (options) {
 		var curvePath, geometry, line;

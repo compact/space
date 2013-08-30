@@ -141,7 +141,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 *                       revolutions.
 	 * <br> texturePath:     Optional path to the texture image. Defaults to
 	 *                       'name.jpg'.
-	 * @class    module:KIMCHI.space.Body
+	 * @constructor
 	 * @memberOf module:KIMCHI.space
 	 */
 	Body = function (options) {
@@ -209,7 +209,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 * Bodies do not move by default; this function is to be overwritten by Body
 	 *   instances.
 	 * @param {Number} delta
-	 * @private
 	 */
 	Body.prototype.move = function (delta) {};
 

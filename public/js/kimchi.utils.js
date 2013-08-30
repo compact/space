@@ -1,11 +1,11 @@
-/** @namespace Math */
+/** @external Math */
 /**
  * @param    {Number}  number         The number to round.
  * @param    {Number}  precision      The number of decimal places to round to.
  * @param    {Boolean} trailingZeroes Whether to include trailing zeroes.
  *                                    Defaults true.
  * @return   {Number}                 The rounded result..
- * @memberOf Math
+ * @memberOf external:Math
  */
 Math.roundDecimals = function (number, precision, trailingZeroes) {
 	var multiplier, result;
@@ -21,7 +21,7 @@ Math.roundDecimals = function (number, precision, trailingZeroes) {
  *   based on the number of digits.
  * @param    {Number} number The number to round.
  * @return   {Number}        The rounded result.
- * @memberOf Math
+ * @memberOf external:Math
  */
 Math.roundNicely = function (number) {
 	if (number < 1) {
@@ -35,16 +35,18 @@ Math.roundNicely = function (number) {
 
 
 
-/** @namespace Date */
+/** @external Date */
 /**
  * Month Strings for {@link Date.prototype.format}.
- * @memberOf Date
+ * @memberOf external:Date
  */
 Date.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
 	'Oct', 'Nov', 'Dec'];
 /**
  * @return   {String} Date custom formatted for the KIMCHI hud.
- * @memberOf Date
+ * @alias    format
+ * @instance
+ * @memberOf external:Date
  */
 Date.prototype.format = function () {
 	return Date.months[this.getMonth()] + ' ' + this.getDate() + ', ' +

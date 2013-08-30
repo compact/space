@@ -168,6 +168,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 		var mode, panTo, translateTo;
 
 		/**
+		 * Pan (rotate) the camera towards the given Body (without translating).
+		 *   Return false to disable auto flight.
+		 * @returns {(undefined|false)}
 		 * @private
 		 */
 		panTo = (function () {
@@ -204,13 +207,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 						t += 0.05;
 					} else {
 						translateTo(body);
-						return false; // stop
+						return false; // disable
 					}
 				});
 			};
 		}());
 
 		/**
+		 * Translate the camera to the given Body until within range of collision.
 		 * @private
 		 */
 		translateTo = function (body) {
@@ -238,6 +242,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 		};
 
 		/**
+		 * Bind the "fly to" links.
 		 * @public
 		 */
 		mode.init = function () {
@@ -259,14 +264,15 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 			});
 		};
 		/**
+		 * Fly to the given Body. Two private functions are used sequentially to
+		 *   first pan and then translate to it. translateTo(body) is called when
+		 *   panTo(body) ends. disable() is called when translateTo(body) ends
 		 * @public
 		 */
 		mode.flyTo = function (body) {
 			KIMCHI.notice.set('Flying to ' + body.name + '...');
 			this.enable();
 			panTo(body);
-			// translateTo(body) is called when panTo(body) ends
-			// disable() is called when translateTo(body) ends
 			// TODO make function queue for successive setTimeout() calls
 		};
 
@@ -280,8 +286,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	 *   direction) depending on how close the camera is to the closest of the
 	 *   given collideable objects; if not given, consider all collideable
 	 *   objects.
-	 * @param   {Array}  object3Ds
-	 * @returns {Number}
+	 * @param    {Array} object3Ds
+	 * @returns  {Number}
+	 * @memberOf module:KIMCHI.flight
 	 */
 	flight.getTranslationSpeedMultiplier = function (object3Ds) {
 		if (typeof object3Ds === 'undefined') {

@@ -344,7 +344,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-	space.Body = Body;
 	space.bodies = bodies;
 	KIMCHI.space = space;
 

@@ -19,7 +19,7 @@
  * @memberOf    external:THREE
  */
 
-(function ($, THREE) {
+(function (_, $, THREE) {
 	'use strict';
 
 	/**
@@ -222,4 +222,4 @@
 		line.scale = options.scale;
 		return line;
 	};
-}(jQuery, THREE));
+}(_, jQuery, THREE));

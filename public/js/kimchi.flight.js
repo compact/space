@@ -5,7 +5,7 @@
  * @namespace flight
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, $, THREE) {
+var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	'use strict';
 
 	var flight = {}, Mode;
@@ -298,4 +298,4 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	return KIMCHI;
-}(KIMCHI || {}, jQuery, THREE));
+}(KIMCHI || {}, _, jQuery, THREE));

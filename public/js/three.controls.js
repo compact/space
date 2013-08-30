@@ -5,7 +5,7 @@
  * @constructor THREE.Controls
  * @memberOf    THREE
  */
-(function ($, THREE) {
+(function (_, $, THREE) {
 	'use strict';
 
 	THREE.Controls = function (camera, options) {
@@ -226,4 +226,4 @@
 	THREE.Controls.prototype.getWorldTranslationVector = function () {
 		return this.camera.localToWorld(this.getLocalTranslationVector());
 	};
-}(jQuery, THREE));
+}(_, jQuery, THREE));

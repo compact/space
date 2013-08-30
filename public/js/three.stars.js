@@ -4,7 +4,7 @@
  * @constructor THREE.Stars
  * @memberOf    THREE
  */
-(function ($, THREE) {
+(function (_, $, THREE) {
 	'use strict';
 
 	THREE.Stars = function (options) {
@@ -66,4 +66,4 @@
 
 		return particleSystems;
 	};
-}(jQuery, THREE));
+}(_, jQuery, THREE));

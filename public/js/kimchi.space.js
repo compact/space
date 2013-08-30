@@ -252,17 +252,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	};
 
 	/**
-	 * @returns {Array} Object3Ds set to be collideable with the camera.
+	 * @returns {Array} Object3Ds of Bodies set to be collideable with the camera.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.getCollideableObject3Ds = function () {
-		var object3Ds = [];
-		_.forEach(bodies, function (body) {
-			if (body.collideable) {
-				object3Ds.push(body.mesh);
-			}
-		});
-		return object3Ds;
+		return _.pluck(_.filter(bodies, 'collideable'), 'mesh');
 	};
 
 

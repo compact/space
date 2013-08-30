@@ -187,7 +187,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     }
 
     // store the name in the Mesh, so in situations where we are given the Mesh
-    // only, the Body can be identified
+    // only, the Body can be identified using space.getBody()
     this.mesh.name = this.name;
 
     // set the Mesh position and rotation

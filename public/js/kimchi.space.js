@@ -34,15 +34,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     {
       'name': 'LOLWTF',
       'radius': 696000,
-      'position': new THREE.Vector3(0.2, 0.2, 0.2),
+      'position': new THREE.Vector3(5, 5, 0),
       'visibleDistance': 1000000,
-      'mesh': function(){
-        var built = jsonLoader.load('testconvert.js', function(geometry, materials){
-          var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-          return mesh;
+      'mesh': (function () {
+        jsonLoader.load('js/testconvert.js', function (geometry, materials) {
+          data[1].mesh = new THREE.Mesh(geometry, materials[0]);
         });
-        return built;
-      }
+      }())
     },
     {
       'name': 'Mercury',

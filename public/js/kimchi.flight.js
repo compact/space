@@ -129,8 +129,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         returnValue = false;
         _.forEach(intersects, function (intersect) {
           // TODO take into account the object's Body's radius
-          if (intersect.distance * KIMCHI.config.scales.radius <
-              KIMCHI.config.collisionDistance) {
+          console.log(KIMCHI.config.getCollisionDistance());
+          if (intersect.distance < KIMCHI.config.getCollisionDistance()) {
             returnValue = true;
           }
         });
@@ -307,7 +307,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       object3Ds = KIMCHI.space.getCollideableObject3Ds();
     }
 
-    return KIMCHI.space.getClosestDistance(object3Ds) * 2;
+    return KIMCHI.space.getClosestDistance(object3Ds);
   };
 
 

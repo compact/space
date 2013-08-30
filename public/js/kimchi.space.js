@@ -8,14 +8,15 @@
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	'use strict';
 
-	var space = {}, Body, bodies;
+	var space = {}, data, Body, bodies;
 	KIMCHI.space = space;
 
 	/**
 	 * Raw data for each body, to be passed into the Body constructor.
 	 * @memberOf module:KIMCHI.space
+	 * @private
 	 */
-	space.data = [
+	data = [
 		{
 			'name': 'Sun',
 			'radius': 696000,
@@ -158,7 +159,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 		this.radius *= KIMCHI.config.scales.radius;
 
-		// create a Mesh for the body; it can already be set in space.data
+		// create a Mesh for the body; it can already be set in data
 		if (typeof this.mesh !== 'object') { 
 			this.mesh = new THREE.Mesh(
 				new THREE.SphereGeometry(this.radius, KIMCHI.config.sphereSegments, KIMCHI.config.sphereSegments),
@@ -226,7 +227,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.init = function () {
-		_.forEach(space.data, function (options) {
+		_.forEach(data, function (options) {
 			bodies[options.name] = new Body(options);
 		});
 	};

@@ -323,21 +323,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	  * @memberOf module:KIMCHI.space
 	 */
 	space.getBodiesByDistance = function () {
-		var sorted = [];
-
-		_.forEach(bodies, function (body, name) {
-			sorted.push({
+		return _.map(bodies, function (body, name) {
+			return {
 				'name': name,
 				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
-			});
-		});
-
-		// sort numerically
-		sorted.sort(function (body1, body2) {
+			};
+		}).sort(function (body1, body2) {
 			return body1.distance - body2.distance;
 		});
-
-		return sorted;
 	};
 
 

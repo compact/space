@@ -285,14 +285,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 			object3Ds = KIMCHI.space.getCollideableObject3Ds();
 		}
 
-		// TODO maybe use KIMCHI.space.getBodiesByDistance() as a helper here
-		_.forEach(object3Ds, function (object3D) {
-			distances.push(THREE.Object3D.distance(KIMCHI.camera, object3D));
-		});
-		distances.sort(function (a, b) { // sort numerically
+		// See space.getBodiesByDistance() for a similar function.
+		return _.map(object3Ds, function (object3D) {
+			return THREE.Object3D.distance(KIMCHI.camera, object3D);
+		}).sort(function (a, b) { // sort numerically
 			return a - b;
-		});
-		return distances[0];
+		})[0];
 	};
 
 

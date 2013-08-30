@@ -8,63 +8,91 @@
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	var flight = {};
+	var flight = {}, Mode;
 	KIMCHI.flight = flight;
 
 
 	/**
 	 * The current flight mode.
-	 * @memberOf module:KIMCHI.light
+	 * @memberOf module:KIMCHI.flight
 	 */
 	flight.mode = false; // possible values are 'free', 'auto', and false
 
 
 
-	// free flight
-	flight.free = {
-		'start': function () {
-			KIMCHI.pointerLock.unbind();
-			KIMCHI.$overlay.hide();
-			$('#hud1').show();
-
-			KIMCHI.clock.start();
-			flight.mode = 'free';
-			KIMCHI.rendering.animate(flight.free.animationFrame);
-			KIMCHI.controls.enable();
-		},
-		'stop': function () {
-			KIMCHI.controls.disable();
-			flight.mode = false;
-			KIMCHI.clock.stop();
-
-			$('#hud1').hide();
-			KIMCHI.$overlay.show();
-			KIMCHI.nav.update();
-
-			KIMCHI.pointerLock.bind();
-		},
-		'toggle': function (enable) {
+	/**
+	 * Flight mode.
+	 * @param {String} name
+	 * @memberOf module:KIMCHI.flight
+	 */
+	Mode = function (name) {
+		this.name = name;
+		this.enabled = false;
+	};
+	/**
+	 * Enable.
+	 * @memberOf module:KIMCHI.flight.Mode
+	 */
+	Mode.prototype.enable = function () {
+		KIMCHI.$overlay.hide();
+		KIMCHI.clock.start();
+		flight.mode = this.name;
+	};
+	/**
+	 * Disable.
+	 * @memberOf module:KIMCHI.flight.Mode
+	 */
+	Mode.prototype.disable = function () {
+		KIMCHI.clock.stop();
+		flight.mode = false;
+		KIMCHI.$overlay.show();
+		KIMCHI.nav.update();
+	};
+	/**
+	 * Toggle.
+	 * @memberOf module:KIMCHI.flight.Mode
+	 */
+	Mode.prototype.toggle = function (enable) {
+		if (typeof enable === 'boolean') {
 			if (enable) {
-				flight.free.start();
+				this.enable();
 			} else {
-				flight.free.stop();
+				this.disable();
 			}
-		},
-		'animationFrame': function (delta) {
-			if (!flight.free.colliding()) {
-				KIMCHI.controls.moveCamera(
-					delta,
-					flight.getTranslationSpeedMultiplier()
-				);
-			}
+		} else if (this.enabled) {
+			this.enable();
+		} else {
+			this.disable();
+		}
+	};
+	/**
+	 * In this mode, what happens in each animation frame?
+	 * @param    {Number} delta
+	 * @memberOf module:KIMCHI.flight.Mode
+	 */
+	Mode.prototype.animationFrame = function (delta) {};
+	/**
+	 * Shortcut for KIMCHI.rendering.animate(this.animationFrame).
+	 * @memberOf module:KIMCHI.flight.Mode
+	 */
+	Mode.prototype.animate = function () {
+		KIMCHI.rendering.animate(this.animationFrame);
+	};
 
-			KIMCHI.space.moveBodies(delta);
-			KIMCHI.hud.update(delta);
-			KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
-		},
-		// Return whether the camera is colliding with an object along the current
-		// movement direction.
-		'colliding': (function () {
+
+
+	/**
+	 * Free flight.
+	 * @memberOf module:KIMCHI.flight
+	 */
+	flight.free = (function () {
+		var mode, colliding;
+
+		/**
+		 * @returns {Boolean} Whether the camera is current in collision.
+		 * @private
+		 */
+		colliding = (function () {
 			var translationVector, raycaster, intersection;
 
 			raycaster = new THREE.Raycaster();
@@ -96,50 +124,53 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 				);
 				return intersection.length > 0;
 			};
-		}())
-	};
+		}());
+
+		mode = new Mode();
+		mode.enable = function () {
+			Mode.prototype.enable.call(this);
+
+			KIMCHI.pointerLock.unbind();
+			$('#hud1').show();
+			KIMCHI.rendering.animate(this.animationFrame);
+			KIMCHI.controls.enable();
+		};
+		mode.disable = function () {
+			Mode.prototype.disable.call(this);
+
+			KIMCHI.controls.disable();
+			$('#hud1').hide();
+			KIMCHI.pointerLock.bind();
+		};
+		mode.animationFrame = function (delta) {
+			if (!colliding()) {
+				KIMCHI.controls.moveCamera(
+					delta,
+					flight.getTranslationSpeedMultiplier()
+				);
+			}
+
+			KIMCHI.space.moveBodies(delta);
+			KIMCHI.hud.update(delta);
+			KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
+		};
+
+		return mode;
+	}());
 
 
 
-	flight.auto = {
-		'init': function () {
-			KIMCHI.nav.update(); // maybe shouldn't be here
+	/**
+	 * Auto flight.
+	 * @memberOf module:KIMCHI.flight
+	 */
+	flight.auto = (function () {
+		var mode, panTo, translateTo;
 
-			$('.nav').on('click', 'a', function (event) {
-				var name;
-
-				// prevent the overlay from being clicked to trigger free flight mode
-				event.stopPropagation();
-
-				name = $(this).data('name');
-				if (typeof KIMCHI.space.bodies[name] === 'object') {
-					flight.auto.flyTo(KIMCHI.space.bodies[name]);
-				} else { // TODO write a general function to get a body
-					console.log(name + ' not found in flight.auto');
-				}
-			});
-		},
-		'start': function () {
-			KIMCHI.$overlay.hide();
-			KIMCHI.clock.start();
-			flight.mode = 'auto';
-		},
-		'stop': function () {
-			KIMCHI.clock.stop();
-			flight.mode = false;
-			KIMCHI.notice.clear(); // TODO move this
-			KIMCHI.$overlay.show();
-			KIMCHI.nav.update();
-		},
-		'flyTo': function (body) {
-			KIMCHI.notice.set('Flying to ' + body.name + '...');
-			flight.auto.start();
-			flight.auto.panTo(body);
-			// translateTo(body) is called when panTo(body) ends
-			// stop() is called when translateTo(body) ends
-			// TODO make function queue for successive setTimeout() calls
-		},
-		'panTo': (function () {
+		/**
+		 * @private
+		 */
+		panTo = (function () {
 			var initQuaternion, rotationMatrix, targetQuaternion, t;
 
 			rotationMatrix = new THREE.Matrix4();
@@ -168,34 +199,78 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 						KIMCHI.camera.quaternion.copy(
 							initQuaternion.slerp(targetQuaternion, t)
 						);
-						flight.auto.animationFrame(delta);
+						mode.animationFrame(delta);
 
 						t += 0.05;
 					} else {
-						flight.auto.translateTo(body);
+						translateTo(body);
 						return false; // stop
 					}
 				});
 			};
-		}()),
-		'translateTo': function (body) {
+		}());
+
+		/**
+		 * @private
+		 */
+		translateTo = function (body) {
 			KIMCHI.rendering.animate(function (delta) {
 				if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) >=
 						body.radius + KIMCHI.config.collisionDistance) {
 					KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
 						flight.getTranslationSpeedMultiplier([body.mesh]));
-					flight.auto.animationFrame(delta);
+					mode.animationFrame(delta);
 				} else {
-					flight.auto.stop();
+					mode.disable();
 				}
 			});
-		},
-		'animationFrame': function (delta) {
+		};
+
+		mode = new Mode();
+		mode.disable = function () {
+			Mode.prototype.disable.call(this);
+
+			KIMCHI.notice.clear(); // TODO move this
+		};
+		mode.animationFrame = function (delta) {
 			KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
 			KIMCHI.hud.update(delta);
-//			KIMCHI.nav.update(); // TODO remove
-		}
-	};
+		};
+
+		/**
+		 * @public
+		 */
+		mode.init = function () {
+			KIMCHI.nav.update(); // maybe shouldn't be here
+
+			$('.nav').on('click', 'a', function (event) {
+				var name;
+
+				// prevent the overlay from being clicked to trigger free flight mode
+				event.stopPropagation();
+
+				name = $(this).data('name');
+				if (typeof KIMCHI.space.bodies[name] === 'object') {
+					mode.flyTo(KIMCHI.space.bodies[name]);
+				} else { // TODO write a general function to get a body
+					console.log(name + ' not found in KIMCHI.flight.auto');
+				}
+			});
+		};
+		/**
+		 * @public
+		 */
+		mode.flyTo = function (body) {
+			KIMCHI.notice.set('Flying to ' + body.name + '...');
+			this.enable();
+			panTo(body);
+			// translateTo(body) is called when panTo(body) ends
+			// disable() is called when translateTo(body) ends
+			// TODO make function queue for successive setTimeout() calls
+		};
+
+		return mode;
+	}());
 
 
 

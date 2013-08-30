@@ -163,7 +163,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			KIMCHI.size.update();
 			KIMCHI.$window.on('resize', function () {
 				KIMCHI.size.update();
-				KIMCHI.rendering.animate(KIMCHI.flight.auto.animationFrame);
+				KIMCHI.flight.auto.animate();
 			});
 		},
 		'update': function () {

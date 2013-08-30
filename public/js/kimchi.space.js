@@ -272,7 +272,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 			// move the body mesh (custom function)
 			body.move(delta);
 
-			space.moveBodyChildren();
+			space.moveBodyChildren(delta);
 		});
 	};
 
@@ -281,10 +281,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 *   themselves, update the visibility, position, and size of all Object3Ds
 	 *   associated with the {@link module:KIMCHI.space.bodies bodies} (such as
 	 *   text label Meshes). This function should be called whenever the camera
-	 *   moves.
+	 *   moves. TODO use delta
 	 * @memberOf module:KIMCHI.space
 	 */
-	space.moveBodyChildren = function () {
+	space.moveBodyChildren = function (delta) {
 		_.forEach(bodies, function (body) {
 			var distance, scale, projector, label;
 

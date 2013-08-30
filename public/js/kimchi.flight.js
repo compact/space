@@ -125,11 +125,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         if (intersects.length === 0) {
           return false;
         }
-return true;
+
         returnValue = false;
         _.forEach(intersects, function (intersect) {
           // TODO take into account the object's Body's radius
-          if (intersect.distance * KIMCHI.config.scales.radius * 149597871 <
+          if (intersect.distance * KIMCHI.config.scales.radius <
               KIMCHI.config.collisionDistance) {
             returnValue = true;
           }

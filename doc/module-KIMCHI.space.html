@@ -41,7 +41,8 @@
     
         
             <div class="description">Contains astronomical bodies, which are represented by instances of the
-<a href="module-KIMCHI.space.Body.html">module:KIMCHI.space.Body</a> class, and their associated Object3Ds.</div>
+  <a href="module-KIMCHI.space.Body.html">Body</a> class, and their associated
+  Object3Ds.</div>
         
         
         
@@ -113,7 +114,7 @@
 <dd>
     
     <div class="description">
-        Contains instances of Body.
+        Contains instances of <a href="module-KIMCHI.space.Body.html">Body</a>.
     </div>
     
     
@@ -142,7 +143,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line214">line 214</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line215">line 215</a>
     </li></ul></dd>
     
     
@@ -167,8 +168,7 @@
 <dd>
     
     <div class="description">
-        Raw data for each body, to be passed into the Body
-constructor.
+        Raw data for each body, to be passed into the <a href="module-KIMCHI.space.Body.html">Body</a> constructor.
     </div>
     
     
@@ -197,7 +197,7 @@ constructor.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line17">line 17</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line18">line 18</a>
     </li></ul></dd>
     
     
@@ -258,7 +258,7 @@ constructor.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line320">line 320</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line322">line 322</a>
     </li></ul></dd>
     
     
@@ -284,8 +284,8 @@ constructor.
             
 <div class="param-desc">
     All bodies sorted by current distance from the camera.
-  Each element is not a Body, but rather an object with
-  properties 'name' and 'distance'.
+  Each element is not a <a href="module-KIMCHI.space.Body.html">Body</a>, but rather
+  an object with properties 'name' and 'distance'.
 </div>
 
 
@@ -347,7 +347,7 @@ constructor.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line246">line 246</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line247">line 247</a>
     </li></ul></dd>
     
     
@@ -434,7 +434,7 @@ constructor.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line234">line 234</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line235">line 235</a>
     </li></ul></dd>
     
     
@@ -459,9 +459,8 @@ constructor.
     
             
 <div class="param-desc">
-    Object3Ds from bodies. Note that each
-  Body may have more than one Object3D, e.g. for orbit lines
-  and text labels.
+    Object3Ds from <a href="module-KIMCHI.space.html#bodies">  bodies</a>. Note that each <a href="module-KIMCHI.space.Body.html">Body</a> may have
+  more than one Object3D, e.g. for orbit lines and text labels.
 </div>
 
 
@@ -494,7 +493,7 @@ constructor.
     
     
     <div class="description">
-        Populate bodies.
+        Populate <a href="module-KIMCHI.space.html#bodies">bodies</a>.
     </div>
     
 
@@ -527,7 +526,7 @@ constructor.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line220">line 220</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line221">line 221</a>
     </li></ul></dd>
     
     
@@ -563,7 +562,7 @@ constructor.
     
     
     <div class="description">
-        Move the bodies. TODO use delta
+        Move the <a href="module-KIMCHI.space.html#bodies">bodies</a>. TODO use delta
     </div>
     
 
@@ -596,7 +595,7 @@ constructor.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line262">line 262</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line263">line 263</a>
     </li></ul></dd>
     
     
@@ -632,10 +631,11 @@ constructor.
     
     
     <div class="description">
-        Without moving the Body Meshes themselves, update the
-visibility, position, and size of all Object3Ds associated with the
-bodies (such as text label Meshes). This function should be
-called whenever the camera moves.
+        Without moving the <a href="module-KIMCHI.space.Body.html">Body</a> Meshes
+  themselves, update the visibility, position, and size of all Object3Ds
+  associated with the <a href="module-KIMCHI.space.html#bodies">bodies</a> (such as
+  text label Meshes). This function should be called whenever the camera
+  moves.
     </div>
     
 
@@ -668,7 +668,7 @@ called whenever the camera moves.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line280">line 280</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line282">line 282</a>
     </li></ul></dd>
     
     
@@ -715,7 +715,7 @@ called whenever the camera moves.
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 30 2013 00:00:06 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 30 2013 00:09:32 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

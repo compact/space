@@ -17,8 +17,8 @@ Math.roundDecimals = function (number, precision, trailingZeroes) {
 	return result;
 };
 /**
- * Round the given number "nicely", as in determine the number of decimals based
- * on the number of digits.
+ * Round the given number "nicely", as in determine the number of decimals
+ *   based on the number of digits.
  * @param    {Number} number The number to round.
  * @return   {Number}        The rounded result.
  * @memberOf Math

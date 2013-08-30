@@ -1,6 +1,7 @@
 /**
  * Contains astronomical bodies, which are represented by instances of the
- * {@link module:KIMCHI.space.Body} class, and their associated Object3Ds.
+ *   {@link module:KIMCHI.space.Body Body} class, and their associated
+ *   Object3Ds.
  * @namespace space
  * @memberOf module:KIMCHI
  */
@@ -10,8 +11,8 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	var space = {}, Body = function () {}, bodies = {};
 
 	/**
-	 * Raw data for each body, to be passed into the {@link Body}
-	 * constructor.
+	 * Raw data for each body, to be passed into the {@link
+	 *   module:KIMCHI.space.Body Body} constructor.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.data = [
@@ -208,13 +209,13 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	/**
-	 * Contains instances of {@link Body}.
+	 * Contains instances of {@link module:KIMCHI.space.Body Body}.
 	 * @memberOf module:KIMCHI.space
 	 */
 	bodies = {};
 
 	/**
-	 * Populate {@link bodies}.
+	 * Populate {@link module:KIMCHI.space.bodies bodies}.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.init = function () {
@@ -226,9 +227,9 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	/**
-	 * @returns {Array} Object3Ds from {@link bodies}. Note that each
-	 *   {@link Body} may have more than one Object3D, e.g. for orbit lines
-	 *   and text labels.
+	 * @returns {Array} Object3Ds from {@link module:KIMCHI.space.bodies
+	 *   bodies}. Note that each {@link module:KIMCHI.space.Body Body} may have
+	 *   more than one Object3D, e.g. for orbit lines and text labels.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.getObject3Ds = function () {
@@ -256,7 +257,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	/**
-	 * Move the {@link bodies}. TODO use delta
+	 * Move the {@link module:KIMCHI.space.bodies bodies}. TODO use delta
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.moveBodies = function (delta) {
@@ -271,10 +272,11 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 
 	/**
-	 * Without moving the {@link Body} Meshes themselves, update the
-	 * visibility, position, and size of all Object3Ds associated with the
-	 * {@link bodies} (such as text label Meshes). This function should be
-	 * called whenever the camera moves.
+	 * Without moving the {@link module:KIMCHI.space.Body Body} Meshes
+	 *   themselves, update the visibility, position, and size of all Object3Ds
+	 *   associated with the {@link module:KIMCHI.space.bodies bodies} (such as
+	 *   text label Meshes). This function should be called whenever the camera
+	 *   moves.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.moveBodyChildren = function () {
@@ -313,8 +315,8 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * @returns {Array} All bodies sorted by current distance from the camera.
-	 *   Each element is not a {@link Body}, but rather an object with
-	 *   properties 'name' and 'distance'.
+	 *   Each element is not a {@link module:KIMCHI.space.Body Body}, but rather
+	 *   an object with properties 'name' and 'distance'.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.getBodiesByDistance = function () {

@@ -1,6 +1,6 @@
 /**
- * Based on PointerLockControls.js.
- * Requires THREE.unitVectors, as defined in three.extensions.js.
+ * Based on PointerLockControls.js. Requires THREE.unitVectors, as defined in
+ *   three.extensions.js.
  * @author    mrdoob / http://mrdoob.com/ Edited by Chris.
  * @class     THREE.Controls
  * @memberOf  THREE

@@ -168,8 +168,9 @@
 
 
 	/**
-	 * For this Curve, create a Line which can be added to a scene. Based on
-	 *   http://mrdoob.github.io/three.js/examples/webgl_geometry_shapes.html
+	 * For this Curve, create a Line which can be added to a scene.
+	 *   Based on {@link
+	 *   http://mrdoob.github.io/three.js/examples/webgl_geometry_shapes.html}
 	 * @param    {Object}      options
 	 * <br>      position:     THREE.Vector3.
 	 * <br>      rotation:     THREE.Euler.

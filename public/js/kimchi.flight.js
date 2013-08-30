@@ -6,304 +6,304 @@
  * @memberOf  module:KIMCHI
  */
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
-	'use strict';
+  'use strict';
 
-	var flight = {}, Mode;
-	KIMCHI.flight = flight;
-
-
-	/**
-	 * The current flight mode.
-	 * @memberOf module:KIMCHI.flight
-	 */
-	flight.mode = false; // possible values are 'free', 'auto', and false
+  var flight = {}, Mode;
+  KIMCHI.flight = flight;
 
 
-
-	/**
-	 * Flight mode. Can be constructed only inside kimchi.flight.js.
-	 * @param       {String} name
-	 * @constructor Mode
-	 */
-	Mode = function (name) {
-		this.name = name;
-		this.enabled = false;
-	};
-	/**
-	 * Enable.
-	 * @memberOf Mode
-	 */
-	Mode.prototype.enable = function () {
-		KIMCHI.$overlay.hide();
-		KIMCHI.clock.start();
-		flight.mode = this.name;
-	};
-	/**
-	 * Disable.
-	 * @memberOf Mode
-	 */
-	Mode.prototype.disable = function () {
-		KIMCHI.clock.stop();
-		flight.mode = false;
-		KIMCHI.$overlay.show();
-		KIMCHI.nav.update();
-	};
-	/**
-	 * Toggle.
-	 * @memberOf Mode
-	 */
-	Mode.prototype.toggle = function (enable) {
-		if (typeof enable === 'boolean') {
-			if (enable) {
-				this.enable();
-			} else {
-				this.disable();
-			}
-		} else if (this.enabled) {
-			this.enable();
-		} else {
-			this.disable();
-		}
-	};
-	/**
-	 * In this mode, what happens in each animation frame?
-	 * @param    {Number} delta
-	 * @memberOf Mode
-	 */
-	Mode.prototype.animationFrame = function () {};
-	/**
-	 * Shortcut for KIMCHI.rendering.animate(this.animationFrame).
-	 * @memberOf Mode
-	 */
-	Mode.prototype.animate = function () {
-		KIMCHI.rendering.animate(this.animationFrame);
-	};
+  /**
+   * The current flight mode.
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.mode = false; // possible values are 'free', 'auto', and false
 
 
 
-	/**
-	 * Free flight.
-	 * @memberOf module:KIMCHI.flight
-	 */
-	flight.free = (function () {
-		var mode, colliding;
-
-		/**
-		 * @returns {Boolean} Whether the camera is current in collision.
-		 * @private
-		 */
-		colliding = (function () {
-			var translationVector, raycaster, intersection;
-
-			raycaster = new THREE.Raycaster();
-
-			return function () {
-				translationVector = KIMCHI.controls.getLocalTranslationVector();
-
-				// scaling may be necessary if translationVector's magnitude is much larger
-				// or smaller than the camera position
-	//		translationVector.multiplyScalar(1000);
-
-				if (translationVector.length() === 0) { // not moving, can't be colliding
-					return false;
-				}
-
-				raycaster.set(
-					KIMCHI.camera.position.clone(),
-					// calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
-					KIMCHI.camera.localToWorld(translationVector)
-						.sub(KIMCHI.camera.position)
-//				KIMCHI.camera.position.clone().sub(translationVector.applyMatrix4(KIMCHI.camera.matrix)),
-				);
-
-				// TODO make this variably dependent on body radius
-				raycaster.far = KIMCHI.config.collisionDistance;
-
-				intersection = raycaster.intersectObjects(
-					KIMCHI.space.getCollideableObject3Ds()
-				);
-				return intersection.length > 0;
-			};
-		}());
-
-		mode = new Mode();
-		mode.enable = function () {
-			Mode.prototype.enable.call(this);
-
-			KIMCHI.pointerLock.unbind();
-			$('#hud1').show();
-			KIMCHI.rendering.animate(this.animationFrame);
-			KIMCHI.controls.enable();
-		};
-		mode.disable = function () {
-			Mode.prototype.disable.call(this);
-
-			KIMCHI.controls.disable();
-			$('#hud1').hide();
-			KIMCHI.pointerLock.bind();
-		};
-		mode.animationFrame = function (delta) {
-			if (!colliding()) {
-				KIMCHI.controls.moveCamera(
-					delta,
-					flight.getTranslationSpeedMultiplier()
-				);
-			}
-
-			KIMCHI.space.moveBodies(delta);
-			KIMCHI.hud.update(delta);
-			KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
-		};
-
-		return mode;
-	}());
+  /**
+   * Flight mode. Can be constructed only inside kimchi.flight.js.
+   * @param       {String} name
+   * @constructor Mode
+   */
+  Mode = function (name) {
+    this.name = name;
+    this.enabled = false;
+  };
+  /**
+   * Enable.
+   * @memberOf Mode
+   */
+  Mode.prototype.enable = function () {
+    KIMCHI.$overlay.hide();
+    KIMCHI.clock.start();
+    flight.mode = this.name;
+  };
+  /**
+   * Disable.
+   * @memberOf Mode
+   */
+  Mode.prototype.disable = function () {
+    KIMCHI.clock.stop();
+    flight.mode = false;
+    KIMCHI.$overlay.show();
+    KIMCHI.nav.update();
+  };
+  /**
+   * Toggle.
+   * @memberOf Mode
+   */
+  Mode.prototype.toggle = function (enable) {
+    if (typeof enable === 'boolean') {
+      if (enable) {
+        this.enable();
+      } else {
+        this.disable();
+      }
+    } else if (this.enabled) {
+      this.enable();
+    } else {
+      this.disable();
+    }
+  };
+  /**
+   * In this mode, what happens in each animation frame?
+   * @param    {Number} delta
+   * @memberOf Mode
+   */
+  Mode.prototype.animationFrame = function () {};
+  /**
+   * Shortcut for KIMCHI.rendering.animate(this.animationFrame).
+   * @memberOf Mode
+   */
+  Mode.prototype.animate = function () {
+    KIMCHI.rendering.animate(this.animationFrame);
+  };
 
 
 
-	/**
-	 * Auto flight.
-	 * @memberOf module:KIMCHI.flight
-	 */
-	flight.auto = (function () {
-		var mode, panTo, translateTo;
+  /**
+   * Free flight.
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.free = (function () {
+    var mode, colliding;
 
-		/**
-		 * Pan (rotate) the camera towards the given Body (without translating).
-		 *   Return false to disable auto flight.
-		 * @returns {(undefined|false)}
-		 * @private
-		 */
-		panTo = (function () {
-			var initQuaternion, rotationMatrix, targetQuaternion, t;
+    /**
+     * @returns {Boolean} Whether the camera is current in collision.
+     * @private
+     */
+    colliding = (function () {
+      var translationVector, raycaster, intersection;
 
-			rotationMatrix = new THREE.Matrix4();
-			targetQuaternion = new THREE.Quaternion();
+      raycaster = new THREE.Raycaster();
 
-			return function (body) {
-				initQuaternion = KIMCHI.camera.quaternion.clone();
+      return function () {
+        translationVector = KIMCHI.controls.getLocalTranslationVector();
 
-				rotationMatrix.lookAt(
-					KIMCHI.camera.position,
-					body.mesh.position,
-					KIMCHI.camera.up
-				);
+        // scaling may be necessary if translationVector's magnitude is much larger
+        // or smaller than the camera position
+  //    translationVector.multiplyScalar(1000);
 
-				targetQuaternion.setFromRotationMatrix(rotationMatrix);
+        if (translationVector.length() === 0) { // not moving, can't be colliding
+          return false;
+        }
 
-				t = 0;
-				KIMCHI.rendering.animate(function (delta) {
-					// avoid rounding imprecision because we want the final rotation to be
-					// centered exactly onto the target body (t = 1)
-					if (t > 1 && t < 1 + 0.05) {
-						t = 1;
-					}
+        raycaster.set(
+          KIMCHI.camera.position.clone(),
+          // calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
+          KIMCHI.camera.localToWorld(translationVector)
+            .sub(KIMCHI.camera.position)
+//        KIMCHI.camera.position.clone().sub(translationVector.applyMatrix4(KIMCHI.camera.matrix)),
+        );
 
-					if (t <= 1) {
-						KIMCHI.camera.quaternion.copy(
-							initQuaternion.slerp(targetQuaternion, t)
-						);
-						mode.animationFrame(delta);
+        // TODO make this variably dependent on body radius
+        raycaster.far = KIMCHI.config.collisionDistance;
 
-						t += 0.05;
-					} else {
-						translateTo(body);
-						return false; // disable
-					}
-				});
-			};
-		}());
+        intersection = raycaster.intersectObjects(
+          KIMCHI.space.getCollideableObject3Ds()
+        );
+        return intersection.length > 0;
+      };
+    }());
 
-		/**
-		 * Translate the camera to the given Body until within range of collision.
-		 * @private
-		 */
-		translateTo = function (body) {
-			KIMCHI.rendering.animate(function (delta) {
-				if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) >=
-						body.radius + KIMCHI.config.collisionDistance) {
-					KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
-						flight.getTranslationSpeedMultiplier([body.mesh]));
-					mode.animationFrame(delta);
-				} else {
-					mode.disable();
-				}
-			});
-		};
+    mode = new Mode();
+    mode.enable = function () {
+      Mode.prototype.enable.call(this);
 
-		mode = new Mode();
-		mode.disable = function () {
-			Mode.prototype.disable.call(this);
+      KIMCHI.pointerLock.unbind();
+      $('#hud1').show();
+      KIMCHI.rendering.animate(this.animationFrame);
+      KIMCHI.controls.enable();
+    };
+    mode.disable = function () {
+      Mode.prototype.disable.call(this);
 
-			KIMCHI.notice.clear(); // TODO move this
-		};
-		mode.animationFrame = function (delta) {
-			KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
-			KIMCHI.hud.update(delta);
-		};
+      KIMCHI.controls.disable();
+      $('#hud1').hide();
+      KIMCHI.pointerLock.bind();
+    };
+    mode.animationFrame = function (delta) {
+      if (!colliding()) {
+        KIMCHI.controls.moveCamera(
+          delta,
+          flight.getTranslationSpeedMultiplier()
+        );
+      }
 
-		/**
-		 * Bind the "fly to" links.
-		 * @public
-		 */
-		mode.init = function () {
-			KIMCHI.nav.update(); // maybe shouldn't be here
+      KIMCHI.space.moveBodies(delta);
+      KIMCHI.hud.update(delta);
+      KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
+    };
 
-			$('.nav').on('click', 'a', function (event) {
-				var name, body;
-
-				// prevent the overlay from being clicked to trigger free flight mode
-				event.stopPropagation();
-
-				name = $(this).data('name');
-				body = KIMCHI.space.getBodies()[name];
-				if (typeof body === 'object') {
-					mode.flyTo(body);
-				} else { // TODO write a general function to get a body
-					console.log(name + ' not found in KIMCHI.flight.auto');
-				}
-			});
-		};
-		/**
-		 * Fly to the given Body. Two private functions are used sequentially to
-		 *   first pan and then translate to it. translateTo(body) is called when
-		 *   panTo(body) ends. disable() is called when translateTo(body) ends
-		 * @public
-		 */
-		mode.flyTo = function (body) {
-			KIMCHI.notice.set('Flying to ' + body.name + '...');
-			this.enable();
-			panTo(body);
-			// TODO make function queue for successive setTimeout() calls
-		};
-
-		return mode;
-	}());
+    return mode;
+  }());
 
 
 
-	/**
-	 * Return a number for scaling the camera translation speed (in every
-	 *   direction) depending on how close the camera is to the closest of the
-	 *   given collideable objects; if not given, consider all collideable
-	 *   objects.
-	 * @param    {Array} object3Ds
-	 * @returns  {Number}
-	 * @memberOf module:KIMCHI.flight
-	 */
-	flight.getTranslationSpeedMultiplier = function (object3Ds) {
-		if (typeof object3Ds === 'undefined') {
-			object3Ds = KIMCHI.space.getCollideableObject3Ds();
-		}
+  /**
+   * Auto flight.
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.auto = (function () {
+    var mode, panTo, translateTo;
 
-		// See space.getBodiesByDistance() for a similar function.
-		return _.map(object3Ds, function (object3D) {
-			return THREE.Object3D.distance(KIMCHI.camera, object3D);
-		}).sort(function (a, b) { // sort numerically
-			return a - b;
-		})[0];
-	};
+    /**
+     * Pan (rotate) the camera towards the given Body (without translating).
+     *   Return false to disable auto flight.
+     * @returns {(undefined|false)}
+     * @private
+     */
+    panTo = (function () {
+      var initQuaternion, rotationMatrix, targetQuaternion, t;
+
+      rotationMatrix = new THREE.Matrix4();
+      targetQuaternion = new THREE.Quaternion();
+
+      return function (body) {
+        initQuaternion = KIMCHI.camera.quaternion.clone();
+
+        rotationMatrix.lookAt(
+          KIMCHI.camera.position,
+          body.mesh.position,
+          KIMCHI.camera.up
+        );
+
+        targetQuaternion.setFromRotationMatrix(rotationMatrix);
+
+        t = 0;
+        KIMCHI.rendering.animate(function (delta) {
+          // avoid rounding imprecision because we want the final rotation to be
+          // centered exactly onto the target body (t = 1)
+          if (t > 1 && t < 1 + 0.05) {
+            t = 1;
+          }
+
+          if (t <= 1) {
+            KIMCHI.camera.quaternion.copy(
+              initQuaternion.slerp(targetQuaternion, t)
+            );
+            mode.animationFrame(delta);
+
+            t += 0.05;
+          } else {
+            translateTo(body);
+            return false; // disable
+          }
+        });
+      };
+    }());
+
+    /**
+     * Translate the camera to the given Body until within range of collision.
+     * @private
+     */
+    translateTo = function (body) {
+      KIMCHI.rendering.animate(function (delta) {
+        if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) >=
+            body.radius + KIMCHI.config.collisionDistance) {
+          KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
+            flight.getTranslationSpeedMultiplier([body.mesh]));
+          mode.animationFrame(delta);
+        } else {
+          mode.disable();
+        }
+      });
+    };
+
+    mode = new Mode();
+    mode.disable = function () {
+      Mode.prototype.disable.call(this);
+
+      KIMCHI.notice.clear(); // TODO move this
+    };
+    mode.animationFrame = function (delta) {
+      KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
+      KIMCHI.hud.update(delta);
+    };
+
+    /**
+     * Bind the "fly to" links.
+     * @public
+     */
+    mode.init = function () {
+      KIMCHI.nav.update(); // maybe shouldn't be here
+
+      $('.nav').on('click', 'a', function (event) {
+        var name, body;
+
+        // prevent the overlay from being clicked to trigger free flight mode
+        event.stopPropagation();
+
+        name = $(this).data('name');
+        body = KIMCHI.space.getBodies()[name];
+        if (typeof body === 'object') {
+          mode.flyTo(body);
+        } else { // TODO write a general function to get a body
+          console.log(name + ' not found in KIMCHI.flight.auto');
+        }
+      });
+    };
+    /**
+     * Fly to the given Body. Two private functions are used sequentially to
+     *   first pan and then translate to it. translateTo(body) is called when
+     *   panTo(body) ends. disable() is called when translateTo(body) ends
+     * @public
+     */
+    mode.flyTo = function (body) {
+      KIMCHI.notice.set('Flying to ' + body.name + '...');
+      this.enable();
+      panTo(body);
+      // TODO make function queue for successive setTimeout() calls
+    };
+
+    return mode;
+  }());
 
 
 
-	return KIMCHI;
+  /**
+   * Return a number for scaling the camera translation speed (in every
+   *   direction) depending on how close the camera is to the closest of the
+   *   given collideable objects; if not given, consider all collideable
+   *   objects.
+   * @param    {Array} object3Ds
+   * @returns  {Number}
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.getTranslationSpeedMultiplier = function (object3Ds) {
+    if (typeof object3Ds === 'undefined') {
+      object3Ds = KIMCHI.space.getCollideableObject3Ds();
+    }
+
+    // See space.getBodiesByDistance() for a similar function.
+    return _.map(object3Ds, function (object3D) {
+      return THREE.Object3D.distance(KIMCHI.camera, object3D);
+    }).sort(function (a, b) { // sort numerically
+      return a - b;
+    })[0];
+  };
+
+
+
+  return KIMCHI;
 }(KIMCHI || {}, _, jQuery, THREE));

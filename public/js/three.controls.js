@@ -1,13 +1,13 @@
+/**
+ * Based on PointerLockControls.js.
+ * Requires THREE.unitVectors, as defined in three.extensions.js.
+ * @author    mrdoob / http://mrdoob.com/ Edited by Chris.
+ * @class     THREE.Controls
+ * @memberOf  THREE
+ */
 (function ($, THREE) {
 	'use strict';
 
-	/**
-	 * Based on PointerLockControls.js.
-	 * Requires THREE.unitVectors, as defined in three.extensions.js.
-	 * @author    mrdoob / http://mrdoob.com/ Edited by Chris.
-	 * @namespace THREE.Controls
-	 * @memberOf  THREE
-	 */
 	THREE.Controls = function (camera, options) {
 		var self = this;
 
@@ -139,6 +139,7 @@
 	 *   movements (both translations and rotations).
 	 * @param    {Number} translationSpeedMultiplier Additional multiplier which
 	 *   applies only to translations.
+	 * @function
 	 * @memberOf THREE.Controls
 	 */
 	THREE.Controls.prototype.moveCamera = (function () {
@@ -181,6 +182,7 @@
 	 *   .getTranslationVector().length() > 0.
 	 * @returns  {THREE.Vector3} A vector corresponding to the current local
 	 *                           movement direction(s).
+	 * @function
 	 * @memberOf THREE.Controls
 	 */
 	THREE.Controls.prototype.getLocalTranslationVector = (function () {

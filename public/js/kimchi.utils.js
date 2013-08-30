@@ -1,10 +1,10 @@
 /** @namespace Math */
 /**
- * @param  {Number}  number         The number to round.
- * @param  {Number}  precision      The number of decimal places to round to.
- * @param  {Boolean} trailingZeroes Whether to include trailing zeroes.
+ * @param    {Number}  number         The number to round.
+ * @param    {Number}  precision      The number of decimal places to round to.
+ * @param    {Boolean} trailingZeroes Whether to include trailing zeroes.
  *                                    Defaults true.
- * @return {Number}                 The rounded result..
+ * @return   {Number}                 The rounded result..
  * @memberOf Math
  */
 Math.roundDecimals = function (number, precision, trailingZeroes) {
@@ -19,8 +19,8 @@ Math.roundDecimals = function (number, precision, trailingZeroes) {
 /**
  * Round the given number "nicely", as in determine the number of decimals based
  * on the number of digits.
- * @param  {Number} number The number to round.
- * @return {Number}        The rounded result.
+ * @param    {Number} number The number to round.
+ * @return   {Number}        The rounded result.
  * @memberOf Math
  */
 Math.roundNicely = function (number) {
@@ -43,7 +43,7 @@ Math.roundNicely = function (number) {
 Date.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
 	'Oct', 'Nov', 'Dec'];
 /**
- * @return {String} Date custom formatted for the KIMCHI hud.
+ * @return   {String} Date custom formatted for the KIMCHI hud.
  * @memberOf Date
  */
 Date.prototype.format = function () {
@@ -59,7 +59,7 @@ Date.prototype.format = function () {
  * <br>   KIMCHI.foo = ...;
  * <br>   return KIMCHI;
  * <br> }(KIMCHI));
- * @namespace KIMCHI
+ * @module KIMCHI
  */
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
@@ -68,7 +68,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Functions for rendering and animating using the three.js renderer.
-	 * @memberOf KIMCHI
+	 * @memberOf module:KIMCHI
 	 */
 	KIMCHI.rendering = {
 		'render': function () {
@@ -95,7 +95,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Heads up display during free flight.
-	 * @memberOf KIMCHI
+	 * @memberOf module:KIMCHI
 	 */
 	KIMCHI.hud = {};
 	KIMCHI.hud.update = function (delta) {
@@ -131,7 +131,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * The navigation that appears when free flight is paused.
-	 * @memberOf KIMCHI
+	 * @memberOf module:KIMCHI
 	 */
 	KIMCHI.nav = {};
 	KIMCHI.nav.update = function () {
@@ -154,7 +154,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Camera and renderer dimensions.
-	 * @memberOf KIMCHI
+	 * @memberOf module:KIMCHI
 	 */
 	KIMCHI.size = {
 		'width': 0,
@@ -178,7 +178,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * Notice box.
-	 * @memberOf KIMCHI
+	 * @memberOf module:KIMCHI
 	 */
 	KIMCHI.notice = {
 		'$notice': $(),

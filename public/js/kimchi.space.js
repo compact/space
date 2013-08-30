@@ -1,19 +1,23 @@
+/**
+ * Contains astronomical bodies, which are represented by instances of the
+ * {@link Body} class, and their associated Object3Ds.
+ * @namespace space
+ * @memberOf module:KIMCHI
+ */
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	/**
-	 * Contains astronomical bodies, which are represented by instances of the
-	 * {@link space.Body} class, and their associated Object3Ds.
-	 * @namespace space
-	 * @memberOf KIMCHI
-	 */
-	var space = {};
+	var space, Body, bodies;
+	space = {
+		'Body': Body,
+		'bodies': bodies
+	};
 	KIMCHI.space = space;
 
 	/**
-	 * Raw data for each body, to be passed into the {@link space.Body}
+	 * Raw data for each body, to be passed into the {@link Body}
 	 * constructor.
-	 * @memberOf space
+	 * @memberOf module:KIMCHI.space
 	 */
 	space.data = [
 		{
@@ -141,9 +145,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	 *                       revolutions.
 	 * <br> texturePath:     Optional path to the texture image. Defaults to
 	 *                       'name.jpg'.
-	 * @memberOf space
+	 * @class    module:KIMCHI.space.Body
+	 * @memberOf module:KIMCHI.space
 	 */
-	space.Body = function (options) {
+	Body = function (options) {
 		var length, curve;
 
 		_.assign(this, { // default options
@@ -208,32 +213,32 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	/**
-	 * Contains instances of {@link space.Body}.
-	 * @memberOf space
+	 * Contains instances of {@link Body}.
+	 * @memberOf module:KIMCHI.space
 	 */
-	space.bodies = {};
+	bodies = {};
 
 	/**
-	 * Populate {@link space.bodies}.
-	 * @memberOf space
+	 * Populate {@link bodies}.
+	 * @memberOf module:KIMCHI.space
 	 */
 	space.init = function () {
 		_.forEach(space.data, function (options) {
-			space.bodies[options.name] = new space.Body(options);
+			bodies[options.name] = new Body(options);
 		});
 	};
 
 
 
 	/**
-	 * @returns {Array} Object3Ds from {@link space.bodies}. Note that each
-	 *   {@link space.Body} may have more than one Object3D, e.g. for orbit lines
+	 * @returns {Array} Object3Ds from {@link bodies}. Note that each
+	 *   {@link Body} may have more than one Object3D, e.g. for orbit lines
 	 *   and text labels.
-	 * @memberOf space
+	 * @memberOf module:KIMCHI.space
 	 */
 	space.getObject3Ds = function () {
 		var object3Ds = [];
-		_.forEach(space.bodies, function (body) {
+		_.forEach(bodies, function (body) {
 			object3Ds.push(body.mesh, body.line, body.labelMesh);
 		});
 		return object3Ds;
@@ -241,11 +246,11 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * @returns {Array} Object3Ds set to be collideable with the camera.
-	 * @memberOf space
+	 * @memberOf module:KIMCHI.space
 	 */
 	space.getCollideableObject3Ds = function () {
 		var object3Ds = [];
-		_.forEach(space.bodies, function (body) {
+		_.forEach(bodies, function (body) {
 			if (body.collideable) {
 				object3Ds.push(body.mesh);
 			}
@@ -256,11 +261,11 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 	/**
-	 * Move the {@link space.bodies}. TODO use delta
-	 * @memberOf space
+	 * Move the {@link bodies}. TODO use delta
+	 * @memberOf module:KIMCHI.space
 	 */
 	space.moveBodies = function (delta) {
-		_.forEach(space.bodies, function (body) {
+		_.forEach(bodies, function (body) {
 			var distance, scale;
 
 			// move the body mesh (custom function)
@@ -271,14 +276,14 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 	};
 
 	/**
-	 * Without moving the {@link space.Body} Meshes themselves, update the
+	 * Without moving the {@link Body} Meshes themselves, update the
 	 * visibility, position, and size of all Object3Ds associated with the
-	 * {@link space.bodies} (such as text label Meshes). This function should be
+	 * {@link bodies} (such as text label Meshes). This function should be
 	 * called whenever the camera moves.
-	 * @memberOf space
+	 * @memberOf module:KIMCHI.space
 	 */
 	space.moveBodyChildren = function () {
-		_.forEach(space.bodies, function (body) {
+		_.forEach(bodies, function (body) {
 			var distance, scale, projector, label;
 
 			distance = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
@@ -313,26 +318,26 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 	/**
 	 * @returns {Array} All bodies sorted by current distance from the camera.
-	 *   Each element is not a {@link space.Body}, but rather an object with
+	 *   Each element is not a {@link Body}, but rather an object with
 	 *   properties 'name' and 'distance'.
-	 * @memberOf space
+	 * @memberOf module:KIMCHI.space
 	 */
 	space.getBodiesByDistance = function () {
-		var bodies = [];
+		var sorted = [];
 
-		_.forEach(space.bodies, function (body, name) {
-			bodies.push({
+		_.forEach(bodies, function (body, name) {
+			sorted.push({
 				'name': name,
 				'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
 			});
 		});
 
 		// sort numerically
-		bodies.sort(function (body1, body2) {
+		sorted.sort(function (body1, body2) {
 			return body1.distance - body2.distance;
 		});
 
-		return bodies;
+		return sorted;
 	};
 
 

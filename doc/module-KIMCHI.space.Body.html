@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Curve</title>
+    <title>JSDoc: Class: Body</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Curve</h1>
+    <h1 class="page-title">Class: Body</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="THREE.html">THREE</a>.</span>
+        <span class="ancestors"><a href="module-KIMCHI.html">KIMCHI</a><a href="module-KIMCHI.space.html">.space</a>.</span>
     
-    Curve
+    Body
     </h2>
     
 </header>  
@@ -41,90 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="Curve"><span class="type-signature"></span>new Curve<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.extensions.js.html">three.extensions.js</a>, <a href="three.extensions.js.html#line5">line 5</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <h4 class="name" id="createLine"><span class="type-signature"></span>createLine<span class="signature">(options)</span><span class="type-signature"> &rarr; {THREE.Line}</span></h4>
+    <h4 class="name" id="Body"><span class="type-signature"></span>new Body<span class="signature">(options)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -132,8 +49,7 @@
     
     
     <div class="description">
-        For this Curve, create a Line which can be added to a scene. Based on
-  http://mrdoob.github.io/three.js/examples/webgl_geometry_shapes.html
+        Class for astronomical bodies. All spheres for now.
     </div>
     
 
@@ -183,12 +99,19 @@
             
             
             
-            <td class="description last"><br>      position:     THREE.Vector3.
-<br>      rotation:     THREE.Euler.
-<br>      color:        Hexadecimal.
-<br>      opacity:      Number.
-<br>      lineSegments: Number of line segments to make up the Line.
-<br>      scale:        THREE.Vector3.</td>
+            <td class="description last">Options.
+<br> name:            Required. Displayed to users.
+<br> radius:          In km.
+<br> position:        Vector3 of the body's initial position, in AU. Not to
+                      be confused with Mesh.position, which gives the
+                      current position.
+<br> rotation:        Vector3 of the body's initial Euler rotation.
+<br> visibleDistance: How far away the text mesh remains visible.
+<br>                  TODO rename to labelMeshDistance or something.
+<br> move:            Optional. Given an Object3D, perform rotations and
+                      revolutions.
+<br> texturePath:     Optional path to the texture image. Defaults to
+                      'name.jpg'.</td>
         </tr>
 	
 	
@@ -219,7 +142,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.extensions.js.html">three.extensions.js</a>, <a href="three.extensions.js.html#line183">line 183</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line133">line 133</a>
     </li></ul></dd>
     
     
@@ -240,29 +163,25 @@
     
     
     
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">THREE.Line</span>
-
-
-	</dd>
-</dl>
-
-        
     
     
 </dd>
 
-        </dl>
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

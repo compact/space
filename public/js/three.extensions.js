@@ -3,19 +3,19 @@
  * @namespace THREE
  */
 /**
- * @namespace THREE.Object3D
+ * @class     THREE.Object3D
  * @memberOf  THREE
  */
 /**
- * @namespace THREE.PerspectiveCamera
+ * @class     THREE.PerspectiveCamera
  * @memberOf  THREE
  */
 /**
- * @namespace THREE.Matrix3
+ * @class     THREE.Matrix3
  * @memberOf  THREE
  */
 /**
- * @namespace THREE.Curve
+ * @class     THREE.Curve
  * @memberOf  THREE
  */
 
@@ -51,8 +51,9 @@
 
 	/**
 	 * "Overload" the original function of THREE.Object3D.prototype.add.
-	 * @param {(THREE.Object3D|Array)} param
+	 * @param    {(THREE.Object3D|Array)} param
 	 *   Either an Object3D or an array of Object3Ds to be added.
+	 * @function
 	 * @memberOf THREE.Object3D
 	 */
 	THREE.Object3D.prototype.add = (function () {
@@ -76,6 +77,7 @@
 	 * @param    {THREE.Vector3} worldAxis Not local based on the object, but
 	 *                                     but global in the world.
 	 * @param    {Number}        angle     In Radians.
+	 * @function
 	 * @memberOf THREE.Object3D
 	 */
 	THREE.Object3D.prototype.orbit = (function () {
@@ -133,6 +135,7 @@
 	 * We overwrite getInverse() because the original function also sets this and
 	 *   requires a Matrix4.
 	 * @returns  {Matrix3} The inverse matrix.
+	 * @function
 	 * @memberOf THREE.Matrix3
 	 */
 	THREE.Matrix3.prototype.getInverse = (function () {

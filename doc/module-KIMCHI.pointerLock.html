@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Controls</title>
+    <title>JSDoc: Namespace: pointerLock</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Controls</h1>
+    <h1 class="page-title">Namespace: pointerLock</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="THREE.html">THREE</a>.</span>
+        <span class="ancestors"><a href="module-KIMCHI.html">KIMCHI</a>.</span>
     
-    Controls
+    pointerLock
     </h2>
     
 </header>  
@@ -40,27 +40,10 @@
     
     
         
-<dt>
-    <h4 class="name" id="Controls"><span class="type-signature"></span>new Controls<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Based on PointerLockControls.js.
-Requires THREE.unitVectors, as defined in three.extensions.js.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
+            <div class="description">Pointer lock state (not controls, which are handled by three.controls.js).</div>
+        
+        
+        
 <dl class="details">
     
         
@@ -73,13 +56,6 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>mrdoob / http://mrdoob.com/ Edited by Chris.</li>
-        </ul>
-    </dd>
-    
     
     
     
@@ -90,7 +66,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line1">line 1</a>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line1">line 1</a>
     </li></ul></dd>
     
     
@@ -101,20 +77,8 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
 </dl>
 
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
+        
+        
     
     </div>
     
@@ -134,14 +98,14 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
         <dl>
             
 <dt>
-    <h4 class="name" id="enabled"><span class="type-signature"></span>enabled<span class="type-signature"></span></h4>
+    <h4 class="name" id="pointerLock.keydownInProgress"><span class="type-signature">&lt;static> </span>pointerLock.keydownInProgress<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Whether the controls are currently enabled.
+        Whether the keydown key (Escape, in our case) is currently being pressed.
     </div>
     
     
@@ -170,7 +134,62 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line102">line 102</a>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line112">line 112</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pointerLock.requestPointerLock"><span class="type-signature">&lt;static> </span>pointerLock.requestPointerLock<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The browser's requestPointerLock function, used in
+pointerLock.request.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line48">line 48</a>
     </li></ul></dd>
     
     
@@ -194,7 +213,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
         <dl>
             
 <dt>
-    <h4 class="name" id="disable"><span class="type-signature"></span>disable<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="pointerLock.bind"><span class="type-signature">&lt;static> </span>pointerLock.bind<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -202,7 +221,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     
     <div class="description">
-        Disable the controls.
+        Bind the event handlers for triggering the request of pointer lock.
     </div>
     
 
@@ -235,7 +254,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line124">line 124</a>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line79">line 79</a>
     </li></ul></dd>
     
     
@@ -263,7 +282,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
         
             
 <dt>
-    <h4 class="name" id="enable"><span class="type-signature"></span>enable<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="pointerLock.click"><span class="type-signature">&lt;static> </span>pointerLock.click<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -271,7 +290,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     
     <div class="description">
-        Enable the controls.
+        The event handler for clicking to request pointer lock.
     </div>
     
 
@@ -304,7 +323,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line108">line 108</a>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line117">line 117</a>
     </li></ul></dd>
     
     
@@ -332,7 +351,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
         
             
 <dt>
-    <h4 class="name" id="getLocalTranslationVector"><span class="type-signature"></span>getLocalTranslationVector<span class="signature">()</span><span class="type-signature"> &rarr; {THREE.Vector3}</span></h4>
+    <h4 class="name" id="pointerLock.init"><span class="type-signature">&lt;static> </span>pointerLock.init<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -340,8 +359,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     
     <div class="description">
-        To check whether the camera is currently moving, check
-  .getTranslationVector().length() > 0.
+        Has to be called once, before any pointer lock requests.
     </div>
     
 
@@ -374,259 +392,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line188">line 188</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    A vector corresponding to the current local
-                          movement direction(s).
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">THREE.Vector3</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getWorldTranslationVector"><span class="type-signature"></span>getWorldTranslationVector<span class="signature">()</span><span class="type-signature"> &rarr; {THREE.Vector3}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Not used; can delete.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line226">line 226</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">THREE.Vector3</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="moveCamera"><span class="type-signature"></span>moveCamera<span class="signature">(speedMultiplier, translationSpeedMultiplier)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Move the camera based on the current states.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>speedMultiplier</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Delta which applies to all
-  movements (both translations and rotations).</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>translationSpeedMultiplier</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Additional multiplier which
-  applies only to translations.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line145">line 145</a>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line29">line 29</a>
     </li></ul></dd>
     
     
@@ -654,7 +420,7 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
         
             
 <dt>
-    <h4 class="name" id="resetStates"><span class="type-signature"></span>resetStates<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="pointerLock.keydown"><span class="type-signature">&lt;static> </span>pointerLock.keydown<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -662,7 +428,11 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     
     <div class="description">
-        Reset all movement states to false.
+        The event handler for pressing Escape to request pointer lock. We request
+pointer lock only on keyup; otherwise, the continued Escape keydown event
+causes the pointer lock to disable immediately, even if one lets go of the
+Escape key asap. Also, the flag pointerLock.keydownInProgress prevents
+multiple handlers of .one('keyup') from being binded.
     </div>
     
 
@@ -695,7 +465,146 @@ Requires THREE.unitVectors, as defined in three.extensions.js.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="three.controls.js.html">three.controls.js</a>, <a href="three.controls.js.html#line83">line 83</a>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line97">line 97</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pointerLock.request"><span class="type-signature">&lt;static> </span>pointerLock.request<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Request pointer lock from the browser. This is called whenever the user
+enters free flight mode.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line17">line 17</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pointerLock.unbind"><span class="type-signature">&lt;static> </span>pointerLock.unbind<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Unbind the event handlers for triggering the request of pointer lock.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="kimchi.pointerlock.js.html">kimchi.pointerlock.js</a>, <a href="kimchi.pointerlock.js.html#line86">line 86</a>
     </li></ul></dd>
     
     

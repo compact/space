@@ -1,11 +1,11 @@
+/**
+ * KIMCHI configuration options.
+ * @namespace config
+ * @memberOf module:KIMCHI
+ */
 var KIMCHI = (function (KIMCHI, THREE) {
 	'use strict';
 
-	/**
-	 * KIMCHI configuration options.
-	 * @namespace config
-	 * @memberOf KIMCHI
-	 */
 	KIMCHI.config = {
 		'debug': true,
 		'camera': {

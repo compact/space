@@ -1,20 +1,20 @@
+/**
+ * The different flight modes:
+ * <br> free: User-controlled flight.
+ * <br> auto: Automatically guided flight.
+ * @namespace flight
+ * @memberOf  module:KIMCHI
+ */
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
 	var flight = {};
-	/**
-	 * The different flight modes:
-	 * <br> free: User-controlled flight.
-	 * <br> auto: Automatically guided flight.
-	 * @namespace flight
-	 * @memberOf KIMCHI
-	 */
 	KIMCHI.flight = flight;
 
 
 	/**
 	 * The current flight mode.
-	 * @memberOf flight
+	 * @memberOf module:KIMCHI.light
 	 */
 	flight.mode = false; // possible values are 'free', 'auto', and false
 

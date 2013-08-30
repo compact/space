@@ -41,8 +41,8 @@
     
         
             <div class="description">Contains astronomical bodies, which are represented by instances of the
-  <a href="module-KIMCHI.space.Body.html">Body</a> class, and their associated
-  Object3Ds.</div>
+  <a href="Body.html">Body</a> class, and their associated Object3Ds. Can only be constructed
+  inside kimchi.space.js.</div>
         
         
         
@@ -91,13 +91,6 @@
     
     
     
-        <h3 class="subsection-title">Classes</h3>
-        
-        <dl>
-            <dt><a href="module-KIMCHI.space.Body.html">Body</a></dt>
-            <dd></dd>
-        </dl>
-    
     
     
     
@@ -114,7 +107,7 @@
 <dd>
     
     <div class="description">
-        Raw data for each body, to be passed into the <a href="module-KIMCHI.space.Body.html">Body</a> constructor.
+        Raw data for each body, to be passed into the Body constructor.
     </div>
     
     
@@ -143,7 +136,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line19">line 19</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line18">line 18</a>
     </li></ul></dd>
     
     
@@ -204,7 +197,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line334">line 334</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line329">line 329</a>
     </li></ul></dd>
     
     
@@ -230,8 +223,8 @@
             
 <div class="param-desc">
     All bodies sorted by current distance from the camera.
-  Each element is not a <a href="module-KIMCHI.space.Body.html">Body</a>, but rather
-  an object with properties 'name' and 'distance'.
+  Each element is not a Body, but rather an object with properties 'name'
+  and 'distance'.
 </div>
 
 
@@ -293,7 +286,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line259">line 259</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line257">line 257</a>
     </li></ul></dd>
     
     
@@ -380,7 +373,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line247">line 247</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line245">line 245</a>
     </li></ul></dd>
     
     
@@ -405,7 +398,7 @@
     
             
 <div class="param-desc">
-    Object3Ds from   bodies. Note that each <a href="module-KIMCHI.space.Body.html">Body</a> may have
+    Object3Ds from the Bodies. Note that each Body may have
   more than one Object3D, e.g. for orbit lines and text labels.
 </div>
 
@@ -439,7 +432,7 @@
     
     
     <div class="description">
-        Populate bodies.
+        Populate the private bodies object.
     </div>
     
 
@@ -472,7 +465,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line228">line 228</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line227">line 227</a>
     </li></ul></dd>
     
     
@@ -508,7 +501,7 @@
     
     
     <div class="description">
-        Move the bodies. TODO use delta
+        Move the Bodies. TODO use delta
     </div>
     
 
@@ -541,7 +534,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line275">line 275</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line273">line 273</a>
     </li></ul></dd>
     
     
@@ -577,9 +570,8 @@
     
     
     <div class="description">
-        Without moving the {@link module:KIMCHI.space.Body Body} Meshes
-  themselves, update the visibility, position, and size of all Object3Ds
-  associated with the bodies (such as
+        Without moving the Body Meshes themselves, update the visibility,
+  position, and size of all Object3Ds associated with the Bodies (such as
   text label Meshes). This function should be called whenever the camera
   moves. TODO use delta
     </div>
@@ -614,7 +606,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line294">line 294</a>
+        <a href="kimchi.space.js.html">kimchi.space.js</a>, <a href="kimchi.space.js.html#line289">line 289</a>
     </li></ul></dd>
     
     
@@ -655,13 +647,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-Date.html">Date</a></li><li><a href="external-Math.html">Math</a></li><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="module-KIMCHI.space.Body.html">Body</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-Date.html">Date</a></li><li><a href="external-Math.html">Math</a></li><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 30 2013 02:03:07 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 30 2013 02:33:55 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

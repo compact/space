@@ -21,7 +21,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 	/**
-	 * Flight mode.
+	 * Flight mode. Can be constructed only inside kimchi.flight.js.
 	 * @param       {String} name
 	 * @constructor Mode
 	 */

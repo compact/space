@@ -1,7 +1,7 @@
 /**
  * Contains astronomical bodies, which are represented by instances of the
- *   {@link module:KIMCHI.space.Body Body} class, and their associated
- *   Object3Ds.
+ *   {@link Body} class, and their associated Object3Ds. Can only be constructed
+ *   inside kimchi.space.js.
  * @namespace space
  * @memberOf module:KIMCHI
  */
@@ -12,8 +12,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	KIMCHI.space = space;
 
 	/**
-	 * Raw data for each body, to be passed into the {@link
-	 *   module:KIMCHI.space.Body Body} constructor.
+	 * Raw data for each body, to be passed into the Body constructor.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.data = [
@@ -141,8 +140,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	 *                       revolutions.
 	 * <br> texturePath:     Optional path to the texture image. Defaults to
 	 *                       'name.jpg'.
-	 * @constructor
-	 * @memberOf module:KIMCHI.space
+	 * @constructor Body
 	 */
 	Body = function (options) {
 		var length, curve;
@@ -205,24 +203,26 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 //	this.$label = $('<div class="label">').text(this.name).appendTo('body');
 	};
+
 	/**
 	 * Bodies do not move by default; this function is to be overwritten by Body
 	 *   instances.
-	 * @param {Number} delta
+	 * @param    {Number} delta
+	 * @memberOf Body
 	 */
 	Body.prototype.move = function () {};
 
 
 
 	/**
-	 * Contains instances of {@link module:KIMCHI.space.Body Body}.
+	 * Contains instances of Body.
 	 * @memberOf module:KIMCHI.space
 	 * @private
 	 */
 	bodies = {};
 
 	/**
-	 * Populate {@link module:KIMCHI.space.bodies bodies}.
+	 * Populate the private bodies object.
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.init = function () {
@@ -239,8 +239,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	};
 
 	/**
-	 * @returns {Array} Object3Ds from {@link module:KIMCHI.space.bodies
-	 *   bodies}. Note that each {@link module:KIMCHI.space.Body Body} may have
+	 * @returns {Array} Object3Ds from the Bodies. Note that each Body may have
 	 *   more than one Object3D, e.g. for orbit lines and text labels.
 	 * @memberOf module:KIMCHI.space
 	 */
@@ -269,7 +268,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 	/**
-	 * Move the {@link module:KIMCHI.space.bodies bodies}. TODO use delta
+	 * Move the Bodies. TODO use delta
 	 * @memberOf module:KIMCHI.space
 	 */
 	space.moveBodies = function (delta) {
@@ -282,9 +281,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	};
 
 	/**
-	 * Without moving the {@link module:KIMCHI.space.Body Body} Meshes
-	 *   themselves, update the visibility, position, and size of all Object3Ds
-	 *   associated with the {@link module:KIMCHI.space.bodies bodies} (such as
+	 * Without moving the Body Meshes themselves, update the visibility,
+	 *   position, and size of all Object3Ds associated with the Bodies (such as
 	 *   text label Meshes). This function should be called whenever the camera
 	 *   moves. TODO use delta
 	 * @memberOf module:KIMCHI.space
@@ -324,10 +322,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 	/**
-	 * @returns {Array} All bodies sorted by current distance from the camera.
-	 *   Each element is not a {@link module:KIMCHI.space.Body Body}, but rather
-	 *   an object with properties 'name' and 'distance'.
-	 * @memberOf module:KIMCHI.space
+	  * @returns {Array} All bodies sorted by current distance from the camera.
+	  *   Each element is not a Body, but rather an object with properties 'name'
+	  *   and 'distance'.
+	  * @memberOf module:KIMCHI.space
 	 */
 	space.getBodiesByDistance = function () {
 		var sorted = [];

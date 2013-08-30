@@ -93,16 +93,16 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      * @private
      */
     colliding = (function () {
-      var translationVector, raycaster, intersection;
+      var translationVector, raycaster, intersects, returnValue;
 
       raycaster = new THREE.Raycaster();
 
       return function () {
         translationVector = KIMCHI.controls.getLocalTranslationVector();
 
-        // scaling may be necessary if translationVector's magnitude is much larger
-        // or smaller than the camera position
-  //    translationVector.multiplyScalar(1000);
+        // scaling may be necessary if translationVector's magnitude is much
+        // larger or smaller than the camera position
+//      translationVector.multiplyScalar(1000);
 
         if (translationVector.length() === 0) { // not moving, can't be colliding
           return false;
@@ -116,13 +116,25 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 //        KIMCHI.camera.position.clone().sub(translationVector.applyMatrix4(KIMCHI.camera.matrix)),
         );
 
-        // TODO make this variably dependent on body radius
-        raycaster.far = KIMCHI.config.collisionDistance;
-
-        intersection = raycaster.intersectObjects(
+        intersects = raycaster.intersectObjects(
           KIMCHI.space.getCollideableObject3Ds()
         );
-        return intersection.length > 0;
+
+        // no objects are in the current direction of translation, so not
+        // colliding
+        if (intersects.length === 0) {
+          return false;
+        }
+return true;
+        returnValue = false;
+        _.forEach(intersects, function (intersect) {
+          // TODO take into account the object's Body's radius
+          if (intersect.distance * KIMCHI.config.scales.radius * 149597871 <
+              KIMCHI.config.collisionDistance) {
+            returnValue = true;
+          }
+        });
+        return returnValue;
       };
     }());
 

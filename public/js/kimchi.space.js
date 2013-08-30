@@ -8,7 +8,7 @@
 var KIMCHI = (function (KIMCHI, $, THREE) {
 	'use strict';
 
-	var space = {}, Body = function () {}, bodies = {};
+	var space = {}, Body, bodies;
 
 	/**
 	 * Raw data for each body, to be passed into the {@link

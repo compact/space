@@ -70,7 +70,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	 * @param    {Number} delta
 	 * @memberOf Mode
 	 */
-	Mode.prototype.animationFrame = function (delta) {};
+	Mode.prototype.animationFrame = function () {};
 	/**
 	 * Shortcut for KIMCHI.rendering.animate(this.animationFrame).
 	 * @memberOf Mode

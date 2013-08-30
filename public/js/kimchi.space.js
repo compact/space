@@ -210,7 +210,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	 *   instances.
 	 * @param {Number} delta
 	 */
-	Body.prototype.move = function (delta) {};
+	Body.prototype.move = function () {};
 
 
 
@@ -274,8 +274,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	 */
 	space.moveBodies = function (delta) {
 		_.forEach(bodies, function (body) {
-			var distance, scale;
-
 			// move the body mesh (custom function)
 			body.move(delta);
 
@@ -293,7 +291,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 	 */
 	space.moveBodyChildren = function (delta) {
 		_.forEach(bodies, function (body) {
-			var distance, scale, projector, label;
+			var distance, scale;
 
 			distance = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
 
@@ -314,10 +312,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 				var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
 					.normalize().multiplyScalar(body.radius + 0.01);
 				var w = body.mesh.position.clone().add(v);
-				var x = body.mesh.position.clone().cross(v).cross(v)
+/*				var x = body.mesh.position.clone().cross(v).cross(v)
 					.normalize().multiplyScalar(
 						body.labelMesh.geometry.boundingSphere.radius / 100
-					);
+					);*/
 				body.labelMesh.position.copy(w);//.add(x);
 			}
 		});

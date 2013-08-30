@@ -8,6 +8,7 @@
  * @memberOf external:Math
  */
 Math.roundDecimals = function (number, precision, trailingZeroes) {
+	'use strict';
 	var multiplier, result;
 	multiplier = Math.pow(10, precision);
 	result = Math.round(number * multiplier) / multiplier;
@@ -24,6 +25,7 @@ Math.roundDecimals = function (number, precision, trailingZeroes) {
  * @memberOf external:Math
  */
 Math.roundNicely = function (number) {
+	'use strict';
 	if (number < 1) {
 		return Math.roundDecimals(number, 2);
 	} else if (number < 10) {
@@ -49,6 +51,7 @@ Date.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
  * @memberOf external:Date
  */
 Date.prototype.format = function () {
+	'use strict';
 	return Date.months[this.getMonth()] + ' ' + this.getDate() + ', ' +
 		this.getFullYear();
 };

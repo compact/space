@@ -317,10 +317,25 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**
-    * @returns {Array} All bodies sorted by current distance from the camera.
-    *   Each element is not a Body, but rather an object with properties 'name'
-    *   and 'distance'.
-    * @memberOf module:KIMCHI.space
+   * @returns  {Array} Numbers representing distances to the given Object3Ds.
+   * @memberOf module:KIMCHI.space
+   */
+  space.getDistances = function (object3Ds) {
+    return _.map(object3Ds, function (object3D) {
+      return THREE.Object3D.distance(KIMCHI.camera, object3D);
+    });
+  };
+  space.getClosestDistance = function (object3Ds) {
+    return space.getDistances(object3Ds).sort(function (distance1, distance2) {
+      return distance1 - distance2;
+    })[0];
+  };
+
+  /**
+   * @returns  {Array} All bodies sorted by current distance from the camera.
+   *   Each element is not a Body, but rather an object with properties 'name'
+   *   and 'distance'.
+   * @memberOf module:KIMCHI.space
    */
   space.getBodiesByDistance = function () {
     return _.map(bodies, function (body, name) {

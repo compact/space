@@ -38,9 +38,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'visibleDistance': 1000000,
       'mesh': (function () {
         jsonLoader.load('js/testconvert.js', function (geometry, materials) {
-          data[1].mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-            'map': new THREE.ImageUtils.loadTexture('images/textures/lolwtf.jpg')
-          }));
+//          data[1].mesh = new THREE.Mesh(geometry, materials);
         });
       }())
     },
@@ -68,8 +66,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'position': new THREE.Vector3(0, 1.00000011, 0),
       'visibleDistance': 50,
       'move': function () {
-      this.mesh.rotateOnAxis((new THREE.Vector3(1, 2, 3)).normalize(), 0.1);
-//    this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+        this.mesh.rotateOnAxis((new THREE.Vector3(1, 2, 3)).normalize(), 0.1);
+//      this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
       },
       'children': [
         {
@@ -152,6 +150,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * <br> rotation:        Vector3 of the body's initial Euler rotation.
    * <br> visibleDistance: How far away the text mesh remains visible.
    * <br>                  TODO rename to labelMeshDistance or something.
+   * <br> mesh:            Optional. If not given, a Mesh is automatically
+   *                       generated.
    * <br> move:            Optional. Given an Object3D, perform rotations and
    *                       revolutions.
    * <br> texturePath:     Optional path to the texture image. Defaults to
@@ -172,9 +172,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
 
-    // the radius is scaled
-    this.radius *= KIMCHI.config.scales.radius;
-
     // create a Mesh for the body; it can already be set in data
     if (typeof this.mesh !== 'object') { 
       this.mesh = new THREE.Mesh(
@@ -185,15 +182,20 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       );
     }
 
-    // so when given the Mesh only, the Body can be identified
+    // store the name in the Mesh, so in situations where we are given the Mesh
+    // only, the Body can be identified
     this.mesh.name = this.name;
 
+    // the radius and position are scaled
+    this.radius *= KIMCHI.config.scales.radius;
     this.position.multiplyScalar(KIMCHI.config.scales.position);
+
+    // set the Mesh position and rotation
     this.mesh.position.copy(this.position);
     this.mesh.rotation.copy(this.rotation);
-    length = this.position.length();
 
     // create a Curve for the orbit, which can be used to create a Line
+    length = this.position.length();
     curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI, true);
     this.line = curve.createLine({
       'color': KIMCHI.config.orbits.color,
@@ -221,8 +223,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         'color': 0xeeeeff
       })
     );
-
-//  this.$label = $('<div class="label">').text(this.name).appendTo('body');
   };
 
   /**

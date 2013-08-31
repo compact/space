@@ -27,7 +27,7 @@ var KIMCHI = (function (KIMCHI, $) {
       translation.y * KIMCHI.config.controls.strafeSpeed,
       translation.z * KIMCHI.config.controls.zSpeed
     )).length() * KIMCHI.flight.getTranslationSpeedMultiplier(), 2, true));
-    $('#hud-time').text(KIMCHI.date.format());
+    $('#hud-time').text(KIMCHI.format.date(KIMCHI.date));
 
     if (KIMCHI.config.debug) {
       $('#hud4').html(

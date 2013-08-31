@@ -36,7 +36,9 @@ var KIMCHI = (function (KIMCHI, THREE) {
     },
     'notices': {
       'pointerLockNotSupported': 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.'
-    }
+    },
+    'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+      'Oct', 'Nov', 'Dec']
   };
 
   return KIMCHI;

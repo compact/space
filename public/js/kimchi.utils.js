@@ -1,24 +1,3 @@
-/** @external Date */
-/**
- * Month Strings for {@link Date.prototype.format}.
- * @memberOf external:Date
- */
-Date.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-  'Oct', 'Nov', 'Dec'];
-/**
- * @return   {String} Date custom formatted for the KIMCHI hud.
- * @alias    format
- * @instance
- * @memberOf external:Date
- */
-Date.prototype.format = function () {
-  'use strict';
-  return Date.months[this.getMonth()] + ' ' + this.getDate() + ', ' +
-    this.getFullYear();
-};
-
-
-
 /**
  * Extensible module for KIMCHI. Extend like this:
  * <br> var KIMCHI = (function (KIMCHI) {
@@ -141,6 +120,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   format.km = function (number) {
     return Math.round(number) + ' km';
+  };
+  /**
+   * @return   {String} Date custom formatted for the KIMCHI hud.
+   * @memberOf module:KIMCHI.format
+   */
+  format.date = function (date) {
+    return KIMCHI.config.months[date.getMonth()] + ' ' + date.getDate() +
+      ', ' + date.getFullYear();
   };
 
 

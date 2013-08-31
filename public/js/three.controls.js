@@ -31,15 +31,17 @@
     this.resetStates();
     this.$document = $(document);
 
-    // event handlers; not a propotype property for convenient reference to self
+    // event handlers
+    // not in the propotype because they need to reference self
     this.events = {
       'mousemove': function (event) {
         var movementX, movementY;
 
-        if (!self.enabled) {
+        // extra check that we are allowed to move
+/*        if (!self.enabled) {
           return;
         }
-
+*/
         movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
         movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
@@ -106,13 +108,13 @@
    * @memberOf THREE.Controls
    */
   THREE.Controls.prototype.enable = function () {
+    // not using jQuery to get event.movementX properties
+    document.addEventListener('mousemove', this.events.mousemove, false);
+
     this.$document.on({
       'keydown': this.events.keydown,
       'keyup': this.events.keyup
     });
-
-    // not using jQuery to get event.movementX properties
-    document.addEventListener('mousemove', this.events.mousemove, false);
 
     this.enabled = true;
   };
@@ -123,11 +125,14 @@
    */
   THREE.Controls.prototype.disable = function () {
     this.resetStates();
+
+    document.removeEventListener('mousemove', this.events.mousemove, false);
+
     this.$document.off({
-      'mousemove': this.events.mousemove,
       'keydown': this.events.keydown,
       'keyup': this.events.keyup
     });
+
     this.enabled = false;
   };
 

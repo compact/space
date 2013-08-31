@@ -150,7 +150,6 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     mode.enable = function () {
       Mode.prototype.enable.call(this);
 
-      KIMCHI.pointerLock.unbind();
       $('#hud1').show();
       KIMCHI.rendering.animate(this.animationFrame);
       KIMCHI.controls.enable();
@@ -160,7 +159,6 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
 
       KIMCHI.controls.disable();
       $('#hud1').hide();
-      KIMCHI.pointerLock.bind();
     };
     mode.animationFrame = function (delta) {
       if (!colliding()) {

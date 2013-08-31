@@ -6,7 +6,7 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var pointerLock = {};
+  var pointerLock = {}, requestPointerLock, bind, keydown, click;
   KIMCHI.pointerLock = pointerLock;
 
 
@@ -17,8 +17,8 @@ var KIMCHI = (function (KIMCHI, $) {
    * @memberOf module:KIMCHI.pointerLock
    */
   pointerLock.request = function () {
-    pointerLock.requestPointerLock.call(document.body);
-    console.log((new Date()) + ' pointer lock requested');
+    requestPointerLock.call(document.body);
+    console.log('pointer lock requested');
   };
 
   /**
@@ -42,15 +42,18 @@ var KIMCHI = (function (KIMCHI, $) {
     /**
      * The browser's requestPointerLock function, used in request().
      * @memberOf module:KIMCHI.pointerLock
+     * @private
      * @function
      */
-    pointerLock.requestPointerLock = body.requestPointerLock ||
+    requestPointerLock = body.requestPointerLock ||
       body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
     change = function () {
-      KIMCHI.flight.free.toggle(document.pointerLockElement === body ||
+      var on = document.pointerLockElement === body ||
         document.mozPointerLockElement === body ||
-        document.webkitPointerLockElement === body);
+        document.webkitPointerLockElement === body;
+      bind(on);
+      KIMCHI.flight.free.toggle(on);
     };
     document.addEventListener('pointerlockchange', change, false);
     document.addEventListener('mozpointerlockchange', change, false);
@@ -65,57 +68,48 @@ var KIMCHI = (function (KIMCHI, $) {
     document.addEventListener('webkitpointerlockerror', error, false);
 
     // the initial flight state is false, so bind the relevant event handlers
-    KIMCHI.$overlay.on('click', '#continue-flying', pointerLock.click);
-    pointerLock.bind();
+    KIMCHI.$overlay.on('click', '#continue-flying', pointerLock.request);
+    bind(false);
   };
 
 
 
   /**
-   * Bind the event handlers for triggering the request of pointer lock.
+   * Bind or unbind the event handlers for triggering the request of pointer
+   *   lock.
    * @memberOf module:KIMCHI.pointerLock
    */
-  pointerLock.bind = function () {
-    KIMCHI.$document.on('keydown', pointerLock.keydown);
+  bind = function (on) {
+    if (on) {
+      KIMCHI.$document.off('keydown', keydown);
+    } else {
+      KIMCHI.$document.on('keydown', keydown);
+    }
   };
-  /**
-   * Unbind the event handlers for triggering the request of pointer lock.
-   * @memberOf module:KIMCHI.pointerLock
-   */
-  pointerLock.unbind = function () {
-    KIMCHI.$document.off('keydown', pointerLock.keydown);
-  };
+
   /**
    * The event handler for pressing Escape to request pointer lock. We request
    *   pointer lock only on keyup; otherwise, the continued Escape keydown
    *   event causes the pointer lock to disable immediately, even if one lets
-   *   go of the Escape key asap. Also, the flag pointerLock.keydownInProgress
-   *   prevents multiple handlers of .one('keyup') from being binded.
+   *   go of the Escape key asap. Also, the flag keydownInProgress prevents
+   *   multiple handlers of .one('keyup') from being binded.
    * @memberOf module:KIMCHI.pointerLock
    */
-  pointerLock.keydown = function (event) {
-    if (event.which === 27) { // Esc
-      pointerLock.keydownInProgress = true;
-      $(this).one('keyup', function (event) {
-        if (event.which === 27 && pointerLock.keydownInProgress) {
-          pointerLock.request();
-          pointerLock.keydownInProgress = false;
-        }
-      });
-    }
-  };
-  /**
-   * Whether the keydown key (Escape, in our case) is currently being pressed.
-   * @memberOf module:KIMCHI.pointerLock
-   */
-  pointerLock.keydownInProgress = false;
-  /**
-   * The event handler for clicking to request pointer lock.
-   * @memberOf module:KIMCHI.pointerLock
-   */
-  pointerLock.click = function () {
-    pointerLock.request();
-  };
+  keydown = (function () {
+    var keydownInProgress = false;
+
+    return function (event) {
+      if (event.which === 27) { // Esc
+        keydownInProgress = true;
+        $(this).one('keyup', function (event) {
+          if (event.which === 27 && keydownInProgress) {
+            pointerLock.request();
+            keydownInProgress = false;
+          }
+        });
+      }
+    };
+  }());
 
 
 

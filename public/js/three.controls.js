@@ -5,7 +5,7 @@
  * @constructor THREE.Controls
  * @memberOf    THREE
  */
-(function (_, $, THREE) {
+(function (_, THREE) {
   'use strict';
 
   THREE.Controls = function (camera, options) {
@@ -20,7 +20,6 @@
     }, options);
 
     this.resetStates();
-    this.$document = $(document);
 
     // event handlers
     // not in the propotype because they need to reference self
@@ -99,13 +98,11 @@
    * @memberOf THREE.Controls
    */
   THREE.Controls.prototype.enable = function () {
-    // not using jQuery to get event.movementX properties
+    // can't use jQuery for this.events.mousemove, because we need the
+    // properties event.movementX and event.movementY
     document.addEventListener('mousemove', this.events.mousemove, false);
-
-    this.$document.on({
-      'keydown': this.events.keydown,
-      'keyup': this.events.keyup
-    });
+    document.addEventListener('keydown', this.events.keydown, false);
+    document.addEventListener('keyup', this.events.keyup, false);
 
     this.enabled = true;
   };
@@ -118,11 +115,8 @@
     this.resetStates();
 
     document.removeEventListener('mousemove', this.events.mousemove, false);
-
-    this.$document.off({
-      'keydown': this.events.keydown,
-      'keyup': this.events.keyup
-    });
+    document.removeEventListener('keydown', this.events.keydown, false);
+    document.removeEventListener('keyup', this.events.keyup, false);
 
     this.enabled = false;
   };
@@ -222,4 +216,4 @@
   THREE.Controls.prototype.getWorldTranslationVector = function () {
     return this.camera.localToWorld(this.getLocalTranslationVector());
   };
-}(_, jQuery, THREE));
+}(_, THREE));

@@ -85,12 +85,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
-  format = {};
-  KIMCHI.format = format;
   /**
    * @namespace format
    * @memberOf  module:KIMCHI
    */
+  format = {};
+  KIMCHI.format = format;
   /**
    * @param    {Number}  number         The number to round.
    * @param    {Number}  precision      The number of decimal places to round to.
@@ -126,12 +126,24 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       return Math.round(number);
     }
   };
+  /**
+   * @param    {Number} number
+   * @returns  {Number}        The number formatted in astronomical units.
+   * @memberOf module:KIMCHI.format
+   */
   format.au = function (number) {
-    return format.roundNicely(number) + ' AU';
+    return format.roundNicely(number) + ' au';
   };
+  /**
+   * @param    {Number} number
+   * @returns  {Number}        The number formatted in kilometres.
+   * @memberOf module:KIMCHI.format
+   */
   format.km = function (number) {
-    return format.roundNicely(number) + ' km';
+    return Math.round(number) + ' km';
   };
+
+
 
   return KIMCHI;
 }(KIMCHI || {}, _, jQuery, THREE));

@@ -99,65 +99,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**
-   * Heads up display during free flight.
-   * @memberOf module:KIMCHI
-   */
-  KIMCHI.hud = {};
-  KIMCHI.hud.update = function (delta) {
-    var translation = KIMCHI.controls.getLocalTranslationVector();
-    $('#hud-distance-from-sun').text(Math.roundDecimals(KIMCHI.camera.position.length(), 2, true));
-    $('#hud-speed').text(Math.roundDecimals((new THREE.Vector3(
-      translation.x * KIMCHI.config.controls.strafeSpeed,
-      translation.y * KIMCHI.config.controls.strafeSpeed,
-      translation.z * KIMCHI.config.controls.zSpeed
-    )).length() * KIMCHI.flight.getTranslationSpeedMultiplier(), 2, true));
-    $('#hud-time').text(KIMCHI.date.format());
-
-    if (KIMCHI.config.debug) {
-      $('#hud4').html(
-        '<strong>Debug</strong><br />' +
-        'Delta: ' +
-          Math.roundDecimals(delta, 4, true) + '<br />' +
-        'Camera position (px): ' +
-          Math.round(KIMCHI.camera.position.x) + ', ' +
-          Math.round(KIMCHI.camera.position.y) + ', ' +
-          Math.round(KIMCHI.camera.position.z) + '<br />' +
-        'Camera rotation (deg): ' +
-          Math.round(KIMCHI.camera.rotation.x * 180 / Math.PI) + ', ' +
-          Math.round(KIMCHI.camera.rotation.y * 180 / Math.PI) + ', ' +
-          Math.round(KIMCHI.camera.rotation.z * 180 / Math.PI) + '<br />'
-/*      'movement: ' +
-          translation.x + ', ' +
-          translation.y + ', ' +
-          translation.z + '<br />' +*/
-      );
-    }
-  };
-
-  /**
-   * The navigation that appears when free flight is paused.
-   * @memberOf module:KIMCHI
-   */
-  KIMCHI.nav = {};
-  KIMCHI.nav.update = function () {
-    KIMCHI.nav.updateFlyToList();
-  };
-  KIMCHI.nav.updateFlyToList = function () {
-    var bodies = KIMCHI.space.getBodiesByDistance();
-    $('#fly-to').empty();
-    _.forEach(bodies, function (body) {
-      $('#fly-to').append(
-        $('<li>').append(
-          $('<a>').text(body.name).data('name', body.name),
-          $('<span>').text(' (' + Math.roundNicely(body.distance) + ' AU)')
-        )
-      );
-    });
-  };
-
-
-
-  /**
    * Camera and renderer dimensions.
    * @memberOf module:KIMCHI
    */

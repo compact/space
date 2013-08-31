@@ -359,13 +359,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       return THREE.Object3D.distance(KIMCHI.camera, object3D);
     });
   };
-  space.getClosestDistance = function (object3Ds) {
+  space.getSortedDistances = function (object3Ds) {
     return space.getDistances(object3Ds).sort(function (distance1, distance2) {
       return distance1 - distance2;
-    })[0];
+    });
   };
 
   /**
+   * Deprecated.
    * @returns  {Array} All bodies sorted by current distance from the camera.
    *   Each element is not a Body, but rather an object with properties 'name'
    *   and 'distance'.

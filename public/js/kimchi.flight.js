@@ -46,7 +46,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.clock.stop();
     flight.mode = false;
     KIMCHI.$overlay.show();
-    KIMCHI.nav.update();
+    KIMCHI.ui.panel.update();
   };
   /**
    * Toggle.
@@ -166,7 +166,7 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
       }
 
       KIMCHI.space.moveBodies(delta);
-      KIMCHI.hud.update(delta);
+      KIMCHI.ui.hud.update(delta);
       KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
     };
 
@@ -253,7 +253,7 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
     };
     mode.animationFrame = function (delta) {
       KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
-      KIMCHI.hud.update(delta);
+      KIMCHI.ui.hud.update(delta);
     };
 
     /**
@@ -261,21 +261,14 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
      * @public
      */
     mode.init = function () {
-      KIMCHI.nav.update(); // maybe shouldn't be here
+      KIMCHI.ui.panel.update(); // maybe shouldn't be here
 
-      $('#fly-to').on('click', 'a', function (event) {
+      $('#bodies').on('click', '.fly-to', function (event) {
         var name, body;
 
-        // prevent the overlay from being clicked to trigger free flight mode
-        event.stopPropagation();
-
         name = $(this).data('name');
-        body = KIMCHI.space.getBodies()[name];
-        if (typeof body === 'object') {
-          mode.flyTo(body);
-        } else { // TODO write a general function to get a body
-          console.log(name + ' not found in KIMCHI.flight.auto');
-        }
+        body = KIMCHI.space.getBody(name);
+        mode.flyTo(body);
       });
     };
     /**
@@ -310,7 +303,7 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
       object3Ds = KIMCHI.space.getCollideableObject3Ds();
     }
 
-    return KIMCHI.space.getClosestDistance(object3Ds);
+    return KIMCHI.space.getSortedDistances(object3Ds)[0];
   };
 
 

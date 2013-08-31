@@ -15,6 +15,7 @@ block scripts
   script(src='/js/kimchi.space.js')
   script(src='/js/kimchi.flight.js')
   script(src='/js/kimchi.pointerlock.js')
+  script(src='/js/kimchi.ui.js')
   script(src='/js/kimchi.utils.js')
   script(src='/js/kimchi.js')
 
@@ -28,13 +29,13 @@ block content
         .panel-body
           ul.nav.nav-tabs
             li.active
-              a(href="#bodies", data-toggle="tab") Astronomical Objects
+              a(href="#bodies-pane", data-toggle="tab") Astronomical Objects
             li
-              a(href="#settings", data-toggle="tab") Options
+              a(href="#settings-pane", data-toggle="tab") Options
           .tab-content
-            #bodies.tab-pane.active
-              ul#fly-to
-            #settings.tab-pane
+            #bodies-pane.tab-pane.active
+              table#bodies.table
+            #settings-pane.tab-pane
               .row
                 .col-lg-3
                   .btn-group(data-toggle="buttons")

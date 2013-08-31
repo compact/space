@@ -24,7 +24,7 @@ var KIMCHI = (function (KIMCHI, THREE) {
   };
   config.scales = {
     'radius': 10 / 149597871, // radii are given in km
-    'position': 1 // positions are given in AU
+    'position': 1 // positions are given in au
   };
   config.orbits = {
     'color': 0xffffcc,

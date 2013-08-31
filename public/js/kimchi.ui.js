@@ -88,7 +88,7 @@ var KIMCHI = (function (KIMCHI, $) {
   panel.updateBodiesTable = function () {
     _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
       $('#body-' + body.name + ' .distance')
-        .text(KIMCHI.format.roundNicely(body.distance) + ' AU');
+        .text(KIMCHI.format.au(body.distance));
     });
   };
 

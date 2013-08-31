@@ -144,7 +144,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @param {Object} options Options.
    * <br> name:            Required. Displayed to users.
    * <br> radius:          In km.
-   * <br> position:        Vector3 of the body's initial position, in AU. Not to
+   * <br> position:        Vector3 of the body's initial position, in au. Not to
    *                       be confused with Mesh.position, which gives the
    *                       current position.
    * <br> rotation:        Vector3 of the body's initial Euler rotation.

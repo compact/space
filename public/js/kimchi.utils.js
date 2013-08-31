@@ -126,8 +126,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.format
    */
   format.date = function (date) {
-    return date.getDate() + ' ' + KIMCHI.config.months[date.getMonth()] + ' ' +
-      date.getFullYear();
+    return date.getDate() + ' ' +
+      KIMCHI.config.language.months[date.getMonth()] + ' ' + date.getFullYear();
   };
 
 

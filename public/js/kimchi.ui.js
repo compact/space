@@ -76,9 +76,7 @@ var KIMCHI = (function (KIMCHI, $) {
     panel.updateBodiesTable();
   };
   panel.updateBodiesTable = function () {
-    var distances = KIMCHI.space.getSortedDistances();
-    console.log(distances);
-    _.forEach(distances, function (body) {
+    _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
       $('#body-' + body.name + ' .distance')
         .text(Math.roundNicely(body.distance) + ' AU');
     });

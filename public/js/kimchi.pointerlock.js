@@ -19,9 +19,6 @@ var KIMCHI = (function (KIMCHI, $) {
   pointerLock.request = function () {
     pointerLock.requestPointerLock.call(document.body);
     console.log((new Date()) + ' pointer lock requested');
-    console.log(document.pointerLockElement ||
-        document.mozPointerLockElement ||
-        document.webkitPointerLockElement);
   };
 
   /**

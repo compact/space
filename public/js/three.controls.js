@@ -19,15 +19,6 @@
       'rollSpeed': 2
     }, options);
 
-/* used in PointerLockControls, but doesn't seem necessary
-    yawObject takes the place of the camera object
-    var pitchObject = new THREE.Object3D();
-    pitchObject.add(camera);
-    var yawObject = new THREE.Object3D();
-    yawObject.add(pitchObject);
-    scene.add(yawObject);
-*/
-
     this.resetStates();
     this.$document = $(document);
 

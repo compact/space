@@ -266,7 +266,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      * @public
      */
     mode.flyTo = function (body) {
-      KIMCHI.ui.notice.set(KIMCHI.config.language.flyTo(body));
+      KIMCHI.ui.notice.set(KIMCHI.config.notices.flyTo(body));
       this.enable();
       panTo(body);
       // TODO make function queue for successive setTimeout() calls

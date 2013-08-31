@@ -10,6 +10,7 @@ var KIMCHI = (function (KIMCHI, THREE) {
   KIMCHI.config = config;
 
   config.debug = true;
+
   config.camera = {
     'fov': 45, // for THREE.PerspectiveCamera
     'near': 0.000001, // for THREE.PerspectiveCamera
@@ -22,6 +23,8 @@ var KIMCHI = (function (KIMCHI, THREE) {
     'strafeSpeed': 0.5, // move left/right/up/down with keyboard
     'rollSpeed': 2 // roll with keyboard
   };
+
+  // space config
   config.scales = {
     'radius': 10 / 149597871, // radii are given in km
     'position': 1 // positions are given in au
@@ -32,17 +35,19 @@ var KIMCHI = (function (KIMCHI, THREE) {
     'lineSegments': 720 // how many lines make up each orbit?
   };
   config.sphereSegments = 48;
+
   config.stars = {
     'scale': 100000,
     'count': 2000
   };
+
   config.notices = {
-    'pointerLockNotSupported': 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.'
-  };
-  config.language = {
+    'pointerLockNotSupported': 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.',
     'flyTo': function (body) {
       return 'Flying to ' + body.name + '...<br />Press Esc to stop.';
-    },
+    }
+  };
+  config.language = {
     'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
       'Oct', 'Nov', 'Dec']
   };

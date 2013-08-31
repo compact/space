@@ -46,11 +46,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.clock.stop();
     flight.mode = false;
     KIMCHI.$overlay.show();
-    $overlay.blurjs({
+/*    KIMCHI.$overlay.blurjs({
       source: '#space',
       radius: 7,
       overlay: 'rgba(255,255,255,0.4)'
-    });
+    });*/
     KIMCHI.ui.panel.update();
   };
   /**
@@ -297,18 +297,17 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
   /**
    * Return a number for scaling the camera translation speed (in every
    *   direction) depending on how close the camera is to the closest of the
-   *   given collideable objects; if not given, consider all collideable
-   *   objects.
-   * @param    {Array} object3Ds
+   *   given collideable Bodies; if not given, consider all collideable Bodies.
+   * @param    {Array}  Bodies
    * @returns  {Number}
    * @memberOf module:KIMCHI.flight
    */
-  flight.getTranslationSpeedMultiplier = function (object3Ds) {
-    if (typeof object3Ds === 'undefined') {
-      object3Ds = KIMCHI.space.getCollideableObject3Ds();
+  flight.getTranslationSpeedMultiplier = function (bodies) {
+    if (typeof bodies === 'undefined') {
+      bodies = KIMCHI.space.getCollideableBodies();
     }
 
-    return KIMCHI.space.getSortedDistances(object3Ds)[0];
+    return KIMCHI.space.getClosestDistance(bodies);
   };
 
 

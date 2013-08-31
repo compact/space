@@ -60,11 +60,12 @@ var KIMCHI = (function (KIMCHI, $) {
     var $bodies = $('#bodies');
     _.forEach(KIMCHI.space.getBodies(), function (body) {
       $bodies.append(
-        $('<tr>').append(
+        $('<tr>').attr('id', 'body-' + body.name).append(
           $('<td>').text(body.name),
           $('<td>').append(
             $('<a>').text('Fly There!')
           ),
+          $('<td>').addClass('distance'),
           $('<td>').text(body.radius)
         )
       );
@@ -76,8 +77,8 @@ var KIMCHI = (function (KIMCHI, $) {
   panel.updateBodiesTable = function () {
     var distances = KIMCHI.space.getSortedDistances();
     console.log(distances);
-    _.forEach(bodies, function (body) {
-      $('#' + body.name + ' .distance')
+    _.forEach(distances, function (body) {
+      $('#body-' + body.name + ' .distance')
         .text(Math.roundNicely(body.distance) + ' AU');
     });
   };

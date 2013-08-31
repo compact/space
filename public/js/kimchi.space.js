@@ -293,6 +293,19 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   space.getCollideableObject3Ds = function () {
     return _.pluck(_.filter(bodies, 'collideable'), 'mesh');
   };
+  /**
+   * @returns {Object} Bodies with names as keys.
+   */
+  space.getCollideableBodies = function () {
+    // _.filter(bodies, 'collideable') returns an Array, not an Object with keys
+    var collideableBodies = {};
+    _.forEach(bodies, function (body, name) {
+      if (body.collideable) {
+        collideableBodies[name] = body;
+      }
+    });
+    return collideableBodies;
+  };
 
 
 
@@ -351,36 +364,43 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**
-   * @returns  {Array} Numbers representing distances to the given Object3Ds.
+   * @param    {Object} bodies
+   * @returns  {Array}  Objects with keys 'name' and 'distance', with the latter
+   *   being the distance between the camera and the Body.
    * @memberOf module:KIMCHI.space
    */
-  space.getDistances = function (object3Ds) {
-    return _.map(object3Ds, function (object3D) {
-      return THREE.Object3D.distance(KIMCHI.camera, object3D);
-    });
-  };
-  space.getSortedDistances = function (object3Ds) {
-    return space.getDistances(object3Ds).sort(function (distance1, distance2) {
-      return distance1 - distance2;
-    });
-  };
+  space.getDistances = function (bodies) {
+    if (typeof bodies === 'undefined') {
+      bodies = KIMCHI.space.getBodies();
+    }
 
-  /**
-   * Deprecated.
-   * @returns  {Array} All bodies sorted by current distance from the camera.
-   *   Each element is not a Body, but rather an object with properties 'name'
-   *   and 'distance'.
-   * @memberOf module:KIMCHI.space
-   */
-  space.getBodiesByDistance = function () {
     return _.map(bodies, function (body, name) {
       return {
         'name': name,
         'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
       };
-    }).sort(function (body1, body2) {
+    });
+/*    return _.forEach(bodies, function (body, name) {
+      distances[name] = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
+    });*/
+  };
+  /**
+   * @param    {Object} bodies
+   * @returns  {Array} Objects with keys 'name' and 'distance', with the latter
+   *   being the distance between the camera and the Body. Sorted ascending.
+   * @memberOf module:KIMCHI.space
+   */
+  space.getSortedDistances = function (bodies) {
+    return space.getDistances(bodies).sort(function (body1, body2) {
       return body1.distance - body2.distance;
     });
+  };
+  /**
+   * @param   {Object} bodies
+   * @returns {Number} The distance to the closest Body Mesh.
+   */
+  space.getClosestDistance = function (bodies) {
+    return KIMCHI.space.getSortedDistances(bodies)[0].distance;
   };
 
 

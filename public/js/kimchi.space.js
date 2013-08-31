@@ -21,7 +21,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   data = [
     {
       'name': 'Sun',
-      'radius': 696000,
+      'radiusInKm': 696000,
       'position': new THREE.Vector3(0, 0, 0),
       'visibleDistance': 1000000,
       'mesh': new THREE.Mesh(
@@ -33,7 +33,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'LOLWTF',
-      'radius': 696000,
+      'radiusInKm': 696000,
       'position': new THREE.Vector3(5, 5, 0),
       'visibleDistance': 1000000,
       'mesh': (function () {
@@ -44,7 +44,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Mercury',
-      'radius': 2439.64,
+      'radiusInKm': 2439.64,
       'position': new THREE.Vector3(0, 0.38709893, 0),
       'visibleDistance': 20,
       'move': function () {
@@ -53,7 +53,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Venus',
-      'radius': 6051.59,
+      'radiusInKm': 6051.59,
       'position': new THREE.Vector3(0, 0.72333199, 0),
       'visibleDistance': 20,
       'move': function () {
@@ -62,7 +62,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Earth',
-      'radius': 6378,
+      'radiusInKm': 6378,
       'position': new THREE.Vector3(0, 1.00000011, 0),
       'visibleDistance': 50,
       'move': function () {
@@ -72,7 +72,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'children': [
         {
           'name': 'Moon',
-          'radius': 1737,
+          'radiusInKm': 1737,
           'position': new THREE.Vector3(0, 1.00000011, 0),
           'visibleDistance': 20,
           'move': function () {
@@ -83,7 +83,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Mars',
-      'radius': 3397,
+      'radiusInKm': 3397,
       'position': new THREE.Vector3(0, 1.52366231, 0),
       'visibleDistance': 50,
       'move': function () {
@@ -92,7 +92,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Jupiter',
-      'radius': 71492,
+      'radiusInKm': 71492,
       'position': new THREE.Vector3(0, 5.20336301, 0),
       'visibleDistance': 250,
       'move': function () {
@@ -101,7 +101,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Saturn',
-      'radius': 60267,
+      'radiusInKm': 60267,
       'position': new THREE.Vector3(0, 9.53707032, 0),
       'visibleDistance': 250,
       'move': function () {
@@ -110,7 +110,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Uranus',
-      'radius': 25557.25,
+      'radiusInKm': 25557.25,
       'position': new THREE.Vector3(0, 19.19126393, 0),
       'visibleDistance': 30,
       'move': function () {
@@ -119,7 +119,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Neptune',
-      'radius': 24766,
+      'radiusInKm': 24766,
       'position': new THREE.Vector3(0, 30.06896348, 0),
       'visibleDistance': 1000,
       'move': function () {
@@ -128,7 +128,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     {
       'name': 'Pluto',
-      'radius': 1148.07,
+      'radiusInKm': 1148.07,
       'position': new THREE.Vector3(0, 39.482, 0),
       'visibleDistance': 1000,
       'move': function () {
@@ -163,7 +163,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     _.assign(this, { // default options
       'name': '',
-      'radius': 0,
+      'radiusInKm': 0,
       'position': new THREE.Vector3(),
       'rotation': new THREE.Euler(),
       'collideable': true,
@@ -173,7 +173,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     }, options);
 
     // the radius and position are scaled
-    this.radius *= KIMCHI.config.scales.radius;
+    this.radius = this.radiusInKm * KIMCHI.config.scales.radius;
     this.position.multiplyScalar(KIMCHI.config.scales.position);
 
     // create a Mesh for the body; it can already be set in data

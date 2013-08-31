@@ -67,7 +67,7 @@ var KIMCHI = (function (KIMCHI, $) {
             $('<a>').text('Fly There!')
           ),
           $('<td>').addClass('distance'),
-          $('<td>').text(body.radius)
+          $('<td>').text(body.radiusInKm)
         )
       );
     });

@@ -63,6 +63,7 @@
 
     // add renderer to DOM
     $('body').append(KIMCHI.renderer.domElement);
+    $(KIMCHI.renderer.domElement).attr("id","space");
     KIMCHI.date = new Date();
     // bind
     KIMCHI.pointerLock.init();

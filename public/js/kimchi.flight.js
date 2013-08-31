@@ -46,6 +46,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.clock.stop();
     flight.mode = false;
     KIMCHI.$overlay.show();
+    $overlay.blurjs({
+      source: '#space',
+      radius: 7,
+      overlay: 'rgba(255,255,255,0.4)'
+    });
     KIMCHI.ui.panel.update();
   };
   /**

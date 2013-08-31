@@ -6,9 +6,10 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var ui = {}, hud = {}, panel = {};
+  var ui = {}, hud = {}, panel = {}, notice = {};
   ui.hud = hud;
   ui.panel = panel;
+  ui.notice = notice;
   KIMCHI.ui = ui;
 
 
@@ -81,6 +82,23 @@ var KIMCHI = (function (KIMCHI, $) {
       $('#body-' + body.name + ' .distance')
         .text(Math.roundNicely(body.distance) + ' AU');
     });
+  };
+
+
+
+  /**
+   * Notice box.
+   * @namespace notice
+   * @memberOf  module:KIMCHI
+   */
+  notice.init = function () {
+    notice.$notice = $('#notice');
+  };
+  notice.set = function (message) {
+    notice.$notice.html(message).fadeIn();
+  };
+  notice.clear = function () {
+    notice.$notice.text('').fadeOut();
   };
 
 

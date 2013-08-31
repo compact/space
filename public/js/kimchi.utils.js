@@ -122,24 +122,5 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
-  /**
-   * Notice box.
-   * @memberOf module:KIMCHI
-   */
-  KIMCHI.notice = {
-    '$notice': $(),
-    'init': function () {
-      KIMCHI.notice.$notice = $('#notice');
-    },
-    'set': function (message) {
-      KIMCHI.notice.$notice.html(message).fadeIn();
-    },
-    'clear': function () {
-      KIMCHI.notice.$notice.text('').fadeOut();
-    }
-  };
-
-
-
   return KIMCHI;
 }(KIMCHI || {}, _, jQuery, THREE));

@@ -254,7 +254,7 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
     mode.disable = function () {
       Mode.prototype.disable.call(this);
 
-      KIMCHI.notice.clear(); // TODO move this
+      KIMCHI.ui.notice.clear(); // TODO move this
     };
     mode.animationFrame = function (delta) {
       KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
@@ -283,7 +283,7 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
      * @public
      */
     mode.flyTo = function (body) {
-      KIMCHI.notice.set('Flying to ' + body.name + '...');
+      KIMCHI.ui.notice.set('Flying to ' + body.name + '...');
       this.enable();
       panTo(body);
       // TODO make function queue for successive setTimeout() calls

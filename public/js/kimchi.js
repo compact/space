@@ -69,6 +69,6 @@
     KIMCHI.pointerLock.init();
     KIMCHI.flight.auto.init();
     KIMCHI.ui.panel.init();
-    KIMCHI.notice.init();
+    KIMCHI.ui.notice.init();
   });
 }(KIMCHI, jQuery, THREE));

@@ -36,7 +36,7 @@ var KIMCHI = (function (KIMCHI, $) {
       'webkitPointerLockElement' in document;
     if (!havePointerLock) {
       // TODO we can use FirstPersonControls here instead
-      KIMCHI.notice.set(KIMCHI.config.notices.pointerLockNotSupported);
+      KIMCHI.ui.notice.set(KIMCHI.config.notices.pointerLockNotSupported);
       return;
     }
 

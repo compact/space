@@ -144,9 +144,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
   KIMCHI.nav.updateFlyToList = function () {
     var bodies = KIMCHI.space.getBodiesByDistance();
-    $('#nav-fly-to').empty();
+    $('#fly-to').empty();
     _.forEach(bodies, function (body) {
-      $('#nav-fly-to').append(
+      $('#fly-to').append(
         $('<li>').append(
           $('<a>').text(body.name).data('name', body.name),
           $('<span>').text(' (' + Math.roundNicely(body.distance) + ' AU)')

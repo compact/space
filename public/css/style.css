@@ -78,13 +78,10 @@ a {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(224, 255, 224, 0.75);
+	background-color: rgba(240, 255, 240, 0.75);
 	color: #000;
 	z-index: 100;
 }
-.nav {
-	margin: 200px 100px;
-}
-.nav a {
-	background-color: rgba(224, 255, 224, 0.75);
+.nav-tabs {
+	margin-bottom: 16px;
 }

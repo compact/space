@@ -234,8 +234,8 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
      */
     translateTo = function (body) {
       KIMCHI.rendering.animate(function (delta) {
-        if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) >=
-            body.radius + KIMCHI.config.collisionDistance) {
+        if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) - body.radius >=
+            body.getCollisionDistance()) {
           KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
             flight.getTranslationSpeedMultiplier([body.mesh]));
           mode.animationFrame(delta);
@@ -263,7 +263,7 @@ console.log(intersect.distance + ' < ' + body.getCollisionDistance());
     mode.init = function () {
       KIMCHI.nav.update(); // maybe shouldn't be here
 
-      $('.nav').on('click', 'a', function (event) {
+      $('#fly-to').on('click', 'a', function (event) {
         var name, body;
 
         // prevent the overlay from being clicked to trigger free flight mode

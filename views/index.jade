@@ -2,8 +2,9 @@ extends layout
 
 block scripts
   script(src='/lib/jquery.js')
-  script(src='/lib/three.js')
   script(src='/lib/lodash.min.js')
+  script(src='/lib/bootstrap.js')
+  script(src='/lib/three.js')
   script(src='/lib/ObjectLoader.js')
   script(src='/lib/JSONLoader.js')
   script(src='/lib/fonts/helvetiker_regular.typeface.js')
@@ -20,11 +21,42 @@ block scripts
 block content
   #notice
   #overlay
-    div(style="text-align: center;")
-      a Fly freely (Esc)
-    .nav
-      strong Fly to:
-      ul#nav-fly-to
+    div(style="font-size: 24px;")
+      a#continue-flying Continue Flying (Esc)
+    .col-lg-6
+      .panel
+        .panel-body
+          ul.nav.nav-tabs
+            li.active
+              a(href="#bodies", data-toggle="tab") Astronomical Objects
+            li
+              a(href="#settings", data-toggle="tab") Options
+          .tab-content
+            #bodies.tab-pane.active
+              ul#fly-to
+            #settings.tab-pane
+              .row
+                .col-lg-3
+                  .btn-group(data-toggle="buttons")
+                    label.btn.btn-default.btn-sm
+                      input(type="radio")
+                      | On
+                    label.btn.btn-default.btn-sm
+                      input(type="radio")
+                      | Off
+                .col-lg-6
+                  | Revolution of planets and moons
+              .row
+                .col-lg-3
+                  .btn-group(data-toggle="buttons")
+                    label.btn.btn-default.btn-sm
+                      input(type="radio")
+                      | On
+                    label.btn.btn-default.btn-sm
+                      input(type="radio")
+                      | Off
+                .col-lg-6
+                  | Rotation of planets and moons
   #hud1.hud
     strong Controls
     ul

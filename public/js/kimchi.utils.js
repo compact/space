@@ -1,42 +1,3 @@
-/** @external Math */
-/**
- * @param    {Number}  number         The number to round.
- * @param    {Number}  precision      The number of decimal places to round to.
- * @param    {Boolean} trailingZeroes Whether to include trailing zeroes.
- *                                    Defaults true.
- * @return   {Number}                 The rounded result..
- * @memberOf external:Math
- */
-Math.roundDecimals = function (number, precision, trailingZeroes) {
-  'use strict';
-  var multiplier, result;
-  multiplier = Math.pow(10, precision);
-  result = Math.round(number * multiplier) / multiplier;
-  if (typeof trailingZeroes === 'boolean' && trailingZeroes) {
-    result = result.toFixed(precision);
-  }
-  return result;
-};
-/**
- * Round the given number "nicely", as in determine the number of decimals
- *   based on the number of digits.
- * @param    {Number} number The number to round.
- * @return   {Number}        The rounded result.
- * @memberOf external:Math
- */
-Math.roundNicely = function (number) {
-  'use strict';
-  if (number < 1) {
-    return Math.roundDecimals(number, 2);
-  } else if (number < 10) {
-    return Math.roundDecimals(number, 1);
-  } else {
-    return Math.round(number);
-  }
-};
-
-
-
 /** @external Date */
 /**
  * Month Strings for {@link Date.prototype.format}.
@@ -68,6 +29,7 @@ Date.prototype.format = function () {
  */
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
+  var format;
 
 
 
@@ -122,6 +84,54 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
 
+
+  format = {};
+  KIMCHI.format = format;
+  /**
+   * @namespace format
+   * @memberOf  module:KIMCHI
+   */
+  /**
+   * @param    {Number}  number         The number to round.
+   * @param    {Number}  precision      The number of decimal places to round to.
+   * @param    {Boolean} trailingZeroes Whether to include trailing zeroes.
+   *                                    Defaults true.
+   * @return   {Number}                 The rounded result..
+   * @memberOf module:KIMCHI.format
+   */
+  format.roundDecimals = function (number, precision, trailingZeroes) {
+    'use strict';
+    var multiplier, result;
+    multiplier = Math.pow(10, precision);
+    result = Math.round(number * multiplier) / multiplier;
+    if (typeof trailingZeroes === 'boolean' && trailingZeroes) {
+      result = result.toFixed(precision);
+    }
+    return result;
+  };
+  /**
+   * Round the given number "nicely", as in determine the number of decimals
+   *   based on the number of digits.
+   * @param    {Number} number The number to round.
+   * @return   {Number}        The rounded result.
+   * @memberOf module:KIMCHI.format
+   */
+  format.roundNicely = function (number) {
+    'use strict';
+    if (number < 1) {
+      return format.roundDecimals(number, 2);
+    } else if (number < 10) {
+      return format.roundDecimals(number, 1);
+    } else {
+      return Math.round(number);
+    }
+  };
+  format.au = function (number) {
+    return format.roundNicely(number) + ' AU';
+  };
+  format.km = function (number) {
+    return format.roundNicely(number) + ' km';
+  };
 
   return KIMCHI;
 }(KIMCHI || {}, _, jQuery, THREE));

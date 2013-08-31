@@ -21,8 +21,8 @@ var KIMCHI = (function (KIMCHI, $) {
    */
   hud.update = function (delta) {
     var translation = KIMCHI.controls.getLocalTranslationVector();
-    $('#hud-distance-from-sun').text(Math.roundDecimals(KIMCHI.camera.position.length(), 2, true));
-    $('#hud-speed').text(Math.roundDecimals((new THREE.Vector3(
+    $('#hud-distance-from-sun').text(KIMCHI.format.roundDecimals(KIMCHI.camera.position.length(), 2, true));
+    $('#hud-speed').text(KIMCHI.format.roundDecimals((new THREE.Vector3(
       translation.x * KIMCHI.config.controls.strafeSpeed,
       translation.y * KIMCHI.config.controls.strafeSpeed,
       translation.z * KIMCHI.config.controls.zSpeed
@@ -33,7 +33,7 @@ var KIMCHI = (function (KIMCHI, $) {
       $('#hud4').html(
         '<strong>Debug</strong><br />' +
         'Delta: ' +
-          Math.roundDecimals(delta, 4, true) + '<br />' +
+          KIMCHI.format.roundDecimals(delta, 4, true) + '<br />' +
         'Camera position (px): ' +
           Math.round(KIMCHI.camera.position.x) + ', ' +
           Math.round(KIMCHI.camera.position.y) + ', ' +
@@ -66,7 +66,8 @@ var KIMCHI = (function (KIMCHI, $) {
           '<td>' + body.name + '</td>' +
           '<td><a class="fly-to" data-name="' + body.name + '">Fly There!</a></td>' +
           '<td class="distance"></td>' +
-          '<td>' + body.radiusInKm + ' km</td>' +
+          '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
+          '<td>' + KIMCHI.format.au(body.position.y) + '</td>' +
         '</tr>').appendTo($bodies);
     });
 
@@ -87,7 +88,7 @@ var KIMCHI = (function (KIMCHI, $) {
   panel.updateBodiesTable = function () {
     _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
       $('#body-' + body.name + ' .distance')
-        .text(Math.roundNicely(body.distance) + ' AU');
+        .text(KIMCHI.format.roundNicely(body.distance) + ' AU');
     });
   };
 

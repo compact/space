@@ -75,7 +75,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @param    {Number}  precision      The number of decimal places to round to.
    * @param    {Boolean} trailingZeroes Whether to include trailing zeroes.
    *                                    Defaults true.
-   * @return   {Number}                 The rounded result..
+   * @return   {Number}                 The rounded result.
    * @memberOf module:KIMCHI.format
    */
   format.roundDecimals = function (number, precision, trailingZeroes) {
@@ -126,8 +126,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.format
    */
   format.date = function (date) {
-    return KIMCHI.config.months[date.getMonth()] + ' ' + date.getDate() +
-      ', ' + date.getFullYear();
+    return date.getDate() + ' ' + KIMCHI.config.months[date.getMonth()] + ' ' +
+      date.getFullYear();
   };
 
 

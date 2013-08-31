@@ -67,7 +67,6 @@
     KIMCHI.date = new Date();
     // bind
     KIMCHI.pointerLock.init();
-    KIMCHI.flight.auto.init();
     KIMCHI.ui.panel.init();
     KIMCHI.ui.notice.init();
   });

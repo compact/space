@@ -240,7 +240,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
         if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) - body.radius >=
             body.getCollisionDistance()) {
           KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
-            flight.getTranslationSpeedMultiplier([body.mesh]));
+            flight.getTranslationSpeedMultiplier([body]));
           mode.animationFrame(delta);
         } else {
           mode.disable();
@@ -259,21 +259,6 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       KIMCHI.ui.hud.update(delta);
     };
 
-    /**
-     * Bind the "fly to" links.
-     * @public
-     */
-    mode.init = function () {
-      KIMCHI.ui.panel.update(); // maybe shouldn't be here
-
-      $('#bodies').on('click', '.fly-to', function (event) {
-        var name, body;
-
-        name = $(this).data('name');
-        body = KIMCHI.space.getBody(name);
-        mode.flyTo(body);
-      });
-    };
     /**
      * Fly to the given Body. Two private functions are used sequentially to
      *   first pan and then translate to it. translateTo(body) is called when

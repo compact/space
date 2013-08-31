@@ -59,18 +59,27 @@ var KIMCHI = (function (KIMCHI, $) {
    */
   panel.init = function () {
     var $bodies = $('#bodies');
+
+    // populate the bodies table
     _.forEach(KIMCHI.space.getBodies(), function (body) {
-      $bodies.append(
-        $('<tr>').attr('id', 'body-' + body.name).append(
-          $('<td>').text(body.name),
-          $('<td>').append(
-            $('<a>').text('Fly There!')
-          ),
-          $('<td>').addClass('distance'),
-          $('<td>').text(body.radiusInKm)
-        )
-      );
+      $('<tr id="body-' + body.name + '">' +
+          '<td>' + body.name + '</td>' +
+          '<td><a class="fly-to" data-name="' + body.name + '">Fly There!</a></td>' +
+          '<td class="distance"></td>' +
+          '<td>' + body.radiusInKm + ' km</td>' +
+        '</tr>').appendTo($bodies);
     });
+
+    // bind fly-to links
+    $('#bodies').on('click', '.fly-to', function (event) {
+      var name, body;
+
+      name = $(this).data('name');
+      body = KIMCHI.space.getBody(name);
+      KIMCHI.flight.auto.flyTo(body);
+    });
+
+    panel.update();
   };
   panel.update = function () {
     panel.updateBodiesTable();

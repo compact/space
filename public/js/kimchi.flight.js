@@ -13,10 +13,33 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**
-   * The current flight mode.
+   * The current flight mode. TODO make private
    * @memberOf module:KIMCHI.flight
    */
-  flight.mode = false; // possible values are 'free', 'auto', and false
+  flight.mode = 'menu'; // possible values are 'free', 'auto', and 'menu'
+  flight.modes = {};
+  /**
+   * @returns {(String|Boolean)}
+   */
+  flight.getMode = function () {
+    return flight.mode;
+  }
+  /**
+   * @param {(String|Boolean)}
+   */
+  flight.setMode = function (name) {
+    var previousName = flight.mode;
+
+    if (previousName === name) {
+      // the given mode is already the current mode; do nothing
+      return;
+    }
+
+    console.log('change flight mode from ' + previousName + ' to ' + name);
+    flight.modes[previousName].disable();
+    flight.modes[name].enable();
+    flight.mode = name;
+  };
 
 
 
@@ -34,24 +57,20 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Mode
    */
   Mode.prototype.enable = function () {
-    KIMCHI.$overlay.hide();
-    KIMCHI.clock.start();
-    flight.mode = this.name;
+    this.enabled = true;
+    this.animate();
   };
   /**
    * Disable.
    * @memberOf Mode
    */
   Mode.prototype.disable = function () {
-    KIMCHI.clock.stop();
-    flight.mode = false;
-    KIMCHI.$overlay.show();
+    this.enabled = false;
 /*    KIMCHI.$overlay.blurjs({
       source: '#space',
       radius: 7,
       overlay: 'rgba(255,255,255,0.4)'
     });*/
-    KIMCHI.ui.panel.update();
   };
   /**
    * Toggle.
@@ -81,16 +100,25 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Mode
    */
   Mode.prototype.animate = function () {
-    KIMCHI.rendering.animate(this.animationFrame);
+    var self = this;
+
+    KIMCHI.rendering.animate(function (delta) {
+      if (!self.enabled) {
+        // this mode is being disabled
+        console.log('stop animate() for ' + self.name);
+        return false;
+      }
+
+      self.animationFrame(delta);
+    });
   };
 
 
 
   /**
    * Free flight.
-   * @memberOf module:KIMCHI.flight
    */
-  flight.free = (function () {
+  flight.modes.free = (function () {
     var mode, colliding;
 
     /**
@@ -150,13 +178,14 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     mode.enable = function () {
       Mode.prototype.enable.call(this);
 
+      KIMCHI.pointerLock.bind(false);
       $('#hud1').show();
-      KIMCHI.rendering.animate(this.animationFrame);
       KIMCHI.controls.enable();
     };
     mode.disable = function () {
       Mode.prototype.disable.call(this);
 
+      KIMCHI.pointerLock.bind(true);
       KIMCHI.controls.disable();
       $('#hud1').hide();
     };
@@ -180,9 +209,8 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
 
   /**
    * Auto flight.
-   * @memberOf module:KIMCHI.flight
    */
-  flight.auto = (function () {
+  flight.modes.auto = (function () {
     var mode, panTo, translateTo;
 
     /**
@@ -249,6 +277,11 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     };
 
     mode = new Mode();
+    mode.enable = function () {
+      Mode.prototype.enable.call(this);
+
+      KIMCHI.pointerLock.bind(false);
+    };
     mode.disable = function () {
       Mode.prototype.disable.call(this);
 
@@ -272,6 +305,29 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       // TODO make function queue for successive setTimeout() calls
     };
 
+    return mode;
+  }());
+
+
+
+  flight.modes.menu = (function () {
+    var mode = new Mode();
+    mode.enable = function () {
+      Mode.prototype.enable.call(this);
+
+      KIMCHI.clock.stop();
+      KIMCHI.ui.panel.update();
+      KIMCHI.$overlay.show();
+    };
+    mode.disable = function () {
+      Mode.prototype.disable.call(this);
+
+      KIMCHI.$overlay.hide();
+      KIMCHI.clock.start();
+    };
+    mode.animationFrame = function () {
+      return false;
+    };
     return mode;
   }());
 

@@ -6,7 +6,7 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var pointerLock = {}, requestPointerLock, bind, keydown, click;
+  var pointerLock = {}, requestPointerLock, keydown;
   KIMCHI.pointerLock = pointerLock;
 
 
@@ -52,8 +52,12 @@ var KIMCHI = (function (KIMCHI, $) {
       var on = document.pointerLockElement === body ||
         document.mozPointerLockElement === body ||
         document.webkitPointerLockElement === body;
-      bind(on);
-      KIMCHI.flight.free.toggle(on);
+
+      if (on) {
+        KIMCHI.flight.setMode('free');
+      } else if (KIMCHI.flight.getMode() === 'free') {
+        KIMCHI.flight.setMode('menu');
+      }
     };
     document.addEventListener('pointerlockchange', change, false);
     document.addEventListener('mozpointerlockchange', change, false);
@@ -69,7 +73,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
     // the initial flight state is false, so bind the relevant event handlers
     KIMCHI.$overlay.on('click', '#continue-flying', pointerLock.request);
-    bind(false);
+    pointerLock.bind(true);
   };
 
 
@@ -79,11 +83,11 @@ var KIMCHI = (function (KIMCHI, $) {
    *   lock.
    * @memberOf module:KIMCHI.pointerLock
    */
-  bind = function (on) {
+  pointerLock.bind = function (on) {
     if (on) {
-      KIMCHI.$document.off('keydown', keydown);
-    } else {
       KIMCHI.$document.on('keydown', keydown);
+    } else {
+      KIMCHI.$document.off('keydown', keydown);
     }
   };
 

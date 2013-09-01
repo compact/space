@@ -77,7 +77,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
       name = $(this).data('name');
       body = KIMCHI.space.getBody(name);
-      KIMCHI.flight.auto.flyTo(body);
+      KIMCHI.flight.modes.auto.flyTo(body);
     });
 
     panel.update();

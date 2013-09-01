@@ -57,7 +57,7 @@
     // render() has to be called to set the camera position for objects and
     // elements to appear in animate()
     KIMCHI.rendering.render();
-    KIMCHI.flight.auto.animate();
+    KIMCHI.flight.modes.auto.animate();
 
 
 

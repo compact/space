@@ -28,8 +28,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
         KIMCHI.rendering.render();
 
-        // stop the next frame if the user has paused
-        if (proceed !== false && KIMCHI.flight.mode !== false) {
+        // stop the next frame if the callback returns false
+//console.log(proceed);
+        if (proceed !== false) {
           window.requestAnimationFrame(function () {
             KIMCHI.rendering.animate(callback);
           });
@@ -51,7 +52,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       KIMCHI.size.update();
       KIMCHI.$window.on('resize', function () {
         KIMCHI.size.update();
-        KIMCHI.flight.auto.animate();
+        KIMCHI.flight.modes.auto.animate();
       });
     },
     'update': function () {

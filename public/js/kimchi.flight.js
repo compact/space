@@ -171,7 +171,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf  module:KIMCHI.flight.modes
    */
   flight.modes.free = (function () {
-    var mode, colliding;
+    var mode, colliding, getSpeed;
 
     /**
      * @returns  {Boolean} Whether the camera is current in collision, i.e.
@@ -227,6 +227,19 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       };
     }());
 
+    /**
+     * @private
+     * @memberOf module:KIMCHI.flight.modes.free
+     */
+    getSpeed = function (delta) {
+      var translation = KIMCHI.controls.getLocalTranslationVector();
+      return (new THREE.Vector3(
+          translation.x * KIMCHI.config.controls.strafeSpeed,
+          translation.y * KIMCHI.config.controls.strafeSpeed,
+          translation.z * KIMCHI.config.controls.zSpeed
+        )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
+    };
+
     mode = new Mode('free');
     mode.enable = function () {
       Mode.prototype.enable.call(this);
@@ -246,24 +259,12 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
           delta,
           flight.getTranslationSpeedMultiplier()
         );
-        this.updateSpeed(delta);
+        this.speed = getSpeed(delta);
       }
 
       KIMCHI.space.moveBodies(delta);
       KIMCHI.ui.hud.update(delta);
       KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
-    };
-
-    /**
-     * @memberOf module:KIMCHI.flight.modes.free
-     */
-    mode.updateSpeed = function (delta) {
-      var translation = KIMCHI.controls.getLocalTranslationVector();
-      this.speed = (new THREE.Vector3(
-          translation.x * KIMCHI.config.controls.strafeSpeed,
-          translation.y * KIMCHI.config.controls.strafeSpeed,
-          translation.z * KIMCHI.config.controls.zSpeed
-        )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
     };
 
     return mode;

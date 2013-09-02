@@ -22,11 +22,7 @@ var KIMCHI = (function (KIMCHI, $) {
   hud.update = function (delta) {
     var translation = KIMCHI.controls.getLocalTranslationVector();
     $('#hud-distance-from-sun').text(KIMCHI.format.roundDecimals(KIMCHI.camera.position.length(), 2, true));
-    $('#hud-speed').text(KIMCHI.format.roundDecimals((new THREE.Vector3(
-      translation.x * KIMCHI.config.controls.strafeSpeed,
-      translation.y * KIMCHI.config.controls.strafeSpeed,
-      translation.z * KIMCHI.config.controls.zSpeed
-    )).length() * KIMCHI.flight.getTranslationSpeedMultiplier(), 2, true));
+    $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
     $('#hud-time').text(KIMCHI.format.date(KIMCHI.date));
 
     if (KIMCHI.config.debug) {

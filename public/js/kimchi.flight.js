@@ -122,6 +122,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       return self.animationFrame(delta);
     });
   };
+  Mode.prototype.speed = 0;
 
 
 
@@ -203,11 +204,20 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
           delta,
           flight.getTranslationSpeedMultiplier()
         );
+        this.updateSpeed(delta);
       }
 
       KIMCHI.space.moveBodies(delta);
       KIMCHI.ui.hud.update(delta);
       KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
+    };
+    mode.updateSpeed = function (delta) {
+      var translation = KIMCHI.controls.getLocalTranslationVector();
+      this.speed = (new THREE.Vector3(
+          translation.x * KIMCHI.config.controls.strafeSpeed,
+          translation.y * KIMCHI.config.controls.strafeSpeed,
+          translation.z * KIMCHI.config.controls.zSpeed
+        )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
     };
 
     return mode;
@@ -219,7 +229,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
    * Auto flight.
    */
   flight.modes.auto = (function () {
-    var mode, keydown, animationFrame, panTo, translateTo;
+    var mode, keydown, update, panTo, translateTo;
 
     /**
      * The event handler for pressing Escape to stop auto flight and return to
@@ -242,7 +252,11 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       };
     }());
 
-    animationFrame = function (delta) {
+    /**
+     * Helper function called in every animationFrame() to update space and hud.
+     * @param {Number} delta
+     */
+    update = function (delta) {
       KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
       KIMCHI.ui.hud.update(delta);
     };
@@ -282,7 +296,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
             KIMCHI.camera.quaternion.copy(
               initQuaternion.slerp(targetQuaternion, t)
             );
-            animationFrame(delta);
+            update(delta);
 
             t += 0.05;
           } else {
@@ -299,11 +313,14 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      */
     translateTo = function (body) {
       mode.animationFrame = function (delta) {
+        var translationZ;
         if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) - body.radius >=
             body.getCollisionDistance()) {
-          KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
-            flight.getTranslationSpeedMultiplier([body]));
-          animationFrame(delta);
+          translationZ = KIMCHI.config.controls.zSpeed * delta *
+            flight.getTranslationSpeedMultiplier([body]);
+          this.speed = translationZ / delta;
+          KIMCHI.camera.translateZ(-translationZ);
+          update(delta);
         } else {
           flight.setMode('menu');
           return false;
@@ -406,6 +423,13 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     }
 
     return KIMCHI.space.getClosestDistance(bodies);
+  };
+
+  /**
+   * @returns {THREE.Vector3} The current translation speed of the camera.
+   */
+  flight.getSpeed = function () {
+    return flight.modes[currentMode].speed;
   };
 
 

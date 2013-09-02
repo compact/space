@@ -35,12 +35,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'name': 'LOLWTF',
       'radiusInKm': 696000,
       'position': new THREE.Vector3(5, 5, 0),
-      'visibleDistance': 1000000,
+      'visibleDistance': 1000000/*,
       'mesh': (function () {
         jsonLoader.load('js/testconvert.json', function (geometry, materials) {
-//          data[1].mesh = new THREE.Mesh(geometry, materials);
+          data[1].mesh = new THREE.Mesh(geometry, materials);
         });
-      }())
+      }())*/
     },
     {
       'name': 'Mercury',

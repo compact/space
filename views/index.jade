@@ -28,7 +28,7 @@ block content
         .panel-body
           ul.nav.nav-tabs
             li.active
-              a(href="#about-pane", data-toggle="tab") Welcome
+              a(href="#about-pane", data-toggle="tab") About
             li
               a(href="#bodies-pane", data-toggle="tab") Astronomical Objects
             li
@@ -38,7 +38,7 @@ block content
               h1 Explore the Solar System
               p [TODO: Blurb.]
               p [TODO: If WebGL support check fails, write a message here.]
-              #continue-flying.btn.btn-lg.btn-primary Start Flying [Esc]
+              .continue-flying.btn.btn-lg.btn-primary(data-loading-text="Loading...", data-continue-text="Continue Flying [Esc]") Start Flying [Esc]
             #bodies-pane.tab-pane
               table#bodies.table
                 tr

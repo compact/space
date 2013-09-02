@@ -15,8 +15,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Raw data for each body, to be passed into the Body constructor.
-   * @memberOf module:KIMCHI.space
    * @private
+   * @memberOf module:KIMCHI.space
    */
   data = [
     {
@@ -244,8 +244,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Contains instances of Body.
-   * @memberOf module:KIMCHI.space
    * @private
+   * @memberOf module:KIMCHI.space
    */
   bodies = {};
 

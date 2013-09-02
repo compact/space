@@ -16,8 +16,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * The current flight mode.
-   * @memberOf module:KIMCHI.flight
    * @private
+   * @memberOf module:KIMCHI.flight
    */
   currentMode = '';
 
@@ -228,6 +228,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     }());
 
     /**
+     * @returns  {Number} The current speed.
      * @private
      * @memberOf module:KIMCHI.flight.modes.free
      */

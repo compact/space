@@ -108,11 +108,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Mode.prototype.disable = function () {
     this.enabled = false;
-/*    KIMCHI.$overlay.blurjs({
-      source: '#space',
-      radius: 7,
-      overlay: 'rgba(255,255,255,0.4)'
-    });*/
   };
   /**
    * Toggle.
@@ -452,6 +447,11 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       KIMCHI.clock.stop();
       KIMCHI.ui.panel.update();
       KIMCHI.$overlay.show();
+/*      KIMCHI.$overlay.blurjs({
+        source: '#space',
+        radius: 7,
+        overlay: 'rgba(255,255,255,0.4)'
+      });*/
       KIMCHI.$document.on('keydown', keydown);
     };
     mode.disable = function () {

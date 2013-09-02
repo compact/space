@@ -52,7 +52,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       KIMCHI.size.update();
       KIMCHI.$window.on('resize', function () {
         KIMCHI.size.update();
-        KIMCHI.flight.modes.auto.animate();
+        KIMCHI.flight.modes.auto.animate(); // TODO
       });
     },
     'update': function () {

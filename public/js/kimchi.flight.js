@@ -16,27 +16,30 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * The current flight mode. TODO make private
    * @memberOf module:KIMCHI.flight
    */
-  flight.mode = 'menu'; // possible values are 'free', 'auto', and 'menu'
+  flight.mode = ''; // possible values are 'free', 'auto', and 'menu'
   flight.modes = {};
   /**
    * @returns {(String|Boolean)}
    */
   flight.getMode = function () {
     return flight.mode;
-  }
+  };
   /**
    * @param {(String|Boolean)}
    */
   flight.setMode = function (name) {
-    var previousName = flight.mode;
+    var prevName = flight.mode;
 
-    if (previousName === name) {
+    if (prevName === name) {
       // the given mode is already the current mode; do nothing
       return;
     }
 
-    console.log('change flight mode from ' + previousName + ' to ' + name);
-    flight.modes[previousName].disable();
+    console.log('change flight mode from ' + prevName + ' to ' + name);
+    if (typeof flight.modes[prevName] === 'object') {
+      // on the first call to setMode(), there is no previous mode
+      flight.modes[prevName].disable();
+    }
     flight.modes[name].enable();
     flight.mode = name;
   };
@@ -50,8 +53,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Mode = function (name) {
     this.name = name;
-    this.enabled = false;
   };
+  /**
+   * Whether this mode is currently enabled.
+   * @memberOf Mode
+   */
+  Mode.prototype.enabled = false;
   /**
    * Enable.
    * @memberOf Mode
@@ -96,7 +103,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Mode.prototype.animationFrame = function () {};
   /**
-   * Shortcut for KIMCHI.rendering.animate(this.animationFrame).
+   * Start animating for this mode.
    * @memberOf Mode
    */
   Mode.prototype.animate = function () {
@@ -174,18 +181,16 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       };
     }());
 
-    mode = new Mode();
+    mode = new Mode('free');
     mode.enable = function () {
       Mode.prototype.enable.call(this);
 
-      KIMCHI.pointerLock.bind(false);
       $('#hud1').show();
       KIMCHI.controls.enable();
     };
     mode.disable = function () {
       Mode.prototype.disable.call(this);
 
-      KIMCHI.pointerLock.bind(true);
       KIMCHI.controls.disable();
       $('#hud1').hide();
     };
@@ -211,8 +216,33 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
    * Auto flight.
    */
   flight.modes.auto = (function () {
-    var mode, panTo, translateTo;
+    var mode, keydown, animationFrame, panTo, translateTo;
 
+    /**
+     * The event handler for pressing Escape to stop auto flight and return to
+     *   menu mode.
+     * @private
+     */
+    keydown = (function () {
+      var keydownInProgress = false;
+
+      return function (event) {
+        if (event.which === 27) { // Esc
+          keydownInProgress = true;
+          $(this).one('keyup', function (event) {
+            if (event.which === 27 && keydownInProgress) {
+              flight.setMode('menu');
+              keydownInProgress = false;
+            }
+          });
+        }
+      };
+    }());
+
+    animationFrame = function (delta) {
+      KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
+      KIMCHI.ui.hud.update(delta);
+    };
     /**
      * Pan (rotate) the camera towards the given Body (without translating).
      *   Return false to disable auto flight.
@@ -237,7 +267,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
         targetQuaternion.setFromRotationMatrix(rotationMatrix);
 
         t = 0;
-        KIMCHI.rendering.animate(function (delta) {
+        mode.animationFrame = function (delta) {
           // avoid rounding imprecision because we want the final rotation to be
           // centered exactly onto the target body (t = 1)
           if (t > 1 && t < 1 + 0.05) {
@@ -248,14 +278,14 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
             KIMCHI.camera.quaternion.copy(
               initQuaternion.slerp(targetQuaternion, t)
             );
-            mode.animationFrame(delta);
+            animationFrame(delta);
 
             t += 0.05;
           } else {
             translateTo(body);
             return false; // disable
           }
-        });
+        };
       };
     }());
 
@@ -264,32 +294,30 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      * @private
      */
     translateTo = function (body) {
-      KIMCHI.rendering.animate(function (delta) {
+      mode.animationFrame = function (delta) {
         if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) - body.radius >=
             body.getCollisionDistance()) {
           KIMCHI.camera.translateZ(-KIMCHI.config.controls.zSpeed * delta *
             flight.getTranslationSpeedMultiplier([body]));
-          mode.animationFrame(delta);
+          animationFrame(delta);
         } else {
-          mode.disable();
+          flight.setMode('menu');
+          return false;
         }
-      });
+      };
     };
 
-    mode = new Mode();
+    mode = new Mode('auto');
     mode.enable = function () {
       Mode.prototype.enable.call(this);
 
-      KIMCHI.pointerLock.bind(false);
+      KIMCHI.$document.on('keydown', keydown);
     };
     mode.disable = function () {
       Mode.prototype.disable.call(this);
 
       KIMCHI.ui.notice.clear(); // TODO move this
-    };
-    mode.animationFrame = function (delta) {
-      KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
-      KIMCHI.ui.hud.update(delta);
+      KIMCHI.$document.off('keydown', keydown);
     };
 
     /**
@@ -300,7 +328,6 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      */
     mode.flyTo = function (body) {
       KIMCHI.ui.notice.set(KIMCHI.config.notices.flyTo(body));
-      this.enable();
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };
@@ -311,19 +338,47 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
 
 
   flight.modes.menu = (function () {
-    var mode = new Mode();
+    var mode, keydown;
+
+    /**
+     * The event handler for pressing Escape to request pointer lock. We request
+     *   pointer lock only on keyup; otherwise, the continued Escape keydown
+     *   event causes the pointer lock to disable immediately, even if one lets
+     *   go of the Escape key asap. Also, the flag keydownInProgress prevents
+     *   multiple handlers of .one('keyup') from being binded.
+     * @private
+     */
+    keydown = (function () {
+      var keydownInProgress = false;
+
+      return function (event) {
+        if (event.which === 27) { // Esc
+          keydownInProgress = true;
+          $(this).one('keyup', function (event) {
+            if (event.which === 27 && keydownInProgress) {
+              KIMCHI.pointerLock.request();
+              keydownInProgress = false;
+            }
+          });
+        }
+      };
+    }());
+
+    mode = new Mode('menu');
     mode.enable = function () {
       Mode.prototype.enable.call(this);
 
       KIMCHI.clock.stop();
       KIMCHI.ui.panel.update();
       KIMCHI.$overlay.show();
+      KIMCHI.$document.on('keydown', keydown);
     };
     mode.disable = function () {
       Mode.prototype.disable.call(this);
 
       KIMCHI.$overlay.hide();
       KIMCHI.clock.start();
+      KIMCHI.$document.off('keydown', keydown);
     };
     mode.animationFrame = function () {
       return false;

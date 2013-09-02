@@ -57,7 +57,7 @@
     // render() has to be called to set the camera position for objects and
     // elements to appear in animate()
     KIMCHI.rendering.render();
-    KIMCHI.flight.modes.auto.animate();
+    KIMCHI.flight.modes.auto.animate(); // TODO
 
 
 
@@ -69,5 +69,6 @@
     KIMCHI.pointerLock.init();
     KIMCHI.ui.panel.init();
     KIMCHI.ui.notice.init();
+    KIMCHI.flight.setMode('menu');
   });
 }(KIMCHI, jQuery, THREE));

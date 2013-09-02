@@ -8,7 +8,7 @@ var express = require('express')
   , path = require('path')
   , mongoose = require('mongoose')
   , passport = require('passport')
-  , docs = require('./routes/docs')
+//  , docs = require('./routes/docs')
   , db = require('./modules/db')(mongoose);
 
 var app = express();
@@ -26,8 +26,8 @@ app.use(express.cookieParser('appsecretLoL'));
 app.use(express.cookieSession({ secret: 'appsecretLoL', cookie: { maxAge: 60 * 60 * 1000 }}));
 app.use(app.router);
 //app.use(express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, "/public")));
-app.use("/docs", express.static(__dirname + "/doc"));
+app.use(express.static(path.join(__dirname, 'public')));
+//app.use("/docs", express.static(__dirname + "/doc"));
 
 // development only
 if ('development' == app.get('env')) {

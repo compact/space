@@ -4,9 +4,9 @@
  */
 
 exports.index = function(req, res){
-  res.render('../doc/index.html');
+  res.render('../docs/index.html');
 };
 
 exports.page = function(req, res){
-  res.render('../doc/index.html');
+  res.render('../docs/index.html');
 }

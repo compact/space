@@ -2,33 +2,33 @@
  * The different flight modes:
  * <br> free: User-controlled flight.
  * <br> auto: Automatically guided flight.
+ * <br> menu: Flight is paused and the menu is shown.
  * @namespace flight
  * @memberOf  module:KIMCHI
  */
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
-  var flight = {}, Mode;
+  var flight = {}, currentMode = '', Mode;
   KIMCHI.flight = flight;
 
 
   /**
-   * The current flight mode. TODO make private
+   * The available flight modes, each an instance of {@link Mode}.
    * @memberOf module:KIMCHI.flight
    */
-  flight.mode = ''; // possible values are 'free', 'auto', and 'menu'
   flight.modes = {};
   /**
    * @returns {(String|Boolean)}
    */
   flight.getMode = function () {
-    return flight.mode;
+    return currentMode;
   };
   /**
    * @param {(String|Boolean)}
    */
   flight.setMode = function (name) {
-    var prevName = flight.mode;
+    var prevName = currentMode;
 
     if (prevName === name) {
       // the given mode is already the current mode; do nothing
@@ -41,7 +41,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       flight.modes[prevName].disable();
     }
     flight.modes[name].enable();
-    flight.mode = name;
+    currentMode = name;
   };
 
 

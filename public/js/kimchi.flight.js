@@ -103,7 +103,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Mode.prototype.animationFrame = function () {};
   /**
-   * Start animating for this mode.
+   * Start animating for this mode with this.animationFrame(). This function
+   *   should only be called once, when this mode is enabled. The animation
+   *   stops if either this mode is disabled or this.animationFrame() returns
+   *   false.
    * @memberOf Mode
    */
   Mode.prototype.animate = function () {
@@ -116,7 +119,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         return false;
       }
 
-      self.animationFrame(delta);
+      return self.animationFrame(delta);
     });
   };
 
@@ -243,6 +246,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
       KIMCHI.ui.hud.update(delta);
     };
+
     /**
      * Pan (rotate) the camera towards the given Body (without translating).
      *   Return false to disable auto flight.
@@ -283,7 +287,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
             t += 0.05;
           } else {
             translateTo(body);
-            return false; // disable
+            //return false; // disable
           }
         };
       };

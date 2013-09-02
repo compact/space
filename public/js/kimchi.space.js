@@ -3,7 +3,7 @@
  *   {@link Body} class, and their associated Object3Ds. Can only be constructed
  *   inside kimchi.space.js.
  * @namespace space
- * @memberOf module:KIMCHI
+ * @memberOf  module:KIMCHI
  */
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
@@ -37,7 +37,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'position': new THREE.Vector3(5, 5, 0),
       'visibleDistance': 1000000,
       'mesh': (function () {
-        jsonLoader.load('js/testconvert.js', function (geometry, materials) {
+        jsonLoader.load('js/testconvert.json', function (geometry, materials) {
 //          data[1].mesh = new THREE.Mesh(geometry, materials);
         });
       }())
@@ -234,6 +234,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   Body.prototype.move = function () {};
   /**
    * @returns {Number} The collision distance between the camera and this Body.
+   * @memberOf Body
    */
   Body.prototype.getCollisionDistance = function () {
     return this.radius;
@@ -259,15 +260,17 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * @returns {Object} Bodies.
+   * @returns  {Object} Bodies.
+   * @memberOf module:KIMCHI.space
    */
   space.getBodies = function () {
     return bodies;
   };
   /**
    * TODO check bodies[name] actually exists
-   * @param   {String} name
-   * @returns {Body}
+   * @param    {String} name
+   * @returns  {Body}
+   * @memberOf module:KIMCHI.space
    */
   space.getBody = function (name) {
     return bodies[name];
@@ -287,7 +290,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * @returns {Array} Object3Ds of Bodies set to be collideable with the camera.
+   * @returns  {Array} Object3Ds of Bodies set to be collideable with the
+   *   camera.
    * @memberOf module:KIMCHI.space
    */
   space.getCollideableObject3Ds = function () {
@@ -295,6 +299,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
   /**
    * @returns {Object} Bodies with names as keys.
+   * @memberOf module:KIMCHI.space
    */
   space.getCollideableBodies = function () {
     // _.filter(bodies, 'collideable') returns an Array, not an Object with keys
@@ -398,6 +403,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   /**
    * @param   {Object} bodies
    * @returns {Number} The distance to the closest Body Mesh.
+   * @memberOf module:KIMCHI.space
    */
   space.getClosestDistance = function (bodies) {
     return KIMCHI.space.getSortedDistances(bodies)[0].distance;

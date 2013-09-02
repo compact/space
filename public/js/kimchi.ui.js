@@ -16,7 +16,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
   /**
    * Heads up display during free flight.
-   * @namespace ui
+   * @namespace hud
    * @memberOf  module:KIMCHI.ui
    */
   hud.update = function (delta) {
@@ -94,7 +94,7 @@ var KIMCHI = (function (KIMCHI, $) {
   /**
    * Notice box.
    * @namespace notice
-   * @memberOf  module:KIMCHI
+   * @memberOf  module:KIMCHI.ui
    */
   notice.init = function () {
     notice.$notice = $('#notice');

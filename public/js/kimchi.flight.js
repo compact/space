@@ -9,23 +9,34 @@
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
-  var flight = {}, currentMode = '', Mode;
+  var flight = {}, currentMode, Mode;
   KIMCHI.flight = flight;
 
 
+
+  /**
+   * The current flight mode.
+   * @memberOf module:KIMCHI.flight
+   * @private
+   */
+  currentMode = '';
+
   /**
    * The available flight modes, each an instance of {@link Mode}.
-   * @memberOf module:KIMCHI.flight
+   * @namespace modes
+   * @memberOf  module:KIMCHI.flight
    */
   flight.modes = {};
   /**
-   * @returns {(String|Boolean)}
+   * @returns  {(String|Boolean)}
+   * @memberOf module:KIMCHI.flight
    */
   flight.getMode = function () {
     return currentMode;
   };
   /**
-   * @param {(String|Boolean)}
+   * @param    {(String|Boolean)}
+   * @memberOf module:KIMCHI.flight
    */
   flight.setMode = function (name) {
     var prevName = currentMode;
@@ -42,6 +53,30 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     }
     flight.modes[name].enable();
     currentMode = name;
+  };
+
+  /**
+   * Return a number for scaling the camera translation speed (in every
+   *   direction) depending on how close the camera is to the closest of the
+   *   given collideable Bodies; if not given, consider all collideable Bodies.
+   * @param    {Array}  Bodies
+   * @returns  {Number}
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.getTranslationSpeedMultiplier = function (bodies) {
+    if (typeof bodies === 'undefined') {
+      bodies = KIMCHI.space.getCollideableBodies();
+    }
+
+    return KIMCHI.space.getClosestDistance(bodies);
+  };
+
+  /**
+   * @returns  {THREE.Vector3} The current translation speed of the camera.
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.getSpeed = function () {
+    return flight.modes[currentMode].speed;
   };
 
 
@@ -122,20 +157,27 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       return self.animationFrame(delta);
     });
   };
+  /**
+   * The current speed.
+   * @memberOf Mode
+   */
   Mode.prototype.speed = 0;
 
 
 
   /**
    * Free flight.
+   * @namespace free
+   * @memberOf  module:KIMCHI.flight.modes
    */
   flight.modes.free = (function () {
     var mode, colliding;
 
     /**
-     * @returns {Boolean} Whether the camera is current in collision, i.e.
+     * @returns  {Boolean} Whether the camera is current in collision, i.e.
      *   within any Body's collision distance.
      * @private
+     * @memberOf module:KIMCHI.flight.modes.free
      */
     colliding = (function () {
       var translationVector, raycaster, intersects, returnValue;
@@ -211,6 +253,10 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
       KIMCHI.ui.hud.update(delta);
       KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
     };
+
+    /**
+     * @memberOf module:KIMCHI.flight.modes.free
+     */
     mode.updateSpeed = function (delta) {
       var translation = KIMCHI.controls.getLocalTranslationVector();
       this.speed = (new THREE.Vector3(
@@ -227,6 +273,8 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
 
   /**
    * Auto flight.
+   * @namespace auto
+   * @memberOf  module:KIMCHI.flight.modes
    */
   flight.modes.auto = (function () {
     var mode, keydown, update, panTo, translateTo;
@@ -235,6 +283,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      * The event handler for pressing Escape to stop auto flight and return to
      *   menu mode.
      * @private
+     * @memberOf module:KIMCHI.flight.modes.auto
      */
     keydown = (function () {
       var keydownInProgress = false;
@@ -254,7 +303,9 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
 
     /**
      * Helper function called in every animationFrame() to update space and hud.
-     * @param {Number} delta
+     * @param   {Number} delta
+     * @private
+     * @memberOf module:KIMCHI.flight.modes.auto
      */
     update = function (delta) {
       KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
@@ -264,8 +315,9 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     /**
      * Pan (rotate) the camera towards the given Body (without translating).
      *   Return false to disable auto flight.
-     * @returns {(undefined|false)}
+     * @returns  {(undefined|false)}
      * @private
+     * @memberOf module:KIMCHI.flight.modes.auto
      */
     panTo = (function () {
       var initQuaternion, rotationMatrix, targetQuaternion, t;
@@ -310,6 +362,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     /**
      * Translate the camera to the given Body until within range of collision.
      * @private
+     * @memberOf module:KIMCHI.flight.modes.auto
      */
     translateTo = function (body) {
       mode.animationFrame = function (delta) {
@@ -345,7 +398,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      * Fly to the given Body. Two private functions are used sequentially to
      *   first pan and then translate to it. translateTo(body) is called when
      *   panTo(body) ends. disable() is called when translateTo(body) ends
-     * @public
+     * @memberOf module:KIMCHI.flight.modes.auto
      */
     mode.flyTo = function (body) {
       KIMCHI.ui.notice.set(KIMCHI.config.notices.flyTo(body));
@@ -358,6 +411,10 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
 
 
 
+  /**
+   * @namespace menu
+   * @memberOf  module:KIMCHI.flight.modes
+   */
   flight.modes.menu = (function () {
     var mode, keydown;
 
@@ -368,6 +425,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      *   go of the Escape key asap. Also, the flag keydownInProgress prevents
      *   multiple handlers of .one('keyup') from being binded.
      * @private
+     * @memberOf module:KIMCHI.flight.modes.menu
      */
     keydown = (function () {
       var keydownInProgress = false;
@@ -404,33 +462,9 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     mode.animationFrame = function () {
       return false;
     };
+
     return mode;
   }());
-
-
-
-  /**
-   * Return a number for scaling the camera translation speed (in every
-   *   direction) depending on how close the camera is to the closest of the
-   *   given collideable Bodies; if not given, consider all collideable Bodies.
-   * @param    {Array}  Bodies
-   * @returns  {Number}
-   * @memberOf module:KIMCHI.flight
-   */
-  flight.getTranslationSpeedMultiplier = function (bodies) {
-    if (typeof bodies === 'undefined') {
-      bodies = KIMCHI.space.getCollideableBodies();
-    }
-
-    return KIMCHI.space.getClosestDistance(bodies);
-  };
-
-  /**
-   * @returns {THREE.Vector3} The current translation speed of the camera.
-   */
-  flight.getSpeed = function () {
-    return flight.modes[currentMode].speed;
-  };
 
 
 

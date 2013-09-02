@@ -33,37 +33,50 @@
 var KIMCHI = (function (KIMCHI, THREE) {
   'use strict';
 
-  KIMCHI.config = {
-    'debug': true,
-    'camera': {
-      'fov': 45, // for THREE.PerspectiveCamera
-      'near': 0.000001, // for THREE.PerspectiveCamera
-      'far': 10000000, // for THREE.PerspectiveCamera
-      'initialPosition': new THREE.Vector3(0, 0, -30)
-    },
-    'controls': { // for THREE.Controls
-      'lookSpeed': 0.0002, // pitch/yaw with mouse
-      'zSpeed': 1, // move forward/backward with keyboard
-      'strafeSpeed': 0.5, // move left/right/up/down with keyboard
-      'rollSpeed': 2 // roll with keyboard
-    },
-    'scales': {
-      'radius': 10 / 149597871, // radii are given in km
-      'position': 1 // positions are given in AU
-    },
-    'orbits': {
-      'color': 0xffffcc,
-      'opacity': 0.5,
-      'lineSegments': 720 // how many lines make up each orbit?
-    },
-    'sphereSegments': 48,
-    'stars': {
-      'scale': 100000,
-      'count': 2000
-    },
-    'notices': {
-      'pointerLockNotSupported': 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.'
+  var config = {};
+  KIMCHI.config = config;
+
+  config.debug = true;
+
+  config.camera = {
+    'fov': 45, // for THREE.PerspectiveCamera
+    'near': 0.000001, // for THREE.PerspectiveCamera
+    'far': 10000000, // for THREE.PerspectiveCamera
+    'initialPosition': new THREE.Vector3(0, 0, -30)
+  };
+  config.controls = { // for THREE.Controls
+    'lookSpeed': 0.0002, // pitch/yaw with mouse
+    'zSpeed': 1, // move forward/backward with keyboard
+    'strafeSpeed': 0.5, // move left/right/up/down with keyboard
+    'rollSpeed': 2 // roll with keyboard
+  };
+
+  // space config
+  config.scales = {
+    'radius': 10 / 149597871, // radii are given in km
+    'position': 1 // positions are given in au
+  };
+  config.orbits = {
+    'color': 0xffffcc,
+    'opacity': 0.5,
+    'lineSegments': 720 // how many lines make up each orbit?
+  };
+  config.sphereSegments = 48;
+
+  config.stars = {
+    'scale': 100000,
+    'count': 2000
+  };
+
+  config.notices = {
+    'pointerLockNotSupported': 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.',
+    'flyTo': function (body) {
+      return 'Flying to ' + body.name + '...&lt;br />Press Esc to stop.';
     }
+  };
+  config.language = {
+    'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+      'Oct', 'Nov', 'Dec']
   };
 
   return KIMCHI;
@@ -77,13 +90,13 @@ var KIMCHI = (function (KIMCHI, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-Date.html">Date</a></li><li><a href="external-Math.html">Math</a></li><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 30 2013 19:56:19 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Mon Sep 02 2013 14:30:42 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

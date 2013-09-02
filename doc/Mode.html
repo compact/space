@@ -128,7 +128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line23">line 23</a>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line84">line 84</a>
     </li></ul></dd>
     
     
@@ -167,6 +167,118 @@
     
     
     
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="enabled"><span class="type-signature"></span>enabled<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Whether this mode is currently enabled.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line96">line 96</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="speed"><span class="type-signature"></span>speed<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The current speed.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line164">line 164</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
     
     
         <h3 class="subsection-title">Methods</h3>
@@ -182,7 +294,10 @@
     
     
     <div class="description">
-        Shortcut for KIMCHI.rendering.animate(this.animationFrame).
+        Start animating for this mode with this.animationFrame(). This function
+  should only be called once, when this mode is enabled. The animation
+  stops if either this mode is disabled or this.animationFrame() returns
+  false.
     </div>
     
 
@@ -215,7 +330,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line78">line 78</a>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line147">line 147</a>
     </li></ul></dd>
     
     
@@ -332,7 +447,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line73">line 73</a>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line139">line 139</a>
     </li></ul></dd>
     
     
@@ -401,7 +516,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line45">line 45</a>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line109">line 109</a>
     </li></ul></dd>
     
     
@@ -470,7 +585,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line36">line 36</a>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line101">line 101</a>
     </li></ul></dd>
     
     
@@ -539,7 +654,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line55">line 55</a>
+        <a href="kimchi.flight.js.html">kimchi.flight.js</a>, <a href="kimchi.flight.js.html#line121">line 121</a>
     </li></ul></dd>
     
     
@@ -580,13 +695,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-Date.html">Date</a></li><li><a href="external-Math.html">Math</a></li><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 30 2013 19:56:20 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Mon Sep 02 2013 14:30:43 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -41,9 +41,7 @@ var KIMCHI = (function (KIMCHI) {
 
     /**
      * The browser's requestPointerLock function, used in request().
-     * @memberOf module:KIMCHI.pointerLock
      * @private
-     * @function
      */
     requestPointerLock = body.requestPointerLock ||
       body.mozRequestPointerLock || body.webkitRequestPointerLock;

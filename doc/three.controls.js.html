@@ -32,7 +32,7 @@
  * @constructor THREE.Controls
  * @memberOf    THREE
  */
-(function (_, $, THREE) {
+(function (_, THREE) {
   'use strict';
 
   THREE.Controls = function (camera, options) {
@@ -46,27 +46,19 @@
       'rollSpeed': 2
     }, options);
 
-/* used in PointerLockControls, but doesn't seem necessary
-    yawObject takes the place of the camera object
-    var pitchObject = new THREE.Object3D();
-    pitchObject.add(camera);
-    var yawObject = new THREE.Object3D();
-    yawObject.add(pitchObject);
-    scene.add(yawObject);
-*/
-
     this.resetStates();
-    this.$document = $(document);
 
-    // event handlers; not a propotype property for convenient reference to self
+    // event handlers
+    // not in the propotype because they need to reference self
     this.events = {
       'mousemove': function (event) {
         var movementX, movementY;
 
-        if (!self.enabled) {
+        // extra check that we are allowed to move
+/*        if (!self.enabled) {
           return;
         }
-
+*/
         movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
         movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
@@ -133,13 +125,11 @@
    * @memberOf THREE.Controls
    */
   THREE.Controls.prototype.enable = function () {
-    this.$document.on({
-      'keydown': this.events.keydown,
-      'keyup': this.events.keyup
-    });
-
-    // not using jQuery to get event.movementX properties
+    // can't use jQuery for this.events.mousemove, because we need the
+    // properties event.movementX and event.movementY
     document.addEventListener('mousemove', this.events.mousemove, false);
+    document.addEventListener('keydown', this.events.keydown, false);
+    document.addEventListener('keyup', this.events.keyup, false);
 
     this.enabled = true;
   };
@@ -150,11 +140,11 @@
    */
   THREE.Controls.prototype.disable = function () {
     this.resetStates();
-    this.$document.off({
-      'mousemove': this.events.mousemove,
-      'keydown': this.events.keydown,
-      'keyup': this.events.keyup
-    });
+
+    document.removeEventListener('mousemove', this.events.mousemove, false);
+    document.removeEventListener('keydown', this.events.keydown, false);
+    document.removeEventListener('keyup', this.events.keyup, false);
+
     this.enabled = false;
   };
 
@@ -253,7 +243,7 @@
   THREE.Controls.prototype.getWorldTranslationVector = function () {
     return this.camera.localToWorld(this.getLocalTranslationVector());
   };
-}(_, jQuery, THREE));</code></pre>
+}(_, THREE));</code></pre>
         </article>
     </section>
 
@@ -263,13 +253,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-Date.html">Date</a></li><li><a href="external-Math.html">Math</a></li><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Aug 30 2013 19:56:19 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Mon Sep 02 2013 14:30:42 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

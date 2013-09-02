@@ -23,25 +23,30 @@ block scripts
 block content
   #notice
   #overlay
-    div(style="font-size: 24px;")
-      a#continue-flying Continue Flying (Esc)
-    .col-lg-6
+    .col-lg-12(style="padding: 15px;")
       .panel
         .panel-body
           ul.nav.nav-tabs
             li.active
+              a(href="#about-pane", data-toggle="tab") Welcome
+            li
               a(href="#bodies-pane", data-toggle="tab") Astronomical Objects
             li
               a(href="#settings-pane", data-toggle="tab") Options
           .tab-content
-            #bodies-pane.tab-pane.active
+            #about-pane.tab-pane.active
+              h1 Explore the Solar System
+              p [TODO: Blurb.]
+              p [TODO: If WebGL support check fails, write a message here.]
+              #continue-flying.btn.btn-lg.btn-primary Start Flying [Esc]
+            #bodies-pane.tab-pane
               table#bodies.table
                 tr
                   th Name
                   th
-                  th Current<br />Distance
+                  th Current Distance
                   th Radius
-                  th Distance<br />from the Sun
+                  th Distance from the Sun
             #settings-pane.tab-pane
               .row
                 .col-lg-3

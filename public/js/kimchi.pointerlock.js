@@ -69,9 +69,6 @@ var KIMCHI = (function (KIMCHI) {
     document.addEventListener('pointerlockerror', error, false);
     document.addEventListener('mozpointerlockerror', error, false);
     document.addEventListener('webkitpointerlockerror', error, false);
-
-    // the initial flight state is false, so bind the relevant event handlers
-    KIMCHI.$overlay.on('click', '#continue-flying', pointerLock.request);
   };
 
 

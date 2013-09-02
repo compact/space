@@ -3,10 +3,10 @@
  * @namespace pointerLock
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
-  var pointerLock = {}, requestPointerLock, keydown;
+  var pointerLock = {}, requestPointerLock;
   KIMCHI.pointerLock = pointerLock;
 
 
@@ -73,25 +73,9 @@ var KIMCHI = (function (KIMCHI, $) {
 
     // the initial flight state is false, so bind the relevant event handlers
     KIMCHI.$overlay.on('click', '#continue-flying', pointerLock.request);
-    pointerLock.bind(true);
-  };
-
-
-
-  /**
-   * Bind or unbind the event handlers for triggering the request of pointer
-   *   lock.
-   * @memberOf module:KIMCHI.pointerLock
-   */
-  pointerLock.bind = function (on) {
-    if (on) {
-      KIMCHI.$document.on('keydown', keydown);
-    } else {
-      KIMCHI.$document.off('keydown', keydown);
-    }
   };
 
 
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery));
+}(KIMCHI || {}));

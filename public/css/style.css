@@ -59,18 +59,6 @@ a {
 	text-align: right;
 }
 
-/***************************** other elements overlaid on the three.js canvas */
-.label {
-	position: absolute;
-	padding: 2px 4px;
-	border: 1px solid #000;
-	background-color: rgba(255, 255, 255, 0.75);
-	color: #000;
-	font-size: 16px;
-	font-weight: bold;
-	z-index: 200;
-}
-
 /********************************* overlay that appears when flying is paused */
 #overlay {
 	position: absolute;

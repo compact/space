@@ -52,5 +52,47 @@ var KIMCHI = (function (KIMCHI, THREE) {
       'Oct', 'Nov', 'Dec']
   };
 
+  /**
+   * @param   {String} name  Config key.
+   * @param   {String} value 'true' and 'false' have to be converted to Boolean.
+   * @returns {Object}       The value, type converted.
+   */
+  KIMCHI.setConfig = function (name, value) {
+    var $button, addClass, removeClass;
+
+    // find the button before value gets changed
+    $button = $('.setting').find('input[name="' + name + '"][value="' + value +
+      '"]').parent();
+
+    // parse value
+    if (value === 'true') {
+      value = true;
+    } else if (value === 'false') {
+      value = false;
+    }/* TODO else if (/^\-?[0-9]+(\.[0-9]+)?$/.test(value)) {
+      value = Number(value);
+    }*/
+
+    // set config
+    config[name] = value;
+
+    console.log('setting: ' + name + ' = ' + value);
+
+    if (value === true) {
+      removeClass = 'btn-danger';
+      addClass = 'btn-success';
+    } else if (value === false) {
+      removeClass = 'btn-success';
+      addClass = 'btn-danger';
+    } else {
+      removeClass = 'btn-primary';
+      addClass = 'btn-primary';
+    }
+    $button.siblings().removeClass(removeClass);
+    $button.addClass(addClass);
+
+    return value;
+  };
+
   return KIMCHI;
 }(KIMCHI || {}, THREE));

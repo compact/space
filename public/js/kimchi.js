@@ -3,8 +3,7 @@
 
   $(function () {
     // initialize KIMCHI
-//    KIMCHI.init();
-    KIMCHI.ui.panel.init();
+    KIMCHI.init();
 
     // event handler for the first time the user clicks "Start Flying"
     KIMCHI.$overlay.one('click', '.continue-flying', function () {

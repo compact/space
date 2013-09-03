@@ -2,12 +2,10 @@
   'use strict';
 
   $(function () {
-    KIMCHI.$document = $(document);
-    KIMCHI.$window = $(window);
-    KIMCHI.$overlay = $('#overlay');
-
+    // initialize KIMCHI
     KIMCHI.init();
 
+    // event handler for the first time the user clicks "Start Flying"
     KIMCHI.$overlay.one('click', '.continue-flying', function () {
       var $this = $(this);
 

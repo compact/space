@@ -16,6 +16,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * Initialize KIMCHI.
    */
   KIMCHI.init = function () {
+    // jQuery objects
+    KIMCHI.$document = $(document);
+    KIMCHI.$window = $(window);
+    KIMCHI.$overlay = $('#overlay');
+
+
+
     // clock
     KIMCHI.clock = new THREE.Clock(false); // do not autostart
 

@@ -23,14 +23,14 @@ block scripts
 block content
   #notice
   #overlay
-    .col-lg-12(style="padding: 15px;")
+    .col-md-12.col-lg-12(style="padding: 15px;")
       .panel
         .panel-body
           ul.nav.nav-tabs
             li.active
               a(href="#about-pane", data-toggle="tab") About
             li
-              a(href="#bodies-pane", data-toggle="tab") Astronomical Objects
+              a(href="#bodies-pane", data-toggle="tab") Astronomical Bodies
             li
               a(href="#settings-pane", data-toggle="tab") Options
           .tab-content
@@ -48,28 +48,46 @@ block content
                   th Radius
                   th Distance from the Sun
             #settings-pane.tab-pane
-              .row
-                .col-lg-3
-                  .btn-group(data-toggle="buttons")
-                    label.btn.btn-default.btn-sm
-                      input(type="radio")
-                      | On
-                    label.btn.btn-default.btn-sm
-                      input(type="radio")
-                      | Off
-                .col-lg-6
-                  | Revolution of planets and moons
-              .row
-                .col-lg-3
-                  .btn-group(data-toggle="buttons")
-                    label.btn.btn-default.btn-sm
-                      input(type="radio")
-                      | On
-                    label.btn.btn-default.btn-sm
-                      input(type="radio")
-                      | Off
-                .col-lg-6
-                  | Rotation of planets and moons
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="rotate", value="true")
+                    | On
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="rotate", value="false")
+                    | Off
+                .setting-description
+                  | Bodies rotate
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="revolve", value="true")
+                    | On
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="revolve", value="false")
+                    | Off
+                .setting-description
+                  | Bodies revolve around the sun
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="show-hud", value="true")
+                    | On
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="show-hud", value="false")
+                    | Off
+                .setting-description
+                  | Show heads-up display
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="show-labels", value="true")
+                    | On
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="show-labels", value="false")
+                    | Off
+                .setting-description
+                  | Show body labels and orbits
   #hud1.hud
     strong Controls
     ul

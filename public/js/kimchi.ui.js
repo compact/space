@@ -77,6 +77,29 @@ var KIMCHI = (function (KIMCHI, $) {
       KIMCHI.flight.modes.auto.flyTo(body);
     });
 
+    // bind settings
+    $('#settings-pane').on('click', '.btn', function () {
+      var $this, $input, name, value;
+
+      $this = $(this);
+      $input = $this.children('input');
+      name = $input.attr('name');
+      value = $input.val();
+
+      if (value === 'true') {
+        value = true;
+        $this.siblings().removeClass('btn-danger');
+        $this.addClass('btn-success');
+      } else if (value === 'false') {
+        value = false;
+        $this.siblings().removeClass('btn-success');
+        $this.addClass('btn-danger');
+      }
+
+//      KIMCHI.config[name] = value;
+      console.log('setting: ' + name + ' = ' + value);
+    });
+
     panel.update();
   };
   panel.update = function () {

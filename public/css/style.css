@@ -27,7 +27,7 @@ a {
 /************************************************************************ hud */
 .hud {
 	position: absolute;
-	z-index: 333;
+	z-index: 100;
 }
 .hud-value {
 	display: inline-block;
@@ -80,8 +80,21 @@ a {
 	bottom: 0;
 	background-color: rgba(240, 255, 240, 0.75);
 	color: #000;
-	z-index: 100;
+	z-index: 300;
 }
 .nav-tabs {
 	margin-bottom: 16px;
+}
+.setting-row {
+	clear: left;
+	margin-top: 8px;
+}
+.setting {
+	float: left;
+	width: 80px;
+	margin-right: 16px;
+}
+.setting-description {
+	float: left;
+	line-height: 30px;
 }

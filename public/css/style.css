@@ -6,9 +6,9 @@ body {
 }
 
 ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -17,72 +17,72 @@ a {
 }
 
 #notice {
-	position: absolute;
-	top: 0;
-	left: 0;
-	font-size: 24px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 24px;
 }
 
 /************************************************************************ hud */
 .hud {
-	position: absolute;
-	z-index: 100;
+  position: absolute;
+  z-index: 100;
 }
 .hud-value {
-	display: inline-block;
-	width: 100px;
-	text-align: right;
+  display: inline-block;
+  width: 100px;
+  text-align: right;
 }
 .hud-unit {
-	display: inline-block;
-	width: 50px;
-	text-align: left;
+  display: inline-block;
+  width: 50px;
+  text-align: left;
 }
 #hud1 {
-	top: 0;
-	left: 0;
-	display: none;
+  top: 0;
+  left: 0;
+  display: none;
 }
 #hud2 {
-	top: 0;
-	right: 0;
-	text-align: right;
+  top: 0;
+  right: 0;
+  text-align: right;
 }
 #hud3 {
-	bottom: 0;
-	left: 0;
+  bottom: 0;
+  left: 0;
 }
 #hud4 {
-	bottom: 0;
-	right: 0;
-	text-align: right;
+  bottom: 0;
+  right: 0;
+  text-align: right;
 }
 
 /********************************* overlay that appears when flying is paused */
 #overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(240, 255, 240, 0.75);
-	color: #000;
-	z-index: 300;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(240, 255, 240, 0.75);
+  color: #000;
+  z-index: 300;
 }
 .nav-tabs {
-	margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 .setting-row {
-	clear: left;
-	margin-top: 8px;
+  clear: left;
+  margin-top: 8px;
 }
 .setting {
-	float: left;
-	width: 125px;
-	margin-right: 16px;
+  float: left;
+  width: 125px;
+  margin-right: 16px;
 }
 .setting-description {
-	float: left;
-	line-height: 30px;
+  float: left;
+  line-height: 30px;
 }

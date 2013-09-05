@@ -20,7 +20,6 @@ var KIMCHI = (function (KIMCHI, $) {
    * @memberOf  module:KIMCHI.ui
    */
   hud.update = function (delta) {
-    var translation = KIMCHI.controls.getLocalTranslationVector();
     $('#hud-distance-from-sun').text(KIMCHI.format.roundDecimals(KIMCHI.camera.position.length(), 2, true));
     $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
     $('#hud-time').text(KIMCHI.format.date(KIMCHI.date));
@@ -68,7 +67,7 @@ var KIMCHI = (function (KIMCHI, $) {
     });
 
     // bind fly-to links
-    $('#bodies').on('click', '.fly-to', function (event) {
+    $('#bodies').on('click', '.fly-to', function () {
       var name, body;
 
       name = $(this).data('name');
@@ -77,10 +76,21 @@ var KIMCHI = (function (KIMCHI, $) {
       KIMCHI.flight.modes.auto.flyTo(body);
     });
 
-    // bind settings
-    $('#settings-pane').on('click', '.btn', function () {
+    // init config
+    KIMCHI.initConfig();
+
+    // bind config
+    $('#config-pane').on('click', '[data-toggle="buttons"] .btn', function () {
+      // radios and checkboxes
       var $input = $(this).children('input');
       KIMCHI.setConfig($input.attr('name'), $input.val());
+    }).on('click', '.dropdown-menu a', function () {
+      // dropdowns
+      var $this = $(this);
+      KIMCHI.setConfig(
+        $this.parents('.btn-group').eq(0).data('key'),
+        $this.data('value')
+      );
     });
 
     panel.update();
@@ -93,6 +103,42 @@ var KIMCHI = (function (KIMCHI, $) {
       $('#body-' + body.name + ' .distance')
         .text(KIMCHI.format.au(body.distance));
     });
+  };
+  panel.updateConfig = function (key, value) {
+    var $config, $button, addClass, removeClass, $btnGroup, label;
+
+    // "unparse" the value back into a String
+    value = String(value);
+
+    $config = $('.config');
+
+    // case 1: radios and checkboxes
+    $button = $config.find(
+      '[name="' + key + '"][value="' + value + '"]'
+    ).parent();
+    if ($button.length === 1) {
+      // determine css classes to add and remove from the respective buttons
+      addClass = 'active ';
+      if (value === 'true') {
+        removeClass = 'btn-danger';
+        addClass += 'btn-success';
+      } else if (value === 'false') {
+        removeClass = 'btn-success';
+        addClass += 'btn-danger';
+      } else {
+        removeClass = 'btn-primary';
+        addClass += 'btn-primary';
+      }
+      $button.siblings().removeClass(removeClass);
+      $button.addClass(addClass);
+      return;
+    }
+
+    // case 2: dropdowns
+    $btnGroup = $config.filter('[data-key="' + key + '"]');
+    label = $btnGroup.find('[data-value="' + value + '"]').text()
+      .replace(/ \(.+\)/, '');
+    $btnGroup.find('.selected-value').text(label);
   };
 
 

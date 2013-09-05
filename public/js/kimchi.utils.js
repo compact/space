@@ -8,12 +8,24 @@
  */
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
-  var format;
+
+  var constants, format;
+
+
+
+  /**
+   * Constants.
+   * @memberOf KIMCHI
+   */
+  constants = {};
+  KIMCHI.constants = constants;
+  constants.kmPerAu = 149597871;
 
 
 
   /**
    * Initialize KIMCHI.
+   * @memberOf KIMCHI
    */
   KIMCHI.init = function () {
     // jQuery objects
@@ -63,7 +75,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.lights.sun.position.set(0, 0, 0);
     KIMCHI.scene.add(KIMCHI.lights.sun);
     // ambient light: remove for production TODO
-    KIMCHI.scene.add(new THREE.AmbientLight(0xff0000));
+    KIMCHI.lights.ambient = new THREE.AmbientLight(0xff0000);
+    KIMCHI.scene.add(KIMCHI.lights.ambient);
 
 
 
@@ -110,7 +123,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     // callback is called before rendering. If it returns false, stop animating.
     'animate': function (callback) {
-      setTimeout(function () { // TODO: remove for production
+      window.setTimeout(function () { // TODO: remove for production
 //console.log(document.webkitPointerLockElement !== null);
         var proceed = callback(KIMCHI.clock.getDelta());
 
@@ -168,7 +181,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.format
    */
   format.roundDecimals = function (number, precision, trailingZeroes) {
-    'use strict';
     var multiplier, result;
     multiplier = Math.pow(10, precision);
     result = Math.round(number * multiplier) / multiplier;
@@ -185,7 +197,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.format
    */
   format.roundNicely = function (number) {
-    'use strict';
     if (number < 1) {
       return format.roundDecimals(number, 2);
     } else if (number < 10) {

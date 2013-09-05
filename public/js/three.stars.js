@@ -8,7 +8,7 @@
   'use strict';
 
   THREE.Stars = function (options) {
-    var i, vertex, scale, particleSystem, // iterators
+    var i, vertex, particleSystem, // iterators
       geometries, counts, materials, particleSystems;
 
     particleSystems = [];
@@ -55,8 +55,7 @@
       particleSystem.rotation.y = Math.random() * Math.PI;
       particleSystem.rotation.z = Math.random() * 2 * Math.PI;
 
-      scale = i * options.scale;
-      particleSystem.scale.set(scale, scale, scale);
+      particleSystem.scale.setXYZ(i * options.scale);
 
       particleSystem.matrixAutoUpdate = false;
       particleSystem.updateMatrix();

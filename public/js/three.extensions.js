@@ -11,6 +11,10 @@
  * @memberOf    external:THREE
  */
 /**
+ * @constructor Vector3
+ * @memberOf    external:THREE
+ */
+/**
  * @constructor Matrix3
  * @memberOf    external:THREE
  */
@@ -140,6 +144,17 @@
 
 
   /**
+   * Set the x, y, and z values of this vector to all be the given value.
+   * @param    {Number} value
+   * @memberOf external:THREE.Vector3
+   */
+  THREE.Vector3.prototype.setXYZ = function (value) {
+    this.set(value, value, value);
+  };
+
+
+
+  /**
    * We overwrite this function because the original also sets this and
    *   requires a Matrix4.
    * @returns  {Matrix3} The inverse matrix.
@@ -219,7 +234,7 @@
     }));
     line.position.copy(options.position);
     line.rotation.copy(options.rotation);
-    line.scale = options.scale;
+    line.scale.copy(options.scale);
     return line;
   };
 }(_, jQuery, THREE));

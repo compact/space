@@ -12,7 +12,7 @@
 
       KIMCHI.pointerLock.request(); // async
       // TODO: this button changing before free flight gets enabled is unsightly, so move this line to pointerLock change()
-      setTimeout(function () {
+      window.setTimeout(function () {
         $this.button('continue');
       }, 250);
 

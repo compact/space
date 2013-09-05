@@ -73,16 +73,16 @@ a {
   margin-bottom: 16px;
 }
 
-.setting-row {
+.config-row {
   clear: left;
   margin-top: 8px;
 }
-.setting {
+.config {
   float: left;
   width: 125px;
   margin-right: 16px;
 }
-.setting-description {
+.config-description {
   float: left;
   line-height: 30px;
 }

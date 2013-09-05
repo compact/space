@@ -13,11 +13,11 @@ block scripts
   script(src='/js/three.controls.js')
   script(src='/js/three.stars.js')
   script(src='/js/kimchi.config.js')
+  script(src='/js/kimchi.utils.js')
   script(src='/js/kimchi.space.js')
   script(src='/js/kimchi.flight.js')
   script(src='/js/kimchi.pointerlock.js')
   script(src='/js/kimchi.ui.js')
-  script(src='/js/kimchi.utils.js')
   script(src='/js/kimchi.js')
 
 block content
@@ -32,7 +32,7 @@ block content
             li
               a(href="#bodies-pane", data-toggle="tab") Astronomical Bodies
             li
-              a(href="#settings-pane", data-toggle="tab") Options
+              a(href="#config-pane", data-toggle="tab") Options
           .tab-content
             #about-pane.tab-pane.active
               h1 Explore the Solar System
@@ -48,93 +48,95 @@ block content
                   th Current Distance
                   th Radius
                   th Distance from the Sun
-            #settings-pane.tab-pane
+            #config-pane.tab-pane
               h1 Options
               h3 Astronomical bodies
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
+              .config-row.clearfix
+                .config.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="rotate", value="true")
                     | On
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="rotate", value="false")
                     | Off
-                .setting-description
+                .config-description
                   | Rotation
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
+              .config-row.clearfix
+                .config.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="revolve", value="true")
+                    input(type="radio", name="enable-clock", value="true")
                     | On
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="revolve", value="false")
+                    input(type="radio", name="enable-clock", value="false")
                     | Off
-                .setting-description
+                .config-description
                   | Revolution around the sun
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
-                  label.btn.btn-default.btn-sm
-                    input(type="radio", name="scale", value="1")
-                    | 1x
-                  label.btn.btn-default.btn-sm
-                    input(type="radio", name="scale", value="10")
-                    | 10x
-                  label.btn.btn-default.btn-sm
-                    input(type="radio", name="scale", value="100")
-                    | 100x
-                .setting-description
+              .config-row.clearfix
+                .config.btn-group(data-key="scales-size")
+                  .btn.btn-primary.btn-sm.dropdown-toggle(data-toggle="dropdown")
+                    span.selected-value
+                    | &nbsp;&nbsp;
+                    span.caret
+                  ul.dropdown-menu
+                    li
+                      a(data-value="1") 1x
+                    li
+                      a(data-value="100") 100x (distances lose scale)
+                    li
+                      a(data-value="1000") 1000x (distances lose scale)
+                .config-description
                   | Scaled size
               h3 Visuals
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
+              .config-row.clearfix
+                .config.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="ambient-lighting", value="true")
                     | On
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="ambient-lighting", value="false")
                     | Off
-                .setting-description
+                .config-description
                   | Ambient lighting
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
+              .config-row.clearfix
+                .config.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="show-labels", value="true")
                     | On
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="show-labels", value="false")
                     | Off
-                .setting-description
+                .config-description
                   | Show text labels
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
+              .config-row.clearfix
+                .config.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="show-orbits", value="true")
                     | On
                   label.btn.btn-default.btn-sm
                     input(type="radio", name="show-orbits", value="false")
                     | Off
-                .setting-description
+                .config-description
                   | Show orbit curves
               h3 Flight
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
+              .config-row.clearfix
+                .config.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="flying-speed", value="1")
+                    input(type="radio", name="controls-flying-speed-multiplier", value="1")
                     | Slow
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="flying-speed", value="2")
+                    input(type="radio", name="controls-flying-speed-multiplier", value="2")
                     | Fast
-                .setting-description
+                .config-description
                   | Flying speed
-              .setting-row.clearfix
-                .setting.btn-group(data-toggle="buttons")
+              .config-row.clearfix
+                .config.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="mouse-sensitivity", value="1")
+                    input(type="radio", name="controls-look-speed", value="0.0002")
                     | Low
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="mouse-sensitivity", value="2")
+                    input(type="radio", name="controls-look-speed", value="0.0005")
                     | High
-                .setting-description
+                .config-description
                   | Mouse sensitivity
   #hud1.hud
     strong Controls

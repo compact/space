@@ -11,46 +11,40 @@ var KIMCHI = (function (KIMCHI, THREE) {
 
   config.debug = true;
 
-  config.camera = {
-    'fov': 45, // for THREE.PerspectiveCamera
-    'near': 0.000001, // for THREE.PerspectiveCamera
-    'far': 10000000, // for THREE.PerspectiveCamera
-    'initialPosition': new THREE.Vector3(0, 0, -30)
-  };
-  config.controls = { // for THREE.Controls
-    'lookSpeed': 0.0002, // pitch/yaw with mouse
-    'zSpeed': 1, // move forward/backward with keyboard
-    'strafeSpeed': 0.5, // move left/right/up/down with keyboard
-    'rollSpeed': 2 // roll with keyboard
+  // for THREE.PerspectiveCamera
+  config['camera-fov'] = 45; 
+  config['camera-near'] = 0.000001;
+  config['camera-far'] = 10000000;
+  // for KIMCHI.init()
+  config['camera-initial-position'] = new THREE.Vector3(0, 0, -30);
+
+  // for THREE.Controls
+  config['controls-look-speed'] = 0.0002; // pitch/yaw with mouse
+  config['controls-z-speed'] = 1; // move forward/backward with keyboard
+  config['controls-strafe-speed'] = 0.5; // move left/right/up/down with keyboard
+  config['controls-roll-speed'] = 2; // roll with keyboard
+
+  // for the astronomical bodies in KIMCHI.space
+  config['sphere-segments'] = 48;
+  config['scales-radius'] = 10 / 149597871; // radii are given in km
+  config['scales-position'] = 1; // positions are given in au
+
+  // for the orbits in KIMCHI.space
+  config['show-orbits'] = true;
+  config['orbits-color'] = 0xffffcc;
+  config['orbits-opacity'] = 0.5;
+  config['orbits-line-segments'] = 720; // how many lines make up each orbit?
+
+  // for THREE.Stars
+  config['stars-scale'] = 100000;
+  config['stars-count'] = 2000;
+
+  config['notices-pointer-lock-not-supported'] = 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.';
+  config['notices-fly-to'] = function (body) {
+    return 'Flying to ' + body.name + '...<br />Press Esc to stop.';
   };
 
-  // space config
-  config.scales = {
-    'radius': 10 / 149597871, // radii are given in km
-    'position': 1 // positions are given in au
-  };
-  config.orbits = {
-    'color': 0xffffcc,
-    'opacity': 0.5,
-    'lineSegments': 720 // how many lines make up each orbit?
-  };
-  config.sphereSegments = 48;
-
-  config.stars = {
-    'scale': 100000,
-    'count': 2000
-  };
-
-  config.notices = {
-    'pointerLockNotSupported': 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.',
-    'flyTo': function (body) {
-      return 'Flying to ' + body.name + '...<br />Press Esc to stop.';
-    }
-  };
-  config.language = {
-    'months': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-      'Oct', 'Nov', 'Dec']
-  };
+  config['language-months'] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   /**
    * @param   {String} name  Config key.

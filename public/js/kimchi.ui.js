@@ -25,7 +25,7 @@ var KIMCHI = (function (KIMCHI, $) {
     $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
     $('#hud-time').text(KIMCHI.format.date(KIMCHI.date));
 
-    if (KIMCHI.config.debug) {
+    if (KIMCHI.config['debug']) {
       $('#hud4').html(
         '<strong>Debug</strong><br />' +
         'Delta: ' +

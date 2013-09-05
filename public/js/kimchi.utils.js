@@ -30,10 +30,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.scene = new THREE.Scene();
     // camera: don't use OrthographicCamera because it lacks perspective
     KIMCHI.camera = new THREE.PerspectiveCamera(
-      KIMCHI.config.camera.fov,
+      KIMCHI.config['camera-fov'],
       1, // placeholder, set with KIMCHI.size.init()
-      KIMCHI.config.camera.near,
-      KIMCHI.config.camera.far
+      KIMCHI.config['camera-near'],
+      KIMCHI.config['camera-far']
     );
     // renderer
     KIMCHI.renderer = new THREE.WebGLRenderer({
@@ -49,7 +49,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
 
     // add background stars, an array of ParticleSystems
-    KIMCHI.scene.add(new THREE.Stars(KIMCHI.config.stars));
+    KIMCHI.scene.add(new THREE.Stars({
+      'scale': KIMCHI.config['stars-scale'],
+      'count': KIMCHI.config['stars-count']
+    }));
 
 
 
@@ -65,12 +68,17 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
     // first person controls
-    KIMCHI.controls = new THREE.Controls(KIMCHI.camera, KIMCHI.config.controls);
+    KIMCHI.controls = new THREE.Controls(KIMCHI.camera, {
+      'lookSpeed': KIMCHI.config['controls-look-speed'],
+      'zSpeed': KIMCHI.config['controls-z-speed'],
+      'strafeSpeed': KIMCHI.config['controls-strafe-speed'],
+      'rollSpeed': KIMCHI.config['controls-roll-speed']
+    });
 
 
 
     // initialize camera position and rotation
-    KIMCHI.camera.position.copy(KIMCHI.config.camera.initialPosition);
+    KIMCHI.camera.position.copy(KIMCHI.config['camera-initial-position']);
     KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
     // render() has to be called to set the camera position for objects and
     // elements to appear in animate()
@@ -208,7 +216,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   format.date = function (date) {
     return date.getDate() + ' ' +
-      KIMCHI.config.language.months[date.getMonth()] + ' ' + date.getFullYear();
+      KIMCHI.config['language-months'][date.getMonth()] + ' ' + date.getFullYear();
   };
 
 

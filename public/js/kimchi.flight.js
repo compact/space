@@ -230,9 +230,9 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     getSpeed = function (delta) {
       var translation = KIMCHI.controls.getLocalTranslationVector();
       return (new THREE.Vector3(
-          translation.x * KIMCHI.config.controls.strafeSpeed,
-          translation.y * KIMCHI.config.controls.strafeSpeed,
-          translation.z * KIMCHI.config.controls.zSpeed
+          translation.x * KIMCHI.config['controls-strafe-speed'],
+          translation.y * KIMCHI.config['controls-strafe-speed'],
+          translation.z * KIMCHI.config['controls-z-speed']
         )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
     };
 
@@ -366,7 +366,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
         var translationZ;
         if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) - body.radius >=
             body.getCollisionDistance()) {
-          translationZ = KIMCHI.config.controls.zSpeed * delta *
+          translationZ = KIMCHI.config['controls-z-speed'] * delta *
             flight.getTranslationSpeedMultiplier([body]);
           this.speed = translationZ / delta;
           KIMCHI.camera.translateZ(-translationZ);
@@ -398,7 +398,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     mode.flyTo = function (body) {
-      KIMCHI.ui.notice.set(KIMCHI.config.notices.flyTo(body));
+      KIMCHI.ui.notice.set(KIMCHI.config['notices-fly-to'](body));
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };

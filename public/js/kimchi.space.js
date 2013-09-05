@@ -25,7 +25,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'position': new THREE.Vector3(0, 0, 0),
       'visibleDistance': 1000000,
       'mesh': new THREE.Mesh(
-        new THREE.SphereGeometry(696000 * KIMCHI.config.scales.radius, KIMCHI.config.sphereSegments, KIMCHI.config.sphereSegments),
+        new THREE.SphereGeometry(696000 * KIMCHI.config['scales-radius'], KIMCHI.config['sphere-segments'], KIMCHI.config['sphere-segments']),
         new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
           'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
         })
@@ -173,13 +173,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     }, options);
 
     // the radius and position are scaled
-    this.radius = this.radiusInKm * KIMCHI.config.scales.radius;
-    this.position.multiplyScalar(KIMCHI.config.scales.position);
+    this.radius = this.radiusInKm * KIMCHI.config['scales-radius'];
+    this.position.multiplyScalar(KIMCHI.config['scales-position']);
 
     // create a Mesh for the body; it can already be set in data
     if (typeof this.mesh !== 'object') { 
       this.mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(this.radius, KIMCHI.config.sphereSegments, KIMCHI.config.sphereSegments),
+        new THREE.SphereGeometry(this.radius, KIMCHI.config['sphere-segments'], KIMCHI.config['sphere-segments']),
         new THREE.MeshLambertMaterial({
           'map': new THREE.ImageUtils.loadTexture(this.texturePath)
         })
@@ -198,9 +198,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     length = this.position.length();
     curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI, true);
     this.line = curve.createLine({
-      'color': KIMCHI.config.orbits.color,
-      'opacity': KIMCHI.config.orbits.opacity,
-      'lineSegments': KIMCHI.config.orbits.lineSegments,
+      'color': KIMCHI.config['orbits-color'],
+      'opacity': KIMCHI.config['orbits-opacity'],
+      'lineSegments': KIMCHI.config['orbits-line-segments']
     });
 
     /***

@@ -166,7 +166,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   setConfigHandlers['controls-look-speed'] = function (value) {
-    KIMCHI.controls.options.lookSpeed = config['controls-look-speed'];
+    KIMCHI.controls.options.lookSpeed = value;
   };
 
   return KIMCHI;

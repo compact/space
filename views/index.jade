@@ -51,18 +51,8 @@ block content
             #config-pane.tab-pane
               h1 Options
               h3 Astronomical bodies
-              .config-row.clearfix
-                .config.btn-group(data-toggle="buttons")
-                  +configRadioLabel("rotate", "true", "On")
-                  +configRadioLabel("rotate", "false", "Off")
-                .config-description
-                  | Rotation
-              .config-row.clearfix
-                .config.btn-group(data-toggle="buttons")
-                  +configRadioLabel("enable-clock", "true", "On")
-                  +configRadioLabel("enable-clock", "false", "Off")
-                .config-description
-                  | Revolution around the sun
+              +configRadioOnOffRow("rotate", "Rotation")
+              +configRadioOnOffRow("enable-clock", "Revolution around the sun")
               .config-row.clearfix
                 .config.btn-group(data-key="scales-size")
                   .btn.btn-primary.btn-sm.dropdown-toggle(data-toggle="dropdown")
@@ -73,51 +63,31 @@ block content
                     li
                       a(data-value="1") 1x
                     li
-                      a(data-value="10") 10x
+                      a(data-value="10") 10x (distances lose scale)
                     li
-                      a(data-value="100") 100x
+                      a(data-value="100") 100x (distances lose more scale)
                     li
-                      a(data-value="1000") 1000x (distances lose scale)
+                      a(data-value="1000") 1000x (distances lose even more scale)
                     li
-                      a(data-value="large") Large (everything appears large with no regard to scale)
+                      a(data-value="large") Large (all bodies appear large without regard to scale)
                 .config-description
                   | Scaled size
               h3 Visuals
-              .config-row.clearfix
-                .config.btn-group(data-toggle="buttons")
-                  +configRadioLabel("ambient-lighting", "true", "On")
-                  +configRadioLabel("ambient-lighting", "false", "Off")
-                .config-description
-                  | Ambient lighting
-              .config-row.clearfix
-                .config.btn-group(data-toggle="buttons")
-                  +configRadioLabel("show-labels", "true", "On")
-                  +configRadioLabel("show-labels", "false", "Off")
-                .config-description
-                  | Show text labels
-              .config-row.clearfix
-                .config.btn-group(data-toggle="buttons")
-                  +configRadioLabel("show-orbits", "true", "On")
-                  +configRadioLabel("show-orbits", "false", "Off")
-                .config-description
-                  | Show orbit curves
-              .config-row.clearfix
-                .config.btn-group(data-toggle="buttons")
-                  +configRadioLabel("show-stars", "true", "On")
-                  +configRadioLabel("show-stars", "false", "Off")
-                .config-description
-                  | Show background stars
+              +configRadioOnOffRow("ambient-lighting", "Ambient lighting")
+              +configRadioOnOffRow("show-labels", "Show text labels")
+              +configRadioOnOffRow("show-orbits", "Show orbit curves")
+              +configRadioOnOffRow("show-stars", "Show background stars")
               h3 Flight
               .config-row.clearfix
                 .config.btn-group(data-toggle="buttons")
-                  +configRadioLabel("controls-flying-speed-multiplier", "1", "Slow")
-                  +configRadioLabel("controls-flying-speed-multiplier", "2", "Fast")
+                  +configRadioLabel("controls-flying-speed-multiplier", "1", "Fast")
+                  +configRadioLabel("controls-flying-speed-multiplier", "2", "Faster")
                 .config-description
                   | Flying speed
               .config-row.clearfix
                 .config.btn-group(data-toggle="buttons")
                   +configRadioLabel("controls-look-speed", "0.0002", "Low")
-                  +configRadioLabel("controls-look-speed", "0.0004", "High")
+                  +configRadioLabel("controls-look-speed", "0.0006", "High")
                 .config-description
                   | Mouse sensitivity
   #hud1.hud
@@ -150,3 +120,11 @@ mixin configRadioLabel(key, value, label)
   label.btn.btn-default.btn-sm
     input(type="radio", name=key, value=value)
     | #{label}
+
+mixin configRadioOnOffRow(key, description)
+  .config-row.clearfix
+    .config.btn-group(data-toggle="buttons")
+      +configRadioLabel(key, "true", "On")
+      +configRadioLabel(key, "false", "Off")
+    .config-description
+      | #{description}

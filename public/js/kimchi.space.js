@@ -242,7 +242,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Body
    */
   Body.prototype.getCollisionDistance = function () {
-    return this.radius * KIMCHI.config['scales-size'];
+    // This is the most general calculation.
+    // this.radius * KIMCHI.config['scales-size'] works for all cases except
+    // when KIMCHI.config['scales-size'] === 'large'
+    return this.radius * this.mesh.scale.x;
   };
 
 

@@ -104,7 +104,17 @@ block content
                     input(type="radio", name="show-labels", value="false")
                     | Off
                 .setting-description
-                  | Show text labels and orbits
+                  | Show text labels
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="show-orbits", value="true")
+                    | On
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="show-orbits", value="false")
+                    | Off
+                .setting-description
+                  | Show orbit curves
               h3 Flight
               .setting-row.clearfix
                 .setting.btn-group(data-toggle="buttons")

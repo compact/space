@@ -55,7 +55,6 @@ var KIMCHI = (function (KIMCHI, THREE) {
   /**
    * @param   {String} name  Config key.
    * @param   {String} value 'true' and 'false' have to be converted to Boolean.
-   * @returns {Object}       The value, type converted.
    */
   KIMCHI.setConfig = function (name, value) {
     var $button, addClass, removeClass;
@@ -90,8 +89,6 @@ var KIMCHI = (function (KIMCHI, THREE) {
     }
     $button.siblings().removeClass(removeClass);
     $button.addClass(addClass);
-
-    return value;
   };
 
   return KIMCHI;

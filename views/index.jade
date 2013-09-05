@@ -40,6 +40,7 @@ block content
               p [TODO: If WebGL support check fails, write a message here.]
               .continue-flying.btn.btn-lg.btn-primary(data-loading-text="Loading...", data-continue-text="Continue Flying [Esc]") Start Flying [Esc]
             #bodies-pane.tab-pane
+              h1 Astronomical bodies
               table#bodies.table
                 tr
                   th Name
@@ -48,6 +49,8 @@ block content
                   th Radius
                   th Distance from the Sun
             #settings-pane.tab-pane
+              h1 Options
+              h3 Astronomical bodies
               .setting-row.clearfix
                 .setting.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
@@ -57,7 +60,7 @@ block content
                     input(type="radio", name="rotate", value="false")
                     | Off
                 .setting-description
-                  | Bodies rotate
+                  | Rotation
               .setting-row.clearfix
                 .setting.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
@@ -67,17 +70,31 @@ block content
                     input(type="radio", name="revolve", value="false")
                     | Off
                 .setting-description
-                  | Bodies revolve around the sun
+                  | Revolution around the sun
               .setting-row.clearfix
                 .setting.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="show-hud", value="true")
+                    input(type="radio", name="scale", value="1")
+                    | 1x
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="scale", value="10")
+                    | 10x
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="scale", value="100")
+                    | 100x
+                .setting-description
+                  | Scaled size
+              h3 Visuals
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="ambient-lighting", value="true")
                     | On
                   label.btn.btn-default.btn-sm
-                    input(type="radio", name="show-hud", value="false")
+                    input(type="radio", name="ambient-lighting", value="false")
                     | Off
                 .setting-description
-                  | Show heads-up display
+                  | Ambient lighting
               .setting-row.clearfix
                 .setting.btn-group(data-toggle="buttons")
                   label.btn.btn-default.btn-sm
@@ -88,6 +105,27 @@ block content
                     | Off
                 .setting-description
                   | Show text labels and orbits
+              h3 Flight
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="flying-speed", value="1")
+                    | Slow
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="flying-speed", value="2")
+                    | Fast
+                .setting-description
+                  | Flying speed
+              .setting-row.clearfix
+                .setting.btn-group(data-toggle="buttons")
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="mouse-sensitivity", value="1")
+                    | Low
+                  label.btn.btn-default.btn-sm
+                    input(type="radio", name="mouse-sensitivity", value="2")
+                    | High
+                .setting-description
+                  | Mouse sensitivity
   #hud1.hud
     strong Controls
     ul

@@ -72,13 +72,14 @@ a {
 .nav-tabs {
 	margin-bottom: 16px;
 }
+
 .setting-row {
 	clear: left;
 	margin-top: 8px;
 }
 .setting {
 	float: left;
-	width: 80px;
+	width: 125px;
 	margin-right: 16px;
 }
 .setting-description {

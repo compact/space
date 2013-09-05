@@ -44,6 +44,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   config['orbits-line-segments'] = 720; // how many lines make up each orbit?
 
   // for THREE.Stars
+  config['show-stars'] = true;
   config['stars-scale'] = 100000;
   config['stars-count'] = 2000;
 
@@ -71,6 +72,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       'ambient-lighting',
       'show-labels',
       'show-orbits',
+      'show-stars',
       'controls-flying-speed-multiplier',
       'controls-look-speed'
     ];
@@ -124,9 +126,15 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   setConfigHandlers['scales-size'] = function (value) {
-    _.forEach(KIMCHI.space.getMeshes(), function (mesh) {
-      mesh.scale.setXYZ(value);
-    });
+    if (value === 'large') {
+      _.forEach(KIMCHI.space.getBodies(), function (body) {
+        body.mesh.scale.setXYZ(0.1 / body.radius);
+      });
+    } else { // value is a Number
+      _.forEach(KIMCHI.space.getMeshes(), function (mesh) {
+        mesh.scale.setXYZ(value);
+      });
+    }
   };
 
   setConfigHandlers['ambient-lighting'] = function (value) {
@@ -142,6 +150,12 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   setConfigHandlers['show-orbits'] = function (value) {
     _.forEach(KIMCHI.space.getOrbitLines(), function (line) {
       line.visible = value;
+    });
+  };
+
+  setConfigHandlers['show-stars'] = function (value) {
+    _.each(KIMCHI.stars, function (particleSystem) {
+      particleSystem.visible = value;
     });
   };
 

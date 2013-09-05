@@ -61,10 +61,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
 
     // add background stars, an array of ParticleSystems
-    KIMCHI.scene.add(new THREE.Stars({
+    KIMCHI.stars = new THREE.Stars({
       'scale': KIMCHI.config['stars-scale'],
       'count': KIMCHI.config['stars-count']
-    }));
+    });
+    KIMCHI.scene.add(KIMCHI.stars);
 
 
 

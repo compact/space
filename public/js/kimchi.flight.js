@@ -178,6 +178,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       var translationVector, raycaster, intersects, returnValue;
 
       raycaster = new THREE.Raycaster();
+      // the default precision, 0.0001, is not low enough for our 1x scale
+      raycaster.precision = 0.000001;
 
       return function () {
         translationVector = KIMCHI.controls.getLocalTranslationVector();

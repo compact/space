@@ -238,15 +238,34 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Body
    */
   Body.prototype.move = function () {};
+
   /**
-   * @returns {Number} The collision distance between the camera and this Body.
+   * @returns  {Number} The collision distance between the camera and this Body.
    * @memberOf Body
    */
   Body.prototype.getCollisionDistance = function () {
     // This is the most general calculation.
     // this.radius * KIMCHI.config['scales-size'] works for all cases except
     // when KIMCHI.config['scales-size'] === 'large'
-    return this.radius * this.mesh.scale.x;
+    return 0.5 * this.radius * this.mesh.scale.x;
+  };
+
+  /**
+   * @returns  {Number} The distance between the given Object3D and the closest
+   *   surface of this Body.
+   * @memberOf Body
+   */
+  Body.prototype.getSurfaceDistance = function (object3D) {
+    return THREE.Object3D.distance(this.mesh, object3D) -
+      this.radius * this.mesh.scale.x;
+  };
+  /**
+   * @returns  {Number} Whether this Body is current in collision with the
+   *   given objects
+   * @memberOf Body
+   */
+  Body.prototype.isColliding = function (object3D) {
+    return this.getSurfaceDistance(object3D) < this.getCollisionDistance();
   };
 
 

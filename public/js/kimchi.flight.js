@@ -366,16 +366,16 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + 
     translateTo = function (body) {
       mode.animationFrame = function (delta) {
         var translationZ;
-        if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) - body.radius >=
-            body.getCollisionDistance()) {
+
+        if (body.isColliding(KIMCHI.camera)) {
+          flight.setMode('menu');
+          return false;
+        } else {
           translationZ = KIMCHI.config['controls-z-speed'] * delta *
             flight.getTranslationSpeedMultiplier([body]);
           this.speed = translationZ / delta;
           KIMCHI.camera.translateZ(-translationZ);
           update(delta);
-        } else {
-          flight.setMode('menu');
-          return false;
         }
       };
     };

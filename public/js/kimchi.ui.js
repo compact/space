@@ -59,7 +59,8 @@ var KIMCHI = (function (KIMCHI, $) {
     _.forEach(KIMCHI.space.getBodies(), function (body) {
       $('<tr id="body-' + body.name + '">' +
           '<td>' + body.name + '</td>' +
-          '<td><a class="fly-to" data-name="' + body.name + '">Fly There!</a></td>' +
+          '<td><a class="fly-to" data-name="' + body.name + '">' +
+            KIMCHI.config['language-fly-to'] + '</a></td>' +
           '<td class="distance"></td>' +
           '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
           '<td>' + KIMCHI.format.au(body.position.y) + '</td>' +

@@ -56,6 +56,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   // language constants
   config['language-months'] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  config['language-fly-to'] = 'Fly there!';
 
 
 

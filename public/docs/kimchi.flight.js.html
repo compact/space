@@ -73,13 +73,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       return;
     }
 
-    console.log('change flight mode from ' + prevName + ' to ' + name);
     if (typeof flight.modes[prevName] === 'object') {
       // on the first call to setMode(), there is no previous mode
       flight.modes[prevName].disable();
     }
     flight.modes[name].enable();
     currentMode = name;
+
+    console.log('flight mode changed from ' + prevName + ' to ' + name);
   };
 
   /**
@@ -135,11 +136,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Mode.prototype.disable = function () {
     this.enabled = false;
-/*    KIMCHI.$overlay.blurjs({
-      source: '#space',
-      radius: 7,
-      overlay: 'rgba(255,255,255,0.4)'
-    });*/
   };
   /**
    * Toggle.
@@ -177,7 +173,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.rendering.animate(function (delta) {
       if (!self.enabled) {
         // this mode is being disabled
-        console.log('stop animate() for ' + self.name);
+        console.log('stop animating for ' + self.name + ' flight mode');
         return false;
       }
 
@@ -210,6 +206,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       var translationVector, raycaster, intersects, returnValue;
 
       raycaster = new THREE.Raycaster();
+      // the default precision, 0.0001, is not low enough for our 1x scale
+      raycaster.precision = 0.000001;
 
       return function () {
         translationVector = KIMCHI.controls.getLocalTranslationVector();
@@ -245,7 +243,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
           // TODO take into account the object's Body's radius
           var body = KIMCHI.space.getBody(intersect.object.name);
           if (intersect.distance &lt; body.getCollisionDistance()) {
-console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; ' + body.getCollisionDistance());
             returnValue = true;
             return false; // break the loop
           }
@@ -262,9 +259,9 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; '
     getSpeed = function (delta) {
       var translation = KIMCHI.controls.getLocalTranslationVector();
       return (new THREE.Vector3(
-          translation.x * KIMCHI.config.controls.strafeSpeed,
-          translation.y * KIMCHI.config.controls.strafeSpeed,
-          translation.z * KIMCHI.config.controls.zSpeed
+          translation.x * KIMCHI.config['controls-strafe-speed'],
+          translation.y * KIMCHI.config['controls-strafe-speed'],
+          translation.z * KIMCHI.config['controls-z-speed']
         )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
     };
 
@@ -349,13 +346,13 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; '
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     panTo = (function () {
-      var initQuaternion, rotationMatrix, targetQuaternion, t;
+      var initialQuaternion, rotationMatrix, targetQuaternion, t;
 
       rotationMatrix = new THREE.Matrix4();
       targetQuaternion = new THREE.Quaternion();
 
       return function (body) {
-        initQuaternion = KIMCHI.camera.quaternion.clone();
+        initialQuaternion = KIMCHI.camera.quaternion.clone();
 
         rotationMatrix.lookAt(
           KIMCHI.camera.position,
@@ -368,14 +365,15 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; '
         t = 0;
         mode.animationFrame = function (delta) {
           // avoid rounding imprecision because we want the final rotation to be
-          // centered exactly onto the target body (t = 1)
+          // centered exactly onto the target body (t = 1); the t += 0.05
+          // calculations can be imprecise
           if (t > 1 && t &lt; 1 + 0.05) {
             t = 1;
           }
 
           if (t &lt;= 1) {
             KIMCHI.camera.quaternion.copy(
-              initQuaternion.slerp(targetQuaternion, t)
+              initialQuaternion.clone().slerp(targetQuaternion, t)
             );
             update(delta);
 
@@ -396,16 +394,16 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; '
     translateTo = function (body) {
       mode.animationFrame = function (delta) {
         var translationZ;
-        if (THREE.Object3D.distance(KIMCHI.camera, body.mesh) - body.radius >=
-            body.getCollisionDistance()) {
-          translationZ = KIMCHI.config.controls.zSpeed * delta *
+
+        if (body.isColliding(KIMCHI.camera)) {
+          flight.setMode('menu');
+          return false;
+        } else {
+          translationZ = KIMCHI.config['controls-z-speed'] * delta *
             flight.getTranslationSpeedMultiplier([body]);
           this.speed = translationZ / delta;
           KIMCHI.camera.translateZ(-translationZ);
           update(delta);
-        } else {
-          flight.setMode('menu');
-          return false;
         }
       };
     };
@@ -430,7 +428,7 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; '
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     mode.flyTo = function (body) {
-      KIMCHI.ui.notice.set(KIMCHI.config.notices.flyTo(body));
+      KIMCHI.ui.notice.set(KIMCHI.config['notices-fly-to'](body));
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };
@@ -479,6 +477,11 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; '
       KIMCHI.clock.stop();
       KIMCHI.ui.panel.update();
       KIMCHI.$overlay.show();
+/*      KIMCHI.$overlay.blurjs({
+        source: '#space',
+        radius: 7,
+        overlay: 'rgba(255,255,255,0.4)'
+      });*/
       KIMCHI.$document.on('keydown', keydown);
     };
     mode.disable = function () {
@@ -508,13 +511,13 @@ console.log('Collision with ' + body.name + ': ' + intersect.distance + ' &lt; '
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Mon Sep 02 2013 14:38:07 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 24 2013 23:44:13 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -448,8 +448,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     });
   };
   /**
-   * @param   {Object} bodies
-   * @returns {Number} The distance to the closest Body Mesh.
+   * @param    {Object} bodies
+   * @returns  {Number} The distance to the closest Body Mesh.
    * @memberOf module:KIMCHI.space
    */
   space.getClosestDistance = function (bodies) {

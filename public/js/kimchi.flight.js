@@ -383,6 +383,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
         if (body.isColliding(KIMCHI.camera)) {
           flight.setMode('menu');
+          // KIMCHI.pointerLock.request();
           return false;
         } else {
           translationZ = KIMCHI.config['controls-z-speed'] * delta *
@@ -415,6 +416,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      */
     mode.flyTo = function (body) {
       KIMCHI.ui.notice.set(KIMCHI.config['notices-fly-to'](body));
+      KIMCHI.setConfig('time-on', false);
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };

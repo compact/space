@@ -28,6 +28,7 @@ var KIMCHI = (function (KIMCHI) {
   pointerLock.init = function () {
     var havePointerLock, body, change, error;
 
+    // check whether pointer lock is enabled
     havePointerLock = 'pointerLockElement' in document ||
       'mozPointerLockElement' in document ||
       'webkitPointerLockElement' in document;
@@ -47,7 +48,8 @@ var KIMCHI = (function (KIMCHI) {
     requestPointerLock = body.requestPointerLock ||
       body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
-    change = function () {
+    // bind pointer lock change and error handlers
+    change = function (event) {
       var on = document.pointerLockElement === body ||
         document.mozPointerLockElement === body ||
         document.webkitPointerLockElement === body;
@@ -63,7 +65,7 @@ var KIMCHI = (function (KIMCHI) {
     document.addEventListener('webkitpointerlockchange', change, false);
 
     error = function (event) {
-      console.log('Pointer Lock error:');
+      console.log('pointerlockerror:');
       console.log(event);
     };
     document.addEventListener('pointerlockerror', error, false);

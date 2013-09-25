@@ -207,7 +207,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'opacity': KIMCHI.config['orbits-opacity'],
       'lineSegments': KIMCHI.config['orbits-line-segments']
     });
-
+console.log(this.orbitLine);
     /***
      * Create a Mesh for the text label. We could do
      *   this.mesh.add(this.labelMesh);

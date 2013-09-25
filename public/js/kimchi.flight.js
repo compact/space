@@ -28,14 +28,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   flight.modes = {};
   /**
-   * @returns  {(String|Boolean)}
+   * @returns  {String|Boolean}
    * @memberOf module:KIMCHI.flight
    */
   flight.getMode = function () {
     return currentMode;
   };
   /**
-   * @param    {(String|Boolean)}
+   * @param    {String|Boolean}
    * @memberOf module:KIMCHI.flight
    */
   flight.setMode = function (name) {
@@ -327,7 +327,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     /**
      * Pan (rotate) the camera towards the given Body (without translating).
      *   Return false to disable auto flight.
-     * @returns  {(undefined|false)}
+     * @returns  {undefined|false}
      * @private
      * @memberOf module:KIMCHI.flight.modes.auto
      */

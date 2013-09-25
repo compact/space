@@ -57,7 +57,7 @@
   /**
    * "Overload" the original function of THREE.Object3D.prototype.add to
    *   accept arrays as well.
-   * @param    {(THREE.Object3D|Array)} param
+   * @param    {THREE.Object3D|Array} param
    *   Either an Object3D or an array of Object3Ds to be added.
    * @alias    add
    * @instance

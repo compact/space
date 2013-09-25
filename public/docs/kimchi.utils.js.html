@@ -62,17 +62,17 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
+    // construct three.js objects
     // clock
     KIMCHI.clock = new THREE.Clock(false); // do not autostart
-
     // scene
     KIMCHI.scene = new THREE.Scene();
     // camera: don't use OrthographicCamera because it lacks perspective
     KIMCHI.camera = new THREE.PerspectiveCamera(
-      KIMCHI.config['camera-fov'],
+      KIMCHI.config.get('camera-fov'),
       1, // placeholder, set with KIMCHI.size.init()
-      KIMCHI.config['camera-near'],
-      KIMCHI.config['camera-far']
+      KIMCHI.config.get('camera-near'),
+      KIMCHI.config.get('camera-far')
     );
     // renderer
     KIMCHI.renderer = new THREE.WebGLRenderer({
@@ -89,8 +89,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // add background stars, an array of ParticleSystems
     KIMCHI.stars = new THREE.Stars({
-      'scale': KIMCHI.config['stars-scale'],
-      'count': KIMCHI.config['stars-count']
+      'scale': KIMCHI.config.get('stars-scale'),
+      'count': KIMCHI.config.get('stars-count')
     });
     KIMCHI.scene.add(KIMCHI.stars);
 
@@ -110,16 +110,16 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // first person controls
     KIMCHI.controls = new THREE.Controls(KIMCHI.camera, {
-      'lookSpeed': KIMCHI.config['controls-look-speed'],
-      'zSpeed': KIMCHI.config['controls-z-speed'],
-      'strafeSpeed': KIMCHI.config['controls-strafe-speed'],
-      'rollSpeed': KIMCHI.config['controls-roll-speed']
+      'lookSpeed': KIMCHI.config.get('controls-look-speed'),
+      'zSpeed': KIMCHI.config.get('controls-z-speed'),
+      'strafeSpeed': KIMCHI.config.get('controls-strafe-speed'),
+      'rollSpeed': KIMCHI.config.get('controls-roll-speed')
     });
 
 
 
     // initialize camera position and rotation
-    KIMCHI.camera.position.copy(KIMCHI.config['camera-initial-position']);
+    KIMCHI.camera.position.copy(KIMCHI.config.get('camera-initial-position'));
     KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
     // render() has to be called to set the camera position for objects and
     // elements to appear in animate()
@@ -131,10 +131,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // add renderer to DOM
     $('body').append(KIMCHI.renderer.domElement);
 //    $(KIMCHI.renderer.domElement).attr('id', 'space'); // for blurjs
-    KIMCHI.date = new Date();
-    // bind
+
+
+
+    // init
     KIMCHI.pointerLock.init();
     KIMCHI.ui.panel.init();
+    KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
   };
@@ -171,7 +174,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Camera and renderer dimensions.
-   * @memberOf module:KIMCHI
+   * @namespace size
+   * @memberOf  module:KIMCHI
    */
   KIMCHI.size = {
     'width': 0,
@@ -190,6 +194,44 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       KIMCHI.renderer.setSize(KIMCHI.size.width, KIMCHI.size.height);
     }
   };
+
+
+
+  /**
+   * Time controller. We use "on"/"off"/"isOn" rather than
+   *   "start"/"stop"/"isEnabled" for a better adjective and to avoid
+   *   confusion with THREE.Clock.
+   * @namespace time
+   * @memberOf  module:KIMCHI
+   */
+  KIMCHI.time = (function () {
+    var time, date, on;
+
+    time = {};
+    // the date corresponding to the current positions of the Bodies
+    date = new Date();
+    // the state
+    on = true;
+
+    time.getDate = function () {
+      return date;
+    };
+    time.increment = function (delta) {
+      // TODO: the increment depends on delta
+      date.setDate(date.getDate() + 1);
+    };
+    time.on = function () {
+      on = true;
+    };
+    time.off = function () {
+      on = false;
+    };
+    time.isOn = function () {
+      return on;
+    };
+
+    return time;
+  }());
 
 
 
@@ -249,12 +291,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     return Math.round(number) + ' km';
   };
   /**
-   * @return   {String} Date custom formatted for the KIMCHI hud.
+   * @return   {String} The current {@link time} formatted for the {@link hud}.
    * @memberOf module:KIMCHI.format
    */
-  format.date = function (date) {
+  format.time = function () {
+    var date = KIMCHI.time.getDate();
     return date.getDate() + ' ' +
-      KIMCHI.config['language-months'][date.getMonth()] + ' ' + date.getFullYear();
+      KIMCHI.config.get('language-months')[date.getMonth()] + ' ' +
+      date.getFullYear();
   };
 
 
@@ -270,13 +314,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 24 2013 23:44:13 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Sep 25 2013 03:07:54 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -33,9 +33,8 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var ui = {}, hud = {}, panel = {}, notice = {};
+  var ui = {}, hud = {}, notice = {};
   ui.hud = hud;
-  ui.panel = panel;
   ui.notice = notice;
   KIMCHI.ui = ui;
 
@@ -49,9 +48,9 @@ var KIMCHI = (function (KIMCHI, $) {
   hud.update = function (delta) {
     $('#hud-distance-from-sun').text(KIMCHI.format.roundDecimals(KIMCHI.camera.position.length(), 2, true));
     $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
-    $('#hud-time').text(KIMCHI.format.date(KIMCHI.date));
+    $('#hud-time').text(KIMCHI.format.time());
 
-    if (KIMCHI.config['debug']) {
+    if (KIMCHI.config.get('debug')) {
       $('#hud4').html(
         '&lt;strong>Debug&lt;/strong>&lt;br />' +
         'Delta: ' +
@@ -79,95 +78,115 @@ var KIMCHI = (function (KIMCHI, $) {
    * @namespace panel
    * @memberOf  module:KIMCHI.ui
    */
-  panel.init = function () {
-    var $bodies = $('#bodies');
+  ui.panel = (function () {
+    var panel = {}, $config = $();
 
-    // populate the bodies table
-    _.forEach(KIMCHI.space.getBodies(), function (body) {
-      $('&lt;tr id="body-' + body.name + '">' +
-          '&lt;td>' + body.name + '&lt;/td>' +
-          '&lt;td>&lt;a class="fly-to" data-name="' + body.name + '">' +
-            KIMCHI.config['language-fly-to'] + '&lt;/a>&lt;/td>' +
-          '&lt;td class="distance">&lt;/td>' +
-          '&lt;td>' + KIMCHI.format.km(body.radiusInKm) + '&lt;/td>' +
-          '&lt;td>' + KIMCHI.format.au(body.position.y) + '&lt;/td>' +
-        '&lt;/tr>').appendTo($bodies);
-    });
+    /**
+     * Populate the panel with data and bind its handlers.
+     * @memberOf module:KIMCHI.ui.panel
+     */
+    panel.init = function () {
+      var $bodies = $('#bodies');
 
-    // bind fly-to links
-    $('#bodies').on('click', '.fly-to', function () {
-      var name, body;
+      // populate the bodies table
+      _.forEach(KIMCHI.space.getBodies(), function (body) {
+        $('&lt;tr id="body-' + body.name + '">' +
+            '&lt;td>' + body.name + '&lt;/td>' +
+            '&lt;td>&lt;a class="fly-to" data-name="' + body.name + '">' +
+              KIMCHI.config.get('language-fly-to') + '&lt;/a>&lt;/td>' +
+            '&lt;td class="distance">&lt;/td>' +
+            '&lt;td>' + KIMCHI.format.km(body.radiusInKm) + '&lt;/td>' +
+            '&lt;td>' + KIMCHI.format.au(body.position.y) + '&lt;/td>' +
+          '&lt;/tr>').appendTo($bodies);
+      });
 
-      name = $(this).data('name');
-      body = KIMCHI.space.getBody(name);
-      KIMCHI.flight.setMode('auto');
-      KIMCHI.flight.modes.auto.flyTo(body);
-    });
+      // bind fly-to links
+      $('#bodies').on('click', '.fly-to', function () {
+        var name, body;
 
-    // init config
-    KIMCHI.initConfig();
+        name = $(this).data('name');
+        body = KIMCHI.space.getBody(name);
+        KIMCHI.flight.setMode('auto');
+        KIMCHI.flight.modes.auto.flyTo(body);
+      });
 
-    // bind config
-    $('#config-pane').on('click', '[data-toggle="buttons"] .btn', function () {
-      // radios and checkboxes
-      var $input = $(this).children('input');
-      KIMCHI.setConfig($input.attr('name'), $input.val());
-    }).on('click', '.dropdown-menu a', function () {
-      // dropdowns
-      var $this = $(this);
-      KIMCHI.setConfig(
-        $this.parents('.btn-group').eq(0).data('key'),
-        $this.data('value')
-      );
-    });
+      // bind config
+      $('#config-pane').on('click', '[data-toggle="buttons"] .btn', function () {
+        // radios and checkboxes
+        var $input = $(this).children('input');
+        KIMCHI.config.set($input.attr('name'), $input.val());
+      }).on('click', '.dropdown-menu a', function () {
+        // dropdowns
+        var $this = $(this);
+        KIMCHI.config.set(
+          $this.parents('.btn-group').eq(0).data('key'),
+          $this.data('value')
+        );
+      });
 
-    panel.update();
-  };
-  panel.update = function () {
-    panel.updateBodiesTable();
-  };
-  panel.updateBodiesTable = function () {
-    _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
-      $('#body-' + body.name + ' .distance')
-        .text(KIMCHI.format.au(body.distance));
-    });
-  };
-  panel.updateConfig = function (key, value) {
-    var $config, $button, addClass, removeClass, $btnGroup, label;
+      // update the panel
+      panel.update();
 
-    // "unparse" the value back into a String
-    value = String(value);
+      // used by updateConfig()
+      $config = $('.config');
+    };
 
-    $config = $('.config');
+    /**
+     * Update the panel with data that may change each time the flight mode
+     *   changes to menu, such as Body distances.
+     * @memberOf module:KIMCHI.ui.panel
+     */
+    panel.update = function () {
+      // update the bodies table
+      _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
+        $('#body-' + body.name + ' .distance')
+          .text(KIMCHI.format.au(body.distance));
+      });
+    };
 
-    // case 1: radios and checkboxes
-    $button = $config.find(
-      '[name="' + key + '"][value="' + value + '"]'
-    ).parent();
-    if ($button.length === 1) {
-      // determine css classes to add and remove from the respective buttons
-      addClass = 'active ';
-      if (value === 'true') {
-        removeClass = 'btn-danger';
-        addClass += 'btn-success';
-      } else if (value === 'false') {
-        removeClass = 'btn-success';
-        addClass += 'btn-danger';
-      } else {
-        removeClass = 'btn-primary';
-        addClass += 'btn-primary';
+    /**
+     * Update the config panel for the given key and value.
+     * @param   {String}                key
+     * @param   {String|Boolean|Number} value
+     * @memberOf module:KIMCHI.ui.panel
+     */
+    panel.updateConfig = function (key, value) {
+      var $button, addClass, removeClass, $btnGroup, label;
+
+      // "unparse" the value back into a String
+      value = String(value);
+
+      // case 1: radios and checkboxes
+      $button = $config.find(
+        '[name="' + key + '"][value="' + value + '"]'
+      ).parent();
+      if ($button.length === 1) {
+        // determine css classes to add and remove from the respective buttons
+        addClass = 'active ';
+        if (value === 'true') {
+          removeClass = 'btn-danger';
+          addClass += 'btn-success';
+        } else if (value === 'false') {
+          removeClass = 'btn-success';
+          addClass += 'btn-danger';
+        } else {
+          removeClass = 'btn-primary';
+          addClass += 'btn-primary';
+        }
+        $button.siblings().removeClass(removeClass);
+        $button.addClass(addClass);
+        return;
       }
-      $button.siblings().removeClass(removeClass);
-      $button.addClass(addClass);
-      return;
-    }
 
-    // case 2: dropdowns
-    $btnGroup = $config.filter('[data-key="' + key + '"]');
-    label = $btnGroup.find('[data-value="' + value + '"]').text()
-      .replace(/ \(.+\)/, '');
-    $btnGroup.find('.selected-value').text(label);
-  };
+      // case 2: dropdowns
+      $btnGroup = $config.filter('[data-key="' + key + '"]');
+      label = $btnGroup.find('[data-value="' + value + '"]').text()
+        .replace(/ \(.+\)/, '');
+      $btnGroup.find('.selected-value').text(label);
+    };
+
+    return panel;
+  }());
 
 
 
@@ -199,13 +218,13 @@ var KIMCHI = (function (KIMCHI, $) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 24 2013 23:44:13 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Sep 25 2013 03:07:54 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

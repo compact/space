@@ -55,14 +55,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   flight.modes = {};
   /**
-   * @returns  {(String|Boolean)}
+   * @returns  {String|Boolean}
    * @memberOf module:KIMCHI.flight
    */
   flight.getMode = function () {
     return currentMode;
   };
   /**
-   * @param    {(String|Boolean)}
+   * @param    {String|Boolean}
    * @memberOf module:KIMCHI.flight
    */
   flight.setMode = function (name) {
@@ -259,9 +259,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     getSpeed = function (delta) {
       var translation = KIMCHI.controls.getLocalTranslationVector();
       return (new THREE.Vector3(
-          translation.x * KIMCHI.config['controls-strafe-speed'],
-          translation.y * KIMCHI.config['controls-strafe-speed'],
-          translation.z * KIMCHI.config['controls-z-speed']
+          translation.x * KIMCHI.config.get('controls-strafe-speed'),
+          translation.y * KIMCHI.config.get('controls-strafe-speed'),
+          translation.z * KIMCHI.config.get('controls-z-speed')
         )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
     };
 
@@ -279,6 +279,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       $('#hud1').hide();
     };
     mode.animationFrame = function (delta) {
+      // move the Camera
       if (!colliding()) {
         KIMCHI.controls.moveCamera(
           delta,
@@ -287,9 +288,17 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         this.speed = getSpeed(delta);
       }
 
-      KIMCHI.space.moveBodies(delta);
+      // move the Bodies and increment the current time
+      if (KIMCHI.config.get('time-on')) {
+        KIMCHI.space.moveBodies(delta);
+        KIMCHI.time.increment(delta);
+      }
+
+      // move the Bodies' children
+      KIMCHI.space.moveBodyChildren(delta);
+
+      // update hud
       KIMCHI.ui.hud.update(delta);
-      KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
     };
 
     return mode;
@@ -328,20 +337,24 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     }());
 
     /**
-     * Helper function called in every animationFrame() to update space and hud.
-     * @param   {Number} delta
+     * Helper function called in every animationFrame() to update the space
+     *   and the hud.
+     * @param    {Number} delta
      * @private
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     update = function (delta) {
-      KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
+      // do not move the Body Meshes themselves
+      KIMCHI.space.moveBodyChildren();
+
+      // update hud
       KIMCHI.ui.hud.update(delta);
     };
 
     /**
      * Pan (rotate) the camera towards the given Body (without translating).
      *   Return false to disable auto flight.
-     * @returns  {(undefined|false)}
+     * @returns  {undefined|false}
      * @private
      * @memberOf module:KIMCHI.flight.modes.auto
      */
@@ -397,9 +410,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
         if (body.isColliding(KIMCHI.camera)) {
           flight.setMode('menu');
+          // KIMCHI.pointerLock.request();
           return false;
         } else {
-          translationZ = KIMCHI.config['controls-z-speed'] * delta *
+          translationZ = KIMCHI.config.get('controls-z-speed') * delta *
             flight.getTranslationSpeedMultiplier([body]);
           this.speed = translationZ / delta;
           KIMCHI.camera.translateZ(-translationZ);
@@ -428,7 +442,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     mode.flyTo = function (body) {
-      KIMCHI.ui.notice.set(KIMCHI.config['notices-fly-to'](body));
+      KIMCHI.ui.notice.set(KIMCHI.config.get('notices-fly-to')(body));
+      KIMCHI.config.set('time-on', false);
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };
@@ -511,13 +526,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 24 2013 23:44:13 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Sep 25 2013 03:07:54 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

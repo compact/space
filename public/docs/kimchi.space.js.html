@@ -35,9 +35,11 @@
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
-  var space = {}, data, Body, bodies;
+  var space = {}, data, Body, bodies, sphereSegments;
   KIMCHI.space = space;
-  var jsonLoader = new THREE.JSONLoader();
+//  var jsonLoader = new THREE.JSONLoader();
+  sphereSegments = KIMCHI.config.get('sphere-segments');
+
 
 
   /**
@@ -53,12 +55,15 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'visibleDistance': 1000000,
       'mesh': (function () {
         var mesh = new THREE.Mesh(
-          new THREE.SphereGeometry(696000 / KIMCHI.constants.kmPerAu, KIMCHI.config['sphere-segments'], KIMCHI.config['sphere-segments']),
-          new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
+          new THREE.SphereGeometry(696000 / KIMCHI.constants.kmPerAu,
+            sphereSegments, sphereSegments),
+          // not Lambert since sunlight is in the center of the sun
+          new THREE.MeshBasicMaterial({
             'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
           })
         );
-        mesh.scale.setXYZ(KIMCHI.config['scales-size']);
+        mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
+
         return mesh;
       }())
     },/*
@@ -205,12 +210,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // the radius and position are scaled
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
-    this.position.multiplyScalar(KIMCHI.config['scales-position']);
+    this.position.multiplyScalar(KIMCHI.config.get('scales-position'));
 
     // create a Mesh for the body; it can already be set in data
     if (typeof this.mesh !== 'object') { 
       this.mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(this.radius, KIMCHI.config['sphere-segments'], KIMCHI.config['sphere-segments']),
+        new THREE.SphereGeometry(this.radius, sphereSegments, sphereSegments),
         new THREE.MeshLambertMaterial({
           'map': new THREE.ImageUtils.loadTexture(this.texturePath)
         })
@@ -224,16 +229,16 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // set Mesh properties
     this.mesh.position.copy(this.position);
     this.mesh.rotation.copy(this.rotation);
-    this.mesh.scale.setXYZ(KIMCHI.config['scales-size']);
+    this.mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
 
     // create a Curve for the orbit, which can be used to create a Line
     length = this.position.length();
     // clockwise
     curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI);
     this.orbitLine = curve.createLine({
-      'color': KIMCHI.config['orbits-color'],
-      'opacity': KIMCHI.config['orbits-opacity'],
-      'lineSegments': KIMCHI.config['orbits-line-segments']
+      'color': KIMCHI.config.get('orbits-color'),
+      'opacity': KIMCHI.config.get('orbits-opacity'),
+      'lineSegments': KIMCHI.config.get('orbits-line-segments')
     });
 
     /***
@@ -272,8 +277,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Body.prototype.getCollisionDistance = function () {
     // This is the most general calculation.
-    // this.radius * KIMCHI.config['scales-size'] works for all cases except
-    // when KIMCHI.config['scales-size'] === 'large'
+    // this.radius * KIMCHI.config.get('scales-size') works for all cases except
+    // when KIMCHI.config.get('scales-size') === 'large'
     return this.radius * this.mesh.scale.x;
   };
 
@@ -396,8 +401,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     _.forEach(bodies, function (body) {
       // move the body mesh (custom function)
       body.move(delta);
-
-      space.moveBodyChildren(delta);
     });
   };
 
@@ -412,30 +415,32 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     _.forEach(bodies, function (body) {
       var distance;
 
-      distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
-
       // move the text mesh
-      if (distance > body.visibleDistance) {
-        body.labelMesh.visible = false;
-      } else {
-        body.labelMesh.visible = true;
+      if (KIMCHI.config.get('show-labels')) {
+        distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
 
-        // scale
-        body.labelMesh.scale.setXYZ(distance / 1000);
+        if (distance > body.visibleDistance) {
+          body.labelMesh.visible = false;
+        } else {
+          body.labelMesh.visible = true;
 
-        // the text Mesh always faces the camera
-        body.labelMesh.quaternion.copy(KIMCHI.camera.quaternion.clone());
+          // scale
+          body.labelMesh.scale.setXYZ(distance / 1000);
 
-        // move it in front of the associated mesh so it's not hidden inside
-        body.labelMesh.geometry.computeBoundingSphere();
-        var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
-          .normalize().multiplyScalar(body.radius + 0.01);
-        var w = body.mesh.position.clone().add(v);
+          // the text Mesh always faces the camera
+          body.labelMesh.quaternion.copy(KIMCHI.camera.quaternion.clone());
+
+          // move it in front of the associated mesh so it's not hidden inside
+          body.labelMesh.geometry.computeBoundingSphere();
+          var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
+            .normalize().multiplyScalar(body.radius + 0.01);
+          var w = body.mesh.position.clone().add(v);
 /*        var x = body.mesh.position.clone().cross(v).cross(v)
           .normalize().multiplyScalar(
             body.labelMesh.geometry.boundingSphere.radius / 100
           );*/
-        body.labelMesh.position.copy(w);//.add(x);
+          body.labelMesh.position.copy(w);//.add(x);
+        }
       }
     });
   };
@@ -496,13 +501,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Sep 24 2013 23:44:13 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Sep 25 2013 03:07:54 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

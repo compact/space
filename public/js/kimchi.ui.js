@@ -54,6 +54,10 @@ var KIMCHI = (function (KIMCHI, $) {
   ui.panel = (function () {
     var panel = {}, $config = $();
 
+    /**
+     * Populate the panel with data and bind its handlers.
+     * @memberOf module:KIMCHI.ui.panel
+     */
     panel.init = function () {
       var $bodies = $('#bodies');
 
@@ -100,6 +104,11 @@ var KIMCHI = (function (KIMCHI, $) {
       $config = $('.config');
     };
 
+    /**
+     * Update the panel with data that may change each time the flight mode
+     *   changes to menu, such as Body distances.
+     * @memberOf module:KIMCHI.ui.panel
+     */
     panel.update = function () {
       // update the bodies table
       _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
@@ -110,8 +119,9 @@ var KIMCHI = (function (KIMCHI, $) {
 
     /**
      * Update the config panel for the given key and value.
-     * @param   {String} key
-     * @param   {(String|Boolean|Number)} value
+     * @param   {String}                key
+     * @param   {String|Boolean|Number} value
+     * @memberOf module:KIMCHI.ui.panel
      */
     panel.updateConfig = function (key, value) {
       var $button, addClass, removeClass, $btnGroup, label;

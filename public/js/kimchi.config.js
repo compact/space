@@ -9,6 +9,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   KIMCHI.config = (function () {
     var config = {}, settings = {}, handlers = {};
 
+
+
     // for dev testing
     settings['debug'] = true;
 
@@ -63,7 +65,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     /**
      * User configurable settings are stored in localStorage. This function sets
      *   them.
-     * @memberOf KIMCHI
+     * @memberOf module:KIMCHI.config
      */
     config.init = function () {
       var userConfigurableKeys = [
@@ -85,8 +87,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     };
 
     /**
-     * @param   {String} key
-     * @returns
+     * @param    {String} key
+     * @returns  {String|Boolean|Number}
+     * @memberOf module:KIMCHI.config
      */
     config.get = function (key) {
       return settings[key];
@@ -94,9 +97,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
     /**
      * @param    {String} key
-     * @param    {String} value 'true' and 'false' have to be converted to
+     * @param    {String} value May be 'true' or 'false', which get converted to
      *   Boolean.
-     * @memberOf KIMCHI
+     * @memberOf module:KIMCHI.config
      */
     config.set = function (key, value) {
       // parse value
@@ -123,6 +126,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       KIMCHI.ui.panel.updateConfig(key, value);
     };
 
+
+
+    // handlers for config.set()
     handlers['rotate'] = function (value) {
     };
 

@@ -35,17 +35,17 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
+    // construct three.js objects
     // clock
     KIMCHI.clock = new THREE.Clock(false); // do not autostart
-
     // scene
     KIMCHI.scene = new THREE.Scene();
     // camera: don't use OrthographicCamera because it lacks perspective
     KIMCHI.camera = new THREE.PerspectiveCamera(
-      KIMCHI.config['camera-fov'],
+      KIMCHI.config.get('camera-fov'),
       1, // placeholder, set with KIMCHI.size.init()
-      KIMCHI.config['camera-near'],
-      KIMCHI.config['camera-far']
+      KIMCHI.config.get('camera-near'),
+      KIMCHI.config.get('camera-far')
     );
     // renderer
     KIMCHI.renderer = new THREE.WebGLRenderer({
@@ -62,8 +62,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // add background stars, an array of ParticleSystems
     KIMCHI.stars = new THREE.Stars({
-      'scale': KIMCHI.config['stars-scale'],
-      'count': KIMCHI.config['stars-count']
+      'scale': KIMCHI.config.get('stars-scale'),
+      'count': KIMCHI.config.get('stars-count')
     });
     KIMCHI.scene.add(KIMCHI.stars);
 
@@ -83,16 +83,16 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // first person controls
     KIMCHI.controls = new THREE.Controls(KIMCHI.camera, {
-      'lookSpeed': KIMCHI.config['controls-look-speed'],
-      'zSpeed': KIMCHI.config['controls-z-speed'],
-      'strafeSpeed': KIMCHI.config['controls-strafe-speed'],
-      'rollSpeed': KIMCHI.config['controls-roll-speed']
+      'lookSpeed': KIMCHI.config.get('controls-look-speed'),
+      'zSpeed': KIMCHI.config.get('controls-z-speed'),
+      'strafeSpeed': KIMCHI.config.get('controls-strafe-speed'),
+      'rollSpeed': KIMCHI.config.get('controls-roll-speed')
     });
 
 
 
     // initialize camera position and rotation
-    KIMCHI.camera.position.copy(KIMCHI.config['camera-initial-position']);
+    KIMCHI.camera.position.copy(KIMCHI.config.get('camera-initial-position'));
     KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
     // render() has to be called to set the camera position for objects and
     // elements to appear in animate()
@@ -104,7 +104,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // add renderer to DOM
     $('body').append(KIMCHI.renderer.domElement);
 //    $(KIMCHI.renderer.domElement).attr('id', 'space'); // for blurjs
-    // bind
+
+
+
+    // init
+    KIMCHI.config.init();
     KIMCHI.pointerLock.init();
     KIMCHI.ui.panel.init();
     KIMCHI.ui.notice.init();
@@ -266,7 +270,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   format.time = function () {
     var date = KIMCHI.time.getDate();
     return date.getDate() + ' ' +
-      KIMCHI.config['language-months'][date.getMonth()] + ' ' +
+      KIMCHI.config.get('language-months')[date.getMonth()] + ' ' +
       date.getFullYear();
   };
 

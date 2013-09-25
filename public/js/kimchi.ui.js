@@ -24,7 +24,7 @@ var KIMCHI = (function (KIMCHI, $) {
     $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
     $('#hud-time').text(KIMCHI.format.time());
 
-    if (KIMCHI.config['debug']) {
+    if (KIMCHI.config.get('debug')) {
       $('#hud4').html(
         '<strong>Debug</strong><br />' +
         'Delta: ' +
@@ -60,7 +60,7 @@ var KIMCHI = (function (KIMCHI, $) {
       $('<tr id="body-' + body.name + '">' +
           '<td>' + body.name + '</td>' +
           '<td><a class="fly-to" data-name="' + body.name + '">' +
-            KIMCHI.config['language-fly-to'] + '</a></td>' +
+            KIMCHI.config.get('language-fly-to') + '</a></td>' +
           '<td class="distance"></td>' +
           '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
           '<td>' + KIMCHI.format.au(body.position.y) + '</td>' +
@@ -77,18 +77,15 @@ var KIMCHI = (function (KIMCHI, $) {
       KIMCHI.flight.modes.auto.flyTo(body);
     });
 
-    // init config
-    KIMCHI.initConfig();
-
     // bind config
     $('#config-pane').on('click', '[data-toggle="buttons"] .btn', function () {
       // radios and checkboxes
       var $input = $(this).children('input');
-      KIMCHI.setConfig($input.attr('name'), $input.val());
+      KIMCHI.config.set($input.attr('name'), $input.val());
     }).on('click', '.dropdown-menu a', function () {
       // dropdowns
       var $this = $(this);
-      KIMCHI.setConfig(
+      KIMCHI.config.set(
         $this.parents('.btn-group').eq(0).data('key'),
         $this.data('value')
       );

@@ -8,9 +8,11 @@
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
-  var space = {}, data, Body, bodies;
+  var space = {}, data, Body, bodies, sphereSegments;
   KIMCHI.space = space;
 //  var jsonLoader = new THREE.JSONLoader();
+  sphereSegments = KIMCHI.config.get('sphere-segments');
+
 
 
   /**
@@ -26,12 +28,15 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       'visibleDistance': 1000000,
       'mesh': (function () {
         var mesh = new THREE.Mesh(
-          new THREE.SphereGeometry(696000 / KIMCHI.constants.kmPerAu, KIMCHI.config['sphere-segments'], KIMCHI.config['sphere-segments']),
-          new THREE.MeshBasicMaterial({ // not Lambert since sunlight is in the center of the sun
+          new THREE.SphereGeometry(696000 / KIMCHI.constants.kmPerAu,
+            sphereSegments, sphereSegments),
+          // not Lambert since sunlight is in the center of the sun
+          new THREE.MeshBasicMaterial({
             'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
           })
         );
-        mesh.scale.setXYZ(KIMCHI.config['scales-size']);
+        mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
+
         return mesh;
       }())
     },/*
@@ -178,12 +183,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // the radius and position are scaled
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
-    this.position.multiplyScalar(KIMCHI.config['scales-position']);
+    this.position.multiplyScalar(KIMCHI.config.get('scales-position'));
 
     // create a Mesh for the body; it can already be set in data
     if (typeof this.mesh !== 'object') { 
       this.mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(this.radius, KIMCHI.config['sphere-segments'], KIMCHI.config['sphere-segments']),
+        new THREE.SphereGeometry(this.radius, sphereSegments, sphereSegments),
         new THREE.MeshLambertMaterial({
           'map': new THREE.ImageUtils.loadTexture(this.texturePath)
         })
@@ -197,16 +202,16 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // set Mesh properties
     this.mesh.position.copy(this.position);
     this.mesh.rotation.copy(this.rotation);
-    this.mesh.scale.setXYZ(KIMCHI.config['scales-size']);
+    this.mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
 
     // create a Curve for the orbit, which can be used to create a Line
     length = this.position.length();
     // clockwise
     curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI);
     this.orbitLine = curve.createLine({
-      'color': KIMCHI.config['orbits-color'],
-      'opacity': KIMCHI.config['orbits-opacity'],
-      'lineSegments': KIMCHI.config['orbits-line-segments']
+      'color': KIMCHI.config.get('orbits-color'),
+      'opacity': KIMCHI.config.get('orbits-opacity'),
+      'lineSegments': KIMCHI.config.get('orbits-line-segments')
     });
 
     /***
@@ -245,8 +250,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Body.prototype.getCollisionDistance = function () {
     // This is the most general calculation.
-    // this.radius * KIMCHI.config['scales-size'] works for all cases except
-    // when KIMCHI.config['scales-size'] === 'large'
+    // this.radius * KIMCHI.config.get('scales-size') works for all cases except
+    // when KIMCHI.config.get('scales-size') === 'large'
     return this.radius * this.mesh.scale.x;
   };
 
@@ -384,7 +389,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       var distance;
 
       // move the text mesh
-      if (KIMCHI.config['show-labels']) {
+      if (KIMCHI.config.get('show-labels')) {
         distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
 
         if (distance > body.visibleDistance) {

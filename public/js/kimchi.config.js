@@ -6,169 +6,180 @@
 var KIMCHI = (function (KIMCHI, _, THREE) {
   'use strict';
 
-  var config = {}, setConfigHandlers = {};
-  KIMCHI.config = config;
+  KIMCHI.config = (function () {
+    var config = {}, settings = {}, handlers = {};
 
-  // for dev testing
-  config['debug'] = true;
+    // for dev testing
+    settings['debug'] = true;
 
-  // for THREE.PerspectiveCamera
-  config['camera-fov'] = 45; 
-  config['camera-near'] = 0.000001;
-  config['camera-far'] = 10000000;
-  // for KIMCHI.init()
-  config['camera-initial-position'] = new THREE.Vector3(0, 0, -30);
+    // for THREE.PerspectiveCamera
+    settings['camera-fov'] = 45; 
+    settings['camera-near'] = 0.000001;
+    settings['camera-far'] = 10000000;
+    // for KIMCHI.init()
+    settings['camera-initial-position'] = new THREE.Vector3(0, 0, -30);
 
-  // for THREE.Controls
-  config['controls-look-speed'] = 0.0002; // pitch/yaw with mouse
-  config['controls-z-speed'] = 1; // move forward/backward with keyboard
-  config['controls-strafe-speed'] = 0.5; // move left/right/up/down with keyboard
-  config['controls-roll-speed'] = 2; // roll with keyboard
-  config['controls-flying-speed-multiplier'] = 1; // user setting
+    // for THREE.Controls
+    settings['controls-look-speed'] = 0.0002; // pitch/yaw with mouse
+    settings['controls-z-speed'] = 1; // move forward/backward with keyboard
+    settings['controls-strafe-speed'] = 0.5; // move left/right/up/down with keyboard
+    settings['controls-roll-speed'] = 2; // roll with keyboard
+    settings['controls-flying-speed-multiplier'] = 1; // user setting
 
-  // lighting
-  config['ambient-lighting'] = false;
+    // lighting
+    settings['ambient-lighting'] = false;
 
-  // for the astronomical bodies in KIMCHI.space
-  config['rotate'] = true;
-  config['time-on'] = false; // pause the movement of Bodies
-  config['show-labels'] = true;
-  config['sphere-segments'] = 48;
-  config['scales-size'] = 1;
-  config['scales-position'] = 1;
+    // for the astronomical bodies in KIMCHI.space
+    settings['rotate'] = true;
+    settings['time-on'] = false; // pause the movement of Bodies
+    settings['show-labels'] = true;
+    settings['sphere-segments'] = 48;
+    settings['scales-size'] = 1;
+    settings['scales-position'] = 1;
 
-  // for the orbits in KIMCHI.space
-  config['show-orbits'] = true;
-  config['orbits-color'] = 0xffffcc;
-  config['orbits-opacity'] = 0.5;
-  config['orbits-line-segments'] = 720; // how many lines make up each orbit?
+    // for the orbits in KIMCHI.space
+    settings['show-orbits'] = true;
+    settings['orbits-color'] = 0xffffcc;
+    settings['orbits-opacity'] = 0.5;
+    settings['orbits-line-segments'] = 720; // how many lines make up each orbit?
 
-  // for THREE.Stars
-  config['show-stars'] = true;
-  config['stars-scale'] = 100000;
-  config['stars-count'] = 2000;
+    // for THREE.Stars
+    settings['show-stars'] = true;
+    settings['stars-scale'] = 100000;
+    settings['stars-count'] = 2000;
 
-  // for KIMCHI.ui.notice
-  config['notices-pointer-lock-not-supported'] = 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.';
-  config['notices-fly-to'] = function (body) {
-    return 'Flying to ' + body.name + '...<br />Press Esc to stop.';
-  };
+    // for KIMCHI.ui.notice
+    settings['notices-pointer-lock-not-supported'] = 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.';
+    settings['notices-fly-to'] = function (body) {
+      return 'Flying to ' + body.name + '...<br />Press Esc to stop.';
+    };
 
-  // language constants
-  config['language-months'] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  config['language-fly-to'] = 'Fly there!';
+    // language constants
+    settings['language-months'] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    settings['language-fly-to'] = 'Fly there!';
 
 
 
-  /**
-   * User configurable settings are stored in localStorage. This function sets
-   *   them.
-   * @memberOf KIMCHI
-   */
-  KIMCHI.initConfig = function () {
-    var userConfigurableKeys = [
-      'rotate',
-      'time-on',
-      'scales-size',
-      'ambient-lighting',
-      'show-labels',
-      'show-orbits',
-      'show-stars',
-      'controls-flying-speed-multiplier',
-      'controls-look-speed'
-    ];
+    /**
+     * User configurable settings are stored in localStorage. This function sets
+     *   them.
+     * @memberOf KIMCHI
+     */
+    config.init = function () {
+      var userConfigurableKeys = [
+        'rotate',
+        'time-on',
+        'scales-size',
+        'ambient-lighting',
+        'show-labels',
+        'show-orbits',
+        'show-stars',
+        'controls-flying-speed-multiplier',
+        'controls-look-speed'
+      ];
 
-    _.assign(config, window.localStorage);
-    _.forEach(userConfigurableKeys, function (key) {
-      KIMCHI.setConfig(key, config[key]);
-    });
-  };
-
-  /**
-   * @param   {String} key   The key in KIMCHI.config.
-   * @param   {String} value 'true' and 'false' have to be converted to
-   *   Boolean.
-   * @memberOf KIMCHI
-   */
-  KIMCHI.setConfig = function (key, value) {
-    // parse value
-    if (value === 'true') {
-      value = true;
-    } else if (value === 'false') {
-      value = false;
-    } else if (/^\-?[0-9]+(\.[0-9]+)?$/.test(value)) {
-      value = Number(value);
-    }
-
-    // set config
-    config[key] = value;
-    // set config in localStorage
-    window.localStorage[key] = value;
-    // call handler, if it exists
-    if (typeof setConfigHandlers[key] === 'function') {
-      setConfigHandlers[key](value);
-    }
-
-    console.log('set config: ' + key + ' = ' + value);
-
-    // update the config user interface
-    KIMCHI.ui.panel.updateConfig(key, value);
-  };
-
-  setConfigHandlers['rotate'] = function (value) {
-  };
-
-  setConfigHandlers['time-on'] = function (value) {
-    if (value) {
-      KIMCHI.time.on();
-    } else {
-      KIMCHI.time.off();
-    }
-  };
-
-  setConfigHandlers['scales-size'] = function (value) {
-    if (value === 'large') {
-      _.forEach(KIMCHI.space.getBodies(), function (body) {
-        body.mesh.scale.setXYZ(0.1 / body.radius);
+      _.assign(settings, window.localStorage);
+      _.forEach(userConfigurableKeys, function (key) {
+        config.set(key, settings[key]);
       });
-    } else { // value is a Number
-      _.forEach(KIMCHI.space.getMeshes(), function (mesh) {
-        mesh.scale.setXYZ(value);
+    };
+
+    /**
+     * @param   {String} key
+     * @returns
+     */
+    config.get = function (key) {
+      return settings[key];
+    };
+
+    /**
+     * @param    {String} key
+     * @param    {String} value 'true' and 'false' have to be converted to
+     *   Boolean.
+     * @memberOf KIMCHI
+     */
+    config.set = function (key, value) {
+      // parse value
+      if (value === 'true') {
+        value = true;
+      } else if (value === 'false') {
+        value = false;
+      } else if (/^\-?[0-9]+(\.[0-9]+)?$/.test(value)) {
+        value = Number(value);
+      }
+
+      // set the setting
+      settings[key] = value;
+      // set the setting in localStorage
+      window.localStorage[key] = value;
+      // call the handler if it exists
+      if (typeof handlers[key] === 'function') {
+        handlers[key](value);
+      }
+
+      console.log('set config: ' + key + ' = ' + value);
+
+      // update the config user interface
+      KIMCHI.ui.panel.updateConfig(key, value);
+    };
+
+    handlers['rotate'] = function (value) {
+    };
+
+    handlers['time-on'] = function (value) {
+      if (value) {
+        KIMCHI.time.on();
+      } else {
+        KIMCHI.time.off();
+      }
+    };
+
+    handlers['scales-size'] = function (value) {
+      if (value === 'large') {
+        _.forEach(KIMCHI.space.getBodies(), function (body) {
+          body.mesh.scale.setXYZ(0.1 / body.radius);
+        });
+      } else { // value is a Number
+        _.forEach(KIMCHI.space.getMeshes(), function (mesh) {
+          mesh.scale.setXYZ(value);
+        });
+      }
+    };
+
+    handlers['ambient-lighting'] = function (value) {
+      KIMCHI.lights.ambient.visible = value;
+    };
+
+    handlers['show-labels'] = function (value) {
+      _.forEach(KIMCHI.space.getLabelMeshes(), function (mesh) {
+        mesh.visible = value;
       });
-    }
-  };
+    };
 
-  setConfigHandlers['ambient-lighting'] = function (value) {
-    KIMCHI.lights.ambient.visible = value;
-  };
+    handlers['show-orbits'] = function (value) {
+      _.forEach(KIMCHI.space.getOrbitLines(), function (line) {
+        line.visible = value;
+      });
+    };
 
-  setConfigHandlers['show-labels'] = function (value) {
-    _.forEach(KIMCHI.space.getLabelMeshes(), function (mesh) {
-      mesh.visible = value;
-    });
-  };
+    handlers['show-stars'] = function (value) {
+      _.each(KIMCHI.stars, function (particleSystem) {
+        particleSystem.visible = value;
+      });
+    };
 
-  setConfigHandlers['show-orbits'] = function (value) {
-    _.forEach(KIMCHI.space.getOrbitLines(), function (line) {
-      line.visible = value;
-    });
-  };
+    handlers['controls-flying-speed-multiplier'] = function (value) {
+      KIMCHI.controls.options.zSpeed = settings['controls-z-speed'] * value;
+      KIMCHI.controls.options.strafeSpeed = settings['controls-strafe-speed'] * value;
+      KIMCHI.controls.options.rollSpeed = settings['controls-roll-speed'] * value;
+    };
 
-  setConfigHandlers['show-stars'] = function (value) {
-    _.each(KIMCHI.stars, function (particleSystem) {
-      particleSystem.visible = value;
-    });
-  };
+    handlers['controls-look-speed'] = function (value) {
+      KIMCHI.controls.options.lookSpeed = value;
+    };
 
-  setConfigHandlers['controls-flying-speed-multiplier'] = function (value) {
-    KIMCHI.controls.options.zSpeed = config['controls-z-speed'] * value;
-    KIMCHI.controls.options.strafeSpeed = config['controls-strafe-speed'] * value;
-    KIMCHI.controls.options.rollSpeed = config['controls-roll-speed'] * value;
-  };
-
-  setConfigHandlers['controls-look-speed'] = function (value) {
-    KIMCHI.controls.options.lookSpeed = value;
-  };
+    return config;
+  }());
 
   return KIMCHI;
 }(KIMCHI || {}, _, THREE));

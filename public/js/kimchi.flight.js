@@ -232,9 +232,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     getSpeed = function (delta) {
       var translation = KIMCHI.controls.getLocalTranslationVector();
       return (new THREE.Vector3(
-          translation.x * KIMCHI.config['controls-strafe-speed'],
-          translation.y * KIMCHI.config['controls-strafe-speed'],
-          translation.z * KIMCHI.config['controls-z-speed']
+          translation.x * KIMCHI.config.get('controls-strafe-speed'),
+          translation.y * KIMCHI.config.get('controls-strafe-speed'),
+          translation.z * KIMCHI.config.get('controls-z-speed')
         )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
     };
 
@@ -262,7 +262,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       }
 
       // move the Bodies and increment the current time
-      if (KIMCHI.config['time-on']) {
+      if (KIMCHI.config.get('time-on')) {
         KIMCHI.space.moveBodies(delta);
         KIMCHI.time.increment(delta);
       }
@@ -386,7 +386,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
           // KIMCHI.pointerLock.request();
           return false;
         } else {
-          translationZ = KIMCHI.config['controls-z-speed'] * delta *
+          translationZ = KIMCHI.config.get('controls-z-speed') * delta *
             flight.getTranslationSpeedMultiplier([body]);
           this.speed = translationZ / delta;
           KIMCHI.camera.translateZ(-translationZ);
@@ -415,8 +415,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     mode.flyTo = function (body) {
-      KIMCHI.ui.notice.set(KIMCHI.config['notices-fly-to'](body));
-      KIMCHI.setConfig('time-on', false);
+      KIMCHI.ui.notice.set(KIMCHI.config.get('notices-fly-to')(body));
+      KIMCHI.config.set('time-on', false);
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };

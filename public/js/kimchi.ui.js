@@ -91,6 +91,7 @@ var KIMCHI = (function (KIMCHI, $) {
       );
     });
 
+    // update the panel
     panel.update();
   };
   panel.update = function () {
@@ -102,6 +103,11 @@ var KIMCHI = (function (KIMCHI, $) {
         .text(KIMCHI.format.au(body.distance));
     });
   };
+  /**
+   * Update the config panel for the given key and value.
+   * @param   {String} key
+   * @param   {(String|Boolean|Number)} value
+   */
   panel.updateConfig = function (key, value) {
     var $config, $button, addClass, removeClass, $btnGroup, label;
 

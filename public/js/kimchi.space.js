@@ -385,30 +385,32 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     _.forEach(bodies, function (body) {
       var distance;
 
-      distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
-
       // move the text mesh
-      if (distance > body.visibleDistance) {
-        body.labelMesh.visible = false;
-      } else {
-        body.labelMesh.visible = true;
+      if (KIMCHI.config['show-labels']) {
+        distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
 
-        // scale
-        body.labelMesh.scale.setXYZ(distance / 1000);
+        if (distance > body.visibleDistance) {
+          body.labelMesh.visible = false;
+        } else {
+          body.labelMesh.visible = true;
 
-        // the text Mesh always faces the camera
-        body.labelMesh.quaternion.copy(KIMCHI.camera.quaternion.clone());
+          // scale
+          body.labelMesh.scale.setXYZ(distance / 1000);
 
-        // move it in front of the associated mesh so it's not hidden inside
-        body.labelMesh.geometry.computeBoundingSphere();
-        var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
-          .normalize().multiplyScalar(body.radius + 0.01);
-        var w = body.mesh.position.clone().add(v);
+          // the text Mesh always faces the camera
+          body.labelMesh.quaternion.copy(KIMCHI.camera.quaternion.clone());
+
+          // move it in front of the associated mesh so it's not hidden inside
+          body.labelMesh.geometry.computeBoundingSphere();
+          var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
+            .normalize().multiplyScalar(body.radius + 0.01);
+          var w = body.mesh.position.clone().add(v);
 /*        var x = body.mesh.position.clone().cross(v).cross(v)
           .normalize().multiplyScalar(
             body.labelMesh.geometry.boundingSphere.radius / 100
           );*/
-        body.labelMesh.position.copy(w);//.add(x);
+          body.labelMesh.position.copy(w);//.add(x);
+        }
       }
     });
   };

@@ -10,7 +10,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   var space = {}, data, Body, bodies;
   KIMCHI.space = space;
-  var jsonLoader = new THREE.JSONLoader();
+//  var jsonLoader = new THREE.JSONLoader();
 
 
   /**

@@ -100,6 +100,21 @@ var KIMCHI = (function (KIMCHI, $) {
       // update the panel
       panel.update();
 
+      // bind "Start Flying" button
+      KIMCHI.$overlay.one('click', '.continue-flying', function () {
+        var $this = $(this);
+
+        KIMCHI.pointerLock.request(); // async
+        // this delay is because the button changing before free flight gets
+        // enabled is unsightly
+        window.setTimeout(function () {
+          $this.button('continue');
+        }, 250);
+
+        KIMCHI.$overlay.on('click', '.continue-flying',
+          KIMCHI.pointerLock.request);
+      });
+
       // used by updateConfig()
       $config = $('.config');
     };

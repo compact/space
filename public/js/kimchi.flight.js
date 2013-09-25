@@ -319,13 +319,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     panTo = (function () {
-      var initQuaternion, rotationMatrix, targetQuaternion, t;
+      var initialQuaternion, rotationMatrix, targetQuaternion, t;
 
       rotationMatrix = new THREE.Matrix4();
       targetQuaternion = new THREE.Quaternion();
 
       return function (body) {
-        initQuaternion = KIMCHI.camera.quaternion.clone();
+        initialQuaternion = KIMCHI.camera.quaternion.clone();
 
         rotationMatrix.lookAt(
           KIMCHI.camera.position,
@@ -338,14 +338,15 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         t = 0;
         mode.animationFrame = function (delta) {
           // avoid rounding imprecision because we want the final rotation to be
-          // centered exactly onto the target body (t = 1)
+          // centered exactly onto the target body (t = 1); the t += 0.05
+          // calculations can be imprecise
           if (t > 1 && t < 1 + 0.05) {
             t = 1;
           }
 
           if (t <= 1) {
             KIMCHI.camera.quaternion.copy(
-              initQuaternion.slerp(targetQuaternion, t)
+              initialQuaternion.clone().slerp(targetQuaternion, t)
             );
             update(delta);
 

@@ -247,7 +247,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // This is the most general calculation.
     // this.radius * KIMCHI.config['scales-size'] works for all cases except
     // when KIMCHI.config['scales-size'] === 'large'
-    return 0.5 * this.radius * this.mesh.scale.x;
+    return this.radius * this.mesh.scale.x;
   };
 
   /**

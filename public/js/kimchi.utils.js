@@ -124,14 +124,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     },
     // callback is called before rendering. If it returns false, stop animating.
     'animate': function (callback) {
-      window.setTimeout(function () { // TODO: remove for production
-//console.log(document.webkitPointerLockElement !== null);
+      // TODO: consider removing this delay for production
+      window.setTimeout(function () {
         var proceed = callback(KIMCHI.clock.getDelta());
 
         KIMCHI.rendering.render();
 
         // stop the next frame if the callback returns false
-//console.log(proceed);
         if (proceed !== false) {
           window.requestAnimationFrame(function () {
             KIMCHI.rendering.animate(callback);

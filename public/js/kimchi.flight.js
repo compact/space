@@ -46,13 +46,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       return;
     }
 
-    console.log('change flight mode from ' + prevName + ' to ' + name);
     if (typeof flight.modes[prevName] === 'object') {
       // on the first call to setMode(), there is no previous mode
       flight.modes[prevName].disable();
     }
     flight.modes[name].enable();
     currentMode = name;
+
+    console.log('flight mode changed from ' + prevName + ' to ' + name);
   };
 
   /**
@@ -145,7 +146,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.rendering.animate(function (delta) {
       if (!self.enabled) {
         // this mode is being disabled
-        console.log('stop animate() for ' + self.name);
+        console.log('stop animating for ' + self.name + ' flight mode');
         return false;
       }
 
@@ -215,7 +216,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
           // TODO take into account the object's Body's radius
           var body = KIMCHI.space.getBody(intersect.object.name);
           if (intersect.distance < body.getCollisionDistance()) {
-console.log('Collision with ' + body.name + ': ' + intersect.distance + ' < ' + body.getCollisionDistance());
             returnValue = true;
             return false; // break the loop
           }

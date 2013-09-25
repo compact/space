@@ -6,9 +6,8 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var ui = {}, hud = {}, panel = {}, notice = {};
+  var ui = {}, hud = {}, notice = {};
   ui.hud = hud;
-  ui.panel = panel;
   ui.notice = notice;
   KIMCHI.ui = ui;
 
@@ -52,98 +51,105 @@ var KIMCHI = (function (KIMCHI, $) {
    * @namespace panel
    * @memberOf  module:KIMCHI.ui
    */
-  panel.init = function () {
-    var $bodies = $('#bodies');
+  ui.panel = (function () {
+    var panel = {}, $config = $();
 
-    // populate the bodies table
-    _.forEach(KIMCHI.space.getBodies(), function (body) {
-      $('<tr id="body-' + body.name + '">' +
-          '<td>' + body.name + '</td>' +
-          '<td><a class="fly-to" data-name="' + body.name + '">' +
-            KIMCHI.config.get('language-fly-to') + '</a></td>' +
-          '<td class="distance"></td>' +
-          '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
-          '<td>' + KIMCHI.format.au(body.position.y) + '</td>' +
-        '</tr>').appendTo($bodies);
-    });
+    panel.init = function () {
+      var $bodies = $('#bodies');
 
-    // bind fly-to links
-    $('#bodies').on('click', '.fly-to', function () {
-      var name, body;
+      // populate the bodies table
+      _.forEach(KIMCHI.space.getBodies(), function (body) {
+        $('<tr id="body-' + body.name + '">' +
+            '<td>' + body.name + '</td>' +
+            '<td><a class="fly-to" data-name="' + body.name + '">' +
+              KIMCHI.config.get('language-fly-to') + '</a></td>' +
+            '<td class="distance"></td>' +
+            '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
+            '<td>' + KIMCHI.format.au(body.position.y) + '</td>' +
+          '</tr>').appendTo($bodies);
+      });
 
-      name = $(this).data('name');
-      body = KIMCHI.space.getBody(name);
-      KIMCHI.flight.setMode('auto');
-      KIMCHI.flight.modes.auto.flyTo(body);
-    });
+      // bind fly-to links
+      $('#bodies').on('click', '.fly-to', function () {
+        var name, body;
 
-    // bind config
-    $('#config-pane').on('click', '[data-toggle="buttons"] .btn', function () {
-      // radios and checkboxes
-      var $input = $(this).children('input');
-      KIMCHI.config.set($input.attr('name'), $input.val());
-    }).on('click', '.dropdown-menu a', function () {
-      // dropdowns
-      var $this = $(this);
-      KIMCHI.config.set(
-        $this.parents('.btn-group').eq(0).data('key'),
-        $this.data('value')
-      );
-    });
+        name = $(this).data('name');
+        body = KIMCHI.space.getBody(name);
+        KIMCHI.flight.setMode('auto');
+        KIMCHI.flight.modes.auto.flyTo(body);
+      });
 
-    // update the panel
-    panel.update();
-  };
-  panel.update = function () {
-    panel.updateBodiesTable();
-  };
-  panel.updateBodiesTable = function () {
-    _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
-      $('#body-' + body.name + ' .distance')
-        .text(KIMCHI.format.au(body.distance));
-    });
-  };
-  /**
-   * Update the config panel for the given key and value.
-   * @param   {String} key
-   * @param   {(String|Boolean|Number)} value
-   */
-  panel.updateConfig = function (key, value) {
-    var $config, $button, addClass, removeClass, $btnGroup, label;
+      // bind config
+      $('#config-pane').on('click', '[data-toggle="buttons"] .btn', function () {
+        // radios and checkboxes
+        var $input = $(this).children('input');
+        KIMCHI.config.set($input.attr('name'), $input.val());
+      }).on('click', '.dropdown-menu a', function () {
+        // dropdowns
+        var $this = $(this);
+        KIMCHI.config.set(
+          $this.parents('.btn-group').eq(0).data('key'),
+          $this.data('value')
+        );
+      });
 
-    // "unparse" the value back into a String
-    value = String(value);
+      // update the panel
+      panel.update();
 
-    $config = $('.config');
+      // used by updateConfig()
+      $config = $('.config');
+    };
 
-    // case 1: radios and checkboxes
-    $button = $config.find(
-      '[name="' + key + '"][value="' + value + '"]'
-    ).parent();
-    if ($button.length === 1) {
-      // determine css classes to add and remove from the respective buttons
-      addClass = 'active ';
-      if (value === 'true') {
-        removeClass = 'btn-danger';
-        addClass += 'btn-success';
-      } else if (value === 'false') {
-        removeClass = 'btn-success';
-        addClass += 'btn-danger';
-      } else {
-        removeClass = 'btn-primary';
-        addClass += 'btn-primary';
+    panel.update = function () {
+      // update the bodies table
+      _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
+        $('#body-' + body.name + ' .distance')
+          .text(KIMCHI.format.au(body.distance));
+      });
+    };
+
+    /**
+     * Update the config panel for the given key and value.
+     * @param   {String} key
+     * @param   {(String|Boolean|Number)} value
+     */
+    panel.updateConfig = function (key, value) {
+      var $button, addClass, removeClass, $btnGroup, label;
+
+      // "unparse" the value back into a String
+      value = String(value);
+
+      // case 1: radios and checkboxes
+      $button = $config.find(
+        '[name="' + key + '"][value="' + value + '"]'
+      ).parent();
+      if ($button.length === 1) {
+        // determine css classes to add and remove from the respective buttons
+        addClass = 'active ';
+        if (value === 'true') {
+          removeClass = 'btn-danger';
+          addClass += 'btn-success';
+        } else if (value === 'false') {
+          removeClass = 'btn-success';
+          addClass += 'btn-danger';
+        } else {
+          removeClass = 'btn-primary';
+          addClass += 'btn-primary';
+        }
+        $button.siblings().removeClass(removeClass);
+        $button.addClass(addClass);
+        return;
       }
-      $button.siblings().removeClass(removeClass);
-      $button.addClass(addClass);
-      return;
-    }
 
-    // case 2: dropdowns
-    $btnGroup = $config.filter('[data-key="' + key + '"]');
-    label = $btnGroup.find('[data-value="' + value + '"]').text()
-      .replace(/ \(.+\)/, '');
-    $btnGroup.find('.selected-value').text(label);
-  };
+      // case 2: dropdowns
+      $btnGroup = $config.filter('[data-key="' + key + '"]');
+      label = $btnGroup.find('[data-value="' + value + '"]').text()
+        .replace(/ \(.+\)/, '');
+      $btnGroup.find('.selected-value').text(label);
+    };
+
+    return panel;
+  }());
 
 
 

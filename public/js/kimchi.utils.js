@@ -108,9 +108,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
     // init
-    KIMCHI.config.init();
     KIMCHI.pointerLock.init();
     KIMCHI.ui.panel.init();
+    KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
   };

@@ -50,7 +50,7 @@
    * @alias    distance
    * @memberOf external:THREE.Object3D
    */
-  THREE.Object3D.distance = function (object1, object2) {
+  THREE.Object3D.getDistance = function (object1, object2) {
     return object1.position.distanceTo(object2.position);
   };
 

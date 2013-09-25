@@ -256,7 +256,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Body
    */
   Body.prototype.getSurfaceDistance = function (object3D) {
-    return THREE.Object3D.distance(this.mesh, object3D) -
+    return THREE.Object3D.getDistance(this.mesh, object3D) -
       this.radius * this.mesh.scale.x;
   };
   /**
@@ -385,7 +385,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     _.forEach(bodies, function (body) {
       var distance;
 
-      distance = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
+      distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
 
       // move the text mesh
       if (distance > body.visibleDistance) {
@@ -429,11 +429,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     return _.map(bodies, function (body, name) {
       return {
         'name': name,
-        'distance': THREE.Object3D.distance(KIMCHI.camera, body.mesh)
+        'distance': THREE.Object3D.getDistance(KIMCHI.camera, body.mesh)
       };
     });
 /*    return _.forEach(bodies, function (body, name) {
-      distances[name] = THREE.Object3D.distance(KIMCHI.camera, body.mesh);
+      distances[name] = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
     });*/
   };
   /**

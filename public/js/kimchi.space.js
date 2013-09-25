@@ -201,13 +201,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // create a Curve for the orbit, which can be used to create a Line
     length = this.position.length();
-    curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI, true);
+    // clockwise
+    curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI);
     this.orbitLine = curve.createLine({
       'color': KIMCHI.config['orbits-color'],
       'opacity': KIMCHI.config['orbits-opacity'],
       'lineSegments': KIMCHI.config['orbits-line-segments']
     });
-console.log(this.orbitLine);
+
     /***
      * Create a Mesh for the text label. We could do
      *   this.mesh.add(this.labelMesh);

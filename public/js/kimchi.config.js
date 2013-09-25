@@ -31,7 +31,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   // for the astronomical bodies in KIMCHI.space
   config['rotate'] = true;
-  config['enable-clock'] = true;
+  config['time-on'] = false; // pause the movement of Bodies
   config['show-labels'] = true;
   config['sphere-segments'] = 48;
   config['scales-size'] = 1;
@@ -68,7 +68,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   KIMCHI.initConfig = function () {
     var userConfigurableKeys = [
       'rotate',
-      'enable-clock',
+      'time-on',
       'scales-size',
       'ambient-lighting',
       'show-labels',
@@ -118,11 +118,11 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   setConfigHandlers['rotate'] = function (value) {
   };
 
-  setConfigHandlers['enable-clock'] = function (value) {
+  setConfigHandlers['time-on'] = function (value) {
     if (value) {
-      KIMCHI.clock.start();
+      KIMCHI.time.on();
     } else {
-      KIMCHI.clock.stop();
+      KIMCHI.time.off();
     }
   };
 

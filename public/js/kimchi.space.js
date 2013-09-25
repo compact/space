@@ -369,8 +369,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     _.forEach(bodies, function (body) {
       // move the body mesh (custom function)
       body.move(delta);
-
-      space.moveBodyChildren(delta);
     });
   };
 

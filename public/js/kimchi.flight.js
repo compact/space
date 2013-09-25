@@ -252,6 +252,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       $('#hud1').hide();
     };
     mode.animationFrame = function (delta) {
+      // move the Camera
       if (!colliding()) {
         KIMCHI.controls.moveCamera(
           delta,
@@ -260,9 +261,17 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         this.speed = getSpeed(delta);
       }
 
-      KIMCHI.space.moveBodies(delta);
+      // move the Bodies and increment the current time
+      if (KIMCHI.config['time-on']) {
+        KIMCHI.space.moveBodies(delta);
+        KIMCHI.time.increment(delta);
+      }
+
+      // move the Bodies' children
+      KIMCHI.space.moveBodyChildren(delta);
+
+      // update hud
       KIMCHI.ui.hud.update(delta);
-      KIMCHI.date.setDate(KIMCHI.date.getDate() + 1);
     };
 
     return mode;
@@ -301,13 +310,17 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     }());
 
     /**
-     * Helper function called in every animationFrame() to update space and hud.
-     * @param   {Number} delta
+     * Helper function called in every animationFrame() to update the space
+     *   and the hud.
+     * @param    {Number} delta
      * @private
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     update = function (delta) {
-      KIMCHI.space.moveBodyChildren(); // do not move the Body Meshes themselves
+      // do not move the Body Meshes themselves
+      KIMCHI.space.moveBodyChildren();
+
+      // update hud
       KIMCHI.ui.hud.update(delta);
     };
 

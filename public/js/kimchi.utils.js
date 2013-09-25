@@ -104,7 +104,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // add renderer to DOM
     $('body').append(KIMCHI.renderer.domElement);
 //    $(KIMCHI.renderer.domElement).attr('id', 'space'); // for blurjs
-    KIMCHI.date = new Date();
     // bind
     KIMCHI.pointerLock.init();
     KIMCHI.ui.panel.init();
@@ -144,7 +143,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Camera and renderer dimensions.
-   * @memberOf module:KIMCHI
+   * @namespace size
+   * @memberOf  module:KIMCHI
    */
   KIMCHI.size = {
     'width': 0,
@@ -163,6 +163,44 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       KIMCHI.renderer.setSize(KIMCHI.size.width, KIMCHI.size.height);
     }
   };
+
+
+
+  /**
+   * Time controller. We use "on"/"off"/"isOn" rather than
+   *   "start"/"stop"/"isEnabled" for a better adjective and to avoid
+   *   confusion with THREE.Clock.
+   * @namespace time
+   * @memberOf  module:KIMCHI
+   */
+  KIMCHI.time = (function () {
+    var time, date, on;
+
+    time = {};
+    // the date corresponding to the current positions of the Bodies
+    date = new Date();
+    // the state
+    on = true;
+
+    time.getDate = function () {
+      return date;
+    };
+    time.increment = function (delta) {
+      // TODO: the increment depends on delta
+      date.setDate(date.getDate() + 1);
+    };
+    time.on = function () {
+      on = true;
+    };
+    time.off = function () {
+      on = false;
+    };
+    time.isOn = function () {
+      return on;
+    };
+
+    return time;
+  }());
 
 
 
@@ -222,12 +260,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     return Math.round(number) + ' km';
   };
   /**
-   * @return   {String} Date custom formatted for the KIMCHI hud.
+   * @return   {String} The current {@link time} formatted for the {@link hud}.
    * @memberOf module:KIMCHI.format
    */
-  format.date = function (date) {
+  format.time = function () {
+    var date = KIMCHI.time.getDate();
     return date.getDate() + ' ' +
-      KIMCHI.config['language-months'][date.getMonth()] + ' ' + date.getFullYear();
+      KIMCHI.config['language-months'][date.getMonth()] + ' ' +
+      date.getFullYear();
   };
 
 

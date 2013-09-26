@@ -27,7 +27,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings['camera-near'] = 0.000001;
   settings['camera-far'] = 10000000;
   // for KIMCHI.init()
-  settings['camera-initial-position'] = new THREE.Vector3(0, 0, -30);
+  settings['camera-initial-position'] = new THREE.Vector3(0, 0, -5);
 
   // for THREE.Controls
   settings['controls-look-speed'] = 0.0002; // pitch/yaw with mouse

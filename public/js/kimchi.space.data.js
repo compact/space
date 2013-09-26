@@ -46,7 +46,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 0.38709893, 0),
       'visibleDistance': 20,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     },
     {
@@ -55,7 +55,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 0.72333199, 0),
       'visibleDistance': 20,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     },
     {
@@ -87,7 +87,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 1.52366231, 0),
       'visibleDistance': 50,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     },
     {
@@ -96,7 +96,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 5.20336301, 0),
       'visibleDistance': 250,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     },
     {
@@ -105,7 +105,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 9.53707032, 0),
       'visibleDistance': 250,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     },
     {
@@ -114,7 +114,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 19.19126393, 0),
       'visibleDistance': 30,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     },
     {
@@ -123,7 +123,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 30.06896348, 0),
       'visibleDistance': 1000,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     },
     {
@@ -132,7 +132,7 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 39.482, 0),
       'visibleDistance': 1000,
       'translate': function () {
-        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.05);
       }
     }
   ];

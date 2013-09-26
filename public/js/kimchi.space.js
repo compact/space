@@ -118,7 +118,10 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @param    {Number} delta
    * @memberOf Body
    */
-  Body.prototype.rotate = function () {};
+  Body.prototype.rotate = function () {
+    // TODO remove this placeholder
+    this.mesh.rotateOnAxis((new THREE.Vector3(-1, -0.5, 0.2)).normalize(), 0.2);
+  };
 
   /**
    * @returns  {Number} The actual radius of this Body in its current scale.

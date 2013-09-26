@@ -350,6 +350,18 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     }
   };
   /**
+   * Taken from {@link
+   *   http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript}.
+   *   Note there are issues with decimals, which we are not using at the
+   *   moment.
+   * @param    {Number} number
+   * @returns  {String} The number separated into thousands by commas.
+   * @memberOf module:KIMCHI.format
+   */
+  format.separateThousands = function (number) {
+    return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+  /**
    * @param    {Number} number
    * @returns  {Number}        The number formatted in astronomical units.
    * @memberOf module:KIMCHI.format
@@ -363,7 +375,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf module:KIMCHI.format
    */
   format.km = function (number) {
-    return Math.round(number) + ' km';
+    return format.separateThousands(Math.round(number)) + ' km';
   };
   /**
    * @return   {String} The current {@link time} formatted for the {@link hud}.

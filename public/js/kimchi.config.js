@@ -67,6 +67,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   // language constants
   settings['language-months'] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   settings['language-fly-to'] = 'Fly there!';
+  settings['language-webgl-not-supported'] = 'Your browser does not support WebGL. Please go to <a href="http://get.webgl.org/">get.webgl.org</a> for more information.';
+  settings['language-webgl-error'] = 'WebGL failed to initialize in your browser. Please go to <a href="http://get.webgl.org/troubleshooting">get.webgl.org/troubleshooting</a> to fix the issue.';
 
 
 
@@ -99,7 +101,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   handlers['ambient-lighting'] = function (value) {
-    KIMCHI.lights.ambient.visible = value;
+//    KIMCHI.lights.ambient.visible = value;
   };
 
   handlers['show-labels'] = function (value) {

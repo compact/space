@@ -33,10 +33,33 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf KIMCHI
    */
   KIMCHI.init = function () {
+    var success;
+
+
+
     // jQuery objects
     KIMCHI.$document = $(document);
     KIMCHI.$window = $(window);
     KIMCHI.$overlay = $('#overlay');
+
+
+
+    // WebGL check
+    if (typeof window.WebGLRenderingContext !== 'function') {
+      // WebGL is not supported by the browser
+      $('.continue-flying').replaceWith(
+        '<p>' + KIMCHI.config.get('language-webgl-not-supported') + '</p>');
+      return false;
+    }
+
+    // renderer
+    success = KIMCHI.renderer.init();
+    if (!success) {
+      // the renderer failed to initialize
+      $('.continue-flying').replaceWith(
+        '<p>' + KIMCHI.config.get('language-webgl-error') + '</p>');
+      return false;
+    }
 
 
 
@@ -52,8 +75,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       KIMCHI.config.get('camera-near'),
       KIMCHI.config.get('camera-far')
     );
-    // renderer
-    KIMCHI.renderer.init();
     // set camera size and renderer size
     KIMCHI.size.init();
 
@@ -75,12 +96,12 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // lighting
     KIMCHI.lights = {};
     // sunlight
-    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
-    KIMCHI.lights.sun.position.set(0, 0, 0);
+    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 10, 10);
+//    KIMCHI.lights.sun.position.set(0, 0, 0);
     KIMCHI.scene.add(KIMCHI.lights.sun);
     // ambient light: remove for production TODO
-    KIMCHI.lights.ambient = new THREE.AmbientLight(0xff0000);
-    KIMCHI.scene.add(KIMCHI.lights.ambient);
+    //KIMCHI.lights.ambient = new THREE.AmbientLight(0xff0000);
+    //KIMCHI.scene.add(KIMCHI.lights.ambient);
 
 
 
@@ -129,22 +150,28 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     /**
      * Call after the DOM is ready.
+     * @returns  {Boolean} Whether the renderer is successfully created.
      * @alias    init
      * @memberOf module:KIMCHI.renderer
      */
     module.init = function () {
-      /**
-       * THREE.WebGLRenderer object.
-       * @private
-       * @memberOf module:KIMCHI.renderer
-       */
-      renderer = new THREE.WebGLRenderer({
-        'antialias': true
-      });
+      try {
+        /**
+         * THREE.WebGLRenderer object.
+         * @private
+         * @memberOf module:KIMCHI.renderer
+         */
+        renderer = new THREE.WebGLRenderer({
+          'antialias': true
+        });
+      } catch (error) {
+        return false;
+      }
 
       // append to DOM
       $('body').append(renderer.domElement);
 //    $(renderer.domElement).attr('id', 'space'); // for blurjs
+      return true;
     };
 
     /**

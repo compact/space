@@ -4,6 +4,11 @@
  * <br>   KIMCHI.foo = ...;
  * <br>   return KIMCHI;
  * <br> }(KIMCHI));
+ * <br>
+ * <br> Conventions:
+ * <br> Movement consists of translation and rotation. If you are only
+ *        translating or rotating, do not use 'move' words.
+ * <br> 'Bodies' refer to astronomical bodies.
  * @module KIMCHI
  */
 var KIMCHI = (function (KIMCHI, $, THREE) {

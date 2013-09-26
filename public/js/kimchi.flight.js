@@ -263,7 +263,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
       // move the Bodies and increment the current time
       if (KIMCHI.config.get('time-on')) {
-        KIMCHI.space.moveBodies(delta);
+        KIMCHI.space.translateBodies(delta);
         KIMCHI.time.increment(delta);
       }
 

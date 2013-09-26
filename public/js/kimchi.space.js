@@ -28,8 +28,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * <br>                  TODO rename to labelMeshDistance or something.
    * <br> mesh:            Optional. If not given, a Mesh is automatically
    *                       generated.
-   * <br> move:            Optional. Given an Object3D, perform rotations and
-   *                       revolutions.
+   * <br> translate:       Optional. Translate the Mesh, e.g. for orbit.
+   * <br> rotate:          Optional. Rotate the Mesh.
    * <br> texturePath:     Optional path to the texture image. Defaults to
    *                       'name.jpg'.
    * @constructor Body
@@ -44,7 +44,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       'rotation': new THREE.Euler(),
       'collideable': true,
       'visibleDistance': 100,
-      'move': function () {},
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
 
@@ -106,15 +105,15 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * Bodies do not move by default; this function is to be overwritten by each
-   *   Body object. Movement does not include rotation; use rotate() for that.
+   * Bodies do not translate by default; this function can be overwritten for
+   *   any Body object.
    * @param    {Number} delta
    * @memberOf Body
    */
-  Body.prototype.move = function () {};
+  Body.prototype.translate = function () {};
 
   /**
-   * This function is to be overwritten by each Body object.
+   * Rotate this Body. Overwriting this function is optional.
    * @param    {Number} delta
    * @memberOf Body
    */
@@ -251,13 +250,12 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Move the Bodies. Does not rotate the Bodies or move their children. TODO:
-   *   Use delta.
+   * Translate the Bodies. Does not move their children. TODO: Use delta.
    * @memberOf module:KIMCHI.space
    */
-  space.moveBodies = function (delta) {
+  space.translateBodies = function (delta) {
     _.forEach(bodies, function (body) {
-      body.move(delta);
+      body.translate(delta);
     });
   };
 

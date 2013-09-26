@@ -37,13 +37,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   Body = function (options) {
     var length, curve;
 
-    _.assign(this, { // default options
-      'name': '',
-      'radiusInKm': 0,
+    _.assign(this, { // further default options appear below in the prototype
       'position': new THREE.Vector3(),
       'rotation': new THREE.Euler(),
-      'collideable': true,
-      'visibleDistance': 100,
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
 
@@ -103,6 +99,11 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       })
     );
   };
+
+  Body.prototype.name = '';
+  Body.prototype.radiusInKm = 0;
+  Body.prototype.collideable = true;
+  Body.prototype.visibleDistance = 100;
 
   /**
    * Bodies do not translate by default; this function can be overwritten for

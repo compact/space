@@ -1,5 +1,6 @@
 /**
- * KIMCHI configuration options.
+ * KIMCHI configuration settings. We call the 'global' KIMCHI settings here
+ *   'config' while settings for submodules are 'options'.
  * @namespace config
  * @memberOf  module:KIMCHI
  */

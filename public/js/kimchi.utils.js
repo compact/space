@@ -192,27 +192,50 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**
-   * Camera and renderer dimensions.
+   * Camera and renderer dimensions controller.
    * @namespace size
    * @memberOf  module:KIMCHI
    */
-  KIMCHI.size = {
-    'width': 0,
-    'height': 0,
-    'init': function () {
-      KIMCHI.size.update();
+  KIMCHI.size = (function () {
+    /**
+     * @alias    width
+     * @memberOf module:KIMCHI.size
+     */
+    /**
+     * @alias    height
+     * @memberOf module:KIMCHI.size
+     */
+    var size = {}, width = 0, height = 0;
+
+    /**
+     * Initialize the camera and renderer dimensions. Bind the window resize
+     *   event handler.
+     * @memberOf module:KIMCHI.size
+     */
+    size.init = function () {
+      size.update();
+
       KIMCHI.$window.on('resize', function () {
-        KIMCHI.size.update();
-        KIMCHI.flight.modes.auto.animate(); // TODO
+        size.update();
+        KIMCHI.renderer.render();
       });
-    },
-    'update': function () {
-      KIMCHI.size.width = KIMCHI.$window.width();
-      KIMCHI.size.height = KIMCHI.$window.height() - 5; // TODO
-      KIMCHI.camera.update(KIMCHI.size.width, KIMCHI.size.height);
-      KIMCHI.renderer.setSize(KIMCHI.size.width, KIMCHI.size.height);
-    }
-  };
+    };
+
+    /**
+     * Update the camera and renderer dimensions.
+     * @memberOf module:KIMCHI.size
+     */
+    size.update = function () {
+      width = KIMCHI.$window.width();
+      height = KIMCHI.$window.height() - 5; // TODO
+      KIMCHI.camera.update(width, height);
+      KIMCHI.renderer.setSize(width, height);
+
+      console.log('size changed to ' + width + ' x ' + height);
+    };
+
+    return size;
+  }());
 
 
 

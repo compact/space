@@ -94,10 +94,15 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // initialize camera position and rotation
     KIMCHI.camera.position.copy(KIMCHI.config.get('camera-initial-position'));
     KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    // render() has to be called to set the camera position for objects and
-    // elements to appear in animate()
-    KIMCHI.rendering.render();
-    KIMCHI.flight.modes.auto.animate(); // TODO
+
+
+
+    // initialize submodules
+    KIMCHI.pointerLock.init();
+    KIMCHI.ui.panel.init();
+    KIMCHI.config.init(); // .config.init() requires .panel.init()
+    KIMCHI.ui.notice.init();
+    KIMCHI.flight.setMode('menu');
 
 
 
@@ -105,14 +110,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     $('body').append(KIMCHI.renderer.domElement);
 //    $(KIMCHI.renderer.domElement).attr('id', 'space'); // for blurjs
 
-
-
-    // init
-    KIMCHI.pointerLock.init();
-    KIMCHI.ui.panel.init();
-    KIMCHI.config.init(); // .config.init() requires .panel.init()
-    KIMCHI.ui.notice.init();
-    KIMCHI.flight.setMode('menu');
+    // initialize Body children positions and scales for rendering
+    KIMCHI.space.moveBodyChildren();
+    setTimeout(function () {
+      // TODO: prefer to do this without a delay, in a callback somewhere
+      KIMCHI.rendering.render();
+    }, 500);
   };
 
 

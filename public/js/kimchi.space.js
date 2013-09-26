@@ -372,7 +372,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   space.moveBodies = function (delta) {
     _.forEach(bodies, function (body) {
-      // move the body mesh (custom function)
+      // move the Body Mesh
       body.move(delta);
     });
   };

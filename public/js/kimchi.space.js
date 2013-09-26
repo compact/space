@@ -121,14 +121,22 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   Body.prototype.rotate = function () {};
 
   /**
-   * @returns  {Number} The collision distance between the camera and this Body.
+   * @returns  {Number} The actual radius of this Body in its current scale.
    * @memberOf Body
    */
-  Body.prototype.getCollisionDistance = function () {
+  Body.prototype.getScaledRadius = function () {
     // This is the most general calculation.
     // this.radius * KIMCHI.config.get('scales-size') works for all cases except
     // when KIMCHI.config.get('scales-size') === 'large'
     return this.radius * this.mesh.scale.x;
+  };
+
+  /**
+   * @returns  {Number} The collision distance between the camera and this Body.
+   * @memberOf Body
+   */
+  Body.prototype.getCollisionDistance = function () {
+    return this.getScaledRadius();
   };
 
   /**
@@ -138,7 +146,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   Body.prototype.getSurfaceDistance = function (object3D) {
     return THREE.Object3D.getDistance(this.mesh, object3D) -
-      this.radius * this.mesh.scale.x;
+      this.getScaledRadius();
   };
 
   /**
@@ -281,7 +289,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     _.forEach(bodies, function (body) {
       var distance;
 
-      // move the text mesh
+      // move the text label Mesh
       if (KIMCHI.config.get('show-labels')) {
         distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
 
@@ -299,7 +307,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
           // move it in front of the associated mesh so it's not hidden inside
           body.labelMesh.geometry.computeBoundingSphere();
           var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
-            .normalize().multiplyScalar(body.radius + 0.01);
+            .normalize().multiplyScalar(body.getScaledRadius() * 1.1);
           var w = body.mesh.position.clone().add(v);
 /*        var x = body.mesh.position.clone().cross(v).cross(v)
           .normalize().multiplyScalar(

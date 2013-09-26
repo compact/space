@@ -1,8 +1,8 @@
-(function (KIMCHI, $, THREE) {
+(function (KIMCHI, $) {
   'use strict';
 
   $(function () {
     // initialize KIMCHI
     KIMCHI.init();
   });
-}(KIMCHI, jQuery, THREE));
+}(KIMCHI, jQuery));

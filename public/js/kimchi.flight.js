@@ -412,6 +412,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      * Fly to the given Body. Two private functions are used sequentially to
      *   first pan and then translate to it. translateTo(body) is called when
      *   panTo(body) ends. disable() is called when translateTo(body) ends
+     * @alias    flyTo
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     mode.flyTo = function (body) {

@@ -128,6 +128,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      * @memberOf module:KIMCHI.renderer
      */
     module.init = function () {
+      /**
+       * THREE.WebGLRenderer object.
+       * @private
+       * @memberOf module:KIMCHI.renderer
+       */
       renderer = new THREE.WebGLRenderer({
         'antialias': true
       });

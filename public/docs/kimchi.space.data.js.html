@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: kimchi.space.data.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: kimchi.space.data.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * Raw data for each body, to be passed into the Body constructor.
+ * @alias    data
+ * @memberOf module:KIMCHI.space
+ */
+var KIMCHI = (function (KIMCHI) {
+  'use strict';
+
+
+
+  KIMCHI.space.data = [
+    {
+      'name': 'Sun',
+      'radiusInKm': 696000,
+      'position': new THREE.Vector3(0, 0, 0),
+      'visibleDistance': 1000000,
+      'mesh': (function () {
+        var mesh = new THREE.Mesh(
+          new THREE.SphereGeometry(696000 / KIMCHI.constants.kmPerAu,
+            KIMCHI.config.get('sphere-segments'),
+            KIMCHI.config.get('sphere-segments')),
+          // not Lambert since sunlight is in the center of the sun
+          new THREE.MeshBasicMaterial({
+            'map': new THREE.ImageUtils.loadTexture('images/textures/sun.jpg')
+          })
+        );
+        mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
+
+        return mesh;
+      }())
+    },/*
+    {
+      'name': 'LOLWTF',
+      'radiusInKm': 696000,
+      'position': new THREE.Vector3(5, 5, 0),
+      'visibleDistance': 1000000,
+      'mesh': (function () {
+        jsonLoader.load('js/testconvert.json', function (geometry, materials) {
+          data[1].mesh = new THREE.Mesh(geometry, materials);
+        });
+      }())
+    },*/
+    {
+      'name': 'Mercury',
+      'radiusInKm': 2439.64,
+      'position': new THREE.Vector3(0, 0.38709893, 0),
+      'visibleDistance': 20,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    },
+    {
+      'name': 'Venus',
+      'radiusInKm': 6051.59,
+      'position': new THREE.Vector3(0, 0.72333199, 0),
+      'visibleDistance': 20,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    },
+    {
+      'name': 'Earth',
+      'radiusInKm': 6378,
+      'position': new THREE.Vector3(0, 1.00000011, 0),
+      'visibleDistance': 50,
+      'move': function () {
+        this.mesh.rotateOnAxis((new THREE.Vector3(1, 2, 3)).normalize(), 0.1);
+//      this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+      },
+      'children': [
+        {
+          'name': 'Moon',
+          'radiusInKm': 1737,
+          'position': new THREE.Vector3(0, 1.00000011, 0),
+          'visibleDistance': 20,
+          'move': function () {
+            this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+          }
+        }
+      ]
+    },
+    {
+      'name': 'Mars',
+      'radiusInKm': 3397,
+      'position': new THREE.Vector3(0, 1.52366231, 0),
+      'visibleDistance': 50,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    },
+    {
+      'name': 'Jupiter',
+      'radiusInKm': 71492,
+      'position': new THREE.Vector3(0, 5.20336301, 0),
+      'visibleDistance': 250,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    },
+    {
+      'name': 'Saturn',
+      'radiusInKm': 60267,
+      'position': new THREE.Vector3(0, 9.53707032, 0),
+      'visibleDistance': 250,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    },
+    {
+      'name': 'Uranus',
+      'radiusInKm': 25557.25,
+      'position': new THREE.Vector3(0, 19.19126393, 0),
+      'visibleDistance': 30,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    },
+    {
+      'name': 'Neptune',
+      'radiusInKm': 24766,
+      'position': new THREE.Vector3(0, 30.06896348, 0),
+      'visibleDistance': 1000,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    },
+    {
+      'name': 'Pluto',
+      'radiusInKm': 1148.07,
+      'position': new THREE.Vector3(0, 39.482, 0),
+      'visibleDistance': 1000,
+      'move': function () {
+        this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.0025);
+      }
+    }
+  ];
+
+
+
+  return KIMCHI;
+}(KIMCHI || {}));</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Sep 26 2013 01:19:51 GMT-0400 (EDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

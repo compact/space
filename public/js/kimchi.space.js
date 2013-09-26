@@ -5,7 +5,7 @@
  * @namespace space
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, _, $, THREE) {
+var KIMCHI = (function (KIMCHI, _, THREE) {
   'use strict';
 
   var space, Body, bodies;
@@ -333,4 +333,4 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, $, THREE));
+}(KIMCHI || {}, _, THREE));

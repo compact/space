@@ -363,7 +363,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   };
   /**
    * @param    {Number} number
-   * @returns  {Number}        The number formatted in astronomical units.
+   * @returns  {Number} The number formatted in astronomical units.
    * @memberOf module:KIMCHI.format
    */
   format.au = function (number) {
@@ -371,14 +371,15 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   };
   /**
    * @param    {Number} number
-   * @returns  {Number}        The number formatted in kilometres.
+   * @returns  {Number} The number formatted in kilometres.
    * @memberOf module:KIMCHI.format
    */
   format.km = function (number) {
     return format.separateThousands(Math.round(number)) + ' km';
   };
   /**
-   * @return   {String} The current {@link time} formatted for the {@link hud}.
+   * @return   {String} The current {@link module:KIMCHI.time|time} formatted
+   *                    for the {@link module:KIMCHI.ui.hud|hud}.
    * @memberOf module:KIMCHI.format
    */
   format.time = function () {

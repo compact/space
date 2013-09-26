@@ -1,7 +1,6 @@
 /**
  * Contains astronomical bodies, which are represented by instances of the
- *   {@link Body} class, and their associated Object3Ds. Can only be constructed
- *   inside kimchi.space.js.
+ *   {@link Body} class, and their associated THREE.Object3D objects.
  * @namespace space
  * @memberOf  module:KIMCHI
  */
@@ -16,7 +15,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Class for astronomical bodies. All spheres for now.
+   * Class for astronomical bodies. All spheres for now. Can only be
+   *   constructed inside kimchi.space.js.
    * @param {Object} options Options.
    * <br> name:            Required. Displayed to users.
    * <br> radius:          In km.

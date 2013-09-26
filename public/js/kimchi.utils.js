@@ -6,7 +6,7 @@
  * <br> }(KIMCHI));
  * @module KIMCHI
  */
-var KIMCHI = (function (KIMCHI, _, $, THREE) {
+var KIMCHI = (function (KIMCHI, $, THREE) {
   'use strict';
 
   var constants, format;
@@ -197,15 +197,19 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf  module:KIMCHI
    */
   KIMCHI.size = (function () {
+    var size, width, height;
+
+    size = {};
     /**
      * @alias    width
      * @memberOf module:KIMCHI.size
      */
+    width = 0;
     /**
      * @alias    height
      * @memberOf module:KIMCHI.size
      */
-    var size = {}, width = 0, height = 0;
+    height = 0;
 
     /**
      * Initialize the camera and renderer dimensions. Bind the window resize
@@ -240,7 +244,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**
-   * Time controller. We use "on"/"off"/"isOn" rather than
+   * Time controller. When the time is on, the Bodies move; when the time is
+   *   off, the Bodies stop moving. We use "on"/"off"/"isOn" rather than
    *   "start"/"stop"/"isEnabled" for a better adjective and to avoid
    *   confusion with THREE.Clock.
    * @namespace time
@@ -250,24 +255,52 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     var time, date, on;
 
     time = {};
-    // the date corresponding to the current positions of the Bodies
+    /**
+     * The Date corresponding to the current positions of Bodies.
+     * @private
+     * @memberOf module:KIMCHI.time
+     */
     date = new Date();
-    // the state
+    /**
+     * The current state.
+     * @private
+     * @memberOf module:KIMCHI.time
+     */
     on = true;
 
+    /**
+     * @returns  {Date}
+     * @memberOf module:KIMCHI.time
+     */
     time.getDate = function () {
       return date;
     };
+    /**
+     * Increment the current time based on delta. TODO: Not implemented yet.
+     * @param    {Number} delta
+     * @memberOf module:KIMCHI.time
+     */
     time.increment = function (delta) {
-      // TODO: the increment depends on delta
       date.setDate(date.getDate() + 1);
     };
+    /**
+     * Turn time on.
+     * @memberOf module:KIMCHI.time
+     */
     time.on = function () {
       on = true;
     };
+    /**
+     * Turn time off.
+     * @memberOf module:KIMCHI.time
+     */
     time.off = function () {
       on = false;
     };
+    /**
+     * @returns  {Boolean} Whether time is currently on.
+     * @memberOf module:KIMCHI.time
+     */
     time.isOn = function () {
       return on;
     };
@@ -346,4 +379,4 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, jQuery, THREE));
+}(KIMCHI || {}, jQuery, THREE));

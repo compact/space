@@ -106,12 +106,19 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * Bodies do not move by default; this function is to be overwritten by Body
-   *   instances.
+   * Bodies do not move by default; this function is to be overwritten by each
+   *   Body object. Movement does not include rotation; use rotate() for that.
    * @param    {Number} delta
    * @memberOf Body
    */
   Body.prototype.move = function () {};
+
+  /**
+   * This function is to be overwritten by each Body object.
+   * @param    {Number} delta
+   * @memberOf Body
+   */
+  Body.prototype.rotate = function () {};
 
   /**
    * @returns  {Number} The collision distance between the camera and this Body.
@@ -133,6 +140,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     return THREE.Object3D.getDistance(this.mesh, object3D) -
       this.radius * this.mesh.scale.x;
   };
+
   /**
    * @returns  {Number} Whether this Body is current in collision with the
    *   given objects
@@ -168,6 +176,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getBodies = function () {
     return bodies;
   };
+
   /**
    * TODO check bodies[name] actually exists
    * @param    {String} name
@@ -177,6 +186,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getBody = function (name) {
     return bodies[name];
   };
+
   /**
    * @returns  {Array} Meshes from the Bodies.
    * @memberOf module:KIMCHI.space
@@ -184,6 +194,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getMeshes = function () {
     return _.pluck(bodies, 'mesh');
   };
+
   /**
    * @returns  {Array} Label Meshes from the Bodies.
    * @memberOf module:KIMCHI.space
@@ -191,6 +202,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getLabelMeshes = function () {
     return _.pluck(bodies, 'labelMesh');
   };
+
   /**
    * @returns  {Array} Orbit Lines from the Bodies.
    * @memberOf module:KIMCHI.space
@@ -198,6 +210,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getOrbitLines = function () {
     return _.pluck(bodies, 'orbitLine');
   };
+
   /**
    * @returns  {Array} Object3Ds from the Bodies. Note that each Body may have
    *   more than one Object3D, e.g. for orbit lines and text labels.
@@ -210,6 +223,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     });
     return object3Ds;
   };
+
   /**
    * @returns  {Array} Object3Ds of Bodies set to be collideable with the
    *   camera.
@@ -218,6 +232,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getCollideableObject3Ds = function () {
     return _.pluck(_.filter(bodies, 'collideable'), 'mesh');
   };
+
   /**
    * @returns {Object} Bodies with names as keys.
    * @memberOf module:KIMCHI.space
@@ -236,13 +251,23 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Move the Bodies. TODO use delta
+   * Move the Bodies. Does not rotate the Bodies or move their children. TODO:
+   *   Use delta.
    * @memberOf module:KIMCHI.space
    */
   space.moveBodies = function (delta) {
     _.forEach(bodies, function (body) {
-      // move the Body Mesh
       body.move(delta);
+    });
+  };
+
+  /**
+   * Rotate the Bodies. TODO: Use delta.
+   * @memberOf module:KIMCHI.space
+   */
+  space.rotateBodies = function (delta) {
+    _.forEach(bodies, function (body) {
+      body.rotate(delta);
     });
   };
 
@@ -250,7 +275,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * Without moving the Body Meshes themselves, update the visibility,
    *   position, and size of all Object3Ds associated with the Bodies (such as
    *   text label Meshes). This function should be called whenever the camera
-   *   moves. TODO use delta
+   *   moves. TODO: Use delta.
    * @memberOf module:KIMCHI.space
    */
   space.moveBodyChildren = function (delta) {
@@ -310,6 +335,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       distances[name] = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
     });*/
   };
+
   /**
    * @param    {Object} bodies
    * @returns  {Array} Objects with keys 'name' and 'distance', with the latter
@@ -321,6 +347,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       return body1.distance - body2.distance;
     });
   };
+
   /**
    * @param    {Object} bodies
    * @returns  {Number} The distance to the closest Body Mesh.

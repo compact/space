@@ -39,7 +39,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings['ambient-lighting'] = false;
 
   // for the astronomical bodies in KIMCHI.space
-  settings['rotate'] = true;
+  settings['rotate-bodies'] = true;
   settings['time-on'] = false; // pause the movement of Bodies
   settings['show-labels'] = true;
   settings['sphere-segments'] = 48;
@@ -70,14 +70,12 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Handlers for config value changes.
+   * Handlers for config setting value changes. A handler is not required for
+   *   each config setting.
    * @alias    handlers
    * @private
    * @memberOf module:KIMCHI.config
    */
-
-  handlers['rotate'] = function (value) {
-  };
 
   handlers['time-on'] = function (value) {
     if (value) {
@@ -140,7 +138,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   config.init = function () {
     var userConfigurableKeys = [
-      'rotate',
+      'rotate-bodies',
       'time-on',
       'scales-size',
       'ambient-lighting',

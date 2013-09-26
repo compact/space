@@ -64,8 +64,10 @@ var KIMCHI = (function (KIMCHI) {
       'position': new THREE.Vector3(0, 1.00000011, 0),
       'visibleDistance': 50,
       'move': function () {
-        this.mesh.rotateOnAxis((new THREE.Vector3(1, 2, 3)).normalize(), 0.1);
 //      this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);
+      },
+      'rotate': function () {
+        this.mesh.rotateOnAxis((new THREE.Vector3(1, 2, 3)).normalize(), 0.2);
       },
       'children': [
         {

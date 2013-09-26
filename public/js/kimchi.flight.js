@@ -267,6 +267,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         KIMCHI.time.increment(delta);
       }
 
+      // rotate the Bodies
+      if (KIMCHI.config.get('rotate-bodies')) {
+        KIMCHI.space.rotateBodies(delta);
+      }
+
       // move the Bodies' children
       KIMCHI.space.moveBodyChildren(delta);
 

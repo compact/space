@@ -48,9 +48,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       KIMCHI.config.get('camera-far')
     );
     // renderer
-    KIMCHI.renderer = new THREE.WebGLRenderer({
-      'antialias': true
-    });
+    KIMCHI.renderer.init();
     // set camera size and renderer size
     KIMCHI.size.init();
 
@@ -106,45 +104,85 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
-    // add renderer to DOM
-    $('body').append(KIMCHI.renderer.domElement);
-//    $(KIMCHI.renderer.domElement).attr('id', 'space'); // for blurjs
-
     // initialize Body children positions and scales for rendering
     KIMCHI.space.moveBodyChildren();
     setTimeout(function () {
       // TODO: prefer to do this without a delay, in a callback somewhere
-      KIMCHI.rendering.render();
+      KIMCHI.renderer.render();
     }, 500);
   };
 
 
 
   /**
-   * Functions for rendering and animating using the three.js renderer.
-   * @memberOf module:KIMCHI
+   * Wrapper around THREE.WebGLRenderer for rendering and animation.
+   * @namespace renderer
+   * @memberOf  module:KIMCHI
    */
-  KIMCHI.rendering = {
-    'render': function () {
-      KIMCHI.renderer.render(KIMCHI.scene, KIMCHI.camera);
-    },
-    // callback is called before rendering. If it returns false, stop animating.
-    'animate': function (callback) {
+  KIMCHI.renderer = (function () {
+    var module = {}, renderer;
+
+    /**
+     * Call after the DOM is ready.
+     * @alias    init
+     * @memberOf module:KIMCHI.renderer
+     */
+    module.init = function () {
+      renderer = new THREE.WebGLRenderer({
+        'antialias': true
+      });
+
+      // append to DOM
+      $('body').append(renderer.domElement);
+//    $(renderer.domElement).attr('id', 'space'); // for blurjs
+    };
+
+    /**
+     * Shortcut for THREE.WebGLRenderer.render() without needing to provide
+     *   the parameters.
+     * @alias    render
+     * @memberOf module:KIMCHI.renderer
+     */
+    module.render = function () {
+      renderer.render(KIMCHI.scene, KIMCHI.camera);
+    };
+
+    /**
+     * Render repeatedly. The given callback is called before rendering. Stop
+     *   animating only when the callback returns false.
+     * @param     {Function} callback
+     * @alias     animate
+     * @memberOf  module:KIMCHI.renderer
+     */
+    module.animate = function (callback) {
       // TODO: consider removing this delay for production
       window.setTimeout(function () {
         var proceed = callback(KIMCHI.clock.getDelta());
 
-        KIMCHI.rendering.render();
+        KIMCHI.renderer.render();
 
         // stop the next frame if the callback returns false
         if (proceed !== false) {
           window.requestAnimationFrame(function () {
-            KIMCHI.rendering.animate(callback);
+            KIMCHI.renderer.animate(callback);
           });
         }
       }, 50);
-    }
-  };
+    };
+
+    /**
+     * See THREE.WebGLRenderer.setSize.
+     * @param    {Number} width
+     * @param    {Number} height
+     * @alias    setSize
+     * @memberOf module:KIMCHI.renderer
+     */
+    module.setSize = function (width, height) {
+      renderer.setSize(width, height);
+    };
+
+    return module;
+  }());
 
 
 

@@ -143,7 +143,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   Mode.prototype.animate = function () {
     var self = this;
 
-    KIMCHI.rendering.animate(function (delta) {
+    KIMCHI.renderer.animate(function (delta) {
       if (!self.enabled) {
         // this mode is being disabled
         console.log('stop animating for ' + self.name + ' flight mode');

@@ -75,9 +75,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       KIMCHI.config.get('camera-far')
     );
     // renderer
-    KIMCHI.renderer = new THREE.WebGLRenderer({
-      'antialias': true
-    });
+    KIMCHI.renderer.init();
     // set camera size and renderer size
     KIMCHI.size.init();
 
@@ -121,54 +119,97 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // initialize camera position and rotation
     KIMCHI.camera.position.copy(KIMCHI.config.get('camera-initial-position'));
     KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
-    // render() has to be called to set the camera position for objects and
-    // elements to appear in animate()
-    KIMCHI.rendering.render();
-    KIMCHI.flight.modes.auto.animate(); // TODO
 
 
 
-    // add renderer to DOM
-    $('body').append(KIMCHI.renderer.domElement);
-//    $(KIMCHI.renderer.domElement).attr('id', 'space'); // for blurjs
-
-
-
-    // init
+    // initialize submodules
     KIMCHI.pointerLock.init();
     KIMCHI.ui.panel.init();
     KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
+
+
+
+    // initialize Body children positions and scales for rendering
+    KIMCHI.space.moveBodyChildren();
+    setTimeout(function () {
+      // TODO: prefer to do this without a delay, in a callback somewhere
+      KIMCHI.renderer.render();
+    }, 500);
   };
 
 
 
   /**
-   * Functions for rendering and animating using the three.js renderer.
-   * @memberOf module:KIMCHI
+   * Wrapper around THREE.WebGLRenderer for rendering and animation.
+   * @namespace renderer
+   * @memberOf  module:KIMCHI
    */
-  KIMCHI.rendering = {
-    'render': function () {
-      KIMCHI.renderer.render(KIMCHI.scene, KIMCHI.camera);
-    },
-    // callback is called before rendering. If it returns false, stop animating.
-    'animate': function (callback) {
+  KIMCHI.renderer = (function () {
+    var module = {}, renderer;
+
+    /**
+     * Call after the DOM is ready.
+     * @alias    init
+     * @memberOf module:KIMCHI.renderer
+     */
+    module.init = function () {
+      renderer = new THREE.WebGLRenderer({
+        'antialias': true
+      });
+
+      // append to DOM
+      $('body').append(renderer.domElement);
+//    $(renderer.domElement).attr('id', 'space'); // for blurjs
+    };
+
+    /**
+     * Shortcut for THREE.WebGLRenderer.render() without needing to provide
+     *   the parameters.
+     * @alias    render
+     * @memberOf module:KIMCHI.renderer
+     */
+    module.render = function () {
+      renderer.render(KIMCHI.scene, KIMCHI.camera);
+    };
+
+    /**
+     * Render repeatedly. The given callback is called before rendering. Stop
+     *   animating only when the callback returns false.
+     * @param     {Function} callback
+     * @alias     animate
+     * @memberOf  module:KIMCHI.renderer
+     */
+    module.animate = function (callback) {
       // TODO: consider removing this delay for production
       window.setTimeout(function () {
         var proceed = callback(KIMCHI.clock.getDelta());
 
-        KIMCHI.rendering.render();
+        KIMCHI.renderer.render();
 
         // stop the next frame if the callback returns false
         if (proceed !== false) {
           window.requestAnimationFrame(function () {
-            KIMCHI.rendering.animate(callback);
+            KIMCHI.renderer.animate(callback);
           });
         }
       }, 50);
-    }
-  };
+    };
+
+    /**
+     * See THREE.WebGLRenderer.setSize.
+     * @param    {Number} width
+     * @param    {Number} height
+     * @alias    setSize
+     * @memberOf module:KIMCHI.renderer
+     */
+    module.setSize = function (width, height) {
+      renderer.setSize(width, height);
+    };
+
+    return module;
+  }());
 
 
 
@@ -314,13 +355,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Wed Sep 25 2013 03:07:54 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Sep 26 2013 01:14:32 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

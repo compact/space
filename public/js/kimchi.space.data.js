@@ -8,7 +8,7 @@ var KIMCHI = (function (KIMCHI) {
 
 
 
-  KIMCHI.space.data = [
+  KIMCHI.space.data = [/*
     {
       'name': 'Sun',
       'radiusInKm': 696000,
@@ -28,7 +28,7 @@ var KIMCHI = (function (KIMCHI) {
 
         return mesh;
       }())
-    },/*
+    },
     {
       'name': 'LOLWTF',
       'radiusInKm': 696000,
@@ -61,7 +61,7 @@ var KIMCHI = (function (KIMCHI) {
     {
       'name': 'Earth',
       'radiusInKm': 6378,
-      'position': new THREE.Vector3(0, 1.00000011, 0),
+      'position': new THREE.Vector3(-1.00000011, 0, 0),
       'visibleDistance': 50,
       'translate': function () {
 //      this.mesh.orbit(new THREE.Vector3(0, 0, 1), 0.025);

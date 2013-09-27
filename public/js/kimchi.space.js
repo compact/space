@@ -7,11 +7,26 @@
 var KIMCHI = (function (KIMCHI, _, THREE) {
   'use strict';
 
-  var space, Body, bodies;
+  var space, Body, bodies, ephemeris;
   space = {};
   KIMCHI.space = space;
 
 //  var jsonLoader = new THREE.JSONLoader();
+
+
+
+  /**
+   * Contains instances of Body.
+   * @private
+   * @memberOf module:KIMCHI.space
+   */
+  bodies = {};
+  /**
+   * Ephemeris data.
+   * @private
+   * @memberOf module:KIMCHI.space
+   */
+  ephemeris = {};
 
 
 
@@ -47,22 +62,20 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     _.assign(this, { // further default options appear below in the prototype
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
-
+console.log(options.name);
     // the radius and position are scaled
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
     this.position.multiplyScalar(KIMCHI.config.get('scales-position'));
 
-    // create a Mesh for the body
-    if (typeof this.mesh !== 'object') {
-      this.mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(this.radius,
-          KIMCHI.config.get('sphere-segments'),
-          KIMCHI.config.get('sphere-segments')),
-        new THREE.MeshLambertMaterial({
-          'map': new THREE.ImageUtils.loadTexture(this.texturePath)
-        })
-      );
-    }
+    // create a Mesh for the Body
+    this.mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(this.radius,
+        KIMCHI.config.get('sphere-segments'),
+        KIMCHI.config.get('sphere-segments')),
+      new THREE.MeshLambertMaterial({
+        'map': new THREE.ImageUtils.loadTexture(this.texturePath)
+      })
+    );
 
     // store the name in the Mesh, so in situations where we are given the Mesh
     // only, the Body can be identified using space.getBody()
@@ -72,7 +85,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     this.mesh.position.copy(this.position);
     this.mesh.rotation.copy(this.rotation);
     this.mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
-
+/*
     // create a Curve for the orbit, which can be used to create a Line
     length = this.position.length();
     // clockwise
@@ -82,7 +95,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       'opacity': KIMCHI.config.get('orbits-opacity'),
       'lineSegments': KIMCHI.config.get('orbits-line-segments')
     });
-
+*/
     /***
      * Create a Mesh for the text label. We could do
      *   this.mesh.add(this.labelMesh);
@@ -171,30 +184,28 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Contains instances of Body.
-   * @private
-   * @memberOf module:KIMCHI.space
-   */
-  bodies = {};
-
-  /**
    * Populate the private bodies object.
    * @params   {Function} callback Optional.
    * @memberOf module:KIMCHI.space
    */
   space.init = function (callback) {
-    $.get('/json/kimchi.space.bodies.json', function (data) {
-      _.forEach(data, function (options) {
-        bodies[options.name] = new Body(options);
+    // get the ephemeris data
+    $.getJSON('/json/ephemeris-subset.json', function (data) {
+      ephemeris = data;
+
+      $.getJSON('/json/kimchi.space.bodies.json', function (data) {
+        _.forEach(data, function (options) {
+          bodies[options.name] = new Body(options);
+        });
+
+        // initialize Body children positions and scales for rendering
+        space.moveBodyChildren();
+
+        // optional callback
+        if (typeof callback === 'function') {
+          callback.call(space);
+        }
       });
-
-      // initialize Body children positions and scales for rendering
-      space.moveBodyChildren();
-
-      // optional callback
-      if (typeof callback === 'function') {
-        callback.call(space);
-      }
     });
   };
 

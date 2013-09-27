@@ -284,15 +284,19 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf  module:KIMCHI
    */
   KIMCHI.time = (function () {
-    var time, date, on, julianToGregorian, gregorianToJulian;
+    var time, julian, on, julianToGregorian, gregorianToJulian;
 
     time = {};
+
     /**
-     * The Date corresponding to the current positions of Bodies.
+     * The Julian Date which will determine the current positions of Bodies.
+     *   We use the original convention where .0 is noon. The ephemeris data
+     *   is given with Julian Dates ending in .0.
      * @private
      * @memberOf module:KIMCHI.time
      */
-    date = new Date();
+    julian = 2451544;
+
     /**
      * The current state.
      * @private
@@ -301,7 +305,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     on = true;
 
     /**
-     * EGR, Algorithm F "Optimising" taken from {@link
+     * Based on EGR, Algorithm F ("Optimising") taken from {@link
      *   http://www.merlyn.demon.co.uk/daycount.htm#E2}. Slower than
      *   julianToGregorian().
      * @returns {Array}
@@ -310,7 +314,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
      */
     julianToGregorian = function (julian) {
       var g = 0, J, t, D, M, Y;
-      J = julian + 2400001;
+
+      // offset by (+ 2400001 - 2400000.5) since the param was originally CMJD
+      J = julian + 0.5;
+
       // Alg F : To convert a Julian day number, J, to a date D/M/Y
       g = ((3 * (((4 * J + 274277) / 146097 | 0)) / 4) | 0) - 38; // not Julian
       J += 1401 + g;
@@ -325,8 +332,9 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       }
       return [Y - 4716, M, D + 1];
     };
+
     /**
-     * EGR, Algorithm E "Optimising" taken from {@link
+     * Based on EGR, Algorithm E ("Optimising") taken from {@link
      *   http://www.merlyn.demon.co.uk/daycount.htm#E1}.
      * @returns {Number} Julian Day Number.
      * @private
@@ -334,6 +342,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
      */
     gregorianToJulian = function (Y, M, D) {
       var c, d, g = 0;
+
       // Alg E : To convert a date D/M/Y to a Julian day number, J
       Y += 4716;
       if (M < 3) {
@@ -343,24 +352,36 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       c = Y * 1461 >> 2;
       d = ((153 * M - 457) / 5) | 0;
       g = (((3 * (((Y + 184) / 100) | 0)) / 4) | 0) - 38; // omit for Julian
-      return c + d + D - g - 2401403; /* -2400001 is for CMJD */
+
+      // offset by - 2401403 + 2400000.5 to return JD rather than CMJD
+      return c + d + D - g -1402.5;
     };
 
     /**
      * @returns  {Date}
      * @memberOf module:KIMCHI.time
      */
-    time.getDate = function () {
-      return date;
+    time.getDMY = function () {
+      return julianToGregorian(julian);
     };
+
+    /**
+     * @returns  {Number}
+     * @memberOf module:KIMCHI.time
+     */
+    time.getJulian = function () {
+      return julian;
+    };
+
     /**
      * Increment the current time based on delta. TODO: Not implemented yet.
      * @param    {Number} delta
      * @memberOf module:KIMCHI.time
      */
     time.increment = function () {
-      date.setDate(date.getDate() + 1);
+      julian += 1;
     };
+
     /**
      * Turn time on.
      * @memberOf module:KIMCHI.time
@@ -368,6 +389,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     time.on = function () {
       on = true;
     };
+
     /**
      * Turn time off.
      * @memberOf module:KIMCHI.time
@@ -375,6 +397,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     time.off = function () {
       on = false;
     };
+
     /**
      * @returns  {Boolean} Whether time is currently on.
      * @memberOf module:KIMCHI.time

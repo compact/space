@@ -360,15 +360,15 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', [
-    'clean:server',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
-    'karma'
+    // 'clean:server',
+    // 'concurrent:test',
+    // 'autoprefixer',
+    // 'connect:test',
+    // 'karma'
   ]);
 
   grunt.registerTask('build', [
-//    'clean:dist',
+    'clean:dist',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',

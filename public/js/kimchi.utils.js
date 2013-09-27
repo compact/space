@@ -420,6 +420,46 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       KIMCHI.config.get('language-months')[date.getMonth()] + ' ' +
       date.getFullYear();
   };
+  /**
+   * EGR, Algorithm E "Optimising" taken from {@link
+   *   http://www.merlyn.demon.co.uk/daycount.htm#E1}.
+   * @returns {Array} [description]
+   */
+  format.julianToGregorian = function (julian) {
+    var g = 0, J, t, D, M, Y;
+    J = julian + 2400001;
+    // Alg F : To convert a Julian day number, J, to a date D/M/Y
+    g = ((3 * (((4 * J + 274277) / 146097 | 0)) / 4) | 0) - 38; // not Julian
+    J += 1401 + g;
+    t = 4 * J + 3;
+    Y = (t / 1461) | 0;
+    t = (t % 1461) >> 2;
+    M = ((t * 5 + 461) / 153) | 0;
+    D = (((t * 5 + 2) % 153) / 5) | 0;
+    if (M > 12) {
+        Y++;
+        M -= 12;
+    }
+    return [Y - 4716, M, D + 1];
+  };
+  /**
+   * EGR, Algorithm F "Optimising" taken from {@link
+   *   http://www.merlyn.demon.co.uk/daycount.htm#E2}.
+   * @returns {Number} Julian Day Number.
+   */
+  format.gregorianToJulian = function (Y, M, D) {
+    var c, d, g = 0;
+    // Alg E : To convert a date D/M/Y to a Julian day number, J
+    Y += 4716;
+    if (M < 3) {
+        Y--;
+        M += 12;
+    }
+    c = Y * 1461 >> 2;
+    d = ((153 * M - 457) / 5) | 0;
+    g = (((3 * (((Y + 184) / 100) | 0)) / 4) | 0) - 38; // omit for Julian
+    return c + d + D - g - 2401403; /* -2400001 is for CMJD */
+  };
 
 
 

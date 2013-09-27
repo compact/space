@@ -14,7 +14,7 @@
 var KIMCHI = (function (KIMCHI, $, THREE) {
   'use strict';
 
-  var constants, format;
+  var constants;
 
 
 

@@ -3,7 +3,7 @@
  * @namespace format
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, $, THREE) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
   var format = {};
@@ -94,4 +94,4 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   };
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery, THREE));
+}(KIMCHI || {}));

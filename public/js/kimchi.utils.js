@@ -96,7 +96,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // lighting
     KIMCHI.lights = {};
     // sunlight
-    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 10, 10);
+    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 3, 100);
 //    KIMCHI.lights.sun.position.set(0, 0, 0);
     KIMCHI.scene.add(KIMCHI.lights.sun);
     // ambient light: remove for production TODO

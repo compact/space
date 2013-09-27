@@ -43,7 +43,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings['rotate-bodies'] = true;
   settings['time-on'] = false; // pause the movement of Bodies
   settings['show-labels'] = true;
-  settings['sphere-segments'] = 48;
+  settings['sphere-segments'] = 64;
   settings['scales-size'] = 1;
   settings['scales-position'] = 1;
 
@@ -51,7 +51,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings['show-orbits'] = true;
   settings['orbits-color'] = 0xffffcc;
   settings['orbits-opacity'] = 0.5;
-  settings['orbits-line-segments'] = 720; // how many lines make up each orbit?
+  settings['orbits-line-segments'] = 1080; // how many lines make up each orbit?
 
   // for THREE.Stars
   settings['show-stars'] = true;

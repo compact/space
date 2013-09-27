@@ -71,7 +71,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     // create a Curve for the orbit, which can be used to create a Line
     length = this.position.length();
     // clockwise
-    curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI);
+    curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
     this.orbitLine = curve.createLine({
       'color': KIMCHI.config.get('orbits-color'),
       'opacity': KIMCHI.config.get('orbits-opacity'),

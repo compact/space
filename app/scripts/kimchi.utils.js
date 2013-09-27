@@ -83,6 +83,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // add astronomical objects
     KIMCHI.space.init(function () {
       KIMCHI.scene.add(this.getObject3Ds());
+      KIMCHI.ui.panel.init();
     });
 
     // add background stars, an array of ParticleSystems
@@ -124,7 +125,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     // initialize submodules
     KIMCHI.pointerLock.init();
-    KIMCHI.ui.panel.init();
     KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
@@ -284,7 +284,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf  module:KIMCHI
    */
   KIMCHI.time = (function () {
-    var time, date, on;
+    var time, date, on, julianToGregorian, gregorianToJulian;
 
     time = {};
     /**
@@ -299,6 +299,52 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
      * @memberOf module:KIMCHI.time
      */
     on = true;
+
+    /**
+     * EGR, Algorithm F "Optimising" taken from {@link
+     *   http://www.merlyn.demon.co.uk/daycount.htm#E2}. Slower than
+     *   julianToGregorian().
+     * @returns {Array}
+     * @private
+     * @memberOf module:KIMCHI.time
+     */
+    julianToGregorian = function (julian) {
+      var g = 0, J, t, D, M, Y;
+      J = julian + 2400001;
+      // Alg F : To convert a Julian day number, J, to a date D/M/Y
+      g = ((3 * (((4 * J + 274277) / 146097 | 0)) / 4) | 0) - 38; // not Julian
+      J += 1401 + g;
+      t = 4 * J + 3;
+      Y = (t / 1461) | 0;
+      t = (t % 1461) >> 2;
+      M = ((t * 5 + 461) / 153) | 0;
+      D = (((t * 5 + 2) % 153) / 5) | 0;
+      if (M > 12) {
+        Y++;
+        M -= 12;
+      }
+      return [Y - 4716, M, D + 1];
+    };
+    /**
+     * EGR, Algorithm E "Optimising" taken from {@link
+     *   http://www.merlyn.demon.co.uk/daycount.htm#E1}.
+     * @returns {Number} Julian Day Number.
+     * @private
+     * @memberOf module:KIMCHI.time
+     */
+    gregorianToJulian = function (Y, M, D) {
+      var c, d, g = 0;
+      // Alg E : To convert a date D/M/Y to a Julian day number, J
+      Y += 4716;
+      if (M < 3) {
+        Y--;
+        M += 12;
+      }
+      c = Y * 1461 >> 2;
+      d = ((153 * M - 457) / 5) | 0;
+      g = (((3 * (((Y + 184) / 100) | 0)) / 4) | 0) - 38; // omit for Julian
+      return c + d + D - g - 2401403; /* -2400001 is for CMJD */
+    };
 
     /**
      * @returns  {Date}
@@ -339,127 +385,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     return time;
   }());
-
-
-
-  /**
-   * @namespace format
-   * @memberOf  module:KIMCHI
-   */
-  format = {};
-  KIMCHI.format = format;
-  /**
-   * @param    {Number}  number         The number to round.
-   * @param    {Number}  precision      The number of decimal places to round to.
-   * @param    {Boolean} trailingZeroes Whether to include trailing zeroes.
-   *                                    Defaults true.
-   * @return   {Number}                 The rounded result.
-   * @memberOf module:KIMCHI.format
-   */
-  format.roundDecimals = function (number, precision, trailingZeroes) {
-    var multiplier, result;
-    multiplier = Math.pow(10, precision);
-    result = Math.round(number * multiplier) / multiplier;
-    if (typeof trailingZeroes === 'boolean' && trailingZeroes) {
-      result = result.toFixed(precision);
-    }
-    return result;
-  };
-  /**
-   * Round the given number "nicely", as in determine the number of decimals
-   *   based on the number of digits.
-   * @param    {Number} number The number to round.
-   * @return   {Number}        The rounded result.
-   * @memberOf module:KIMCHI.format
-   */
-  format.roundNicely = function (number) {
-    if (number < 1) {
-      return format.roundDecimals(number, 2);
-    } else if (number < 10) {
-      return format.roundDecimals(number, 1);
-    } else {
-      return Math.round(number);
-    }
-  };
-  /**
-   * Taken from {@link
-   *   http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript}.
-   *   Note there are issues with decimals, which we are not using at the
-   *   moment.
-   * @param    {Number} number
-   * @returns  {String} The number separated into thousands by commas.
-   * @memberOf module:KIMCHI.format
-   */
-  format.separateThousands = function (number) {
-    return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-  /**
-   * @param    {Number} number
-   * @returns  {Number} The number formatted in astronomical units.
-   * @memberOf module:KIMCHI.format
-   */
-  format.au = function (number) {
-    return format.roundNicely(number) + ' au';
-  };
-  /**
-   * @param    {Number} number
-   * @returns  {Number} The number formatted in kilometres.
-   * @memberOf module:KIMCHI.format
-   */
-  format.km = function (number) {
-    return format.separateThousands(Math.round(number)) + ' km';
-  };
-  /**
-   * @return   {String} The current {@link module:KIMCHI.time|time} formatted
-   *                    for the {@link module:KIMCHI.ui.hud|hud}.
-   * @memberOf module:KIMCHI.format
-   */
-  format.time = function () {
-    var date = KIMCHI.time.getDate();
-    return date.getDate() + ' ' +
-      KIMCHI.config.get('language-months')[date.getMonth()] + ' ' +
-      date.getFullYear();
-  };
-  /**
-   * EGR, Algorithm E "Optimising" taken from {@link
-   *   http://www.merlyn.demon.co.uk/daycount.htm#E1}.
-   * @returns {Array} [description]
-   *//*
-  format.julianToGregorian = function (julian) {
-    var g = 0, J, t, D, M, Y;
-    J = julian + 2400001;
-    // Alg F : To convert a Julian day number, J, to a date D/M/Y
-    g = ((3 * (((4 * J + 274277) / 146097 | 0)) / 4) | 0) - 38; // not Julian
-    J += 1401 + g;
-    t = 4 * J + 3;
-    Y = (t / 1461) | 0;
-    t = (t % 1461) >> 2;
-    M = ((t * 5 + 461) / 153) | 0;
-    D = (((t * 5 + 2) % 153) / 5) | 0;
-    if (M > 12) {
-        Y++;
-        M -= 12;
-    }
-    return [Y - 4716, M, D + 1];
-  };
-  /**
-   * EGR, Algorithm F "Optimising" taken from {@link
-   *   http://www.merlyn.demon.co.uk/daycount.htm#E2}.
-   * @returns {Number} Julian Day Number.
-   *//*
-  format.gregorianToJulian = function (Y, M, D) {
-    var c, d, g = 0;
-    // Alg E : To convert a date D/M/Y to a Julian day number, J
-    Y += 4716;
-    if (M < 3) {
-        Y--;
-        M += 12;
-    }
-    c = Y * 1461 >> 2;
-    d = ((153 * M - 457) / 5) | 0;
-    g = (((3 * (((Y + 184) / 100) | 0)) / 4) | 0) - 38; // omit for Julian
-    return c + d + D - g - 2401403; /* -2400001 is for CMJD *//*
-  };*/
 
 
 

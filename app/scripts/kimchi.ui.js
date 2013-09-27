@@ -62,14 +62,14 @@ var KIMCHI = (function (KIMCHI, $) {
       var $bodies = $('#bodies');
 
       // populate the bodies table
-      _.forEach(KIMCHI.space.getBodies(), function (body) {
+      _.each(KIMCHI.space.getBodies(), function (body) {
         $('<tr id="body-' + body.name + '">' +
             '<td>' + body.name + '</td>' +
             '<td><a class="fly-to" data-name="' + body.name + '">' +
               KIMCHI.config.get('language-fly-to') + '</a></td>' +
             '<td class="distance"></td>' +
             '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
-            '<td>' + KIMCHI.format.au(body.position.y) + '</td>' +
+            '<td>' + KIMCHI.format.au(body.distanceFromSun) + '</td>' +
           '</tr>').appendTo($bodies);
       });
 
@@ -126,7 +126,7 @@ var KIMCHI = (function (KIMCHI, $) {
      */
     panel.update = function () {
       // update the bodies table
-      _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
+      _.each(KIMCHI.space.getSortedDistances(), function (body) {
         $('#body-' + body.name + ' .distance')
           .text(KIMCHI.format.au(body.distance));
       });

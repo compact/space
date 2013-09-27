@@ -90,7 +90,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   handlers['scales-size'] = function (value) {
-    _.forEach(KIMCHI.space.getBodies(), function (body) {
+    _.each(KIMCHI.space.getBodies(), function (body) {
       body.setScale(value);
     });
   };
@@ -100,13 +100,13 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   handlers['show-labels'] = function (value) {
-    _.forEach(KIMCHI.space.getLabelMeshes(), function (mesh) {
+    _.each(KIMCHI.space.getLabelMeshes(), function (mesh) {
       mesh.visible = value;
     });
   };
 
   handlers['show-orbits'] = function (value) {
-    _.forEach(KIMCHI.space.getOrbitLines(), function (line) {
+    _.each(KIMCHI.space.getOrbitLines(), function (line) {
       line.visible = value;
     });
   };
@@ -148,7 +148,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     ];
 
     _.assign(settings, window.localStorage);
-    _.forEach(userConfigurableKeys, function (key) {
+    _.each(userConfigurableKeys, function (key) {
       config.set(key, settings[key]);
     });
   };

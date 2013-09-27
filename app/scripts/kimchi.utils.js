@@ -83,6 +83,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // add astronomical objects
     KIMCHI.space.init(function () {
       KIMCHI.scene.add(this.getObject3Ds());
+      KIMCHI.ui.panel.init();
     });
 
     // add background stars, an array of ParticleSystems
@@ -124,7 +125,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     // initialize submodules
     KIMCHI.pointerLock.init();
-    KIMCHI.ui.panel.init();
     KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
@@ -394,19 +394,25 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
   /**
-   * @param    {Number} number
-   * @returns  {Number} The number formatted in astronomical units.
+   * @param    {Number} number Optional.
+   * @returns  {String}        The number formatted in astronomical units.
    * @memberOf module:KIMCHI.format
    */
   format.au = function (number) {
+    if (typeof number === 'undefined') {
+      return '';
+    }
     return format.roundNicely(number) + ' au';
   };
   /**
-   * @param    {Number} number
-   * @returns  {Number} The number formatted in kilometres.
+   * @param    {Number} number Optional.
+   * @returns  {String}        The number formatted in kilometres.
    * @memberOf module:KIMCHI.format
    */
   format.km = function (number) {
+    if (typeof number === 'undefined') {
+      return '';
+    }
     return format.separateThousands(Math.round(number)) + ' km';
   };
   /**

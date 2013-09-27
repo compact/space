@@ -69,7 +69,7 @@ var KIMCHI = (function (KIMCHI, $) {
               KIMCHI.config.get('language-fly-to') + '</a></td>' +
             '<td class="distance"></td>' +
             '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
-            '<td>' + KIMCHI.format.au(body.position.y) + '</td>' +
+            '<td>' + KIMCHI.format.au(body.distanceFromSun) + '</td>' +
           '</tr>').appendTo($bodies);
       });
 

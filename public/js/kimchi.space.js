@@ -346,7 +346,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       if (KIMCHI.config.get('show-labels')) {
         distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
 
-        if (distance > body.visibleDistance) {
+        if (distance > body.labelVisibleDistance) {
           body.labelMesh.visible = false;
         } else {
           body.labelMesh.visible = true;

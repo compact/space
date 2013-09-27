@@ -1,3 +1,5 @@
+var KIMCHI = KIMCHI || {};
+
 (function (KIMCHI, $) {
   'use strict';
 

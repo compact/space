@@ -312,7 +312,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
      * @param    {Number} delta
      * @memberOf module:KIMCHI.time
      */
-    time.increment = function (delta) {
+    time.increment = function () {
       date.setDate(date.getDate() + 1);
     };
     /**
@@ -424,7 +424,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * EGR, Algorithm E "Optimising" taken from {@link
    *   http://www.merlyn.demon.co.uk/daycount.htm#E1}.
    * @returns {Array} [description]
-   */
+   *//*
   format.julianToGregorian = function (julian) {
     var g = 0, J, t, D, M, Y;
     J = julian + 2400001;
@@ -446,7 +446,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * EGR, Algorithm F "Optimising" taken from {@link
    *   http://www.merlyn.demon.co.uk/daycount.htm#E2}.
    * @returns {Number} Julian Day Number.
-   */
+   *//*
   format.gregorianToJulian = function (Y, M, D) {
     var c, d, g = 0;
     // Alg E : To convert a date D/M/Y to a Julian day number, J
@@ -458,8 +458,8 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     c = Y * 1461 >> 2;
     d = ((153 * M - 457) / 5) | 0;
     g = (((3 * (((Y + 184) / 100) | 0)) / 4) | 0) - 38; // omit for Julian
-    return c + d + D - g - 2401403; /* -2400001 is for CMJD */
-  };
+    return c + d + D - g - 2401403; /* -2400001 is for CMJD *//*
+  };*/
 
 
 

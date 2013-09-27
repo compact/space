@@ -49,7 +49,7 @@ var KIMCHI = (function (KIMCHI) {
       body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
     // bind pointer lock change and error handlers
-    change = function (event) {
+    change = function () {
       var on = document.pointerLockElement === body ||
         document.mozPointerLockElement === body ||
         document.webkitPointerLockElement === body;

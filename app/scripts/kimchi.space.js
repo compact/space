@@ -4,7 +4,7 @@
  * @namespace space
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, _, THREE) {
+var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
   var space, Body, bodies, ephemeris;
@@ -338,7 +338,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    *   moves. TODO: Use delta.
    * @memberOf module:KIMCHI.space
    */
-  space.moveBodyChildren = function (delta) {
+  space.moveBodyChildren = function () {
     _.forEach(bodies, function (body) {
       var distance;
 
@@ -420,4 +420,4 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, THREE));
+}(KIMCHI || {}, _, jQuery, THREE));

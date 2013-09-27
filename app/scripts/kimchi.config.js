@@ -20,10 +20,10 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
 
   // for dev testing
-  settings['debug'] = true;
+  settings.debug = true;
 
   // for THREE.PerspectiveCamera
-  settings['camera-fov'] = 45; 
+  settings['camera-fov'] = 45;
   settings['camera-near'] = 0.000001;
   settings['camera-far'] = 10000000;
   // for KIMCHI.init()
@@ -94,7 +94,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     });
   };
 
-  handlers['ambient-lighting'] = function (value) {
+  handlers['ambient-lighting'] = function () {
 //    KIMCHI.lights.ambient.visible = value;
   };
 

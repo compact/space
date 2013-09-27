@@ -41,26 +41,66 @@
       },
       'keydown': function (event) {
         switch (event.which) {
-          case 38: case 87: self.states.moveForward = true; break; // up, W
-          case 40: case 83: self.states.moveBackward = true; break; // down, S
-          case 37: case 65: self.states.moveLeft = true; break; // left, A
-          case 39: case 68: self.states.moveRight = true; break; // right, D
-          case 82: self.states.moveUp = true; break; // R
-          case 70: self.states.moveDown = true; break; // F
-          case 81: self.states.rollLeft = true; break; // Q
-          case 69: self.states.rollRight = true; break; // E
+        case 38: // up
+        case 87: // W
+          self.states.moveForward = true;
+          break;
+        case 40: // down
+        case 83: // S
+          self.states.moveBackward = true;
+          break;
+        case 37: // left
+        case 65: // A
+          self.states.moveLeft = true;
+          break;
+        case 39: // right
+        case 68: // D
+          self.states.moveRight = true;
+          break;
+        case 82: // R
+          self.states.moveUp = true;
+          break;
+        case 70: // F
+          self.states.moveDown = true;
+          break;
+        case 81: // Q
+          self.states.rollLeft = true;
+          break;
+        case 69: // E
+          self.states.rollRight = true;
+          break;
         }
       },
       'keyup': function (event) {
         switch (event.which) {
-          case 38: case 87: self.states.moveForward = false; break; // up, W
-          case 40: case 83: self.states.moveBackward = false; break; // down, S
-          case 37: case 65: self.states.moveLeft = false; break; // left, A
-          case 39: case 68: self.states.moveRight = false; break; // right, D
-          case 82: self.states.moveUp = false; break; // R
-          case 70: self.states.moveDown = false; break; // F
-          case 81: self.states.rollLeft = false; break; // Q
-          case 69: self.states.rollRight = false; break; // E
+        case 38: // up
+        case 87: // W
+          self.states.moveForward = false;
+          break;
+        case 40: // down
+        case 83: // S
+          self.states.moveBackward = false;
+          break;
+        case 37: // left
+        case 65: // A
+          self.states.moveLeft = false;
+          break;
+        case 39: // right
+        case 68: // D
+          self.states.moveRight = false;
+          break;
+        case 82: // R
+          self.states.moveUp = false;
+          break;
+        case 70: // F
+          self.states.moveDown = false;
+          break;
+        case 81: // Q
+          self.states.rollLeft = false;
+          break;
+        case 69: // E
+          self.states.rollRight = false;
+          break;
         }
       }
     };

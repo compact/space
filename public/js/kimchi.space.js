@@ -37,11 +37,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @param {Object} options Options.
    * <br> name:
    *        Required. Displayed to users.
-   * <br> radius:
+   * <br> radiusInKm:
    *        In km.
-   * <br> initialPositionArray:
-   *        Vector3 of the body's initial position, in au. Not to be confused
-   *        with Mesh.position, which gives the current position.
    * <br> rotation:
    *        Vector3 of the body's initial Euler rotation.
    * <br> labelVisibleDistance:
@@ -62,10 +59,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     _.assign(this, { // further default options appear below in the prototype
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
-console.log(options.name);
-    // the radius and position are scaled
+
+    // convert the radius back to au (it is stored in km for convenience)
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
-    this.position.multiplyScalar(KIMCHI.config.get('scales-position'));
 
     // create a Mesh for the Body
     this.mesh = new THREE.Mesh(
@@ -82,12 +78,15 @@ console.log(options.name);
     this.mesh.name = this.name;
 
     // set Mesh properties
-    this.mesh.position.copy(this.position);
-    this.mesh.rotation.copy(this.rotation);
-    this.mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
-/*
+//    this.mesh.position.copy(this.position);
+//    this.mesh.rotation.copy(this.rotation);
+    this.setScale();
+
+    // position the Mesh
+    this.translate();
+
     // create a Curve for the orbit, which can be used to create a Line
-    length = this.position.length();
+    length = this.mesh.position.length();
     // clockwise
     curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
     this.orbitLine = curve.createLine({
@@ -95,7 +94,7 @@ console.log(options.name);
       'opacity': KIMCHI.config.get('orbits-opacity'),
       'lineSegments': KIMCHI.config.get('orbits-line-segments')
     });
-*/
+
     /***
      * Create a Mesh for the text label. We could do
      *   this.mesh.add(this.labelMesh);
@@ -126,12 +125,32 @@ console.log(options.name);
   Body.prototype.labelVisibleDistance = 100;
 
   /**
+   * Set this Body's scale.
+   * @param    {Number|String} value See the config setting 'scales-size' for
+   *   allowed values. If value is not given, use the current config value.
+   * @memberOf Body
+   */
+  Body.prototype.setScale = function (value) {
+    if (typeof value === 'undefined') {
+      value = KIMCHI.config.get('scales-size');
+    }
+    if (value === 'large') {
+      value = 0.1 / this.radius;
+    }
+    this.mesh.scale.setXYZ(value);
+  };
+
+  /**
    * Bodies do not translate by default; this function can be overwritten for
    *   any Body object.
    * @param    {Number} delta
    * @memberOf Body
    */
-  Body.prototype.translate = function () {};
+  Body.prototype.translate = function () {
+    this.mesh.position.fromArray(
+      ephemeris[0].data[this.ephemerisIndex].position
+    ).multiplyScalar(KIMCHI.config.get('scales-position'));
+  };
 
   /**
    * Rotate this Body. Overwriting this function is optional.
@@ -193,7 +212,9 @@ console.log(options.name);
     $.getJSON('/json/ephemeris-subset.json', function (data) {
       ephemeris = data;
 
+      // get the bodies data
       $.getJSON('/json/kimchi.space.bodies.json', function (data) {
+        // construct the Bodies
         _.forEach(data, function (options) {
           bodies[options.name] = new Body(options);
         });

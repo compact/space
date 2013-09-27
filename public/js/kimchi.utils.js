@@ -83,6 +83,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // add astronomical objects
     KIMCHI.space.init(function () {
       KIMCHI.scene.add(this.getObject3Ds());
+      KIMCHI.renderer.render();
     });
 
     // add background stars, an array of ParticleSystems
@@ -97,7 +98,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // lighting
     KIMCHI.lights = {};
     // sunlight
-    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 3, 100);
+    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
 //    KIMCHI.lights.sun.position.set(0, 0, 0);
     KIMCHI.scene.add(KIMCHI.lights.sun);
     // ambient light: remove for production TODO
@@ -132,10 +133,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
     // fix Body children positions and scales
-    setTimeout(function () {
+/*    setTimeout(function () {
       // TODO: prefer to do this without a delay, in a callback somewhere
       KIMCHI.renderer.render();
-    }, 500);
+    }, 2500);*/
   };
 
 

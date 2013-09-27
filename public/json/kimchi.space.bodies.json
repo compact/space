@@ -1,21 +1,25 @@
 [
   {
     "name": "Sun",
+    "ephemerisIndex": 10,
     "radiusInKm": 696000,
     "labelVisibleDistance": 1000000
   },
   {
     "name": "Mercury",
+    "ephemerisIndex": 0,
     "radiusInKm": 2439.64,
     "labelVisibleDistance": 20
   },
   {
     "name": "Venus",
+    "ephemerisIndex": 1,
     "radiusInKm": 6051.59,
     "labelVisibleDistance": 20
   },
   {
     "name": "Earth",
+    "ephemerisIndex": 2,
     "radiusInKm": 6378,
     "labelVisibleDistance": 50,
     "rotationArray": [1, 2, 3],
@@ -23,31 +27,37 @@
   },
   {
     "name": "Mars",
+    "ephemerisIndex": 3,
     "radiusInKm": 3397,
     "labelVisibleDistance": 50
   },
   {
     "name": "Jupiter",
+    "ephemerisIndex": 4,
     "radiusInKm": 71492,
     "labelVisibleDistance": 250
   },
   {
     "name": "Saturn",
+    "ephemerisIndex": 5,
     "radiusInKm": 60267,
     "labelVisibleDistance": 250
   },
   {
     "name": "Uranus",
+    "ephemerisIndex": 6,
     "radiusInKm": 25557.25,
     "labelVisibleDistance": 30
   },
   {
     "name": "Neptune",
+    "ephemerisIndex": 7,
     "radiusInKm": 24766,
     "labelVisibleDistance": 1000
   },
   {
     "name": "Pluto",
+    "ephemerisIndex": 8,
     "radiusInKm": 1148.07,
     "labelVisibleDistance": 1000
   }

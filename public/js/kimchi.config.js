@@ -89,15 +89,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   handlers['scales-size'] = function (value) {
-    if (value === 'large') {
-      _.forEach(KIMCHI.space.getBodies(), function (body) {
-        body.mesh.scale.setXYZ(0.1 / body.radius);
-      });
-    } else { // value is a Number
-      _.forEach(KIMCHI.space.getMeshes(), function (mesh) {
-        mesh.scale.setXYZ(value);
-      });
-    }
+    _.forEach(KIMCHI.space.getBodies(), function (body) {
+      body.setScale(value);
+    });
   };
 
   handlers['ambient-lighting'] = function (value) {

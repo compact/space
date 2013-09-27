@@ -83,7 +83,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // add astronomical objects
     KIMCHI.space.init(function () {
       KIMCHI.scene.add(this.getObject3Ds());
-      KIMCHI.renderer.render();
     });
 
     // add background stars, an array of ParticleSystems
@@ -133,10 +132,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
     // fix Body children positions and scales
-/*    setTimeout(function () {
+    setTimeout(function () {
       // TODO: prefer to do this without a delay, in a callback somewhere
       KIMCHI.renderer.render();
-    }, 2500);*/
+    }, 3000);
   };
 
 

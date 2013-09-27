@@ -70,7 +70,7 @@
       var self = this;
 
       if (Object.prototype.toString.call(param) === '[object Array]') { // add multiple Object3Ds
-        _.forEach(param, function (object) {
+        _.each(param, function (object) {
           self.add(object);
         });
       } else { // add a single Object3D

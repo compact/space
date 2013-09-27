@@ -212,7 +212,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         }
 
         returnValue = false;
-        _.forEach(intersects, function (intersect) {
+        _.each(intersects, function (intersect) {
           // TODO take into account the object's Body's radius
           var body = KIMCHI.space.getBody(intersect.object.name);
           if (intersect.distance < body.getCollisionDistance()) {

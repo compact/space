@@ -215,7 +215,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       // get the bodies data
       $.getJSON('/json/kimchi.space.bodies.json', function (data) {
         // construct the Bodies
-        _.forEach(data, function (options) {
+        _.each(data, function (options) {
           bodies[options.name] = new Body(options);
         });
 
@@ -279,7 +279,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   space.getObject3Ds = function () {
     var object3Ds = [];
-    _.forEach(bodies, function (body) {
+    _.each(bodies, function (body) {
       object3Ds.push(body.mesh, body.orbitLine, body.labelMesh);
     });
     return object3Ds;
@@ -301,7 +301,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   space.getCollideableBodies = function () {
     // _.filter(bodies, 'collideable') returns an Array, not an Object with keys
     var collideableBodies = {};
-    _.forEach(bodies, function (body, name) {
+    _.each(bodies, function (body, name) {
       if (body.collideable) {
         collideableBodies[name] = body;
       }
@@ -316,7 +316,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.space
    */
   space.translateBodies = function (delta) {
-    _.forEach(bodies, function (body) {
+    _.each(bodies, function (body) {
       body.translate(delta);
     });
   };
@@ -326,7 +326,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.space
    */
   space.rotateBodies = function (delta) {
-    _.forEach(bodies, function (body) {
+    _.each(bodies, function (body) {
       body.rotate(delta);
     });
   };
@@ -339,7 +339,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.space
    */
   space.moveBodyChildren = function () {
-    _.forEach(bodies, function (body) {
+    _.each(bodies, function (body) {
       var distance;
 
       // move the text label Mesh
@@ -391,7 +391,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         'distance': THREE.Object3D.getDistance(KIMCHI.camera, body.mesh)
       };
     });
-/*    return _.forEach(bodies, function (body, name) {
+/*    return _.each(bodies, function (body, name) {
       distances[name] = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
     });*/
   };

@@ -29,7 +29,10 @@
     "expect": false,
     "inject": false,
     "it": false,
-    "spyOn": false
+    "spyOn": false,
+    "_": false,
+    "jQuery": false,
+    "THREE": false
   }
 }
 

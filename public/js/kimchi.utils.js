@@ -81,8 +81,9 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
     // add astronomical objects
-    KIMCHI.space.init();
-    KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
+    KIMCHI.space.init(function () {
+      KIMCHI.scene.add(this.getObject3Ds());
+    });
 
     // add background stars, an array of ParticleSystems
     KIMCHI.stars = new THREE.Stars({
@@ -130,8 +131,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-    // initialize Body children positions and scales for rendering
-    KIMCHI.space.moveBodyChildren();
+    // fix Body children positions and scales
     setTimeout(function () {
       // TODO: prefer to do this without a delay, in a callback somewhere
       KIMCHI.renderer.render();

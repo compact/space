@@ -10,36 +10,41 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   var space, Body, bodies;
   space = {};
   KIMCHI.space = space;
+
 //  var jsonLoader = new THREE.JSONLoader();
 
 
 
   /**
    * Class for astronomical bodies. All spheres for now. Can only be
-   *   constructed inside kimchi.space.js.
+   *   constructed inside kimchi.space.js. Raw data for each Body is stored in
+   *   /json/kimchi.space.bodies.json for passing into this constructor.
    * @param {Object} options Options.
-   * <br> name:            Required. Displayed to users.
-   * <br> radius:          In km.
-   * <br> position:        Vector3 of the body's initial position, in au. Not to
-   *                       be confused with Mesh.position, which gives the
-   *                       current position.
-   * <br> rotation:        Vector3 of the body's initial Euler rotation.
-   * <br> visibleDistance: How far away the text mesh remains visible.
-   * <br>                  TODO rename to labelMeshDistance or something.
-   * <br> mesh:            Optional. If not given, a Mesh is automatically
-   *                       generated.
-   * <br> translate:       Optional. Translate the Mesh, e.g. for orbit.
-   * <br> rotate:          Optional. Rotate the Mesh.
-   * <br> texturePath:     Optional path to the texture image. Defaults to
-   *                       'name.jpg'.
+   * <br> name:
+   *        Required. Displayed to users.
+   * <br> radius:
+   *        In km.
+   * <br> initialPositionArray:
+   *        Vector3 of the body's initial position, in au. Not to be confused
+   *        with Mesh.position, which gives the current position.
+   * <br> rotation:
+   *        Vector3 of the body's initial Euler rotation.
+   * <br> labelVisibleDistance:
+   *        How far away the text mesh remains visible.
+   * <br> mesh:
+   *        Optional. If not given, a Mesh is automatically generated.
+   * <br> translate:
+   *        Optional. Translate the Mesh, e.g. for orbit.
+   * <br> rotate:
+   *        Optional. Rotate the Mesh.
+   * <br> texturePath:
+   *        Optional path to the texture image. Defaults to 'name.jpg'.
    * @constructor Body
    */
   Body = function (options) {
     var length, curve;
 
     _.assign(this, { // further default options appear below in the prototype
-      'position': new THREE.Vector3(),
-      'rotation': new THREE.Euler(),
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
 
@@ -47,7 +52,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
     this.position.multiplyScalar(KIMCHI.config.get('scales-position'));
 
-    // create a Mesh for the body; it can already be set in data
+    // create a Mesh for the body
     if (typeof this.mesh !== 'object') {
       this.mesh = new THREE.Mesh(
         new THREE.SphereGeometry(this.radius,
@@ -100,10 +105,12 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     );
   };
 
+  // default values
   Body.prototype.name = '';
   Body.prototype.radiusInKm = 0;
+  Body.prototype.initialPositionArray = [3, 3, 0];
   Body.prototype.collideable = true;
-  Body.prototype.visibleDistance = 100;
+  Body.prototype.labelVisibleDistance = 100;
 
   /**
    * Bodies do not translate by default; this function can be overwritten for
@@ -172,11 +179,22 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * Populate the private bodies object.
+   * @params   {Function} callback Optional.
    * @memberOf module:KIMCHI.space
    */
-  space.init = function () {
-    _.forEach(space.data, function (options) {
-      bodies[options.name] = new Body(options);
+  space.init = function (callback) {
+    $.get('/json/kimchi.space.bodies.json', function (data) {
+      _.forEach(data, function (options) {
+        bodies[options.name] = new Body(options);
+      });
+
+      // initialize Body children positions and scales for rendering
+      space.moveBodyChildren();
+
+      // optional callback
+      if (typeof callback === 'function') {
+        callback.call(space);
+      }
     });
   };
 

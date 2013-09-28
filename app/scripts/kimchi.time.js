@@ -90,7 +90,6 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.time
    */
   time.getDMY = function () {
-    console.log(julianToGregorian(julian));
     return julianToGregorian(julian);
   };
 
@@ -99,7 +98,6 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.time
    */
   time.getJulian = function () {
-    console.log(julian);
     return julian;
   };
 

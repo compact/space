@@ -83,7 +83,8 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // add astronomical objects
     KIMCHI.space.init(function () {
       KIMCHI.scene.add(this.getObject3Ds());
-      KIMCHI.ui.panel.init();
+      KIMCHI.ui.panel.init(); // depends on .space.init()
+      KIMCHI.config.init(); // depends on .panel.init()
     });
 
     // add background stars, an array of ParticleSystems
@@ -125,7 +126,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     // initialize submodules
     KIMCHI.pointerLock.init();
-    KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
 

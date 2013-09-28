@@ -88,8 +88,7 @@ var KIMCHI = (function (KIMCHI) {
    */
   format.time = function () {
     var dmy = KIMCHI.time.getDMY();
-    return dmy[2] + ' ' +
-      KIMCHI.config.get('language-months')[dmy[1]] + ' ' + dmy[0];
+    return dmy[0] + '-' + dmy[1] + '-' + dmy[2];
   };
 
   return KIMCHI;

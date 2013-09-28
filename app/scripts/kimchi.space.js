@@ -100,7 +100,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     this.setScale();
 
     // position the Mesh
-    this.translate();ephemeris.getCurrentPosition(this.ephemerisIndex)
+    this.translate();
 
     // create a Curve for the orbit, which can be used to create a Line
     length = this.mesh.position.length();

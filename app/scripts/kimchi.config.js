@@ -4,6 +4,7 @@
  * @namespace config
  * @memberOf  module:KIMCHI
  */
+
 var KIMCHI = (function (KIMCHI, _, THREE) {
   'use strict';
 

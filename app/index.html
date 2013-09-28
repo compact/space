@@ -16,8 +16,7 @@
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
 </head>
- <!--  <body ng-app="kimchiApp"> -->
-  <body>
+ <body ng-app="kimchi">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -35,7 +34,7 @@
     </div>
     <div id="overlay" style="display: block;">
       <div style="padding: 15px;" class="col-md-12 col-lg-12">
-        <div class="panel">
+        <div class="panel" ng-controller="TestCtrl">
           <div class="panel-body">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#about-pane" data-toggle="tab">About</a></li>

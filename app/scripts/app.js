@@ -1,13 +1,15 @@
 'use strict';
 
-angular.module('kimchiApp', [])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
-  });
+var kimchi = angular.module('kimchi',[]);
+
+kimchi.factory('ThreeJS', function(){
+  return THREE;
+})
+
+function TestCtrl($scope, Service){
+  $scope.message = "zorplol";
+  $scope.servicemessage = Service;
+  $scope.alertSomething = function(){
+    alert("A MESSAGEEE");
+  };
+}

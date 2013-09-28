@@ -87,10 +87,9 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.format
    */
   format.time = function () {
-    var date = KIMCHI.time.getDate();
-    return date.getDate() + ' ' +
-      KIMCHI.config.get('language-months')[date.getMonth()] + ' ' +
-      date.getFullYear();
+    var dmy = KIMCHI.time.getDMY();
+    return dmy[2] + ' ' +
+      KIMCHI.config.get('language-months')[dmy[1]] + ' ' + dmy[0];
   };
 
   return KIMCHI;

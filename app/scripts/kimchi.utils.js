@@ -83,7 +83,8 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // add astronomical objects
     KIMCHI.space.init(function () {
       KIMCHI.scene.add(this.getObject3Ds());
-      KIMCHI.ui.panel.init();
+      KIMCHI.ui.panel.init(); // depends on .space.init()
+      KIMCHI.config.init(); // depends on .panel.init()
     });
 
     // add background stars, an array of ParticleSystems
@@ -125,7 +126,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     // initialize submodules
     KIMCHI.pointerLock.init();
-    KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
 
@@ -271,119 +271,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     };
 
     return size;
-  }());
-
-
-
-  /**
-   * Time controller. When the time is on, the Bodies move; when the time is
-   *   off, the Bodies stop moving. We use "on"/"off"/"isOn" rather than
-   *   "start"/"stop"/"isEnabled" for a better adjective and to avoid
-   *   confusion with THREE.Clock.
-   * @namespace time
-   * @memberOf  module:KIMCHI
-   */
-  KIMCHI.time = (function () {
-    var time, date, on, julianToGregorian, gregorianToJulian;
-
-    time = {};
-    /**
-     * The Date corresponding to the current positions of Bodies.
-     * @private
-     * @memberOf module:KIMCHI.time
-     */
-    date = new Date();
-    /**
-     * The current state.
-     * @private
-     * @memberOf module:KIMCHI.time
-     */
-    on = true;
-
-    /**
-     * EGR, Algorithm F "Optimising" taken from {@link
-     *   http://www.merlyn.demon.co.uk/daycount.htm#E2}. Slower than
-     *   julianToGregorian().
-     * @returns {Array}
-     * @private
-     * @memberOf module:KIMCHI.time
-     */
-    julianToGregorian = function (julian) {
-      var g = 0, J, t, D, M, Y;
-      J = julian + 2400001;
-      // Alg F : To convert a Julian day number, J, to a date D/M/Y
-      g = ((3 * (((4 * J + 274277) / 146097 | 0)) / 4) | 0) - 38; // not Julian
-      J += 1401 + g;
-      t = 4 * J + 3;
-      Y = (t / 1461) | 0;
-      t = (t % 1461) >> 2;
-      M = ((t * 5 + 461) / 153) | 0;
-      D = (((t * 5 + 2) % 153) / 5) | 0;
-      if (M > 12) {
-        Y++;
-        M -= 12;
-      }
-      return [Y - 4716, M, D + 1];
-    };
-    /**
-     * EGR, Algorithm E "Optimising" taken from {@link
-     *   http://www.merlyn.demon.co.uk/daycount.htm#E1}.
-     * @returns {Number} Julian Day Number.
-     * @private
-     * @memberOf module:KIMCHI.time
-     */
-    gregorianToJulian = function (Y, M, D) {
-      var c, d, g = 0;
-      // Alg E : To convert a date D/M/Y to a Julian day number, J
-      Y += 4716;
-      if (M < 3) {
-        Y--;
-        M += 12;
-      }
-      c = Y * 1461 >> 2;
-      d = ((153 * M - 457) / 5) | 0;
-      g = (((3 * (((Y + 184) / 100) | 0)) / 4) | 0) - 38; // omit for Julian
-      return c + d + D - g - 2401403; /* -2400001 is for CMJD */
-    };
-
-    /**
-     * @returns  {Date}
-     * @memberOf module:KIMCHI.time
-     */
-    time.getDate = function () {
-      return date;
-    };
-    /**
-     * Increment the current time based on delta. TODO: Not implemented yet.
-     * @param    {Number} delta
-     * @memberOf module:KIMCHI.time
-     */
-    time.increment = function () {
-      date.setDate(date.getDate() + 1);
-    };
-    /**
-     * Turn time on.
-     * @memberOf module:KIMCHI.time
-     */
-    time.on = function () {
-      on = true;
-    };
-    /**
-     * Turn time off.
-     * @memberOf module:KIMCHI.time
-     */
-    time.off = function () {
-      on = false;
-    };
-    /**
-     * @returns  {Boolean} Whether time is currently on.
-     * @memberOf module:KIMCHI.time
-     */
-    time.isOn = function () {
-      return on;
-    };
-
-    return time;
   }());
 
 

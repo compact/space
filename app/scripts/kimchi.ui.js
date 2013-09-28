@@ -150,7 +150,8 @@ var KIMCHI = (function (KIMCHI, $) {
       ).parent();
       if ($button.length === 1) {
         // determine css classes to add and remove from the respective buttons
-        addClass = 'active ';
+        addClass = '';
+//        addClass = 'active ';
         if (value === 'true') {
           removeClass = 'btn-danger';
           addClass += 'btn-success';

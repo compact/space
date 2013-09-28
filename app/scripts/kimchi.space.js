@@ -26,7 +26,24 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @private
    * @memberOf module:KIMCHI.space
    */
-  ephemeris = {};
+  ephemeris = (function () {
+    var ephemeris = {}, data = [];
+
+    ephemeris.setData = function (d) {
+      data = d;
+    };
+
+    /**
+     * @param   {Number} index
+     * @returns {Array}  The current position [x, y, z] of the body
+     *   corresponding to the given index.
+     */
+    ephemeris.getCurrentPosition = function (index) {
+      return data['' + KIMCHI.time.getJulian()][index];
+    };
+
+    return ephemeris;
+  }());
 
 
 
@@ -83,7 +100,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     this.setScale();
 
     // position the Mesh
-    this.translate();
+    this.translate();ephemeris.getCurrentPosition(this.ephemerisIndex)
 
     // create a Curve for the orbit, which can be used to create a Line
     length = this.mesh.position.length();
@@ -148,7 +165,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Body.prototype.translate = function () {
     this.mesh.position.fromArray(
-      ephemeris[0].data[this.ephemerisIndex].position
+      ephemeris.getCurrentPosition(this.ephemerisIndex)
     ).multiplyScalar(KIMCHI.config.get('scales-position'));
   };
 
@@ -210,7 +227,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   space.init = function (callback) {
     // get the ephemeris data
     $.getJSON('/json/ephemeris-subset.json', function (data) {
-      ephemeris = data;
+      ephemeris.setData(data);
 
       // get the bodies data
       $.getJSON('/json/kimchi.space.bodies.json', function (data) {

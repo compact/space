@@ -7,7 +7,7 @@
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
-  var space, Body, bodies, ephemeris;
+  var space, Body, bodies;
   space = {};
   KIMCHI.space = space;
 
@@ -21,60 +21,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.space
    */
   bodies = {};
-  /**
-   * Ephemeris data.
-   * @private
-   * @memberOf module:KIMCHI.space
-   */
-  ephemeris = (function () {
-    // we call it a "batch" of the data since this array contains only a subset
-    // of all the ephemeris data
-    var ephemeris = {}, batch = [];
-
-    ephemeris.loadBatch = function (julian) {
-      var file = '/data/de405/' + julian + '.json';
-
-      console.log('loading ephemeris batch: ' + julian);
-
-      return $.getJSON(file).done(function (data) {
-        batch = data;
-      }).fail(function (jqXHR, textStatus, error) {
-        console.log('Failed to get: ' + file);
-      });
-    };
-
-    /**
-     * @param   {Number}          index
-     * @returns {jQuery.Deferred} The current position [x, y, z] of the body
-     *   corresponding to the given index.
-     */
-    ephemeris.getCurrentPosition = function (index) {
-      var currentBatch, julian, position, deferred;
-
-      julian = KIMCHI.time.getJulian();
-      currentBatch = batch[julian];
-
-      if (typeof currentBatch === 'object') {
-        position = currentBatch[index];
-        // "Empty" Promise to match the return type in the case below.
-        return $.when(position);
-      } else {
-        // We are at the last of the current batch, so load the next batch. The
-        // Deferred object is used to return the position after loading the next
-        // batch.
-        deferred = $.Deferred();
-
-        ephemeris.loadBatch(julian).done(function (data) {
-          position = data[julian];
-          deferred.resolve(position);
-        });
-
-        return deferred.promise();
-      }
-    }
-
-    return ephemeris;
-  }());
 
 
 
@@ -196,7 +142,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Body.prototype.translate = function () {
     var self = this;
-    ephemeris.getCurrentPosition(this.ephemerisIndex).done(function (position) {
+    KIMCHI.ephemeris.getCurrentPosition(this.ephemerisIndex).done(function (position) {
       self.scalePositionFromArray(position);
     });
   };
@@ -270,7 +216,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   space.init = function (callback) {
     // get the ephemeris data
-    ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
+    KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
       // get the bodies data
       $.getJSON('/data/kimchi.space.bodies.json', function (data) {
         // construct the Bodies

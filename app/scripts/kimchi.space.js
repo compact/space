@@ -27,20 +27,51 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.space
    */
   ephemeris = (function () {
-    var ephemeris = {}, data = [];
+    // we call it a "batch" of the data since this array contains only a subset
+    // of all the ephemeris data
+    var ephemeris = {}, batch = [];
 
-    ephemeris.setData = function (d) {
-      data = d;
+    ephemeris.loadBatch = function (julian) {
+      var file = '/data/de405/' + julian + '.json';
+
+      console.log('loading ephemeris batch: ' + julian);
+
+      return $.getJSON(file).done(function (data) {
+        batch = data;
+      }).fail(function (jqXHR, textStatus, error) {
+        console.log('Failed to get: ' + file);
+      });
     };
 
     /**
-     * @param   {Number} index
-     * @returns {Array}  The current position [x, y, z] of the body
+     * @param   {Number}          index
+     * @returns {jQuery.Deferred} The current position [x, y, z] of the body
      *   corresponding to the given index.
      */
     ephemeris.getCurrentPosition = function (index) {
-      return data['' + KIMCHI.time.getJulian()][index];
-    };
+      var currentBatch, julian, position, deferred;
+
+      julian = KIMCHI.time.getJulian();
+      currentBatch = batch[julian];
+
+      if (typeof currentBatch === 'object') {
+        position = currentBatch[index];
+        // "Empty" Promise to match the return type in the case below.
+        return $.when(position);
+      } else {
+        // We are at the last of the current batch, so load the next batch. The
+        // Deferred object is used to return the position after loading the next
+        // batch.
+        deferred = $.Deferred();
+
+        ephemeris.loadBatch(julian).done(function (data) {
+          position = data[julian];
+          deferred.resolve(position);
+        });
+
+        return deferred.promise();
+      }
+    }
 
     return ephemeris;
   }());
@@ -164,9 +195,22 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Body
    */
   Body.prototype.translate = function () {
-    this.mesh.position.fromArray(
-      ephemeris.getCurrentPosition(this.ephemerisIndex)
-    ).multiplyScalar(KIMCHI.config.get('scales-position'));
+    var self = this;
+    ephemeris.getCurrentPosition(this.ephemerisIndex).done(function (position) {
+      self.scalePositionFromArray(position);
+    });
+  };
+
+  /**
+   * @param    {Array}  Array because this function gets called only with
+   *   ephemeris data.
+   * @memberOf Body
+   */
+  Body.prototype.scalePositionFromArray = function (position) {
+    // first set the position from the parameter, then scale it
+    this.mesh.position.fromArray(position)
+      .multiplyScalar(KIMCHI.config.get('scales-position'));
+    // TODO implement scales-position
   };
 
   /**
@@ -180,7 +224,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * @returns  {Number} The actual radius of this Body in its current scale.
+   * @returns  {Number} The radius of this Body in its current scale.
    * @memberOf Body
    */
   Body.prototype.getScaledRadius = function () {
@@ -226,11 +270,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   space.init = function (callback) {
     // get the ephemeris data
-    $.getJSON('/json/ephemeris-subset.json', function (data) {
-      ephemeris.setData(data);
-
+    ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
       // get the bodies data
-      $.getJSON('/json/kimchi.space.bodies.json', function (data) {
+      $.getJSON('/data/kimchi.space.bodies.json', function (data) {
         // construct the Bodies
         _.each(data, function (options) {
           bodies[options.name] = new Body(options);
@@ -329,7 +371,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**
-   * Translate the Bodies. Does not move their children. TODO: Use delta.
+   * Translate the Bodies. Does not move their children.
+   *   TODO: Use delta.
+   *   TODO: In the future, for optimization, consider first storing the
+   *   ephemeris batch array element in one variable for all bodies.
    * @memberOf module:KIMCHI.space
    */
   space.translateBodies = function (delta) {

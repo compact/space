@@ -22,7 +22,7 @@ var KIMCHI = (function (KIMCHI, $) {
    * @type     {Number}
    * @memberOf module:KIMCHI.ephemeris
    */
-  ephemeris.lastJulianInBatch;
+  ephemeris.lastJulianInBatch = 0; // TODO
 
   ephemeris.updateLastJulianInBatch = function () {
     var keys = Object.keys(batch);
@@ -42,7 +42,7 @@ var KIMCHI = (function (KIMCHI, $) {
     return $.getJSON(file).done(function (data) {
       batch = data;
       ephemeris.updateLastJulianInBatch();
-    }).fail(function (jqXHR, textStatus, error) {
+    }).fail(function () { // jqXHR, textStatus, error
       console.log('Failed to get: ' + file);
     });
   };

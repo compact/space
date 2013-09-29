@@ -6,7 +6,7 @@
  * @namespace time
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI) {
+var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
   var time, julian, on, julianToGregorian, gregorianToJulian;
@@ -107,7 +107,25 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.time
    */
   time.increment = function () {
-    julian += 1;
+    var newJulian, deferred;
+
+    newJulian = julian + 1;
+
+    if (newJulian <= KIMCHI.ephemeris.lastJulianInBatch) {
+      // "Empty" promise to match the return type in the case below.
+      return $.when(newJulian);
+    } else {
+      // We are at the last of the current batch, so we have to load the next
+      // batch before incrementing the date. The Deferred object is used to
+      // return the position after loading the next batch.
+      deferred = $.Deferred();
+
+      KIMCHI.ephemeris.loadBatch(julian).done(function (data) {
+        deferred.resolve(data);
+      });
+
+      return deferred.promise();
+    }
   };
 
   /**
@@ -135,4 +153,4 @@ var KIMCHI = (function (KIMCHI) {
   };
 
   return KIMCHI;
-}(KIMCHI || {}));
+}(KIMCHI || {}, jQuery));

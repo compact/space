@@ -345,6 +345,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('server', function (target) {
+    grunt.log.writeln("YOLO!!! " + target);
     if (target === 'dist') {
       return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
     }

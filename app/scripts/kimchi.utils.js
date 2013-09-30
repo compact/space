@@ -161,7 +161,9 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
          * @private
          * @memberOf module:KIMCHI.renderer
          */
+        var useCanvas = document.getElementById('kimchi');
         renderer = new THREE.WebGLRenderer({
+          'canvas': useCanvas,
           'antialias': true
         });
       } catch (error) {

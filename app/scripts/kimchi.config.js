@@ -12,7 +12,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   KIMCHI.config = config;
 
 
-
   /**
    * An object storing all the config values by key.
    * @alias    settings

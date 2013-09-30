@@ -33,7 +33,7 @@
     <div id="notice"></div>
     <div id="overlay" style="display: block;">
       <div style="padding: 15px;" class="col-md-12 col-lg-12">
-        <div class="panel" ng-controller="TestCtrl">
+        <div class="panel">
           <div class="panel-body">
             <ul class="nav nav-tabs">
               <li class="active">
@@ -188,10 +188,21 @@
           <div id="hud-speed" class="hud-value">0</div>
           <div class="hud-unit">&nbsp;AU/s</div>
         </li>
-      </ul>
+      </ul> 
     </div>
     <div id="hud3" class="hud"></div>
-    <div id="hud4" class="hud"></div>
+    <div id="hud4" class="hud" ng-controller="debugCtrl" ng-show="settings.visible">
+      <div>
+        <h4>DEBUG</h4>
+      </div>
+      <div>
+        <ul>
+          <li>Delta: {{delta}}</li>
+          <li>Position (px): {{kimchi.camera.position.x}}, {{kimchi.camera.position.y}}, {{kimchi.camera.position.z}}</li>
+          <li>Rotation (deg): {{translateRotation(kimchi.camera.rotation.x)}}, {{translateRotation(kimchi.camera.rotation.y)}}, {{translateRotation(kimchi.camera.rotation.y)}}</li>
+        </ul>
+      </div>
+    </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -231,6 +242,7 @@
     <script src="/scripts/three.controls.js"></script>
     <script src="/scripts/three.stars.js"></script>
     <script src="/scripts/kimchi.config.js"></script>
+    <script src="/scripts/kimchi.watcher.js"></script>
     <script src="/scripts/kimchi.utils.js"></script>
     <script src="/scripts/kimchi.time.js"></script>
     <script src="/scripts/kimchi.format.js"></script>
@@ -249,8 +261,9 @@
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/ng/ngthree.js"></script>
+    <script src="scripts/ng/kimchi.js"></script>
+    <script src="scripts/ng/hud.js"></script>
     <!-- endbuild -->
 </body>
 </html>

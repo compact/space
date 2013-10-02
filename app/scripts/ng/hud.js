@@ -6,7 +6,6 @@ function debugCtrl($scope, $timeout, Kimchi, Three){
   $scope.delta = 0;
  
   var unbind = KIMCHI.watcher.watch(function() {
-    $scope.kimchi = Kimchi;
     $scope.delta = $scope.kimchi.renderer.lastDelta;
     $scope.$digest();
   });

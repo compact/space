@@ -146,10 +146,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       if (!self.enabled) {
         // this mode is being disabled
         console.log('stop animating for ' + self.name + ' flight mode');
-        return false;
+        return $.when(false);
       }
 
-      return self.animationFrame(delta);
+      return $.when(self.animationFrame(delta));
     });
   };
   /**
@@ -251,6 +251,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       $('#hud1').hide();
     };
     mode.animationFrame = function (delta) {
+      // resolve true/false to continue/stop animating
+      var deferred = $.Deferred();
+
       // move the Camera
       if (!colliding()) {
         KIMCHI.controls.moveCamera(
@@ -264,7 +267,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       if (KIMCHI.config.get('time-on')) {
         KIMCHI.time.increment().done(function () {
           KIMCHI.space.translateBodies(delta);
+          deferred.resolve(true);
+        }).fail(function () {
+          deferred.resolve(false);
         });
+      } else {
+        deferred.resolve(true);
       }
 
       // rotate the Bodies
@@ -277,6 +285,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
       // update hud
       KIMCHI.ui.hud.update(delta);
+
+      return deferred.promise();
     };
 
     return mode;

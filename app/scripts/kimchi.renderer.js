@@ -63,19 +63,18 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   module.animate = function (callback) {
     // TODO: consider removing this delay for production
     window.setTimeout(function () {
-      var proceed;
-
       module.delta = KIMCHI.clock.getDelta();
-      proceed = callback(module.delta);
-      module.render();
-      KIMCHI.watcher.trigger(); // trigger KIMCHI.watcher so observers (specifically angularjs) are aware that kimchi has changed
+      callback(module.delta).done(function (proceed) {
+        module.render();
+        KIMCHI.watcher.trigger(); // trigger KIMCHI.watcher so observers (specifically angularjs) are aware that kimchi has changed
 
-      // stop the next frame if the callback returns false
-      if (proceed !== false) {
-        window.requestAnimationFrame(function () {
-          module.animate(callback);
-        });
-      }
+        // stop the next frame if the callback returns false
+        if (proceed !== false) {
+          window.requestAnimationFrame(function () {
+            module.animate(callback);
+          });
+        }
+      });
     }, 50);
   };
 

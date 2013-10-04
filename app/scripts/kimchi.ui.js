@@ -18,7 +18,7 @@ var KIMCHI = (function (KIMCHI, $) {
    * @namespace hud
    * @memberOf  module:KIMCHI.ui
    */
-  hud.update = function (delta) {
+  hud.update = function () {
     $('#hud-distance-from-sun').text(KIMCHI.format.roundDecimals(KIMCHI.camera.position.length(), 2, true));
     $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
     $('#hud-time').text(KIMCHI.format.time());

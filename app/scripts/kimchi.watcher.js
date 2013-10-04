@@ -10,14 +10,12 @@ var KIMCHI = (function (KIMCHI, _) {
         watches[id] = callback;
 
         return function () {
-          console.log('w');
           watches[id] = null;
           delete watches[id];
         };
       },
       'trigger': function () {
         _.each(watches, function (watch) {
-          console.log('t');
           watch(1);
         });
       }

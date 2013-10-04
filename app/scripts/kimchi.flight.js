@@ -264,7 +264,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       }
 
       // move the Bodies and increment the current time
-      if (KIMCHI.config.get('time-on')) {
+      if (KIMCHI.config.get('bodies-speed')) {
         KIMCHI.time.increment().done(function () {
           KIMCHI.space.translateBodies(delta);
           deferred.resolve(true);
@@ -432,7 +432,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      */
     mode.flyTo = function (body) {
       KIMCHI.ui.notice.set(KIMCHI.config.get('notices-fly-to')(body));
-      KIMCHI.config.set('time-on', false);
+      KIMCHI.config.set('bodies-speed', false);
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };

@@ -75,6 +75,23 @@
             <h1>Options</h1>
             <h3>Astronomical bodies</h3>
             <div class="config-row clearfix">
+              <div data-key="bodies-speed" class="config btn-group">
+                <div data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">
+                  <span class="selected-value"></span>
+                  &nbsp;<span class="caret"></span>
+                </div>
+                <ul class="dropdown-menu">
+                  <li><a data-value="0">Off</a></li>
+                  <li><a data-value="1">Fast</a></li>
+                  <li><a data-value="2">Faster</a></li>
+                  <li><a data-value="8">Fastest</a></li>
+                </ul>
+              </div>
+              <div class="config-description">
+                Revolution speed
+              </div>
+            </div>
+            <div class="config-row clearfix">
               <div data-toggle="buttons" class="config btn-group">
                 <label class="btn btn-default btn-sm">
                   <input type="radio" name="rotate-bodies" value="true">
@@ -90,24 +107,10 @@
               </div>
             </div>
             <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <label class="btn btn-default btn-sm">
-                  <input type="radio" name="time-on" value="true">
-                  On
-                </label>
-                <label class="btn btn-default btn-sm">
-                  <input type="radio" name="time-on" value="false">
-                  Off
-                </label>
-              </div>
-              <div class="config-description">
-                Revolution around the sun
-              </div>
-            </div>
-            <div class="config-row clearfix">
               <div data-key="scales-size" class="config btn-group">
                 <div data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">
-                  <span class="selected-value"></span>&nbsp;&nbsp;<span class="caret"></span>
+                  <span class="selected-value"></span>
+                  &nbsp;<span class="caret"></span>
                 </div>
                 <ul class="dropdown-menu">
                   <li><a data-value="1">1x</a></li>
@@ -179,7 +182,7 @@
                 </label>
               </div>
               <div class="config-description">
-                Show background stars
+                Show stars in the background
               </div>
             </div>
             <h3>Flight</h3>
@@ -195,7 +198,7 @@
                 </label>
               </div>
               <div class="config-description">
-                Flying speed
+                Flight speed
               </div>
             </div>
             <div class="config-row clearfix">
@@ -284,7 +287,7 @@
 
   <!-- build:js scripts/plugins.js -->
   <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js"></script>
-  <script src="bowe r_components/bootstrap-sass/js/bootstrap-alert.js"></script>
+  <script src="bower_components/bootstrap-sass/js/bootstrap-alert.js"></script>
   <script src="bower_components/bootstrap-sass/js/bootstrap-dropdown.js"></script>
   <script src="bower_components/bootstrap-sass/js/bootstrap-tooltip.js"></script>
   <script src="bower_components/bootstrap-sass/js/bootstrap-modal.js"></script>

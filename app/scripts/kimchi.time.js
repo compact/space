@@ -9,7 +9,7 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var time, julian, on, julianToGregorian, gregorianToJulian;
+  var time, julian, on, step, julianToGregorian, gregorianToJulian;
 
   time = {};
   KIMCHI.time = time;
@@ -29,6 +29,14 @@ var KIMCHI = (function (KIMCHI, $) {
    * @memberOf module:KIMCHI.time
    */
   on = true;
+
+  /**
+   * The current step to increment the julian by in each frame. The higher
+   *   this is, the faster bodies move.
+   * @private
+   * @memberOf module:KIMCHI.time
+   */
+  step = 1;
 
   /**
    * Based on EGR, Algorithm F ("Optimising") taken from {@link
@@ -109,7 +117,7 @@ var KIMCHI = (function (KIMCHI, $) {
   time.increment = function () {
     var newJulian, deferred;
 
-    newJulian = julian + 1;
+    newJulian = julian + step;
 
     if (newJulian <= KIMCHI.ephemeris.lastJulianInBatch) {
       // "Empty" promise to match the return type in the case below.
@@ -144,6 +152,19 @@ var KIMCHI = (function (KIMCHI, $) {
    */
   time.off = function () {
     on = false;
+  };
+
+  /**
+   * [setStep description]
+   * @param {[type]} s [description]
+   */
+  time.setStep = function (s) {
+    if (s === 0) {
+      time.off();
+    } else {
+      step = s;
+      time.on();
+    }
   };
 
   /**

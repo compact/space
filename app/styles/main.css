@@ -65,6 +65,7 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
+  padding: 15px;
   background-color: rgba(240, 255, 240, 0.75);
   color: #000;
   z-index: 300;
@@ -87,7 +88,7 @@ a {
   line-height: 30px;
 }
 
-/************************************* some random hud stylings etc - temporary */
+/*********************************** some random hud stylings etc - temporary */
 
 #hud4 {
   font-family: "omnes-pro",sans-serif;

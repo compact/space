@@ -1,3 +1,3 @@
-angular.module('three',[]).factory('Three', function(){
+angular.module('three', []).factory('Three', function () {
   return THREE || {};
 });

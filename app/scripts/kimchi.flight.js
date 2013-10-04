@@ -143,8 +143,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   Mode.prototype.animate = function () {
     var self = this;
     KIMCHI.renderer.animate(function (delta) {
-      KIMCHI.renderer.lastDelta = delta;
-      KIMCHI.watcher.trigger(); // trigger KIMCHI.watcher so observers (specifically angularjs) are aware that kimchi has changed
       if (!self.enabled) {
         // this mode is being disabled
         console.log('stop animating for ' + self.name + ' flight mode');

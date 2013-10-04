@@ -44,6 +44,10 @@ var KIMCHI = (function (KIMCHI) {
     }
   };
 
+  format.angle = function (angle) {
+    return Math.round(angle * 180 / Math.PI);
+  };
+
   /**
    * Taken from {@link
    *   http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript}.

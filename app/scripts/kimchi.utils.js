@@ -149,6 +149,13 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     var module = {}, renderer;
 
     /**
+     * The time between the current call of .animate() and the previous call.
+     * @alias    delta
+     * @memberOf module:KIMCHI.renderer
+     */
+    module.delta = 0;
+
+    /**
      * Call after the DOM is ready.
      * @returns  {Boolean} Whether the renderer is successfully created.
      * @alias    init
@@ -161,9 +168,8 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
          * @private
          * @memberOf module:KIMCHI.renderer
          */
-        var useCanvas = document.getElementById('kimchi');
         renderer = new THREE.WebGLRenderer({
-          'canvas': useCanvas,
+          'canvas': document.getElementById('kimchi'),
           'antialias': true
         });
       } catch (error) {
@@ -196,14 +202,17 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     module.animate = function (callback) {
       // TODO: consider removing this delay for production
       window.setTimeout(function () {
-        var proceed = callback(KIMCHI.clock.getDelta());
+        var proceed;
 
-        KIMCHI.renderer.render();
+        module.delta = KIMCHI.clock.getDelta();
+        proceed = callback(module.delta);
+        module.render();
+        KIMCHI.watcher.trigger(); // trigger KIMCHI.watcher so observers (specifically angularjs) are aware that kimchi has changed
 
         // stop the next frame if the callback returns false
         if (proceed !== false) {
           window.requestAnimationFrame(function () {
-            KIMCHI.renderer.animate(callback);
+            module.animate(callback);
           });
         }
       }, 50);

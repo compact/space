@@ -48,6 +48,31 @@ var KIMCHI = KIMCHI || {};
       KIMCHI.config.get('camera-near'),
       KIMCHI.config.get('camera-far')
     );
+
+
+
+    // OCCLUSION SCENE
+    var oclscene = new THREE.Scene();
+    oclscene.add(new THREE.AmbientLight(0xffffff));
+    KIMCHI.occlusionCamera = new THREE.PerspectiveCamera(
+      KIMCHI.config.get('camera-fov'),
+      1, // placeholder, set with KIMCHI.size.init()
+      KIMCHI.config.get('camera-near'),
+      KIMCHI.config.get('camera-far')
+    );
+    KIMCHI.occlusionCamera.position = KIMCHI.camera.position;
+    // Volumetric light
+    var vlight = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(50, 3),
+      new THREE.MeshBasicMaterial({
+        'color': 0xffffff
+      })
+    );
+    vlight.position.y = 0;
+    oclscene.add(vlight);
+
+
+
     // set camera size and renderer size
     KIMCHI.size.init();
 
@@ -72,12 +97,14 @@ var KIMCHI = KIMCHI || {};
     // lighting
     KIMCHI.lights = {};
     // sunlight
-    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
-//    KIMCHI.lights.sun.position.set(0, 0, 0);
+    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 0);
+    // KIMCHI.lights.sun.position.set(0, 0, 0);
+    // KIMCHI.lights.sun = new THREE.SpotLight(0xffffee, 2, 0);
+    // KIMCHI.lights.sun.target = KIMCHI.space.getBodies().Earth.mesh;
     KIMCHI.scene.add(KIMCHI.lights.sun);
-    // ambient light: remove for production TODO
-    //KIMCHI.lights.ambient = new THREE.AmbientLight(0xff0000);
-    //KIMCHI.scene.add(KIMCHI.lights.ambient);
+    // ambient light
+    KIMCHI.lights.ambient = new THREE.AmbientLight(0x0000cc);
+    KIMCHI.scene.add(KIMCHI.lights.ambient);
 
 
 

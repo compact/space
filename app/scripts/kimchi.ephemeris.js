@@ -57,29 +57,6 @@ var KIMCHI = (function (KIMCHI, $) {
    */
   ephemeris.getCurrentPosition = function (index) {
     return batch[KIMCHI.time.getJulian()][index];
-
-    var currentBatch, julian, position, deferred;
-
-    julian = KIMCHI.time.getJulian();
-    currentBatch = batch[julian];
-
-    if (typeof currentBatch === 'object') {
-      position = currentBatch[index];
-      // "Empty" Promise to match the return type in the case below.
-      return $.when(position);
-    } else {
-      // We are at the last of the current batch, so load the next batch. The
-      // Deferred object is used to return the position after loading the next
-      // batch.
-      deferred = $.Deferred();
-
-      ephemeris.loadBatch(julian).done(function (data) {
-        position = data[julian];
-        deferred.resolve(position);
-      });
-
-      return deferred.promise();
-    }
   };
 
   return KIMCHI;

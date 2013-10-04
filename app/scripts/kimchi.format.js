@@ -6,8 +6,19 @@
 var KIMCHI = (function (KIMCHI) {
   'use strict';
 
-  var format = {};
+  var format = {}, constants = {};
   KIMCHI.format = format;
+
+
+
+  /**
+   * Constants.
+   * @memberOf KIMCHI
+   */
+  KIMCHI.constants = constants;
+  constants.kmPerAu = 149597871;
+
+
 
   /**
    * @param    {Number}  number         The number to round.

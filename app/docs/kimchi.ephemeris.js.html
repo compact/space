@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: kimchi.pointerlock.js</title>
+    <title>JSDoc: Source: kimchi.ephemeris.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: kimchi.pointerlock.js</h1>
+    <h1 class="page-title">Source: kimchi.ephemeris.js</h1>
     
     
 
@@ -26,84 +26,87 @@
     <section>
         <article>
             <pre class="prettyprint source"><code>/**
- * Pointer lock state (not controls, which are handled by three.controls.js).
- * @namespace pointerLock
+ * Ephemeris data.
+ * @namespace ephemeris
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI) {
+var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var pointerLock = {}, requestPointerLock;
-  KIMCHI.pointerLock = pointerLock;
-
-
+  var ephemeris, batch;
+  ephemeris = {};
+  KIMCHI.ephemeris = ephemeris;
 
   /**
-   * Request pointer lock from the browser. This is called whenever the user
-   *   enters free flight mode.
-   * @memberOf module:KIMCHI.pointerLock
+   * We call it a "batch" of the data since this array contains only a subset
+   *   of all the ephemeris data.
+   * @private
+   * @memberOf module:KIMCHI.ephemeris
    */
-  pointerLock.request = function () {
-    requestPointerLock.call(document.body);
-    console.log('pointer lock requested');
+  batch = [];
+
+  /**
+   * @type     {Number}
+   * @memberOf module:KIMCHI.ephemeris
+   */
+  ephemeris.lastJulianInBatch = 0; // TODO
+
+  ephemeris.updateLastJulianInBatch = function () {
+    var keys = Object.keys(batch);
+    ephemeris.lastJulianInBatch = Number(keys[keys.length - 1]);
   };
 
   /**
-   * Has to be called once, before any pointer lock requests.
-   * @memberOf module:KIMCHI.pointerLock
+   * @param    {Number}  julian
+   * @returns  {Promise}
+   * @memberOf module:KIMCHI.ephemeris
    */
-  pointerLock.init = function () {
-    var havePointerLock, body, change, error;
+  ephemeris.loadBatch = function (julian) {
+    var file = '/data/de405/' + julian + '.json';
 
-    // check whether pointer lock is enabled
-    havePointerLock = 'pointerLockElement' in document ||
-      'mozPointerLockElement' in document ||
-      'webkitPointerLockElement' in document;
-    if (!havePointerLock) {
-      // TODO we can use FirstPersonControls here instead
-      KIMCHI.ui.notice.set(KIMCHI.config.get('notices-pointer-lock-not-supported'));
-      return;
+    console.log('loading ephemeris batch: ' + julian);
+
+    return $.getJSON(file).done(function (data) {
+      batch = data;
+      ephemeris.updateLastJulianInBatch();
+    }).fail(function () { // jqXHR, textStatus, error
+      console.log('Failed to get: ' + file);
+    });
+  };
+
+  /**
+   * @param    {Number}  index
+   * @returns  {Promise} The current position [x, y, z] of the body
+   *   corresponding to the given index.
+   * @memberOf module:KIMCHI.ephemeris
+   */
+  ephemeris.getCurrentPosition = function (index) {
+    var currentBatch, julian, position, deferred;
+
+    julian = KIMCHI.time.getJulian();
+    currentBatch = batch[julian];
+
+    if (typeof currentBatch === 'object') {
+      position = currentBatch[index];
+      // "Empty" Promise to match the return type in the case below.
+      return $.when(position);
+    } else {
+      // We are at the last of the current batch, so load the next batch. The
+      // Deferred object is used to return the position after loading the next
+      // batch.
+      deferred = $.Deferred();
+
+      ephemeris.loadBatch(julian).done(function (data) {
+        position = data[julian];
+        deferred.resolve(position);
+      });
+
+      return deferred.promise();
     }
-
-    body = document.body;
-
-    /**
-     * The browser's requestPointerLock function, used in request().
-     * @private
-     * @memberOf module:KIMCHI.pointerLock
-     */
-    requestPointerLock = body.requestPointerLock ||
-      body.mozRequestPointerLock || body.webkitRequestPointerLock;
-
-    // bind pointer lock change and error handlers
-    change = function () {
-      var on = document.pointerLockElement === body ||
-        document.mozPointerLockElement === body ||
-        document.webkitPointerLockElement === body;
-
-      if (on) {
-        KIMCHI.flight.setMode('free');
-      } else if (KIMCHI.flight.getMode() === 'free') {
-        KIMCHI.flight.setMode('menu');
-      }
-    };
-    document.addEventListener('pointerlockchange', change, false);
-    document.addEventListener('mozpointerlockchange', change, false);
-    document.addEventListener('webkitpointerlockchange', change, false);
-
-    error = function (event) {
-      console.log('pointerlockerror:');
-      console.log(event);
-    };
-    document.addEventListener('pointerlockerror', error, false);
-    document.addEventListener('mozpointerlockerror', error, false);
-    document.addEventListener('webkitpointerlockerror', error, false);
   };
-
-
 
   return KIMCHI;
-}(KIMCHI || {}));</code></pre>
+}(KIMCHI, jQuery));</code></pre>
         </article>
     </section>
 

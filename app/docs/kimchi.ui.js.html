@@ -45,29 +45,29 @@ var KIMCHI = (function (KIMCHI, $) {
    * @namespace hud
    * @memberOf  module:KIMCHI.ui
    */
-  hud.update = function (delta) {
+  hud.update = function () {
     $('#hud-distance-from-sun').text(KIMCHI.format.roundDecimals(KIMCHI.camera.position.length(), 2, true));
     $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
     $('#hud-time').text(KIMCHI.format.time());
 
     if (KIMCHI.config.get('debug')) {
-      $('#hud4').html(
-        '&lt;strong>Debug&lt;/strong>&lt;br />' +
-        'Delta: ' +
-          KIMCHI.format.roundDecimals(delta, 4, true) + '&lt;br />' +
-        'Camera position (px): ' +
-          Math.round(KIMCHI.camera.position.x) + ', ' +
-          Math.round(KIMCHI.camera.position.y) + ', ' +
-          Math.round(KIMCHI.camera.position.z) + '&lt;br />' +
-        'Camera rotation (deg): ' +
-          Math.round(KIMCHI.camera.rotation.x * 180 / Math.PI) + ', ' +
-          Math.round(KIMCHI.camera.rotation.y * 180 / Math.PI) + ', ' +
-          Math.round(KIMCHI.camera.rotation.z * 180 / Math.PI) + '&lt;br />'
-/*      'movement: ' +
-          translation.x + ', ' +
-          translation.y + ', ' +
-          translation.z + '&lt;br />' +*/
-      );
+      // $('#hud4').html(
+      //   '&lt;strong>Debug&lt;/strong>&lt;br />' +
+      //   'Delta: ' +
+      //     KIMCHI.format.roundDecimals(delta, 4, true) + '&lt;br />' +
+      //   'Camera position (px): ' +
+      //     Math.round(KIMCHI.camera.position.x) + ', ' +
+      //     Math.round(KIMCHI.camera.position.y) + ', ' +
+      //     Math.round(KIMCHI.camera.position.z) + '&lt;br />' +
+      //   'Camera rotation (deg): ' +
+      //     Math.round(KIMCHI.camera.rotation.x * 180 / Math.PI) + ', ' +
+      //     Math.round(KIMCHI.camera.rotation.y * 180 / Math.PI) + ', ' +
+      //     Math.round(KIMCHI.camera.rotation.z * 180 / Math.PI) + '&lt;br />'
+      //   'movement: ' +
+      //     translation.x + ', ' +
+      //     translation.y + ', ' +
+      //     translation.z + '&lt;br />' +
+      // );
     }
   };
 
@@ -89,14 +89,14 @@ var KIMCHI = (function (KIMCHI, $) {
       var $bodies = $('#bodies');
 
       // populate the bodies table
-      _.forEach(KIMCHI.space.getBodies(), function (body) {
+      _.each(KIMCHI.space.getBodies(), function (body) {
         $('&lt;tr id="body-' + body.name + '">' +
             '&lt;td>' + body.name + '&lt;/td>' +
             '&lt;td>&lt;a class="fly-to" data-name="' + body.name + '">' +
               KIMCHI.config.get('language-fly-to') + '&lt;/a>&lt;/td>' +
             '&lt;td class="distance">&lt;/td>' +
             '&lt;td>' + KIMCHI.format.km(body.radiusInKm) + '&lt;/td>' +
-            '&lt;td>' + KIMCHI.format.au(body.position.y) + '&lt;/td>' +
+            '&lt;td>' + KIMCHI.format.au(body.distanceFromSun) + '&lt;/td>' +
           '&lt;/tr>').appendTo($bodies);
       });
 
@@ -153,7 +153,7 @@ var KIMCHI = (function (KIMCHI, $) {
      */
     panel.update = function () {
       // update the bodies table
-      _.forEach(KIMCHI.space.getSortedDistances(), function (body) {
+      _.each(KIMCHI.space.getSortedDistances(), function (body) {
         $('#body-' + body.name + ' .distance')
           .text(KIMCHI.format.au(body.distance));
       });
@@ -177,7 +177,8 @@ var KIMCHI = (function (KIMCHI, $) {
       ).parent();
       if ($button.length === 1) {
         // determine css classes to add and remove from the respective buttons
-        addClass = 'active ';
+        addClass = '';
+//        addClass = 'active ';
         if (value === 'true') {
           removeClass = 'btn-danger';
           addClass += 'btn-success';
@@ -233,13 +234,13 @@ var KIMCHI = (function (KIMCHI, $) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.ephemeris.html">ephemeris</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Sep 26 2013 02:21:12 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Oct 03 2013 20:33:23 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

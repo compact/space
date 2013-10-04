@@ -26,16 +26,17 @@
     <section>
         <article>
             <pre class="prettyprint source"><code>/**
- * KIMCHI configuration options.
+ * KIMCHI configuration settings. We call the 'global' KIMCHI settings here
+ *   'config' while settings for submodules are 'options'.
  * @namespace config
  * @memberOf  module:KIMCHI
  */
+
 var KIMCHI = (function (KIMCHI, _, THREE) {
   'use strict';
 
   var config = {}, settings = {}, handlers = {};
   KIMCHI.config = config;
-
 
 
   /**
@@ -46,14 +47,14 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
 
   // for dev testing
-  settings['debug'] = true;
+  settings.debug = true;
 
   // for THREE.PerspectiveCamera
-  settings['camera-fov'] = 45; 
+  settings['camera-fov'] = 45;
   settings['camera-near'] = 0.000001;
   settings['camera-far'] = 10000000;
   // for KIMCHI.init()
-  settings['camera-initial-position'] = new THREE.Vector3(0, 0, -30);
+  settings['camera-initial-position'] = new THREE.Vector3(0, 0, -5);
 
   // for THREE.Controls
   settings['controls-look-speed'] = 0.0002; // pitch/yaw with mouse
@@ -66,10 +67,10 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings['ambient-lighting'] = false;
 
   // for the astronomical bodies in KIMCHI.space
-  settings['rotate'] = true;
+  settings['rotate-bodies'] = true;
   settings['time-on'] = false; // pause the movement of Bodies
   settings['show-labels'] = true;
-  settings['sphere-segments'] = 48;
+  settings['sphere-segments'] = 64;
   settings['scales-size'] = 1;
   settings['scales-position'] = 1;
 
@@ -77,7 +78,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings['show-orbits'] = true;
   settings['orbits-color'] = 0xffffcc;
   settings['orbits-opacity'] = 0.5;
-  settings['orbits-line-segments'] = 720; // how many lines make up each orbit?
+  settings['orbits-line-segments'] = 1080; // how many lines make up each orbit?
 
   // for THREE.Stars
   settings['show-stars'] = true;
@@ -93,18 +94,18 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   // language constants
   settings['language-months'] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   settings['language-fly-to'] = 'Fly there!';
+  settings['language-webgl-not-supported'] = 'Your browser does not support WebGL. Please go to &lt;a href="http://get.webgl.org/">get.webgl.org&lt;/a> for more information.';
+  settings['language-webgl-error'] = 'WebGL failed to initialize in your browser. Please go to &lt;a href="http://get.webgl.org/troubleshooting">get.webgl.org/troubleshooting&lt;/a> to fix the issue.';
 
 
 
   /**
-   * Handlers for config value changes.
+   * Handlers for config setting value changes. A handler is not required for
+   *   each config setting.
    * @alias    handlers
    * @private
    * @memberOf module:KIMCHI.config
    */
-
-  handlers['rotate'] = function (value) {
-  };
 
   handlers['time-on'] = function (value) {
     if (value) {
@@ -115,29 +116,23 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   handlers['scales-size'] = function (value) {
-    if (value === 'large') {
-      _.forEach(KIMCHI.space.getBodies(), function (body) {
-        body.mesh.scale.setXYZ(0.1 / body.radius);
-      });
-    } else { // value is a Number
-      _.forEach(KIMCHI.space.getMeshes(), function (mesh) {
-        mesh.scale.setXYZ(value);
-      });
-    }
+    _.each(KIMCHI.space.getBodies(), function (body) {
+      body.setScale(value);
+    });
   };
 
-  handlers['ambient-lighting'] = function (value) {
-    KIMCHI.lights.ambient.visible = value;
+  handlers['ambient-lighting'] = function () {
+//    KIMCHI.lights.ambient.visible = value;
   };
 
   handlers['show-labels'] = function (value) {
-    _.forEach(KIMCHI.space.getLabelMeshes(), function (mesh) {
+    _.each(KIMCHI.space.getLabelMeshes(), function (mesh) {
       mesh.visible = value;
     });
   };
 
   handlers['show-orbits'] = function (value) {
-    _.forEach(KIMCHI.space.getOrbitLines(), function (line) {
+    _.each(KIMCHI.space.getOrbitLines(), function (line) {
       line.visible = value;
     });
   };
@@ -167,7 +162,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   config.init = function () {
     var userConfigurableKeys = [
-      'rotate',
+      'rotate-bodies',
       'time-on',
       'scales-size',
       'ambient-lighting',
@@ -179,7 +174,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     ];
 
     _.assign(settings, window.localStorage);
-    _.forEach(userConfigurableKeys, function (key) {
+    _.each(userConfigurableKeys, function (key) {
       config.set(key, settings[key]);
     });
   };
@@ -237,13 +232,13 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.ephemeris.html">ephemeris</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Sep 26 2013 02:21:12 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Oct 03 2013 20:33:23 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -31,12 +31,17 @@
  * &lt;br>   KIMCHI.foo = ...;
  * &lt;br>   return KIMCHI;
  * &lt;br> }(KIMCHI));
+ * &lt;br>
+ * &lt;br> Conventions:
+ * &lt;br> Movement consists of translation and rotation. If you are only
+ *        translating or rotating, do not use 'move' words.
+ * &lt;br> 'Bodies' refer to astronomical bodies.
  * @module KIMCHI
  */
 var KIMCHI = (function (KIMCHI, $, THREE) {
   'use strict';
 
-  var constants, format;
+  var constants;
 
 
 
@@ -55,10 +60,33 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf KIMCHI
    */
   KIMCHI.init = function () {
+    var success;
+
+
+
     // jQuery objects
     KIMCHI.$document = $(document);
     KIMCHI.$window = $(window);
     KIMCHI.$overlay = $('#overlay');
+
+
+
+    // WebGL check
+    if (typeof window.WebGLRenderingContext !== 'function') {
+      // WebGL is not supported by the browser
+      $('.continue-flying').replaceWith(
+        '&lt;p>' + KIMCHI.config.get('language-webgl-not-supported') + '&lt;/p>');
+      return false;
+    }
+
+    // renderer
+    success = KIMCHI.renderer.init();
+    if (!success) {
+      // the renderer failed to initialize
+      $('.continue-flying').replaceWith(
+        '&lt;p>' + KIMCHI.config.get('language-webgl-error') + '&lt;/p>');
+      return false;
+    }
 
 
 
@@ -74,16 +102,17 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       KIMCHI.config.get('camera-near'),
       KIMCHI.config.get('camera-far')
     );
-    // renderer
-    KIMCHI.renderer.init();
     // set camera size and renderer size
     KIMCHI.size.init();
 
 
 
     // add astronomical objects
-    KIMCHI.space.init();
-    KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
+    KIMCHI.space.init(function () {
+      KIMCHI.scene.add(this.getObject3Ds());
+      KIMCHI.ui.panel.init(); // depends on .space.init()
+      KIMCHI.config.init(); // depends on .panel.init()
+    });
 
     // add background stars, an array of ParticleSystems
     KIMCHI.stars = new THREE.Stars({
@@ -98,11 +127,11 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     KIMCHI.lights = {};
     // sunlight
     KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 100);
-    KIMCHI.lights.sun.position.set(0, 0, 0);
+//    KIMCHI.lights.sun.position.set(0, 0, 0);
     KIMCHI.scene.add(KIMCHI.lights.sun);
     // ambient light: remove for production TODO
-    KIMCHI.lights.ambient = new THREE.AmbientLight(0xff0000);
-    KIMCHI.scene.add(KIMCHI.lights.ambient);
+    //KIMCHI.lights.ambient = new THREE.AmbientLight(0xff0000);
+    //KIMCHI.scene.add(KIMCHI.lights.ambient);
 
 
 
@@ -124,19 +153,16 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     // initialize submodules
     KIMCHI.pointerLock.init();
-    KIMCHI.ui.panel.init();
-    KIMCHI.config.init(); // .config.init() requires .panel.init()
     KIMCHI.ui.notice.init();
     KIMCHI.flight.setMode('menu');
 
 
 
-    // initialize Body children positions and scales for rendering
-    KIMCHI.space.moveBodyChildren();
+    // fix Body children positions and scales
     setTimeout(function () {
       // TODO: prefer to do this without a delay, in a callback somewhere
       KIMCHI.renderer.render();
-    }, 500);
+    }, 3000);
   };
 
 
@@ -151,22 +177,30 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
     /**
      * Call after the DOM is ready.
+     * @returns  {Boolean} Whether the renderer is successfully created.
      * @alias    init
      * @memberOf module:KIMCHI.renderer
      */
     module.init = function () {
-      /**
-       * THREE.WebGLRenderer object.
-       * @private
-       * @memberOf module:KIMCHI.renderer
-       */
-      renderer = new THREE.WebGLRenderer({
-        'antialias': true
-      });
+      try {
+        /**
+         * THREE.WebGLRenderer object.
+         * @private
+         * @memberOf module:KIMCHI.renderer
+         */
+        var useCanvas = document.getElementById('kimchi');
+        renderer = new THREE.WebGLRenderer({
+          'canvas': useCanvas,
+          'antialias': true
+        });
+      } catch (error) {
+        return false;
+      }
 
       // append to DOM
       $('body').append(renderer.domElement);
 //    $(renderer.domElement).attr('id', 'space'); // for blurjs
+      return true;
     };
 
     /**
@@ -270,154 +304,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
 
 
-  /**
-   * Time controller. When the time is on, the Bodies move; when the time is
-   *   off, the Bodies stop moving. We use "on"/"off"/"isOn" rather than
-   *   "start"/"stop"/"isEnabled" for a better adjective and to avoid
-   *   confusion with THREE.Clock.
-   * @namespace time
-   * @memberOf  module:KIMCHI
-   */
-  KIMCHI.time = (function () {
-    var time, date, on;
-
-    time = {};
-    /**
-     * The Date corresponding to the current positions of Bodies.
-     * @private
-     * @memberOf module:KIMCHI.time
-     */
-    date = new Date();
-    /**
-     * The current state.
-     * @private
-     * @memberOf module:KIMCHI.time
-     */
-    on = true;
-
-    /**
-     * @returns  {Date}
-     * @memberOf module:KIMCHI.time
-     */
-    time.getDate = function () {
-      return date;
-    };
-    /**
-     * Increment the current time based on delta. TODO: Not implemented yet.
-     * @param    {Number} delta
-     * @memberOf module:KIMCHI.time
-     */
-    time.increment = function (delta) {
-      date.setDate(date.getDate() + 1);
-    };
-    /**
-     * Turn time on.
-     * @memberOf module:KIMCHI.time
-     */
-    time.on = function () {
-      on = true;
-    };
-    /**
-     * Turn time off.
-     * @memberOf module:KIMCHI.time
-     */
-    time.off = function () {
-      on = false;
-    };
-    /**
-     * @returns  {Boolean} Whether time is currently on.
-     * @memberOf module:KIMCHI.time
-     */
-    time.isOn = function () {
-      return on;
-    };
-
-    return time;
-  }());
-
-
-
-  /**
-   * @namespace format
-   * @memberOf  module:KIMCHI
-   */
-  format = {};
-  KIMCHI.format = format;
-  /**
-   * @param    {Number}  number         The number to round.
-   * @param    {Number}  precision      The number of decimal places to round to.
-   * @param    {Boolean} trailingZeroes Whether to include trailing zeroes.
-   *                                    Defaults true.
-   * @return   {Number}                 The rounded result.
-   * @memberOf module:KIMCHI.format
-   */
-  format.roundDecimals = function (number, precision, trailingZeroes) {
-    var multiplier, result;
-    multiplier = Math.pow(10, precision);
-    result = Math.round(number * multiplier) / multiplier;
-    if (typeof trailingZeroes === 'boolean' && trailingZeroes) {
-      result = result.toFixed(precision);
-    }
-    return result;
-  };
-  /**
-   * Round the given number "nicely", as in determine the number of decimals
-   *   based on the number of digits.
-   * @param    {Number} number The number to round.
-   * @return   {Number}        The rounded result.
-   * @memberOf module:KIMCHI.format
-   */
-  format.roundNicely = function (number) {
-    if (number &lt; 1) {
-      return format.roundDecimals(number, 2);
-    } else if (number &lt; 10) {
-      return format.roundDecimals(number, 1);
-    } else {
-      return Math.round(number);
-    }
-  };
-  /**
-   * Taken from {@link
-   *   http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript}.
-   *   Note there are issues with decimals, which we are not using at the
-   *   moment.
-   * @param    {Number} number
-   * @returns  {String} The number separated into thousands by commas.
-   * @memberOf module:KIMCHI.format
-   */
-  format.separateThousands = function (number) {
-    return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-  /**
-   * @param    {Number} number
-   * @returns  {Number} The number formatted in astronomical units.
-   * @memberOf module:KIMCHI.format
-   */
-  format.au = function (number) {
-    return format.roundNicely(number) + ' au';
-  };
-  /**
-   * @param    {Number} number
-   * @returns  {Number} The number formatted in kilometres.
-   * @memberOf module:KIMCHI.format
-   */
-  format.km = function (number) {
-    return format.separateThousands(Math.round(number)) + ' km';
-  };
-  /**
-   * @return   {String} The current {@link module:KIMCHI.time|time} formatted
-   *                    for the {@link module:KIMCHI.ui.hud|hud}.
-   * @memberOf module:KIMCHI.format
-   */
-  format.time = function () {
-    var date = KIMCHI.time.getDate();
-    return date.getDate() + ' ' +
-      KIMCHI.config.get('language-months')[date.getMonth()] + ' ' +
-      date.getFullYear();
-  };
-
-
-
   return KIMCHI;
 }(KIMCHI || {}, jQuery, THREE));</code></pre>
         </article>
@@ -429,13 +315,13 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.ephemeris.html">ephemeris</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Sep 26 2013 02:21:12 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Oct 03 2013 20:33:23 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

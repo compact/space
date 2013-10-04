@@ -31,79 +31,85 @@
  * @namespace space
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, _, THREE) {
+var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
   var space, Body, bodies;
   space = {};
   KIMCHI.space = space;
+
 //  var jsonLoader = new THREE.JSONLoader();
 
 
 
   /**
+   * Contains instances of Body.
+   * @private
+   * @memberOf module:KIMCHI.space
+   */
+  bodies = {};
+
+
+
+  /**
    * Class for astronomical bodies. All spheres for now. Can only be
-   *   constructed inside kimchi.space.js.
+   *   constructed inside kimchi.space.js. Raw data for each Body is stored in
+   *   /json/kimchi.space.bodies.json for passing into this constructor.
    * @param {Object} options Options.
-   * &lt;br> name:            Required. Displayed to users.
-   * &lt;br> radius:          In km.
-   * &lt;br> position:        Vector3 of the body's initial position, in au. Not to
-   *                       be confused with Mesh.position, which gives the
-   *                       current position.
-   * &lt;br> rotation:        Vector3 of the body's initial Euler rotation.
-   * &lt;br> visibleDistance: How far away the text mesh remains visible.
-   * &lt;br>                  TODO rename to labelMeshDistance or something.
-   * &lt;br> mesh:            Optional. If not given, a Mesh is automatically
-   *                       generated.
-   * &lt;br> move:            Optional. Given an Object3D, perform rotations and
-   *                       revolutions.
-   * &lt;br> texturePath:     Optional path to the texture image. Defaults to
-   *                       'name.jpg'.
+   * &lt;br> name:
+   *        Required. Displayed to users.
+   * &lt;br> radiusInKm:
+   *        In km.
+   * &lt;br> rotation:
+   *        Vector3 of the body's initial Euler rotation.
+   * &lt;br> labelVisibleDistance:
+   *        How far away the text mesh remains visible.
+   * &lt;br> mesh:
+   *        Optional. If not given, a Mesh is automatically generated.
+   * &lt;br> translate:
+   *        Optional. Translate the Mesh, e.g. for orbit.
+   * &lt;br> rotate:
+   *        Optional. Rotate the Mesh.
+   * &lt;br> texturePath:
+   *        Optional path to the texture image. Defaults to 'name.jpg'.
    * @constructor Body
    */
   Body = function (options) {
     var length, curve;
 
-    _.assign(this, { // default options
-      'name': '',
-      'radiusInKm': 0,
-      'position': new THREE.Vector3(),
-      'rotation': new THREE.Euler(),
-      'collideable': true,
-      'visibleDistance': 100,
-      'move': function () {},
+    _.assign(this, { // further default options appear below in the prototype
       'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
     }, options);
 
-    // the radius and position are scaled
+    // convert the radius back to au (it is stored in km for convenience)
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
-    this.position.multiplyScalar(KIMCHI.config.get('scales-position'));
 
-    // create a Mesh for the body; it can already be set in data
-    if (typeof this.mesh !== 'object') {
-      this.mesh = new THREE.Mesh(
-        new THREE.SphereGeometry(this.radius,
-          KIMCHI.config.get('sphere-segments'),
-          KIMCHI.config.get('sphere-segments')),
-        new THREE.MeshLambertMaterial({
-          'map': new THREE.ImageUtils.loadTexture(this.texturePath)
-        })
-      );
-    }
+    // create a Mesh for the Body
+    this.mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(this.radius,
+        KIMCHI.config.get('sphere-segments'),
+        KIMCHI.config.get('sphere-segments')),
+      new THREE.MeshLambertMaterial({
+        'map': new THREE.ImageUtils.loadTexture(this.texturePath)
+      })
+    );
 
     // store the name in the Mesh, so in situations where we are given the Mesh
     // only, the Body can be identified using space.getBody()
     this.mesh.name = this.name;
 
     // set Mesh properties
-    this.mesh.position.copy(this.position);
-    this.mesh.rotation.copy(this.rotation);
-    this.mesh.scale.setXYZ(KIMCHI.config.get('scales-size'));
+//    this.mesh.position.copy(this.position);
+//    this.mesh.rotation.copy(this.rotation);
+    this.setScale();
+
+    // position the Mesh
+    this.translate();
 
     // create a Curve for the orbit, which can be used to create a Line
-    length = this.position.length();
+    length = this.mesh.position.length();
     // clockwise
-    curve = new THREE.EllipseCurve(0, 0, 2 * length, length, 0, 2 * Math.PI);
+    curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
     this.orbitLine = curve.createLine({
       'color': KIMCHI.config.get('orbits-color'),
       'opacity': KIMCHI.config.get('orbits-opacity'),
@@ -132,23 +138,81 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     );
   };
 
+  // default values
+  Body.prototype.name = '';
+  Body.prototype.radiusInKm = 0;
+  Body.prototype.initialPositionArray = [3, 3, 0];
+  Body.prototype.collideable = true;
+  Body.prototype.labelVisibleDistance = 100;
+
   /**
-   * Bodies do not move by default; this function is to be overwritten by Body
-   *   instances.
+   * Set this Body's scale.
+   * @param    {Number|String} value See the config setting 'scales-size' for
+   *   allowed values. If value is not given, use the current config value.
+   * @memberOf Body
+   */
+  Body.prototype.setScale = function (value) {
+    if (typeof value === 'undefined') {
+      value = KIMCHI.config.get('scales-size');
+    }
+    if (value === 'large') {
+      value = 0.1 / this.radius;
+    }
+    this.mesh.scale.setXYZ(value);
+  };
+
+  /**
+   * Bodies do not translate by default; this function can be overwritten for
+   *   any Body object.
    * @param    {Number} delta
    * @memberOf Body
    */
-  Body.prototype.move = function () {};
+  Body.prototype.translate = function () {
+    var self = this;
+    KIMCHI.ephemeris.getCurrentPosition(this.ephemerisIndex).done(function (position) {
+      self.scalePositionFromArray(position);
+    });
+  };
+
+  /**
+   * @param    {Array}  Array because this function gets called only with
+   *   ephemeris data.
+   * @memberOf Body
+   */
+  Body.prototype.scalePositionFromArray = function (position) {
+    // first set the position from the parameter, then scale it
+    this.mesh.position.fromArray(position)
+      .multiplyScalar(KIMCHI.config.get('scales-position'));
+    // TODO implement scales-position
+  };
+
+  /**
+   * Rotate this Body. Overwriting this function is optional.
+   * @param    {Number} delta
+   * @memberOf Body
+   */
+  Body.prototype.rotate = function () {
+    // TODO remove this placeholder
+    this.mesh.rotateOnAxis((new THREE.Vector3(-1, -0.5, 0.2)).normalize(), 0.2);
+  };
+
+  /**
+   * @returns  {Number} The radius of this Body in its current scale.
+   * @memberOf Body
+   */
+  Body.prototype.getScaledRadius = function () {
+    // This is the most general calculation.
+    // this.radius * KIMCHI.config.get('scales-size') works for all cases except
+    // when KIMCHI.config.get('scales-size') === 'large'
+    return this.radius * this.mesh.scale.x;
+  };
 
   /**
    * @returns  {Number} The collision distance between the camera and this Body.
    * @memberOf Body
    */
   Body.prototype.getCollisionDistance = function () {
-    // This is the most general calculation.
-    // this.radius * KIMCHI.config.get('scales-size') works for all cases except
-    // when KIMCHI.config.get('scales-size') === 'large'
-    return this.radius * this.mesh.scale.x;
+    return this.getScaledRadius();
   };
 
   /**
@@ -158,8 +222,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   Body.prototype.getSurfaceDistance = function (object3D) {
     return THREE.Object3D.getDistance(this.mesh, object3D) -
-      this.radius * this.mesh.scale.x;
+      this.getScaledRadius();
   };
+
   /**
    * @returns  {Number} Whether this Body is current in collision with the
    *   given objects
@@ -172,19 +237,28 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Contains instances of Body.
-   * @private
-   * @memberOf module:KIMCHI.space
-   */
-  bodies = {};
-
-  /**
    * Populate the private bodies object.
+   * @params   {Function} callback Optional.
    * @memberOf module:KIMCHI.space
    */
-  space.init = function () {
-    _.forEach(space.data, function (options) {
-      bodies[options.name] = new Body(options);
+  space.init = function (callback) {
+    // get the ephemeris data
+    KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
+      // get the bodies data
+      $.getJSON('/data/kimchi.space.bodies.json', function (data) {
+        // construct the Bodies
+        _.each(data, function (options) {
+          bodies[options.name] = new Body(options);
+        });
+
+        // initialize Body children positions and scales for rendering
+        space.moveBodyChildren();
+
+        // optional callback
+        if (typeof callback === 'function') {
+          callback.call(space);
+        }
+      });
     });
   };
 
@@ -195,6 +269,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getBodies = function () {
     return bodies;
   };
+
   /**
    * TODO check bodies[name] actually exists
    * @param    {String} name
@@ -204,6 +279,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getBody = function (name) {
     return bodies[name];
   };
+
   /**
    * @returns  {Array} Meshes from the Bodies.
    * @memberOf module:KIMCHI.space
@@ -211,6 +287,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getMeshes = function () {
     return _.pluck(bodies, 'mesh');
   };
+
   /**
    * @returns  {Array} Label Meshes from the Bodies.
    * @memberOf module:KIMCHI.space
@@ -218,6 +295,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getLabelMeshes = function () {
     return _.pluck(bodies, 'labelMesh');
   };
+
   /**
    * @returns  {Array} Orbit Lines from the Bodies.
    * @memberOf module:KIMCHI.space
@@ -225,6 +303,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getOrbitLines = function () {
     return _.pluck(bodies, 'orbitLine');
   };
+
   /**
    * @returns  {Array} Object3Ds from the Bodies. Note that each Body may have
    *   more than one Object3D, e.g. for orbit lines and text labels.
@@ -232,11 +311,12 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   space.getObject3Ds = function () {
     var object3Ds = [];
-    _.forEach(bodies, function (body) {
+    _.each(bodies, function (body) {
       object3Ds.push(body.mesh, body.orbitLine, body.labelMesh);
     });
     return object3Ds;
   };
+
   /**
    * @returns  {Array} Object3Ds of Bodies set to be collideable with the
    *   camera.
@@ -245,6 +325,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getCollideableObject3Ds = function () {
     return _.pluck(_.filter(bodies, 'collideable'), 'mesh');
   };
+
   /**
    * @returns {Object} Bodies with names as keys.
    * @memberOf module:KIMCHI.space
@@ -252,7 +333,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   space.getCollideableBodies = function () {
     // _.filter(bodies, 'collideable') returns an Array, not an Object with keys
     var collideableBodies = {};
-    _.forEach(bodies, function (body, name) {
+    _.each(bodies, function (body, name) {
       if (body.collideable) {
         collideableBodies[name] = body;
       }
@@ -263,13 +344,25 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Move the Bodies. TODO use delta
+   * Translate the Bodies. Does not move their children.
+   *   TODO: Use delta.
+   *   TODO: In the future, for optimization, consider first storing the
+   *   ephemeris batch array element in one variable for all bodies.
    * @memberOf module:KIMCHI.space
    */
-  space.moveBodies = function (delta) {
-    _.forEach(bodies, function (body) {
-      // move the Body Mesh
-      body.move(delta);
+  space.translateBodies = function (delta) {
+    _.each(bodies, function (body) {
+      body.translate(delta);
+    });
+  };
+
+  /**
+   * Rotate the Bodies. TODO: Use delta.
+   * @memberOf module:KIMCHI.space
+   */
+  space.rotateBodies = function (delta) {
+    _.each(bodies, function (body) {
+      body.rotate(delta);
     });
   };
 
@@ -277,18 +370,18 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * Without moving the Body Meshes themselves, update the visibility,
    *   position, and size of all Object3Ds associated with the Bodies (such as
    *   text label Meshes). This function should be called whenever the camera
-   *   moves. TODO use delta
+   *   moves. TODO: Use delta.
    * @memberOf module:KIMCHI.space
    */
-  space.moveBodyChildren = function (delta) {
-    _.forEach(bodies, function (body) {
+  space.moveBodyChildren = function () {
+    _.each(bodies, function (body) {
       var distance;
 
-      // move the text mesh
+      // move the text label Mesh
       if (KIMCHI.config.get('show-labels')) {
         distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
 
-        if (distance > body.visibleDistance) {
+        if (distance > body.labelVisibleDistance) {
           body.labelMesh.visible = false;
         } else {
           body.labelMesh.visible = true;
@@ -302,7 +395,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
           // move it in front of the associated mesh so it's not hidden inside
           body.labelMesh.geometry.computeBoundingSphere();
           var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
-            .normalize().multiplyScalar(body.radius + 0.01);
+            .normalize().multiplyScalar(body.getScaledRadius() * 1.1);
           var w = body.mesh.position.clone().add(v);
 /*        var x = body.mesh.position.clone().cross(v).cross(v)
           .normalize().multiplyScalar(
@@ -333,10 +426,11 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
         'distance': THREE.Object3D.getDistance(KIMCHI.camera, body.mesh)
       };
     });
-/*    return _.forEach(bodies, function (body, name) {
+/*    return _.each(bodies, function (body, name) {
       distances[name] = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
     });*/
   };
+
   /**
    * @param    {Object} bodies
    * @returns  {Array} Objects with keys 'name' and 'distance', with the latter
@@ -348,6 +442,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       return body1.distance - body2.distance;
     });
   };
+
   /**
    * @param    {Object} bodies
    * @returns  {Number} The distance to the closest Body Mesh.
@@ -360,7 +455,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, THREE));</code></pre>
+}(KIMCHI || {}, _, jQuery, THREE));</code></pre>
         </article>
     </section>
 
@@ -370,13 +465,13 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-KIMCHI.html">KIMCHI</a></li></ul><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li></ul><h3>Classes</h3><ul><li><a href="Body.html">Body</a></li><li><a href="external-THREE.Curve.html">Curve</a></li><li><a href="external-THREE.Matrix3.html">Matrix3</a></li><li><a href="external-THREE.Object3D.html">Object3D</a></li><li><a href="external-THREE.PerspectiveCamera.html">PerspectiveCamera</a></li><li><a href="external-THREE.Vector3.html">Vector3</a></li><li><a href="Mode.html">Mode</a></li><li><a href="THREE.Controls.html">Controls</a></li><li><a href="THREE.Stars.html">Stars</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-KIMCHI.config.html">config</a></li><li><a href="module-KIMCHI.ephemeris.html">ephemeris</a></li><li><a href="module-KIMCHI.flight.html">flight</a></li><li><a href="module-KIMCHI.flight.modes.html">modes</a></li><li><a href="module-KIMCHI.flight.modes.auto.html">auto</a></li><li><a href="module-KIMCHI.flight.modes.free.html">free</a></li><li><a href="module-KIMCHI.flight.modes.menu.html">menu</a></li><li><a href="module-KIMCHI.format.html">format</a></li><li><a href="module-KIMCHI.pointerLock.html">pointerLock</a></li><li><a href="module-KIMCHI.renderer.html">renderer</a></li><li><a href="module-KIMCHI.size.html">size</a></li><li><a href="module-KIMCHI.space.html">space</a></li><li><a href="module-KIMCHI.time.html">time</a></li><li><a href="module-KIMCHI.ui.html">ui</a></li><li><a href="module-KIMCHI.ui.hud.html">hud</a></li><li><a href="module-KIMCHI.ui.notice.html">notice</a></li><li><a href="module-KIMCHI.ui.panel.html">panel</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Sep 26 2013 02:21:12 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Thu Oct 03 2013 20:33:23 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

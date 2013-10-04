@@ -44,7 +44,8 @@ var KIMCHI = (function (KIMCHI, $) {
       batch = data;
       ephemeris.updateLastJulianInBatch();
     }).fail(function () { // jqXHR, textStatus, error
-      console.log('Failed to get: ' + file);
+      console.log('failed to get: ' + file);
+      KIMCHI.config.set('time-on', false);
     });
   };
 

@@ -27,6 +27,7 @@ var KIMCHI = (function (KIMCHI, $) {
   ephemeris.updateLastJulianInBatch = function () {
     var keys = Object.keys(batch);
     ephemeris.lastJulianInBatch = Number(keys[keys.length - 1]);
+    console.log('last julian in batch: ' + ephemeris.lastJulianInBatch);
   };
 
   /**
@@ -48,12 +49,14 @@ var KIMCHI = (function (KIMCHI, $) {
   };
 
   /**
-   * @param    {Number}  index
-   * @returns  {Promise} The current position [x, y, z] of the body
+   * @param    {Number} index
+   * @returns  {Number} The current position [x, y, z] of the body
    *   corresponding to the given index.
    * @memberOf module:KIMCHI.ephemeris
    */
   ephemeris.getCurrentPosition = function (index) {
+    return batch[KIMCHI.time.getJulian()][index];
+
     var currentBatch, julian, position, deferred;
 
     julian = KIMCHI.time.getJulian();

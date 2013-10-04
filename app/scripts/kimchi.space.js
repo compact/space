@@ -141,10 +141,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Body
    */
   Body.prototype.translate = function () {
-    var self = this;
-    KIMCHI.ephemeris.getCurrentPosition(this.ephemerisIndex).done(function (position) {
-      self.scalePositionFromArray(position);
-    });
+    this.scalePositionFromArray(
+      KIMCHI.ephemeris.getCurrentPosition(this.ephemerisIndex));
   };
 
   /**

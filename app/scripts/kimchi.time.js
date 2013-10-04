@@ -113,6 +113,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
     if (newJulian <= KIMCHI.ephemeris.lastJulianInBatch) {
       // "Empty" promise to match the return type in the case below.
+      julian = newJulian;
       return $.when(newJulian);
     } else {
       // We are at the last of the current batch, so we have to load the next
@@ -120,7 +121,8 @@ var KIMCHI = (function (KIMCHI, $) {
       // return the position after loading the next batch.
       deferred = $.Deferred();
 
-      KIMCHI.ephemeris.loadBatch(julian).done(function (data) {
+      KIMCHI.ephemeris.loadBatch(newJulian).done(function (data) {
+        julian = newJulian;
         deferred.resolve(data);
       });
 

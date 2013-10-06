@@ -151,7 +151,7 @@
    * @memberOf external:THREE.Vector3
    */
   THREE.Vector3.prototype.setXYZ = function (value) {
-    this.set(value, value, value);
+    return this.set(value, value, value);
   };
 
 

@@ -123,7 +123,7 @@
       position = this.position.clone();
       position.applyMatrix3(scalingMatrix)
         .applyMatrix3(rotationMatrix)
-        .applyMatrix3(scalingMatrix.getInverse());
+        .applyMatrix3(scalingMatrix.inverse());
       this.position.copy(position);
     };
   }());
@@ -157,15 +157,15 @@
 
 
   /**
-   * We overwrite this function because the original also sets this and
-   *   requires a Matrix4.
+   * The original function getInverse() also sets this and requires a Matrix4,
+   *   so we write our own function to only return the inverse.
    * @returns  {Matrix3} The inverse matrix.
-   * @alias    getInverse
+   * @alias    inverse
    * @instance
    * @function
    * @memberOf external:THREE.Matrix3
    */
-  THREE.Matrix3.prototype.getInverse = (function () {
+  THREE.Matrix3.prototype.inverse = (function () {
     var determinant, e, inverse = new THREE.Matrix3();
 
     return function () {
@@ -173,7 +173,7 @@
       e = this.elements;
 
       if (determinant === 0) {
-        throw new Error('Matrix3.getInverse(): Matrix not invertible.');
+        throw new Error('Matrix3.inverse(): Matrix not invertible.');
       }
 
       inverse.set(

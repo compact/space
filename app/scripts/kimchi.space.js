@@ -69,7 +69,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     );
 
     // occluding object
-    var gmat = new THREE.MeshBasicMaterial( { color: 0x000000, map: null } );
+    var gmat = new THREE.MeshBasicMaterial({
+      'color': 0x000000
+    });
     var geometryClone = geometry.clone();
     this.gmesh = new THREE.Mesh(geometryClone, gmat);
     this.gmesh.position = this.mesh.position;

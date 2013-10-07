@@ -16,6 +16,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    */
   module.delta = 0;
 
+  module.get = function () {
+    return renderer;
+  };
+
   /**
    * Call after the DOM is ready.
    * @returns  {Boolean} Whether the renderer is successfully created.
@@ -64,8 +68,16 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     // TODO: consider removing this delay for production
     window.setTimeout(function () {
       module.delta = KIMCHI.clock.getDelta();
+
       callback(module.delta).done(function (proceed) {
-        module.render();
+        // godrays
+        var lPos = THREE.projectOnScreen(KIMCHI.vlight, KIMCHI.camera);
+        KIMCHI.grPass.uniforms["fX"].value = lPos.x;
+        KIMCHI.grPass.uniforms["fY"].value = lPos.y;
+        KIMCHI.oclcomposer.render(0.1);
+        KIMCHI.finalcomposer.render(0.1);
+
+        // module.render();
         KIMCHI.watcher.trigger(); // trigger KIMCHI.watcher so observers (specifically angularjs) are aware that kimchi has changed
 
         // stop the next frame if the callback returns false

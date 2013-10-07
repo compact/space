@@ -40,7 +40,6 @@ var KIMCHI = (function (KIMCHI, $) {
     size.width = KIMCHI.$window.width();
     size.height = KIMCHI.$window.height() - 5; // TODO
     KIMCHI.camera.update(size.width, size.height);
-    KIMCHI.occlusionCamera.update(size.width, size.height);
     KIMCHI.renderer.setSize(size.width, size.height);
 
     console.log('size changed to ' + size.width + ' x ' + size.height);

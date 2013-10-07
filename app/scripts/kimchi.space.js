@@ -58,25 +58,14 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
 
     // create a Mesh for the Body
-    var geometry = new THREE.SphereGeometry(this.radius,
-      KIMCHI.config.get('sphere-segments'),
-      KIMCHI.config.get('sphere-segments'));
     this.mesh = new THREE.Mesh(
-      geometry,
+      new THREE.SphereGeometry(this.radius,
+        KIMCHI.config.get('sphere-segments'),
+        KIMCHI.config.get('sphere-segments')),
       new THREE.MeshLambertMaterial({
         'map': new THREE.ImageUtils.loadTexture(this.texturePath)
       })
     );
-
-    // occluding object
-    var gmat = new THREE.MeshBasicMaterial({
-      'color': 0x000000
-    });
-    var geometryClone = geometry.clone();
-    this.gmesh = new THREE.Mesh(geometryClone, gmat);
-    this.gmesh.position = this.mesh.position;
-    this.gmesh.rotation = this.mesh.rotation;
-    this.gmesh.scale = this.mesh.scale;
 
     // store the name in the Mesh, so in situations where we are given the Mesh
     // only, the Body can be identified using space.getBody()
@@ -294,7 +283,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   space.getObject3Ds = function () {
     var object3Ds = [];
     _.each(bodies, function (body) {
-      object3Ds.push(body.mesh, body.orbitLine, body.labelMesh, body.gmesh);
+      object3Ds.push(body.mesh, body.orbitLine, body.labelMesh);
     });
     return object3Ds;
   };

@@ -103,8 +103,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     });
   };
 
-  handlers['ambient-lighting'] = function () {
-//    KIMCHI.lights.ambient.visible = value;
+  handlers['ambient-lighting'] = function (value) {
+    KIMCHI.lights.ambient.visible = value;
   };
 
   handlers['show-labels'] = function (value) {

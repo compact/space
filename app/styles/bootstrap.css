@@ -5357,7 +5357,7 @@ body.modal-open,
   float: right !important;
 }
 .pull-left {
-  float: left !important;
+  float: left !important;  
 }
 .hide {
   display: none !important;

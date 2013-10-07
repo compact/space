@@ -1,3 +1,3 @@
-angular.module('kimchi', ['three']).factory('Kimchi', function () {
+angular.module('kimchi', ['three', '$strap.directives']).factory('Kimchi', function () {
   return window.KIMCHI || {};
 });

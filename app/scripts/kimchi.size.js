@@ -6,19 +6,17 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var size = {}, width, height;
+  var size = {};
   KIMCHI.size = size;
 
   /**
-   * @private
    * @memberOf module:KIMCHI.size
    */
-  width = 0;
+  size.width = 0;
   /**
-   * @private
    * @memberOf module:KIMCHI.size
    */
-  height = 0;
+  size.height = 0;
 
   /**
    * Initialize the camera and renderer dimensions. Bind the window resize
@@ -39,13 +37,13 @@ var KIMCHI = (function (KIMCHI, $) {
    * @memberOf module:KIMCHI.size
    */
   size.update = function () {
-    width = KIMCHI.$window.width();
-    height = KIMCHI.$window.height() - 5; // TODO
-    KIMCHI.camera.update(width, height);
-    KIMCHI.occlusionCamera.update(width, height);
-    KIMCHI.renderer.setSize(width, height);
+    size.width = KIMCHI.$window.width();
+    size.height = KIMCHI.$window.height() - 5; // TODO
+    KIMCHI.camera.update(size.width, size.height);
+    KIMCHI.occlusionCamera.update(size.width, size.height);
+    KIMCHI.renderer.setSize(size.width, size.height);
 
-    console.log('size changed to ' + width + ' x ' + height);
+    console.log('size changed to ' + size.width + ' x ' + size.height);
   };
 
   return KIMCHI;

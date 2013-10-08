@@ -1,4 +1,8 @@
-[
+var KIMCHI = KIMCHI || {};
+
+KIMCHI.space = {};
+
+KIMCHI.space.data = [
   {
     "name": "Sun",
     "ephemerisIndex": 10,

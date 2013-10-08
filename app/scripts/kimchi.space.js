@@ -1,6 +1,7 @@
 /**
  * Contains astronomical bodies, which are represented by instances of the
- *   {@link Body} class, and their associated THREE.Object3D objects.
+ *   {@link Body} class, and their associated THREE.Object3D objects. Include
+ *   data/kimchi.space.bodies.js before this script
  * @namespace space
  * @memberOf  module:KIMCHI
  */
@@ -8,8 +9,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
   var space, Body, bodies;
-  space = {};
-  KIMCHI.space = space;
+  space = KIMCHI.space;
 
 //  var jsonLoader = new THREE.JSONLoader();
 
@@ -231,21 +231,18 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   space.init = function (callback) {
     // get the ephemeris data
     KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
-      // get the bodies data
-      $.getJSON('/data/kimchi.space.bodies.json', function (data) {
-        // construct the Bodies
-        _.each(data, function (options) {
-          bodies[options.name] = new Body(options);
-        });
-
-        // initialize Body children positions and scales for rendering
-        space.moveBodyChildren();
-
-        // optional callback
-        if (typeof callback === 'function') {
-          callback.call(space);
-        }
+      // construct the Bodies
+      _.each(space.data, function (options) {
+        bodies[options.name] = new Body(options);
       });
+
+      // initialize Body children positions and scales for rendering
+      space.moveBodyChildren();
+
+      // optional callback
+      if (typeof callback === 'function') {
+        callback.call(space);
+      }
     });
   };
 

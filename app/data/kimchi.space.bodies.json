@@ -25,6 +25,7 @@
     "radiusInKm": 6378,
     "distanceFromSun": 1.00000011,
     "labelVisibleDistance": 50,
+    "hasBumpMap": true,
     "rotationArray": [1, 2, 3],
     "rotationAngle": 0.2
   },

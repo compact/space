@@ -48,24 +48,34 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @constructor Body
    */
   Body = function (options) {
-    var length, curve;
+    var geometry, material, length, curve;
 
-    _.assign(this, { // further default options appear below in the prototype
-      'texturePath': 'images/textures/' + options.name.toLowerCase() + '.jpg'
-    }, options);
+    // further default options appear below in the prototype
+    _.assign(this, options);
 
     // convert the radius back to au (it is stored in km for convenience)
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
 
+    // geometry
+    geometry = new THREE.SphereGeometry(this.radius,
+      KIMCHI.config.get('sphere-segments'),
+      KIMCHI.config.get('sphere-segments'));
+
+    // material
+    material = new THREE.MeshPhongMaterial({
+      'map': THREE.ImageUtils.loadTexture(this.getTexturePath())
+    });
+    if (this.hasBumpMap) {
+      material.bumpMap = THREE.ImageUtils.loadTexture(this.getTexturePath('bump'));
+      material.bumpScale = 0.003;
+    }
+    if (this.hasSpecularMap) {
+      material.specularMap = THREE.ImageUtils.loadTexture(this.getTexturePath('specular'));
+      material.specular = new THREE.Color('grey');
+    }
+
     // create a Mesh for the Body
-    this.mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(this.radius,
-        KIMCHI.config.get('sphere-segments'),
-        KIMCHI.config.get('sphere-segments')),
-      new THREE.MeshLambertMaterial({
-        'map': new THREE.ImageUtils.loadTexture(this.texturePath)
-      })
-    );
+    this.mesh = new THREE.Mesh(geometry, material);
 
     // store the name in the Mesh, so in situations where we are given the Mesh
     // only, the Body can be identified using space.getBody()
@@ -117,6 +127,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   Body.prototype.initialPositionArray = [3, 3, 0];
   Body.prototype.collideable = true;
   Body.prototype.labelVisibleDistance = 100;
+  Body.prototype.hasBumpMap = false;
+
+  Body.prototype.getTexturePath = function (type) {
+    type = typeof type === 'undefined' ? '' : '-' + type;
+    return 'images/textures/' + this.name.toLowerCase() + type + '.jpg';
+  };
 
   /**
    * Set this Body's scale.

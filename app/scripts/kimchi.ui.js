@@ -133,7 +133,7 @@ var KIMCHI = (function (KIMCHI, $) {
     };
 
     /**
-     * Update the config panel for the given key and value.
+     * DEPRECATED. Update the config panel for the given key and value.
      * @param   {String}                key
      * @param   {String|Boolean|Number} value
      * @memberOf module:KIMCHI.ui.panel

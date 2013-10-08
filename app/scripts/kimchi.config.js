@@ -198,7 +198,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     console.log('set config: ' + key + ' = ' + value);
 
     // update the config user interface
-    KIMCHI.ui.panel.updateConfig(key, value);
+    // KIMCHI.ui.panel.updateConfig(key, value);
   };
 
 

@@ -37,8 +37,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   // for THREE.PerspectiveCamera
   settings['camera-fov'] = 45;
-  settings['camera-near'] = 0.000001;
-  settings['camera-far'] = 10000000;
+  settings['camera-near'] = 0.001;
+  settings['camera-far'] = 1000;
   // for KIMCHI.init()
   settings['camera-initial-position'] = new THREE.Vector3(0, 0, -5);
 

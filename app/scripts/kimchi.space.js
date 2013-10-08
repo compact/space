@@ -65,9 +65,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       KIMCHI.config.get('sphere-segments'));
 
     // material
-    material = new THREE.MeshPhongMaterial({
-      'map': THREE.ImageUtils.loadTexture(this.getTexturePath())
-    });
+    if (this.material === 'function') {
+      material = this.material();
+    } else {
+      material = new THREE.MeshPhongMaterial({
+        'map': THREE.ImageUtils.loadTexture(this.getTexturePath())
+      });
+    }
     if (this.hasBumpMap) {
       material.bumpMap = THREE.ImageUtils.loadTexture(this.getTexturePath('bump'));
       material.bumpScale = 0.003;
@@ -91,15 +95,16 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // position the Mesh
     this.translate();
 
-    // create a Curve for the orbit, which can be used to create a Line
-    length = this.object3Ds.main.position.length();
-    // clockwise
-    curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
-    this.object3Ds.orbit = curve.createLine({
-      'color': KIMCHI.config.get('orbits-color'),
-      'opacity': KIMCHI.config.get('orbits-opacity'),
-      'lineSegments': KIMCHI.config.get('orbits-line-segments')
-    });
+    // create an orbit Line with a clockwise Curve
+    if (this.createOrbit) {
+      length = this.object3Ds.main.position.length();
+      curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
+      this.object3Ds.orbit = curve.createLine({
+        'color': KIMCHI.config.get('orbits-color'),
+        'opacity': KIMCHI.config.get('orbits-opacity'),
+        'lineSegments': KIMCHI.config.get('orbits-line-segments')
+      });
+    }
 
     /***
      * Create a Mesh for the text label. We could do
@@ -133,6 +138,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   Body.prototype.initialPositionArray = [3, 3, 0];
   Body.prototype.collideable = true;
   Body.prototype.labelVisibleDistance = 100;
+  Body.prototype.createOrbit = false;
   Body.prototype.hasBumpMap = false;
   Body.prototype.hasSpecularMap = false;
 
@@ -286,7 +292,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         return allObject3Ds.concat(_.values(bodyObject3Ds));
       }, []);
     } else {
-      return _.pluck(object3Ds, type);
+      
+      return _.filter(_.pluck(object3Ds, type));
     }
   };
 

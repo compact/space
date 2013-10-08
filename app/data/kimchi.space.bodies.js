@@ -40,11 +40,10 @@ KIMCHI.space.data = [
     'rotationAngle': 0.2,
     'createOrbit': true,
     'hasBumpMap': true,
-    'hasSpecularMap': true,
+    // 'hasSpecularMap': true,
     'callback': function () {
       var cloud = new THREE.Mesh(
-        // 1.001 would be more accurate
-        new THREE.SphereGeometry(this.radius * 1.01,
+        new THREE.SphereGeometry(this.radius * 1.001,
           KIMCHI.config.get('sphere-segments'),
           KIMCHI.config.get('sphere-segments')),
         new THREE.MeshPhongMaterial({

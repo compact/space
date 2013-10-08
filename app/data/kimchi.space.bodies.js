@@ -79,7 +79,28 @@ KIMCHI.space.data = [
     'radiusInKm': 60267,
     'distanceFromSun': 9.53707032,
     'labelVisibleDistance': 250,
-    'createOrbit': true
+    'createOrbit': true,
+    'callback': function () {
+      var curve = new THREE.EllipseCurve(0, 0, this.radius + 0.2, this.radius + 0.2, 0, 2 * Math.PI);
+      var curvePath = new THREE.CurvePath();
+      curvePath.add(curve);
+      var geometry = curvePath.createSpacedPointsGeometry(100);
+      var ring = new THREE.Mesh(
+        new THREE.RingGeometry(
+          this.radius + 7000 / KIMCHI.constants.kmPerAu,
+          this.radius + 60300 / KIMCHI.constants.kmPerAu,
+          360
+        ),
+        new THREE.MeshBasicMaterial({
+          'map': THREE.ImageUtils.loadTexture(this.getTexturePath('ring')),
+          'side': THREE.DoubleSide
+          // 'opacity': 0.25,
+          // 'transparent': true,
+          // 'depthWrite': false
+        })
+      );
+      this.object3Ds.main.add(ring);
+    }
   },
   {
     'name': 'Uranus',

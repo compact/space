@@ -127,6 +127,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       })
     );
 
+    // optional callback
     if (typeof this.callback === 'function') {
       this.callback();
     }
@@ -142,6 +143,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   Body.prototype.hasBumpMap = false;
   Body.prototype.hasSpecularMap = false;
 
+  /**
+   * @param   {String} type Optional
+   * @returns {String} Path to the given texture type.
+   */
   Body.prototype.getTexturePath = function (type) {
     type = typeof type === 'undefined' ? '' : '-' + type;
     return 'images/textures/' + this.name.toLowerCase() + type + '.jpg';
@@ -292,7 +297,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         return allObject3Ds.concat(_.values(bodyObject3Ds));
       }, []);
     } else {
-      
       return _.filter(_.pluck(object3Ds, type));
     }
   };
@@ -326,7 +330,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Translate the Bodies. Does not move their children.
-   *   TODO: Use delta.
    *   TODO: In the future, for optimization, consider first storing the
    *   ephemeris batch array element in one variable for all bodies.
    * @memberOf module:KIMCHI.space
@@ -338,7 +341,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * Rotate the Bodies. TODO: Use delta.
+   * Rotate the Bodies.
    * @memberOf module:KIMCHI.space
    */
   space.rotateBodies = function (delta) {

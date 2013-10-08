@@ -85,7 +85,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     this.object3Ds.main.name = this.name;
 
     // set Mesh properties
-//    this.object3Ds.main.position.copy(this.position);
 //    this.object3Ds.main.rotation.copy(this.rotation);
     this.setScale();
 
@@ -131,6 +130,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   Body.prototype.collideable = true;
   Body.prototype.labelVisibleDistance = 100;
   Body.prototype.hasBumpMap = false;
+  Body.prototype.hasSpecularMap = false;
 
   Body.prototype.getTexturePath = function (type) {
     type = typeof type === 'undefined' ? '' : '-' + type;
@@ -240,7 +240,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       });
 
       // initialize Body children positions and scales for rendering
-      space.moveBodyChildren();
+      space.updateBodyChildren();
 
       // optional callback
       if (typeof callback === 'function') {
@@ -268,8 +268,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * @returns  {Array} Object3Ds from the Bodies. Note that each Body may have
-   *   more than one Object3D, e.g. for orbit lines and text labels.
+   * Each Body may have more than one Object3D, e.g. for orbit lines and text
+   *   labels. The parameter can be used to restrict the array returned.
+   * @param    {String} type Optional.
+   * @returns  {Array}  Object3Ds from the Bodies.
    * @memberOf module:KIMCHI.space
    */
   space.getObject3Ds = function (type) {
@@ -341,7 +343,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    *   moves. TODO: Use delta.
    * @memberOf module:KIMCHI.space
    */
-  space.moveBodyChildren = function () {
+  space.updateBodyChildren = function () {
     _.each(bodies, function (body) {
       var distance;
 

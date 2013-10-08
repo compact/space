@@ -281,7 +281,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       }
 
       // move the Bodies' children
-      KIMCHI.space.moveBodyChildren(delta);
+      KIMCHI.space.updateBodyChildren();
 
       // update hud
       KIMCHI.ui.hud.update(delta);
@@ -333,7 +333,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      */
     update = function (delta) {
       // do not move the Body Meshes themselves
-      KIMCHI.space.moveBodyChildren();
+      KIMCHI.space.updateBodyChildren();
 
       // update hud
       KIMCHI.ui.hud.update(delta);

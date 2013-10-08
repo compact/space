@@ -53,6 +53,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // further default options appear below in the prototype
     _.assign(this, options);
 
+    // contains all THREE.Object3D objects belonging to this Body
+    this.object3Ds = {};
+
     // convert the radius back to au (it is stored in km for convenience)
     this.radius = this.radiusInKm / KIMCHI.constants.kmPerAu;
 
@@ -75,25 +78,25 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     }
 
     // create a Mesh for the Body
-    this.mesh = new THREE.Mesh(geometry, material);
+    this.object3Ds.main = new THREE.Mesh(geometry, material);
 
     // store the name in the Mesh, so in situations where we are given the Mesh
     // only, the Body can be identified using space.getBody()
-    this.mesh.name = this.name;
+    this.object3Ds.main.name = this.name;
 
     // set Mesh properties
-//    this.mesh.position.copy(this.position);
-//    this.mesh.rotation.copy(this.rotation);
+//    this.object3Ds.main.position.copy(this.position);
+//    this.object3Ds.main.rotation.copy(this.rotation);
     this.setScale();
 
     // position the Mesh
     this.translate();
 
     // create a Curve for the orbit, which can be used to create a Line
-    length = this.mesh.position.length();
+    length = this.object3Ds.main.position.length();
     // clockwise
     curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
-    this.orbitLine = curve.createLine({
+    this.object3Ds.orbit = curve.createLine({
       'color': KIMCHI.config.get('orbits-color'),
       'opacity': KIMCHI.config.get('orbits-opacity'),
       'lineSegments': KIMCHI.config.get('orbits-line-segments')
@@ -101,11 +104,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     /***
      * Create a Mesh for the text label. We could do
-     *   this.mesh.add(this.labelMesh);
+     *   this.object3Ds.main.add(this.object3Ds.label);
      * but then the text Mesh rotates with the body and it is nontrivial to
      * rotate it back.
      */
-    this.labelMesh = new THREE.Mesh(
+    this.object3Ds.label = new THREE.Mesh(
       new THREE.TextGeometry(this.name, {
         'size': 10,
         'height': 0.1,
@@ -147,7 +150,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     if (value === 'large') {
       value = 0.1 / this.radius;
     }
-    this.mesh.scale.setXYZ(value);
+    this.object3Ds.main.scale.setXYZ(value);
   };
 
   /**
@@ -168,7 +171,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Body.prototype.scalePositionFromArray = function (position) {
     // first set the position from the parameter, then scale it
-    this.mesh.position.fromArray(position)
+    this.object3Ds.main.position.fromArray(position)
       .multiplyScalar(KIMCHI.config.get('scales-position'));
     // TODO implement scales-position
   };
@@ -180,7 +183,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   Body.prototype.rotate = function () {
     // TODO remove this placeholder
-    this.mesh.rotateOnAxis((new THREE.Vector3(-1, -0.5, 0.2)).normalize(), 0.2);
+    this.object3Ds.main.rotateOnAxis((new THREE.Vector3(-1, -0.5, 0.2)).normalize(), 0.2);
   };
 
   /**
@@ -191,7 +194,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // This is the most general calculation.
     // this.radius * KIMCHI.config.get('scales-size') works for all cases except
     // when KIMCHI.config.get('scales-size') === 'large'
-    return this.radius * this.mesh.scale.x;
+    return this.radius * this.object3Ds.main.scale.x;
   };
 
   /**
@@ -208,7 +211,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf Body
    */
   Body.prototype.getSurfaceDistance = function (object3D) {
-    return THREE.Object3D.getDistance(this.mesh, object3D) -
+    return THREE.Object3D.getDistance(this.object3Ds.main, object3D) -
       this.getScaledRadius();
   };
 
@@ -265,40 +268,20 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * @returns  {Array} Meshes from the Bodies.
-   * @memberOf module:KIMCHI.space
-   */
-  space.getMeshes = function () {
-    return _.pluck(bodies, 'mesh');
-  };
-
-  /**
-   * @returns  {Array} Label Meshes from the Bodies.
-   * @memberOf module:KIMCHI.space
-   */
-  space.getLabelMeshes = function () {
-    return _.pluck(bodies, 'labelMesh');
-  };
-
-  /**
-   * @returns  {Array} Orbit Lines from the Bodies.
-   * @memberOf module:KIMCHI.space
-   */
-  space.getOrbitLines = function () {
-    return _.pluck(bodies, 'orbitLine');
-  };
-
-  /**
    * @returns  {Array} Object3Ds from the Bodies. Note that each Body may have
    *   more than one Object3D, e.g. for orbit lines and text labels.
    * @memberOf module:KIMCHI.space
    */
-  space.getObject3Ds = function () {
-    var object3Ds = [];
-    _.each(bodies, function (body) {
-      object3Ds.push(body.mesh, body.orbitLine, body.labelMesh);
-    });
-    return object3Ds;
+  space.getObject3Ds = function (type) {
+    var object3Ds = _.pluck(bodies, 'object3Ds');
+    if (typeof type === 'undefined') {
+      // flatten the nested object
+      return _.reduce(object3Ds, function (allObject3Ds, bodyObject3Ds) {
+        return allObject3Ds.concat(_.values(bodyObject3Ds));
+      }, []);
+    } else {
+      return _.pluck(object3Ds, type);
+    }
   };
 
   /**
@@ -307,7 +290,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.space
    */
   space.getCollideableObject3Ds = function () {
-    return _.pluck(_.filter(bodies, 'collideable'), 'mesh');
+    return _(bodies).filter('collideable').pluck('object3Ds').pluck('main')
+      .valueOf();
   };
 
   /**
@@ -363,29 +347,29 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
       // move the text label Mesh
       if (KIMCHI.config.get('show-labels')) {
-        distance = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
+        distance = THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main);
 
         if (distance > body.labelVisibleDistance) {
-          body.labelMesh.visible = false;
+          body.object3Ds.label.visible = false;
         } else {
-          body.labelMesh.visible = true;
+          body.object3Ds.label.visible = true;
 
           // scale
-          body.labelMesh.scale.setXYZ(distance / 1000);
+          body.object3Ds.label.scale.setXYZ(distance / 1000);
 
           // the text Mesh always faces the camera
-          body.labelMesh.quaternion.copy(KIMCHI.camera.quaternion.clone());
+          body.object3Ds.label.quaternion.copy(KIMCHI.camera.quaternion.clone());
 
           // move it in front of the associated mesh so it's not hidden inside
-          body.labelMesh.geometry.computeBoundingSphere();
-          var v = KIMCHI.camera.position.clone().sub(body.mesh.position)
+          body.object3Ds.label.geometry.computeBoundingSphere();
+          var v = KIMCHI.camera.position.clone().sub(body.object3Ds.main.position)
             .normalize().multiplyScalar(body.getScaledRadius() * 1.1);
-          var w = body.mesh.position.clone().add(v);
-/*        var x = body.mesh.position.clone().cross(v).cross(v)
+          var w = body.object3Ds.main.position.clone().add(v);
+/*        var x = body.object3Ds.main.position.clone().cross(v).cross(v)
           .normalize().multiplyScalar(
-            body.labelMesh.geometry.boundingSphere.radius / 100
+            body.object3Ds.label.geometry.boundingSphere.radius / 100
           );*/
-          body.labelMesh.position.copy(w);//.add(x);
+          body.object3Ds.label.position.copy(w);//.add(x);
         }
       }
     });
@@ -393,7 +377,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
-  /**
+  /**fly-
    * @param    {Object} bodies
    * @returns  {Array}  Objects with keys 'name' and 'distance', with the latter
    *   being the distance between the camera and the Body.
@@ -407,11 +391,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     return _.map(bodies, function (body, name) {
       return {
         'name': name,
-        'distance': THREE.Object3D.getDistance(KIMCHI.camera, body.mesh)
+        'distance': THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main)
       };
     });
 /*    return _.each(bodies, function (body, name) {
-      distances[name] = THREE.Object3D.getDistance(KIMCHI.camera, body.mesh);
+      distances[name] = THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main);
     });*/
   };
 

@@ -108,13 +108,13 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   handlers['show-labels'] = function (value) {
-    _.each(KIMCHI.space.getLabelMeshes(), function (mesh) {
+    _.each(KIMCHI.space.getObject3Ds('label'), function (mesh) {
       mesh.visible = value;
     });
   };
 
   handlers['show-orbits'] = function (value) {
-    _.each(KIMCHI.space.getOrbitLines(), function (line) {
+    _.each(KIMCHI.space.getObject3Ds('orbit'), function (line) {
       line.visible = value;
     });
   };

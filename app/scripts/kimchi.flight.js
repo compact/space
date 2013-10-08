@@ -357,7 +357,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
         rotationMatrix.lookAt(
           KIMCHI.camera.position,
-          body.mesh.position,
+          body.object3Ds.main.position,
           KIMCHI.camera.up
         );
 

@@ -67,7 +67,7 @@ var KIMCHI = KIMCHI || {};
     });
     KIMCHI.scene.add(KIMCHI.stars);
 
- 
+
 
     // lighting
     KIMCHI.lights = {};
@@ -78,7 +78,7 @@ var KIMCHI = KIMCHI || {};
     // KIMCHI.lights.sun.target = KIMCHI.space.getBodies().Earth.mesh;
     KIMCHI.scene.add(KIMCHI.lights.sun);
     // ambient light
-    KIMCHI.lights.ambient = new THREE.AmbientLight(0x0000cc);
+    KIMCHI.lights.ambient = new THREE.AmbientLight(0x333333);
     KIMCHI.scene.add(KIMCHI.lights.ambient);
 
 

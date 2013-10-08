@@ -121,6 +121,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         'color': 0xeeeeff
       })
     );
+
+    if (typeof this.callback === 'function') {
+      this.callback();
+    }
   };
 
   // default values

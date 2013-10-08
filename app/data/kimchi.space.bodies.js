@@ -29,9 +29,26 @@ KIMCHI.space.data = [
     "radiusInKm": 6378,
     "distanceFromSun": 1.00000011,
     "labelVisibleDistance": 50,
-    "hasBumpMap": true,
     "rotationArray": [1, 2, 3],
-    "rotationAngle": 0.2
+    "rotationAngle": 0.2,
+    "hasBumpMap": true,
+    "hasSpecularMap": true,
+    "callback": function () {
+      var cloud = new THREE.Mesh(
+        // 1.001 would be more accurate
+        new THREE.SphereGeometry(this.radius * 1.01,
+          KIMCHI.config.get('sphere-segments'),
+          KIMCHI.config.get('sphere-segments')),
+        new THREE.MeshPhongMaterial({
+          'map': THREE.ImageUtils.loadTexture(this.getTexturePath('clouds')),
+          'side': THREE.DoubleSide,
+          'opacity': 0.25,
+          'transparent': true,
+          'depthWrite': false
+        })
+      );
+      this.object3Ds.main.add(cloud);
+    }
   },
   {
     "name": "Mars",

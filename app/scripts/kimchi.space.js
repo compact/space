@@ -376,7 +376,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
           label.quaternion.copy(KIMCHI.camera.quaternion.clone());
 
           // distance between the label to the camera
-          labelDistance = (bodyDistance - body.getScaledRadius()) / 2
+          labelDistance = (bodyDistance - body.getScaledRadius()) / 2;
           // distance between the center of the Body Mesh and the label
           labelLocalLength = labelDistance + body.getScaledRadius();
           // vector from the center of the Body Mesh to the label

@@ -22,7 +22,7 @@
  * @constructor Body
  * @memberOf    KIMCHI.space
  */
-(function (KIMCHI, _, THREE) {
+var KIMCHI = (function (KIMCHI, _, THREE) {
   var Body = function (options) {
     var geometry, material, length, curve;
 
@@ -82,12 +82,9 @@
       });
     }
 
-    /***
-     * Create a Mesh for the text label. We could do
-     *   this.object3Ds.main.add(this.object3Ds.label);
-     * but then the text Mesh rotates with the body and it is nontrivial to
-     * rotate it back.
-     */
+    // Create a Mesh for the text label. We could do
+    // this.object3Ds.main.add(this.object3Ds.label); but then the text Mesh
+    // rotates with the body and it is nontrivial to rotate it back.
     this.object3Ds.label = new THREE.Mesh(
       new THREE.TextGeometry(this.name, {
         'size': 10,
@@ -218,4 +215,5 @@
 
   KIMCHI.space = KIMCHI.space || {};
   KIMCHI.space.Body = Body;
+  return KIMCHI;
 }(KIMCHI || {}, _, THREE));

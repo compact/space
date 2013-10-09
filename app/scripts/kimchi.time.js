@@ -155,14 +155,14 @@ var KIMCHI = (function (KIMCHI, $) {
   };
 
   /**
-   * [setStep description]
-   * @param {[type]} s [description]
+   * @param {Number} days The number of days to increment julian by in each
+   *   call of increment().
    */
-  time.setStep = function (s) {
-    if (s === 0) {
+  time.setStep = function (days) {
+    if (days === 0) {
       time.off();
     } else {
-      step = s;
+      step = days;
       time.on();
     }
   };

@@ -211,7 +211,7 @@
    * To check whether the camera is currently moving, check
    *   .getTranslationVector().length() > 0.
    * @returns  {THREE.Vector3} A vector corresponding to the current local
-   *                           movement direction(s).
+   *   movement direction(s).
    * @function
    * @memberOf THREE.Controls
    */

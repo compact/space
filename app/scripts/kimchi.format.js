@@ -13,7 +13,7 @@ var KIMCHI = (function (KIMCHI) {
 
   /**
    * Constants.
-   * @memberOf KIMCHI
+   * @memberOf module:KIMCHI
    */
   KIMCHI.constants = constants;
   constants.kmPerAu = 149597871;
@@ -73,8 +73,8 @@ var KIMCHI = (function (KIMCHI) {
   };
 
   /**
-   * @param    {Number} number Optional.
-   * @returns  {String}        The number formatted in astronomical units.
+   * @param    {Number} [number]
+   * @returns  {String} The number formatted in astronomical units.
    * @memberOf module:KIMCHI.format
    */
   format.au = function (number) {
@@ -85,8 +85,8 @@ var KIMCHI = (function (KIMCHI) {
   };
 
   /**
-   * @param    {Number} number Optional.
-   * @returns  {String}        The number formatted in kilometres.
+   * @param    {Number} [number]
+   * @returns  {String} The number formatted in kilometres.
    * @memberOf module:KIMCHI.format
    */
   format.km = function (number) {

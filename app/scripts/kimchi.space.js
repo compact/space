@@ -27,7 +27,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Populate the private bodies object.
-   * @params   {Function} callback Optional.
+   * @params   {Function} [callback]
    * @memberOf module:KIMCHI.space
    */
   space.init = function (callback) {
@@ -47,6 +47,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       }
     });
   };
+
+
 
   /**
    * @returns  {Object} Bodies.
@@ -69,7 +71,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   /**
    * Each Body may have more than one Object3D, e.g. for orbit lines and text
    *   labels. The parameter can be used to restrict the array returned.
-   * @param    {String} type Optional.
+   * @param    {String} [type]
    * @returns  {Array}  Object3Ds from the Bodies.
    * @memberOf module:KIMCHI.space
    */
@@ -182,7 +184,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   /**fly-
-   * @param    {Object} bodies
+   * @param    {Object} [bodies]
    * @returns  {Array}  Objects with keys 'name' and 'distance', with the latter
    *   being the distance between the camera and the Body.
    * @memberOf module:KIMCHI.space
@@ -204,9 +206,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * @param    {Object} bodies
-   * @returns  {Array} Objects with keys 'name' and 'distance', with the latter
-   *   being the distance between the camera and the Body. Sorted ascending.
+   * @param    {Object} [bodies]
+   * @returns  {Array}  Objects with keys 'name' and 'distance', with the
+   *   latter being the distance between the camera and the Body. Sorted
+   *   ascending.
    * @memberOf module:KIMCHI.space
    */
   space.getSortedDistances = function (bodies) {
@@ -216,7 +219,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   /**
-   * @param    {Object} bodies
+   * @param    {Object} [bodies]
    * @returns  {Number} The distance to the closest Body Mesh.
    * @memberOf module:KIMCHI.space
    */

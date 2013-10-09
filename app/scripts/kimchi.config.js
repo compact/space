@@ -1,18 +1,4 @@
 /**
- * Extensible module for KIMCHI. Extend like this:
- * <br> var KIMCHI = (function (KIMCHI) {
- * <br>   KIMCHI.foo = ...;
- * <br>   return KIMCHI;
- * <br> }(KIMCHI));
- * <br>
- * <br> Conventions:
- * <br> Movement consists of translation and rotation. If you are only
- *        translating or rotating, do not use 'move' words.
- * <br> 'Bodies' refer to astronomical bodies.
- * @module KIMCHI
- */
-
-/**
  * KIMCHI configuration settings. We call the 'global' KIMCHI settings here
  *   'config' while settings for submodules are 'options'.
  * @namespace config

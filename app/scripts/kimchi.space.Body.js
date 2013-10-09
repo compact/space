@@ -1,26 +1,29 @@
 /**
- * Class for astronomical bodies. All spheres for now. Can only be constructed
- *   inside kimchi.space.js. Raw data for each Body is stored in
+ * Class for astronomical bodies. All spheres for now. Should only be
+ *   constructed inside kimchi.space.js. Raw data for each Body is stored in
  *   /data/kimchi.space.bodies.js for passing into this constructor.
- * @param {Object} options Options.
- * <br> name:
- *        Required. Displayed to users.
- * <br> radiusInKm:
- *        In km.
- * <br> rotation:
- *        Vector3 of the body's initial Euler rotation.
- * <br> labelVisibleDistance:
- *        How far away the text mesh remains visible.
- * <br> mesh:
- *        Optional. If not given, a Mesh is automatically generated.
- * <br> translate:
- *        Optional. Translate the Mesh, e.g. for orbit.
- * <br> rotate:
- *        Optional. Rotate the Mesh.
- * <br> texturePath:
- *        Optional path to the texture image. Defaults to 'name.jpg'.
+ * @param {Object}   options
+ * @param {String}   options.name Used to generate a label that is displayed
+ *   to users.
+ * @param {Number}   [options.ephemerisIndex] The index for {@link
+ *   module:KIMCHI.ephemeris|ephemeris}.
+ * @param {Number}  options.radiusInKm TODO: Make optional.
+ * @param {Number}   [options.labelVisibleDistance=100] How far away the label
+ *   remains visible.
+ * @param {Boolean}  [options.collideable=true] Whether this Body is to be
+ *   collideable with the camera.
+ * @param {Boolean}  [options.createOrbit=false] Whether to create an orbit
+ *   for this Body.
+ * @param {Boolean}  [options.hasBumpMap=false] Whether this Body has a bump
+ *   map.
+ * @param {Boolean}  [options.hasSpecularMap=false] Whether this Body has a
+ *   specular map.
+ * @param {Function} [options.material] Function returning custom material for
+ *   this Body
+ * @param {Function} [options.callback] Custom callback called at the end of
+ *   this constructor.
  * @constructor Body
- * @memberOf    KIMCHI.space
+ * @memberOf    module:KIMCHI.space
  */
 var KIMCHI = (function (KIMCHI, _, THREE) {
   var Body = function (options) {
@@ -109,17 +112,16 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   // default values
   Body.prototype.name = '';
   Body.prototype.radiusInKm = 0;
-  Body.prototype.initialPositionArray = [3, 3, 0];
-  Body.prototype.collideable = true;
   Body.prototype.labelVisibleDistance = 100;
+  Body.prototype.collideable = true;
   Body.prototype.createOrbit = false;
   Body.prototype.hasBumpMap = false;
   Body.prototype.hasSpecularMap = false;
 
   /**
-   * @param    {String} type Optional
+   * @param    {String} [type]
    * @returns  {String} Path to the given texture type.
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getTexturePath = function (type) {
     type = typeof type === 'undefined' ? '' : '-' + type;
@@ -128,9 +130,10 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * Set this Body's scale.
-   * @param    {Number|String} value See the config setting 'scales-size' for
-   *   allowed values. If value is not given, use the current config value.
-   * @memberOf KIMCHI.space.Body
+   * @param    {Number|String} [value] See the config setting 'scales-size'
+   *   for allowed values. If value is not given, use the current config
+   *   value.
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.setScale = function (value) {
     if (typeof value === 'undefined') {
@@ -146,7 +149,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * Bodies do not translate by default; this function can be overwritten for
    *   any Body object.
    * @param    {Number} delta
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.translate = function () {
     this.scalePositionFromArray(
@@ -156,7 +159,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * @param    {Array}  Array because this function gets called only with
    *   ephemeris data.
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.scalePositionFromArray = function (position) {
     // first set the position from the parameter, then scale it
@@ -168,7 +171,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * Rotate this Body. Overwriting this function is optional.
    * @param    {Number} delta
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.rotate = function () {
     // TODO remove this placeholder
@@ -177,7 +180,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * @returns  {Number} The radius of this Body in its current scale.
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getScaledRadius = function () {
     // This is the most general calculation.
@@ -188,7 +191,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * @returns  {Number} The collision distance between the camera and this Body.
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getCollisionDistance = function () {
     return this.getScaledRadius();
@@ -197,7 +200,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * @returns  {Number} The distance between the given Object3D and the closest
    *   surface of this Body.
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getSurfaceDistance = function (object3D) {
     return THREE.Object3D.getDistance(this.object3Ds.main, object3D) -
@@ -207,7 +210,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * @returns  {Number} Whether this Body is current in collision with the
    *   given objects
-   * @memberOf KIMCHI.space.Body
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.isColliding = function (object3D) {
     return this.getSurfaceDistance(object3D) < this.getCollisionDistance();

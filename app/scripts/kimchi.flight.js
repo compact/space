@@ -60,7 +60,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * Return a number for scaling the camera translation speed (in every
    *   direction) depending on how close the camera is to the closest of the
    *   given collideable Bodies; if not given, consider all collideable Bodies.
-   * @param    {Array}  Bodies
+   * @param    {Array}  [bodies]
    * @returns  {Number}
    * @memberOf module:KIMCHI.flight
    */

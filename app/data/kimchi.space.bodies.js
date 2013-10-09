@@ -2,6 +2,11 @@ var KIMCHI = KIMCHI || {};
 
 KIMCHI.space = KIMCHI.space || {};
 
+/**
+ * Options for each Body to be passed into the constructor.
+ * @alias    data
+ * @memberOf module:KIMCHI.space
+ */
 KIMCHI.space.data = [
   {
     'name': 'Sun',

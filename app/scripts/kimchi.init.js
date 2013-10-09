@@ -1,11 +1,21 @@
+/**
+ * Extensible module for KIMCHI.
+ * <br>
+ * <br> Conventions:
+ * <br> Movement consists of translation and rotation. If you are only
+ *        translating or rotating, do not use the word 'move'.
+ * <br> "Bodies" refer to astronomical bodies.
+ * @module KIMCHI
+ */
+
 var KIMCHI = KIMCHI || {};
 
 (function (KIMCHI, $) {
   'use strict';
 
   /**
-   * Initialize KIMCHI.
-   * @memberOf KIMCHI
+   * Initialize KIMCHI. Call after the DOM is ready.
+   * @memberOf module:KIMCHI
    */
   KIMCHI.init = function () {
     var success;

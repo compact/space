@@ -1,6 +1,6 @@
 // var options = angular.module('options', ['kimchi', 'three']);
 
-angular.module('kimchi').controller('optionsCtrl', function ($scope, Kimchi) {
+angular.module('kimchi').controller('optionsCtrl', function ($scope, $timeout, Kimchi) {
 
   $scope.revolutionSpeeds = [
     {
@@ -44,55 +44,51 @@ angular.module('kimchi').controller('optionsCtrl', function ($scope, Kimchi) {
     }
   ];
 
-  $scope.rotation = true;
-  $scope.ambientLighting = true;
-  $scope.showTextLabels = true;
-  $scope.showOrbitCurves = true;
-  $scope.showStars = true;
-  $scope.flightSpeed = 1;
-  $scope.mouseSensitivity = 0.0002;
-  $scope.revolutionSpeed = $scope.revolutionSpeeds[1];
-  $scope.scaledSize = $scope.scaledSizes[4];
+  $timeout(function () {
+    $scope.rotation = true;
+    $scope.ambientLighting = true;
+    $scope.showTextLabels = true;
+    $scope.showOrbitCurves = true;
+    $scope.showStars = true;
+    $scope.flightSpeed = 1;
+    $scope.mouseSensitivity = 0.0002;
+    $scope.revolutionSpeed = $scope.revolutionSpeeds[1];
+    $scope.scaledSize = $scope.scaledSizes[4];
 
-  $scope.$watch('revolutionSpeed', function(newVal, oldVal){
-    Kimchi.config.set('bodies-speed', newVal.val);
+    $scope.$watch('revolutionSpeed', function (option) {
+      Kimchi.config.set('bodies-speed', option.val);
+    });
+
+    $scope.$watch('scaledSize', function (option) {
+      Kimchi.config.set('scales-size', option.val);
+    });
+
+    $scope.$watch('rotation', function (value) {
+      Kimchi.config.set('rotate-bodies', value);
+    });
+
+    $scope.$watch('ambientLighting', function (value) {
+      Kimchi.config.set('ambient-lighting', value);
+    });
+
+    $scope.$watch('showTextLabels', function (value) {
+      Kimchi.config.set('show-labels', value);
+    });
+
+    $scope.$watch('showOrbitCurves', function (value) {
+      Kimchi.config.set('show-orbits', value);
+    });
+
+    $scope.$watch('showStars', function (value) {
+      Kimchi.config.set('show-stars', value);
+    });
+
+    $scope.$watch('flightSpeed', function (value) {
+      Kimchi.config.set('controls-flying-speed-multiplier', value);
+    });
+
+    $scope.$watch('mouseSensitivity', function (value) {
+      Kimchi.config.set('controls-look-speed', value);
+    });
   });
-
-  $scope.$watch('scaledSize', function(newVal, oldVal){
-    Kimchi.config.set('scales-size', newVal.val);
-  });
-
-  $scope.$watch('rotation', function(newVal, oldVal){
-    Kimchi.config.set('rotate-bodies', newVal);
-    console.log(newVal);
-  });
-
-  $scope.$watch('ambientLighting', function(newVal, oldVal){
-    Kimchi.config.set('ambient-lighting', newVal);
-  });
-
-  $scope.$watch('showTextLabels', function(newVal, oldVal){
-    Kimchi.config.set('show-labels', newVal);
-  });
-
-  $scope.$watch('showOrbitCurves', function(newVal, oldVal){
-    Kimchi.config.set('show-orbits', newVal);
-  });
-
-  $scope.$watch('showStars', function(newVal, oldVal){
-    Kimchi.config.set('show-stars', newVal);
-  });
-
-  $scope.$watch('flightSpeed', function(newVal, oldVal){
-    if(Kimchi.controls !== undefined){
-      Kimchi.config.set('controls-flying-speed-multiplier', newVal);
-    }
-  });
-
-  $scope.$watch('mouseSensitivity', function(newVal, oldVal){
-    if(Kimchi.controls !== undefined){
-      Kimchi.config.set('controls-look-speed', newVal);
-    }
-  });
-
 });

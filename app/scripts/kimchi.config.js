@@ -142,9 +142,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     ];
 
     _.assign(settings, window.localStorage);
-    _.each(userConfigurableKeys, function (key) {
-      config.set(key, settings[key]);
-    });
+    // _.each(userConfigurableKeys, function (key) {
+    //   config.set(key, settings[key]);
+    // });
   };
 
   /**

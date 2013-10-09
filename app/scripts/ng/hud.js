@@ -1,6 +1,6 @@
-var hud = angular.module('hud', ['kimchi', 'three']);
+// var hud = angular.module('hud', ['kimchi', 'three']);
 
-function debugCtrl($scope, $timeout, Kimchi, Three) {
+angular.module('kimchi').controller('debugCtrl', function ($scope, $timeout, Kimchi, Three) {
   var unbind, position, rotation;
 
   $scope.kimchi = Kimchi;
@@ -33,4 +33,4 @@ function debugCtrl($scope, $timeout, Kimchi, Three) {
   $scope.settings = {
     visible: Kimchi.config.get('debug')
   };
-}
+});

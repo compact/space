@@ -36,7 +36,7 @@ var KIMCHI = (function (KIMCHI, $) {
    * @memberOf module:KIMCHI.ephemeris
    */
   ephemeris.loadBatch = function (julian) {
-    var file = '/data/de405/' + julian + '.json';
+    var file = 'data/de405/' + julian + '.json';
 
     console.log('loading ephemeris batch: ' + julian);
 

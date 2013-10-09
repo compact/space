@@ -1,6 +1,6 @@
-var options = angular.module('options', ['kimchi', 'three']);
+// var options = angular.module('options', ['kimchi', 'three']);
 
-function optionsCtrl($scope, Kimchi) {
+angular.module('kimchi').controller('optionsCtrl', function ($scope, Kimchi) {
 
   $scope.revolutionSpeeds = [
     {
@@ -95,4 +95,4 @@ function optionsCtrl($scope, Kimchi) {
     }
   });
 
-}
+});

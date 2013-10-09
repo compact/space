@@ -9,7 +9,12 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
   var space, Body, bodies;
-  space = KIMCHI.space;
+  if (typeof KIMCHI.space === 'object') {
+    space = KIMCHI.space;
+  } else {
+    space = {};
+    KIMCHI.space = space;
+  }
 
   /**
    * Contains instances of Body.

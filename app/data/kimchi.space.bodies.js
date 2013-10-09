@@ -1,6 +1,6 @@
 var KIMCHI = KIMCHI || {};
 
-KIMCHI.space = {};
+KIMCHI.space = KIMCHI.space || {};
 
 KIMCHI.space.data = [
   {

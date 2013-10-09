@@ -76,7 +76,7 @@
             <h3>Astronomical bodies</h3>
             <div class="config-row clearfix">
               <div class="config btn-group">
-                <select ng-model="revolutionSpeed" ng-options="value.text for value in revolutionSpeeds" data-style="btn-primary btn-sm" bs-select></select>
+                <select ng-model="bodiesSpeed" ng-options="option.label for option in options.bodiesSpeed" data-style="btn-primary btn-sm" bs-select></select>
               </div>
               <div class="config-description">
                 Revolution speed
@@ -84,7 +84,7 @@
             </div>
             <div class="config-row clearfix">
               <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="rotation" bs-buttons-radio>
+                <div class="btn-group" ng-model="rotateBodies" bs-buttons-radio>
                   <button type="button" class="btn btn-default btn-sm" value="true">On</button>
                   <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
                 </div>
@@ -94,8 +94,8 @@
               </div>
             </div>
             <div class="config-row clearfix">
-              <div data-key="scales-size" class="config btn-group">
-                <select ng-model="scaledSize" ng-options="value.text for value in scaledSizes" data-style="btn-primary btn-sm" bs-select></select>
+              <div class="config btn-group">
+                <select ng-model="bodiesSizeScale" ng-options="option.label for option in options.bodiesSizeScale" data-style="btn-primary btn-sm" bs-select></select>
                 </div>
               <div class="config-description">
                 Scaled size
@@ -104,7 +104,7 @@
             <h3>Visuals</h3>
             <div class="config-row clearfix">
               <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="ambientLighting" bs-buttons-radio>
+                <div class="btn-group" ng-model="ambientLight" bs-buttons-radio>
                   <button type="button" class="btn btn-default btn-sm" value="true">On</button>
                   <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
                 </div>
@@ -115,7 +115,7 @@
             </div> 
             <div class="config-row clearfix">
               <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="showTextLabels" bs-buttons-radio>
+                <div class="btn-group" ng-model="showLabels" bs-buttons-radio>
                   <button type="button" class="btn btn-default btn-sm" value="true">On</button>
                   <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
                 </div>
@@ -126,7 +126,7 @@
             </div>
             <div class="config-row clearfix">
               <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="showOrbitCurves" bs-buttons-radio>
+                <div class="btn-group" ng-model="showOrbits" bs-buttons-radio>
                   <button type="button" class="btn btn-default btn-sm" value="true">On</button>
                   <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
                 </div>
@@ -149,7 +149,7 @@
             <h3>Flight</h3>
             <div class="config-row clearfix">
               <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="flightSpeed" bs-buttons-radio>
+                <div class="btn-group" ng-model="controlsKeyboardSpeedMultiplier" bs-buttons-radio>
                   <button type="button" class="btn btn-default btn-sm" value="1">Fast</button>
                   <button type="button" class="btn btn-default btn-sm" value="2">Faster</button>
                 </div>
@@ -160,7 +160,7 @@
             </div>
             <div class="config-row clearfix">
               <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="mouseSensitivity" bs-buttons-radio>
+                <div class="btn-group" ng-model="controlsLookSpeed" bs-buttons-radio>
                   <button type="button" class="btn btn-default btn-sm" value="0.0002">Low</button>
                   <button type="button" class="btn btn-default btn-sm" value="0.0006">High</button>
                 </div>

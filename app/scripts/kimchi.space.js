@@ -149,7 +149,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         labelLocalVector, labelWorldVector;
 
       // update the text label Mesh
-      if (KIMCHI.config.get('show-labels')) {
+      if (KIMCHI.config.get('showLabels')) {
         bodyDistance = THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main);
         label = body.object3Ds.label;
 

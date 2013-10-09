@@ -231,9 +231,9 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     getSpeed = function (delta) {
       var translation = KIMCHI.controls.getLocalTranslationVector();
       return (new THREE.Vector3(
-          translation.x * KIMCHI.config.get('controls-strafe-speed'),
-          translation.y * KIMCHI.config.get('controls-strafe-speed'),
-          translation.z * KIMCHI.config.get('controls-z-speed')
+          translation.x * KIMCHI.config.get('controlsStrafeSpeed'),
+          translation.y * KIMCHI.config.get('controlsStrafeSpeed'),
+          translation.z * KIMCHI.config.get('controlsZSpeed')
         )).length() * KIMCHI.flight.getTranslationSpeedMultiplier() / delta;
     };
 
@@ -264,7 +264,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       }
 
       // move the Bodies and increment the current time
-      if (KIMCHI.config.get('bodies-speed')) {
+      if (KIMCHI.config.get('bodiesSpeed')) {
         KIMCHI.time.increment().done(function () {
           KIMCHI.space.translateBodies(delta);
           deferred.resolve(true);
@@ -276,7 +276,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
       }
 
       // rotate the Bodies
-      if (KIMCHI.config.get('rotate-bodies')) {
+      if (KIMCHI.config.get('rotateBodies')) {
         KIMCHI.space.rotateBodies(delta);
       }
 
@@ -401,7 +401,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
           // KIMCHI.pointerLock.request();
           return false;
         } else {
-          translationZ = KIMCHI.config.get('controls-z-speed') * delta *
+          translationZ = KIMCHI.config.get('controlsZSpeed') * delta *
             flight.getTranslationSpeedMultiplier([body]);
           this.speed = translationZ / delta;
           KIMCHI.camera.translateZ(-translationZ);
@@ -431,8 +431,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
      * @memberOf module:KIMCHI.flight.modes.auto
      */
     mode.flyTo = function (body) {
-      KIMCHI.ui.notice.set(KIMCHI.config.get('notices-fly-to')(body));
-      KIMCHI.config.set('bodies-speed', false);
+      KIMCHI.ui.notice.set(KIMCHI.config.get('noticeFlyTo')(body));
+      KIMCHI.config.set('bodiesSpeed', 0);
       panTo(body);
       // TODO make function queue for successive setTimeout() calls
     };

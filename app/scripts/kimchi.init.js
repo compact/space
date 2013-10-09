@@ -31,7 +31,7 @@ var KIMCHI = KIMCHI || {};
     if (typeof window.WebGLRenderingContext !== 'function') {
       // WebGL is not supported by the browser
       $('.continue-flying').replaceWith(
-        '<p>' + KIMCHI.config.get('language-webgl-not-supported') + '</p>');
+        '<p>' + KIMCHI.config.get('langWebGLNotSupported') + '</p>');
       return false;
     }
 
@@ -40,7 +40,7 @@ var KIMCHI = KIMCHI || {};
     if (!success) {
       // the renderer failed to initialize
       $('.continue-flying').replaceWith(
-        '<p>' + KIMCHI.config.get('language-webgl-error') + '</p>');
+        '<p>' + KIMCHI.config.get('langWebGLError') + '</p>');
       return false;
     }
 
@@ -53,10 +53,10 @@ var KIMCHI = KIMCHI || {};
     KIMCHI.scene = new THREE.Scene();
     // camera: don't use OrthographicCamera because it lacks perspective
     KIMCHI.camera = new THREE.PerspectiveCamera(
-      KIMCHI.config.get('camera-fov'),
+      KIMCHI.config.get('cameraFov'),
       1, // placeholder, set with KIMCHI.size.init()
-      KIMCHI.config.get('camera-near'),
-      KIMCHI.config.get('camera-far')
+      KIMCHI.config.get('cameraNear'),
+      KIMCHI.config.get('cameraFar')
     );
     // set camera size and renderer size
     KIMCHI.size.init();
@@ -67,13 +67,12 @@ var KIMCHI = KIMCHI || {};
     KIMCHI.space.init(function () {
       KIMCHI.scene.add(this.getObject3Ds());
       KIMCHI.ui.panel.init(); // depends on .space.init()
-      KIMCHI.config.init(); // depends on .panel.init()
     });
 
     // add background stars, an array of ParticleSystems
     KIMCHI.stars = new THREE.Stars({
-      'scale': KIMCHI.config.get('stars-scale'),
-      'count': KIMCHI.config.get('stars-count')
+      'scale': KIMCHI.config.get('starsScale'),
+      'count': KIMCHI.config.get('starsCount')
     });
     KIMCHI.scene.add(KIMCHI.stars);
 
@@ -94,17 +93,12 @@ var KIMCHI = KIMCHI || {};
 
 
     // first person controls
-    KIMCHI.controls = new THREE.Controls(KIMCHI.camera, {
-      'lookSpeed': KIMCHI.config.get('controls-look-speed'),
-      'zSpeed': KIMCHI.config.get('controls-z-speed'),
-      'strafeSpeed': KIMCHI.config.get('controls-strafe-speed'),
-      'rollSpeed': KIMCHI.config.get('controls-roll-speed')
-    });
+    KIMCHI.controls = new THREE.Controls(KIMCHI.camera);
 
 
 
     // initialize camera position and rotation
-    KIMCHI.camera.position.copy(KIMCHI.config.get('camera-initial-position'));
+    KIMCHI.camera.position.copy(KIMCHI.config.get('cameraInitialPosition'));
     KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 

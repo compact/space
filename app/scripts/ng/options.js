@@ -2,93 +2,94 @@
 
 angular.module('kimchi').controller('optionsCtrl', function ($scope, $timeout, Kimchi) {
 
-  $scope.revolutionSpeeds = [
-    {
-      'val': 0,
-      'text': 'Off'
-    },
-    {
-      'val': 1,
-      'text': 'Fast'
-    },
-    {
-      'val': 2,
-      'text': 'Faster'
-    },
-    {
-      'val': 8,
-      'text': 'Fastest'
-    }
-  ];
-
-  $scope.scaledSizes = [
-    {
-      'val': '1',
-      'text': '1x'
-    },
-    {
-      'val': '10',
-      'text': '10x'
-    },
-    {
-      'val': '100',
-      'text': '100x'
-    },
-    {
-      'val': '1000',
-      'text': '1000x'
-    },
-    {
-      'val': 'large',
-      'text': 'Large'
-    }
-  ];
+  $scope.options = {
+    'bodiesSpeed': [
+      {
+        'value': 0,
+        'label': 'Off'
+      },
+      {
+        'value': 1,
+        'label': 'Fast'
+      },
+      {
+        'value': 2,
+        'label': 'Faster'
+      },
+      {
+        'value': 8,
+        'label': 'Fastest'
+      }
+    ],
+    'bodiesSizeScale': [
+      {
+        'value': 1,
+        'label': '1x'
+      },
+      {
+        'value': 10,
+        'label': '10x' // (distances lose scale)
+      },
+      {
+        'value': 100,
+        'label': '100x' // (distances lose more scale)
+      },
+      {
+        'value': 1000,
+        'label': '1000x' // (distances lose even more scale)
+      },
+      {
+        'value': 'large',
+        'label': 'Large' // (all bodies appear large without regard to scale)
+      }
+    ]
+  };
 
   $timeout(function () {
-    $scope.rotation = true;
-    $scope.ambientLighting = true;
-    $scope.showTextLabels = true;
-    $scope.showOrbitCurves = true;
-    $scope.showStars = true;
-    $scope.flightSpeed = 1;
-    $scope.mouseSensitivity = 0.0002;
-    $scope.revolutionSpeed = $scope.revolutionSpeeds[1];
-    $scope.scaledSize = $scope.scaledSizes[4];
+    var keys, radioKeys, dropdownKeys;
 
-    $scope.$watch('revolutionSpeed', function (option) {
-      Kimchi.config.set('bodies-speed', option.val);
+    // Radio settings and dropdown settings are handled differently. When
+    // editing these arrays, edit KIMCHI.config.userConfigurableKeys
+    // accordingly.
+    radioKeys = [
+      'rotateBodies',
+      'ambientLight',
+      'showLabels',
+      'showOrbits',
+      'showStars',
+      'controlsKeyboardSpeedMultiplier',
+      'controlsLookSpeed'
+    ];
+    dropdownKeys = [
+      'bodiesSpeed',
+      'bodiesSizeScale'
+    ];
+    keys = radioKeys.concat(dropdownKeys);
+
+    // initialize the values in KIMCHI.config
+    Kimchi.config.init();
+
+    // radios
+    _.each(radioKeys, function (key) {
+      // set the initial value (either default or from localStorage)
+      $scope[key] = Kimchi.config.get(key);
+
+      // watch for changes, and set the new value accordingly
+      $scope.$watch(key, function (value) {
+        Kimchi.config.set(key, value);
+      });
     });
 
-    $scope.$watch('scaledSize', function (option) {
-      Kimchi.config.set('scales-size', option.val);
-    });
+    // dropdowns
+    _.each(dropdownKeys, function (key) {
+      // set the initial value, which is an object
+      $scope[key] = _.find($scope.options[key], {
+        'value': Kimchi.config.get(key)
+      });
 
-    $scope.$watch('rotation', function (value) {
-      Kimchi.config.set('rotate-bodies', value);
-    });
-
-    $scope.$watch('ambientLighting', function (value) {
-      Kimchi.config.set('ambient-lighting', value);
-    });
-
-    $scope.$watch('showTextLabels', function (value) {
-      Kimchi.config.set('show-labels', value);
-    });
-
-    $scope.$watch('showOrbitCurves', function (value) {
-      Kimchi.config.set('show-orbits', value);
-    });
-
-    $scope.$watch('showStars', function (value) {
-      Kimchi.config.set('show-stars', value);
-    });
-
-    $scope.$watch('flightSpeed', function (value) {
-      Kimchi.config.set('controls-flying-speed-multiplier', value);
-    });
-
-    $scope.$watch('mouseSensitivity', function (value) {
-      Kimchi.config.set('controls-look-speed', value);
+      $scope.$watch(key, function (option) {
+        Kimchi.config.set(key, option.value);
+      });
     });
   });
 });

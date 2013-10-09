@@ -66,7 +66,7 @@ var KIMCHI = (function (KIMCHI, $) {
         $('<tr id="body-' + body.name + '">' +
             '<td>' + body.name + '</td>' +
             '<td><a class="fly-to" data-name="' + body.name + '">' +
-              KIMCHI.config.get('language-fly-to') + '</a></td>' +
+              KIMCHI.config.get('langFlyTo') + '</a></td>' +
             '<td class="distance"></td>' +
             '<td>' + KIMCHI.format.km(body.radiusInKm) + '</td>' +
             '<td>' + KIMCHI.format.au(body.distanceFromSun) + '</td>' +
@@ -81,20 +81,6 @@ var KIMCHI = (function (KIMCHI, $) {
         body = KIMCHI.space.getBody(name);
         KIMCHI.flight.setMode('auto');
         KIMCHI.flight.modes.auto.flyTo(body);
-      });
-
-      // bind config
-      $('#config-pane').on('click', '[data-toggle="buttons"] .btn', function () {
-        // radios and checkboxes
-        var $input = $(this).children('input');
-        KIMCHI.config.set($input.attr('name'), $input.val());
-      }).on('click', '.dropdown-menu a', function () {
-        // dropdowns
-        var $this = $(this);
-        KIMCHI.config.set(
-          $this.parents('.btn-group').eq(0).data('key'),
-          $this.data('value')
-        );
       });
 
       // update the panel
@@ -130,48 +116,6 @@ var KIMCHI = (function (KIMCHI, $) {
         $('#body-' + body.name + ' .distance')
           .text(KIMCHI.format.au(body.distance));
       });
-    };
-
-    /**
-     * DEPRECATED. Update the config panel for the given key and value.
-     * @param   {String}                key
-     * @param   {String|Boolean|Number} value
-     * @memberOf module:KIMCHI.ui.panel
-     */
-    panel.updateConfig = function (key, value) {
-      var $button, addClass, removeClass, $btnGroup, label;
-
-      // "unparse" the value back into a String
-      value = String(value);
-
-      // case 1: radios and checkboxes
-      $button = $config.find(
-        '[name="' + key + '"][value="' + value + '"]'
-      ).parent();
-      if ($button.length === 1) {
-        // determine css classes to add and remove from the respective buttons
-        addClass = '';
-//        addClass = 'active ';
-        if (value === 'true') {
-          removeClass = 'btn-danger';
-          addClass += 'btn-success';
-        } else if (value === 'false') {
-          removeClass = 'btn-success';
-          addClass += 'btn-danger';
-        } else {
-          removeClass = 'btn-primary';
-          addClass += 'btn-primary';
-        }
-        $button.siblings().removeClass(removeClass);
-        $button.addClass(addClass);
-        return;
-      }
-
-      // case 2: dropdowns
-      $btnGroup = $config.filter('[data-key="' + key + '"]');
-      label = $btnGroup.find('[data-value="' + value + '"]').text()
-        .replace(/ \(.+\)/, '');
-      $btnGroup.find('.selected-value').text(label);
     };
 
     return panel;

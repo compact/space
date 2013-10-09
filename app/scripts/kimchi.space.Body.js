@@ -40,8 +40,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
     // geometry
     geometry = new THREE.SphereGeometry(this.radius,
-      KIMCHI.config.get('sphere-segments'),
-      KIMCHI.config.get('sphere-segments'));
+      KIMCHI.config.get('sphereSegments'),
+      KIMCHI.config.get('sphereSegments'));
 
     // material
     if (this.material === 'function') {
@@ -79,9 +79,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       length = this.object3Ds.main.position.length();
       curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
       this.object3Ds.orbit = curve.createLine({
-        'color': KIMCHI.config.get('orbits-color'),
-        'opacity': KIMCHI.config.get('orbits-opacity'),
-        'lineSegments': KIMCHI.config.get('orbits-line-segments')
+        'color': KIMCHI.config.get('orbitsColor'),
+        'opacity': KIMCHI.config.get('orbitsOpacity'),
+        'lineSegments': KIMCHI.config.get('orbitsLineSegments')
       });
     }
 
@@ -130,14 +130,14 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * Set this Body's scale.
-   * @param    {Number|String} [value] See the config setting 'scales-size'
+   * @param    {Number|String} [value] See the config setting 'bodiesSizeScale'
    *   for allowed values. If value is not given, use the current config
    *   value.
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.setScale = function (value) {
     if (typeof value === 'undefined') {
-      value = KIMCHI.config.get('scales-size');
+      value = KIMCHI.config.get('bodiesSizeScale');
     }
     if (value === 'large') {
       value = 0.1 / this.radius;
@@ -164,7 +164,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   Body.prototype.scalePositionFromArray = function (position) {
     // first set the position from the parameter, then scale it
     this.object3Ds.main.position.fromArray(position)
-      .multiplyScalar(KIMCHI.config.get('scales-position'));
+      .multiplyScalar(KIMCHI.config.get('bodiesPositionScale'));
     // TODO implement scales-position
   };
 
@@ -184,8 +184,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   Body.prototype.getScaledRadius = function () {
     // This is the most general calculation.
-    // this.radius * KIMCHI.config.get('scales-size') works for all cases except
-    // when KIMCHI.config.get('scales-size') === 'large'
+    // this.radius * KIMCHI.config.get('bodiesSizeScale') works for all cases except
+    // when KIMCHI.config.get('bodiesSizeScale') === 'large'
     return this.radius * this.object3Ds.main.scale.x;
   };
 

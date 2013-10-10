@@ -1,14 +1,15 @@
 /**
- * Based on PointerLockControls.js. Requires THREE.unitVectors, as defined in
- *   three.extensions.js.
+ * Based on {@link
+ *   http://threejs.org/examples/misc_controls_pointerlock.html}. Requires
+ *   THREE.unitVectors, as defined in three.extensions.js.
  * @author      mrdoob / http://mrdoob.com/ Edited by Chris.
- * @constructor THREE.Controls
+ * @constructor Controls
  * @memberOf    THREE
  */
 (function (_, THREE) {
   'use strict';
 
-  THREE.Controls = function (camera, options) {
+  var PointerLockControls = function (camera, options) {
     var self = this;
 
     this.camera = camera;
@@ -110,9 +111,9 @@
 
   /**
    * Reset all movement states to false.
-   * @memberOf THREE.Controls
+   * @memberOf THREE.PointerLockControls
    */
-  THREE.Controls.prototype.resetStates = function () {
+  PointerLockControls.prototype.resetStates = function () {
     this.states = {
       'moveForward': false,
       'moveBackward': false,
@@ -129,15 +130,15 @@
 
   /**
    * Whether the controls are currently enabled.
-   * @memberOf THREE.Controls
+   * @memberOf THREE.PointerLockControls
    */
-  THREE.Controls.prototype.enabled = false;
+  PointerLockControls.prototype.enabled = false;
 
   /**
    * Enable the controls.
-   * @memberOf THREE.Controls
+   * @memberOf THREE.PointerLockControls
    */
-  THREE.Controls.prototype.enable = function () {
+  PointerLockControls.prototype.enable = function () {
     // can't use jQuery for this.events.mousemove, because we need the
     // properties event.movementX and event.movementY
     document.addEventListener('mousemove', this.events.mousemove, false);
@@ -149,9 +150,9 @@
 
   /**
    * Disable the controls.
-   * @memberOf THREE.Controls
+   * @memberOf THREE.PointerLockControls
    */
-  THREE.Controls.prototype.disable = function () {
+  PointerLockControls.prototype.disable = function () {
     this.resetStates();
 
     document.removeEventListener('mousemove', this.events.mousemove, false);
@@ -170,9 +171,9 @@
    * @param    {Number} translationSpeedMultiplier Additional multiplier which
    *   applies only to translations.
    * @function
-   * @memberOf THREE.Controls
+   * @memberOf THREE.PointerLockControls
    */
-  THREE.Controls.prototype.moveCamera = (function () {
+  PointerLockControls.prototype.moveCamera = (function () {
     var translationVector = new THREE.Vector3(), angle, camera, options;
 
     return function (speedMultiplier, translationSpeedMultiplier) {
@@ -213,9 +214,9 @@
    * @returns  {THREE.Vector3} A vector corresponding to the current local
    *   movement direction(s).
    * @function
-   * @memberOf THREE.Controls
+   * @memberOf THREE.PointerLockControls
    */
-  THREE.Controls.prototype.getLocalTranslationVector = (function () {
+  PointerLockControls.prototype.getLocalTranslationVector = (function () {
     var vector = new THREE.Vector3();
 
     return function () {
@@ -251,9 +252,11 @@
   /**
    * Not used; can delete.
    * @returns  {THREE.Vector3}
-   * @memberOf THREE.Controls
+   * @memberOf THREE.PointerLockControls
    */
-  THREE.Controls.prototype.getWorldTranslationVector = function () {
+  PointerLockControls.prototype.getWorldTranslationVector = function () {
     return this.camera.localToWorld(this.getLocalTranslationVector());
   };
+
+  THREE.PointerLockControls = PointerLockControls;
 }(_, THREE));

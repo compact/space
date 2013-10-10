@@ -98,7 +98,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
     // first person controls
-    KIMCHI.controls = new THREE.Controls(KIMCHI.camera);
+    KIMCHI.controls = new THREE.PointerLockControls(KIMCHI.camera);
 
 
 

@@ -10,6 +10,7 @@ KIMCHI.space = KIMCHI.space || {};
 KIMCHI.space.data = [
   {
     'name': 'Sun',
+    'type': 'star',
     'ephemerisIndex': 10,
     'radiusInKm': 696000,
     'labelVisibleDistance': 1000000,
@@ -21,6 +22,7 @@ KIMCHI.space.data = [
   },
   {
     'name': 'Mercury',
+    'type': 'planet',
     'ephemerisIndex': 0,
     'radiusInKm': 2439.64,
     'distanceFromSun': 0.38709893,
@@ -29,6 +31,7 @@ KIMCHI.space.data = [
   },
   {
     'name': 'Venus',
+    'type': 'planet',
     'ephemerisIndex': 1,
     'radiusInKm': 6051.59,
     'distanceFromSun': 0.72333199,
@@ -37,6 +40,7 @@ KIMCHI.space.data = [
   },
   {
     'name': 'Earth',
+    'type': 'planet',
     'ephemerisIndex': 2,
     'radiusInKm': 6378,
     'distanceFromSun': 1.00000011,
@@ -63,7 +67,16 @@ KIMCHI.space.data = [
     }
   },
   {
+    'name': 'Moon',
+    'type': 'moon',
+    'ephemerisIndex': 9,
+    'radiusInKm': 1737,
+    'labelVisibleDistance': 10,
+    'hasBumpMap': true
+  },
+  {
     'name': 'Mars',
+    'type': 'planet',
     'ephemerisIndex': 3,
     'radiusInKm': 3397,
     'distanceFromSun': 1.52366231,
@@ -72,6 +85,7 @@ KIMCHI.space.data = [
   },
   {
     'name': 'Jupiter',
+    'type': 'planet',
     'ephemerisIndex': 4,
     'radiusInKm': 71492,
     'distanceFromSun': 5.20336301,
@@ -80,6 +94,7 @@ KIMCHI.space.data = [
   },
   {
     'name': 'Saturn',
+    'type': 'planet',
     'ephemerisIndex': 5,
     'radiusInKm': 60267,
     'distanceFromSun': 9.53707032,
@@ -109,14 +124,16 @@ KIMCHI.space.data = [
   },
   {
     'name': 'Uranus',
+    'type': 'planet',
     'ephemerisIndex': 6,
     'radiusInKm': 25557.25,
     'distanceFromSun': 19.19126393,
-    'labelVisibleDistance': 30,
+    'labelVisibleDistance': 500,
     'createOrbit': true
   },
   {
     'name': 'Neptune',
+    'type': 'planet',
     'ephemerisIndex': 7,
     'radiusInKm': 24766,
     'distanceFromSun': 30.06896348,
@@ -125,6 +142,7 @@ KIMCHI.space.data = [
   },
   {
     'name': 'Pluto',
+    'type': 'planet',
     'ephemerisIndex': 8,
     'radiusInKm': 1148.07,
     'distanceFromSun': 39.482,

@@ -7,23 +7,20 @@ app.factory('Kimchi', function ($rootScope, $q) {
 
 
 
-  console.log('initializing KIMCHI...');
-
   // we construct the deferred ourselves because $q.when() didn't work with the
-  // promise returned from KIMCHI.init()
+  // promise returned from KIMCHI
   deferred = $q.defer();
 
-  KIMCHI.init().done(function () {
-    console.log('...finished initializing KIMCHI');
+  KIMCHI.init.promise.done(function () {
     deferred.resolve();
+    // TODO: got a "$apply already in progress" error here once
     $rootScope.$digest();
   }).fail(function () {
-    console.log('...error initializing KIMCHI');
     deferred.reject();
     $rootScope.$digest();
   });
 
-  KIMCHI.init.promise = deferred.promise;
+  KIMCHI.init.ngPromise = deferred.promise;
 
 
 

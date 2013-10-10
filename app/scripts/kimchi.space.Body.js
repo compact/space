@@ -53,7 +53,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     }
     if (this.hasBumpMap) {
       material.bumpMap = THREE.ImageUtils.loadTexture(this.getTexturePath('bump'));
-      material.bumpScale = 0.003;
+      // material.bumpScale is set in KIMCHI.config
     }
     if (this.hasSpecularMap) {
       material.specularMap = THREE.ImageUtils.loadTexture(this.getTexturePath('specular'));
@@ -69,10 +69,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
     // set Mesh properties
 //    this.object3Ds.main.rotation.copy(this.rotation);
-    this.setScale();
-
-    // position the Mesh
-    // this.translate();
 
     // create an orbit Line with a clockwise Curve
     if (this.createOrbit) {
@@ -126,23 +122,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   Body.prototype.getTexturePath = function (type) {
     type = typeof type === 'undefined' ? '' : '-' + type;
     return 'images/textures/' + this.name.toLowerCase() + type + '.jpg';
-  };
-
-  /**
-   * Set this Body's scale.
-   * @param    {Number|String} [value] See the config setting 'bodiesSizeScale'
-   *   for allowed values. If value is not given, use the current config
-   *   value.
-   * @memberOf module:KIMCHI.space.Body
-   */
-  Body.prototype.setScale = function (value) {
-    if (typeof value === 'undefined') {
-      value = KIMCHI.config.get('bodiesSizeScale');
-    }
-    if (value === 'large') {
-      value = 0.1 / this.radius;
-    }
-    this.object3Ds.main.scale.setXYZ(value);
   };
 
   /**

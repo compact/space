@@ -89,9 +89,49 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     KIMCHI.time.setStep(value);
   };
   handlers.bodiesSizeScale = function (value) {
-    _.each(KIMCHI.space.getBodies(), function (body) {
-      body.setScale(value);
+    var large, near, bumpScale;
+
+    // special case
+    large = value === 'large';
+
+    // Update the "near" property of the camera. The higher the scale, the less
+    // we need to see objects that are very near. Increasing this value helps
+    // avoid z-fighting. The number constants here were picked by trial and
+    // error by me on 2013-10-10 based on how the Earth looks. -Chris
+    near = large ? 0.01 : 0.00001 * value;
+    KIMCHI.camera.update({
+      'near': near
     });
+
+    _.each(KIMCHI.space.getBodies(), function (body) {
+      // set the scale
+      if (large) {
+        switch (body.type) {
+          case 'star':
+            value = 0.2 / body.radius;
+            break;
+          case 'planet':
+            value = 0.1 / body.radius;
+            break;
+          case 'moon':
+            value = 0.05 / body.radius;
+            break;
+          default:
+            value = 0.1 / body.radius;
+        }
+      }
+      body.object3Ds.main.scale.setXYZ(value);
+
+      // The bump map scale is also proportional to the Body's size. The number
+      // constants here were picked by trial and error by me on 2013-10-10 based
+      // on how the Earth looks. -Chris
+      bumpScale = large ? body.radius * 50: body.radius * value * 0.05;
+      if (body.hasBumpMap) {
+        console.log(body.name + ' ' + bumpScale);
+        body.object3Ds.main.material.bumpScale = bumpScale;
+      }
+    });
+
     KIMCHI.renderer.render();
   };
   handlers.ambientLight = function (value) {

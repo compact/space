@@ -8,9 +8,7 @@
  * @module KIMCHI
  */
 
-var KIMCHI = KIMCHI || {};
-
-(function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
   /**
@@ -60,21 +58,22 @@ var KIMCHI = KIMCHI || {};
     );
     // set camera size and renderer size
     KIMCHI.size.init();
+    // initialize camera position and rotation
+    KIMCHI.camera.position.copy(KIMCHI.config.get('cameraInitialPosition'));
+    KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
 
-    // add astronomical objects
-    KIMCHI.space.init();
-    KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
+    // lighting
+    KIMCHI.lights = {};
+    // sunlight
+    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 0);
+    KIMCHI.scene.add(KIMCHI.lights.sun);
+    // ambient light
+    KIMCHI.lights.ambient = new THREE.AmbientLight(0x333333);
+    KIMCHI.scene.add(KIMCHI.lights.ambient);
 
-    // get the ephemeris data
-    promise = KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
-      // initialize the positions of the Bodies
-      KIMCHI.space.translateBodies();
 
-      // initialize Body children positions and scales for rendering
-      KIMCHI.space.updateBodyChildren();
-    });
 
     // add background stars, an array of ParticleSystems
     KIMCHI.stars = new THREE.Stars({
@@ -83,30 +82,23 @@ var KIMCHI = KIMCHI || {};
     });
     KIMCHI.scene.add(KIMCHI.stars);
 
+    // add astronomical bodies
+    KIMCHI.space.init();
+    KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
 
+    // get ephemeris data
+    promise = KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
+      // initialize Body positions
+      KIMCHI.space.translateBodies();
 
-    // lighting
-    KIMCHI.lights = {};
-    // sunlight
-    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 0);
-    // KIMCHI.lights.sun.position.set(0, 0, 0);
-    // KIMCHI.lights.sun = new THREE.SpotLight(0xffffee, 2, 0);
-    // KIMCHI.lights.sun.target = KIMCHI.space.getBodies().Earth.mesh;
-    KIMCHI.scene.add(KIMCHI.lights.sun);
-    // ambient light
-    KIMCHI.lights.ambient = new THREE.AmbientLight(0x333333);
-    KIMCHI.scene.add(KIMCHI.lights.ambient);
+      // initialize Body children positions and scales for rendering
+      KIMCHI.space.updateBodyChildren();
+    });
 
 
 
     // first person controls
     KIMCHI.controls = new THREE.Controls(KIMCHI.camera);
-
-
-
-    // initialize camera position and rotation
-    KIMCHI.camera.position.copy(KIMCHI.config.get('cameraInitialPosition'));
-    KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
 
@@ -119,17 +111,8 @@ var KIMCHI = KIMCHI || {};
 
 
 
-    // fix Body children positions and scales
-    // setTimeout(function () {
-    //   // TODO: prefer to do this without a delay, in a callback somewhere
-    //   KIMCHI.renderer.render();
-    // }, 3000);
-
     return promise;
   };
 
-  $(function () {
-    // initialize KIMCHI
-    // KIMCHI.init();
-  });
-}(KIMCHI, jQuery));
+  return KIMCHI;
+}(KIMCHI || {}, jQuery));

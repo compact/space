@@ -89,7 +89,7 @@ var KIMCHI = (function (KIMCHI, $) {
      * @type     {THREE.PointerLockControls}
      * @memberOf module:KIMCHI
      */
-    KIMCHI.controls = new THREE.PointerLockControls(KIMCHI.camera);
+    KIMCHI.pointerLockControls = new THREE.PointerLockControls(KIMCHI.camera);
 
 
 

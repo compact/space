@@ -158,12 +158,12 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     settings.controlsZSpeed = settings.controlsBaseZSpeed * value;
     settings.controlsStrafeSpeed = settings.controlsBaseStrafeSpeed * value;
     settings.controlsRollSpeed = settings.controlsBaseRollSpeed * value;
-    KIMCHI.controls.options.zSpeed = settings.controlsZSpeed;
-    KIMCHI.controls.options.strafeSpeed = settings.controlsStrafeSpeed;
-    KIMCHI.controls.options.rollSpeed = settings.controlsRollSpeed;
+    KIMCHI.pointerLockControls.options.zSpeed = settings.controlsZSpeed;
+    KIMCHI.pointerLockControls.options.strafeSpeed = settings.controlsStrafeSpeed;
+    KIMCHI.pointerLockControls.options.rollSpeed = settings.controlsRollSpeed;
   };
   handlers.controlsLookSpeed = function (value) {
-    KIMCHI.controls.options.lookSpeed = value;
+    KIMCHI.pointerLockControls.options.lookSpeed = value;
   };
 
 

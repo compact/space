@@ -19,13 +19,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     Mode.prototype.enable.call(this);
 
     $('#hud1').show();
-    KIMCHI.controls.enable();
+    KIMCHI.pointerLockControls.enable();
   };
 
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
-    KIMCHI.controls.disable();
+    KIMCHI.pointerLockControls.disable();
     $('#hud1').hide();
   };
 
@@ -35,7 +35,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // move the Camera
     if (!colliding()) {
-      KIMCHI.controls.moveCamera(
+      KIMCHI.pointerLockControls.moveCamera(
         delta,
         flight.getTranslationSpeedMultiplier()
       );
@@ -84,7 +84,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     raycaster.precision = 0.000001;
 
     return function () {
-      translationVector = KIMCHI.controls.getLocalTranslationVector();
+      translationVector = KIMCHI.pointerLockControls.getLocalTranslationVector();
 
       // scaling may be necessary if translationVector's magnitude is much
       // larger or smaller than the camera position
@@ -131,7 +131,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * @memberOf module:KIMCHI.flight.modes.free
    */
   getSpeed = function (delta) {
-    var translation = KIMCHI.controls.getLocalTranslationVector();
+    var translation = KIMCHI.pointerLockControls.getLocalTranslationVector();
     return (new THREE.Vector3(
         translation.x * KIMCHI.config.get('controlsStrafeSpeed'),
         translation.y * KIMCHI.config.get('controlsStrafeSpeed'),

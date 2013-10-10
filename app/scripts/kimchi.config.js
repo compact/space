@@ -25,7 +25,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.cameraFov = 45;
   settings.cameraNear = 0.001;
   settings.cameraFar = 1000;
-  // for KIMCHI.init()
   settings.cameraInitialPosition = new THREE.Vector3(0, 0, -5);
 
   // for THREE.PointerLockControls
@@ -127,7 +126,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       // on how the Earth looks. -Chris
       bumpScale = large ? body.radius * 50: body.radius * value * 0.05;
       if (body.hasBumpMap) {
-        console.log(body.name + ' ' + bumpScale);
         body.object3Ds.main.material.bumpScale = bumpScale;
       }
     });
@@ -253,7 +251,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       handlers[key](value);
     }
 
-    console.log('set config: ' + key + ' = ' + value);
+    console.log('.config: set ' + key + ' = ' + value);
 
     // update the config user interface
     // KIMCHI.ui.panel.updateConfig(key, value);

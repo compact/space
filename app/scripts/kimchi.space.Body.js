@@ -32,6 +32,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     // further default options appear below in the prototype
     _.assign(this, options);
 
+    console.log('.space: constructing ' + this.name);
+
     // contains all THREE.Object3D objects belonging to this Body
     this.object3Ds = {};
 

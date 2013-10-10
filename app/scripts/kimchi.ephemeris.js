@@ -37,10 +37,10 @@ var KIMCHI = (function (KIMCHI, $) {
   ephemeris.loadBatch = function (julian) {
     var file = 'data/de405/' + julian + '.json';
 
-    console.log('loading ephemeris batch: ' + julian);
+    console.log('.ephemeris: loading batch ' + julian);
 
     return $.getJSON(file).done(function (data) {
-      console.log('loaded ephemeris batch: ' + julian);
+      console.log('.ephemeris: loaded batch ' + julian);
       batch = data;
       ephemeris.updateLastJulianInBatch();
     }).fail(function () { // jqXHR, textStatus, error

@@ -45,7 +45,7 @@ var KIMCHI = (function (KIMCHI, $) {
     });
     KIMCHI.renderer.setSize(size.width, size.height);
 
-    console.log('size changed to ' + size.width + ' x ' + size.height);
+    console.log('.size: resized to ' + size.width + ' x ' + size.height);
   };
 
   return KIMCHI;

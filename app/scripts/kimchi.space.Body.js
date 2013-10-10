@@ -72,7 +72,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     this.setScale();
 
     // position the Mesh
-    this.translate();
+    // this.translate();
 
     // create an orbit Line with a clockwise Curve
     if (this.createOrbit) {

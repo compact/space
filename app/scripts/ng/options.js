@@ -45,7 +45,8 @@ angular.module('kimchi').controller('optionsCtrl', function ($scope, $timeout, K
     ]
   };
 
-  $timeout(function () {
+  // the config values cannot be set before KIMCHI is initialized
+  Kimchi.init.promise.then(function () {
     var keys, radioKeys, dropdownKeys;
 
     // Radio settings and dropdown settings are handled differently. When
@@ -65,9 +66,6 @@ angular.module('kimchi').controller('optionsCtrl', function ($scope, $timeout, K
       'bodiesSizeScale'
     ];
     keys = radioKeys.concat(dropdownKeys);
-
-    // initialize the values in KIMCHI.config
-    Kimchi.config.init();
 
     // radios
     _.each(radioKeys, function (key) {

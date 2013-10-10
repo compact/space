@@ -27,24 +27,11 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Populate the private bodies object.
-   * @params   {Function} [callback]
    * @memberOf module:KIMCHI.space
    */
   space.init = function (callback) {
-    // get the ephemeris data
-    KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
-      // construct the Bodies
-      _.each(space.data, function (options) {
-        bodies[options.name] = new space.Body(options);
-      });
-
-      // initialize Body children positions and scales for rendering
-      space.updateBodyChildren();
-
-      // optional callback
-      if (typeof callback === 'function') {
-        callback.call(space);
-      }
+    _.each(space.data, function (options) {
+      bodies[options.name] = new space.Body(options);
     });
   };
 

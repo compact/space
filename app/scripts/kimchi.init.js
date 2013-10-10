@@ -18,7 +18,7 @@ var KIMCHI = KIMCHI || {};
    * @memberOf module:KIMCHI
    */
   KIMCHI.init = function () {
-    var success;
+    var promise, success;
 
     // jQuery objects
     KIMCHI.$document = $(document);
@@ -64,9 +64,16 @@ var KIMCHI = KIMCHI || {};
 
 
     // add astronomical objects
-    KIMCHI.space.init(function () {
-      KIMCHI.scene.add(this.getObject3Ds());
-      KIMCHI.ui.panel.init(); // depends on .space.init()
+    KIMCHI.space.init();
+    KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
+
+    // get the ephemeris data
+    promise = KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
+      // initialize the positions of the Bodies
+      KIMCHI.space.translateBodies();
+
+      // initialize Body children positions and scales for rendering
+      KIMCHI.space.updateBodyChildren();
     });
 
     // add background stars, an array of ParticleSystems
@@ -104,21 +111,25 @@ var KIMCHI = KIMCHI || {};
 
 
     // initialize submodules
+    KIMCHI.config.init();
     KIMCHI.pointerLock.init();
     KIMCHI.ui.notice.init();
+    KIMCHI.ui.panel.init();
     KIMCHI.flight.setMode('menu');
 
 
 
     // fix Body children positions and scales
-    setTimeout(function () {
-      // TODO: prefer to do this without a delay, in a callback somewhere
-      KIMCHI.renderer.render();
-    }, 3000);
+    // setTimeout(function () {
+    //   // TODO: prefer to do this without a delay, in a callback somewhere
+    //   KIMCHI.renderer.render();
+    // }, 3000);
+
+    return promise;
   };
 
   $(function () {
     // initialize KIMCHI
-    KIMCHI.init();
+    // KIMCHI.init();
   });
 }(KIMCHI, jQuery));

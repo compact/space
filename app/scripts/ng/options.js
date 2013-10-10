@@ -1,6 +1,25 @@
 // var options = angular.module('options', ['kimchi', 'three']);
 
-angular.module('kimchi').controller('optionsCtrl', function ($scope, $timeout, Kimchi) {
+angular.module('kimchi').controller('optionsCtrl', function ($scope, Kimchi) {
+
+  var keys, radioKeys, dropdownKeys;
+
+  // Radio settings and dropdown settings are handled differently. When editing
+  // these arrays, edit KIMCHI.config.userConfigurableKeys accordingly.
+  radioKeys = [
+    'rotateBodies',
+    'ambientLight',
+    'showLabels',
+    'showOrbits',
+    'showStars',
+    'controlsKeyboardSpeedMultiplier',
+    'controlsLookSpeed'
+  ];
+  dropdownKeys = [
+    'bodiesSpeed',
+    'bodiesSizeScale'
+  ];
+  keys = radioKeys.concat(dropdownKeys);
 
   $scope.options = {
     'bodiesSpeed': [
@@ -47,26 +66,6 @@ angular.module('kimchi').controller('optionsCtrl', function ($scope, $timeout, K
 
   // the config values cannot be set before KIMCHI is initialized
   Kimchi.init.promise.then(function () {
-    var keys, radioKeys, dropdownKeys;
-
-    // Radio settings and dropdown settings are handled differently. When
-    // editing these arrays, edit KIMCHI.config.userConfigurableKeys
-    // accordingly.
-    radioKeys = [
-      'rotateBodies',
-      'ambientLight',
-      'showLabels',
-      'showOrbits',
-      'showStars',
-      'controlsKeyboardSpeedMultiplier',
-      'controlsLookSpeed'
-    ];
-    dropdownKeys = [
-      'bodiesSpeed',
-      'bodiesSizeScale'
-    ];
-    keys = radioKeys.concat(dropdownKeys);
-
     // radios
     _.each(radioKeys, function (key) {
       // set the initial value (either default or from localStorage)
@@ -89,5 +88,7 @@ angular.module('kimchi').controller('optionsCtrl', function ($scope, $timeout, K
         Kimchi.config.set(key, option.value);
       });
     });
+
+    KIMCHI.renderer.render();
   });
 });

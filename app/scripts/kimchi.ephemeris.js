@@ -27,7 +27,6 @@ var KIMCHI = (function (KIMCHI, $) {
   ephemeris.updateLastJulianInBatch = function () {
     var keys = Object.keys(batch);
     ephemeris.lastJulianInBatch = Number(keys[keys.length - 1]);
-    console.log('last julian in batch: ' + ephemeris.lastJulianInBatch);
   };
 
   /**
@@ -41,12 +40,13 @@ var KIMCHI = (function (KIMCHI, $) {
     console.log('loading ephemeris batch: ' + julian);
 
     return $.getJSON(file).done(function (data) {
+      console.log('loaded ephemeris batch: ' + julian);
       batch = data;
       ephemeris.updateLastJulianInBatch();
     }).fail(function () { // jqXHR, textStatus, error
       console.log('failed to get: ' + file);
       KIMCHI.config.set('bodiesSpeed', 0);
-    });
+    }).promise();
   };
 
   /**

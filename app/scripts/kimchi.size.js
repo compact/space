@@ -39,7 +39,10 @@ var KIMCHI = (function (KIMCHI, $) {
   size.update = function () {
     size.width = KIMCHI.$window.width();
     size.height = KIMCHI.$window.height() - 5; // TODO
-    KIMCHI.camera.update(size.width, size.height);
+    KIMCHI.camera.update({
+      'width': size.width,
+      'height': size.height
+    });
     KIMCHI.renderer.setSize(size.width, size.height);
 
     console.log('size changed to ' + size.width + ' x ' + size.height);

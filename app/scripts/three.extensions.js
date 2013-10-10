@@ -131,15 +131,30 @@
 
 
   /**
-   * Update the camera given dimensions.
-   * @param    {Number} width
-   * @param    {Number} height
+   * Update the camera with the given options. The aspect ratio is calculated
+   *   from the given width and height. See {@link
+   *   http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera} for the
+   *   other properties.
+   * @param    {Object} options
+   * @param    {Number} [options.width] If given, height must also be given
+   * @param    {Number} [options.height] If given, width must also be given.
+   * @param    {Number} [options.fov]
+   * @param    {Number} [options.near]
+   * @param    {Number} [options.far]
    * @alias    update
    * @instance
    * @memberOf external:THREE.PerspectiveCamera
    */
-  THREE.PerspectiveCamera.prototype.update = function (width, height) {
-    this.aspect = width / height;
+  THREE.PerspectiveCamera.prototype.update = function (options) {
+    if (typeof options.width === 'number' && options.height > 0) {
+      this.aspect = options.width / options.height;
+
+      // the camera doesn't have width and height properties; no need to assign
+      _.omit(options, ['width', 'height']);
+    }
+    _.assign(this, options);
+
+    // must be called after changing options
     this.updateProjectionMatrix();
   };
 

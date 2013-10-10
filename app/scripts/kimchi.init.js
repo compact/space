@@ -12,59 +12,91 @@ var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
   /**
-   * Initialize KIMCHI. Call after the DOM is ready.
+   * This function can be called before the DOM is ready.
    * @memberOf module:KIMCHI
    */
   KIMCHI.init = function () {
-    var promise, success;
+    console.log('.init(): start');
 
-    // jQuery objects
-    KIMCHI.$document = $(document);
-    KIMCHI.$window = $(window);
-    KIMCHI.$overlay = $('#overlay');
+    var deferred, rendererSuccess;
+
+    deferred = $.Deferred();
+    /**
+     * @type     {Promise}
+     * @memberOf module:KIMCHI
+     */
+    KIMCHI.init.promise = deferred.promise();
 
 
 
     // WebGL check
     if (typeof window.WebGLRenderingContext !== 'function') {
       // WebGL is not supported by the browser
-      $('.continue-flying').replaceWith(
-        '<p>' + KIMCHI.config.get('langWebGLNotSupported') + '</p>');
+      console.log('.init(): WebGL is not supported by the browser');
+      // $('.continue-flying').replaceWith(
+      //   '<p>' + KIMCHI.config.get('langWebGLNotSupported') + '</p>');
       return false;
     }
 
     // renderer
-    success = KIMCHI.renderer.init();
-    if (!success) {
+    rendererSuccess = KIMCHI.renderer.init();
+    if (!rendererSuccess) {
       // the renderer failed to initialize
-      $('.continue-flying').replaceWith(
-        '<p>' + KIMCHI.config.get('langWebGLError') + '</p>');
+      console.log('.init(): the renderer failed to initialize');
+      // $('.continue-flying').replaceWith(
+      //   '<p>' + KIMCHI.config.get('langWebGLError') + '</p>');
       return false;
     }
 
 
 
-    // construct three.js objects
-    // clock
+    // config
+    KIMCHI.config.init();
+
+    /**
+     * This clock keeps track of time for three.js. It is different from
+     *   {@link module:KIMCHI.time|KIMCHI.time}, which keeps track of the
+     *   user's current Julian Date in space.
+     * @type     {THREE.Clock}
+     * @memberOf module:KIMCHI
+     */
     KIMCHI.clock = new THREE.Clock(false); // do not autostart
-    // scene
+
+    /**
+     * @type     {THREE.Scene}
+     * @memberOf module:KIMCHI
+     */
     KIMCHI.scene = new THREE.Scene();
-    // camera: don't use OrthographicCamera because it lacks perspective
+
+    /**
+     * Don't use OrthographicCamera because it lacks perspective.
+     * @type     {THREE.PerspectiveCamera}
+     * @memberOf module:KIMCHI
+     */
     KIMCHI.camera = new THREE.PerspectiveCamera(
       KIMCHI.config.get('cameraFov'),
       1, // placeholder, set with KIMCHI.size.init()
       KIMCHI.config.get('cameraNear'),
       KIMCHI.config.get('cameraFar')
     );
-    // set camera size and renderer size
-    KIMCHI.size.init();
     // initialize camera position and rotation
     KIMCHI.camera.position.copy(KIMCHI.config.get('cameraInitialPosition'));
     KIMCHI.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
 
-    // lighting
+    /**
+     * @type     {THREE.PointerLockControls}
+     * @memberOf module:KIMCHI
+     */
+    KIMCHI.controls = new THREE.PointerLockControls(KIMCHI.camera);
+
+
+
+    /**
+     * Lighting.
+     * @memberOf module:KIMCHI
+     */
     KIMCHI.lights = {};
     // sunlight
     KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 0);
@@ -75,44 +107,81 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
 
-    // add background stars, an array of ParticleSystems
+    /**
+     * Stars in the background.
+     * @type     {THREE.ParticleSystem[]}
+     * @memberOf module:KIMCHI
+     */
     KIMCHI.stars = new THREE.Stars({
       'scale': KIMCHI.config.get('starsScale'),
       'count': KIMCHI.config.get('starsCount')
     });
     KIMCHI.scene.add(KIMCHI.stars);
 
+
+
     // add astronomical bodies
     KIMCHI.space.init();
     KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
 
+
+
     // get ephemeris data
-    promise = KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
+    KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
       // initialize Body positions
+      console.log('.init(): position Bodies');
       KIMCHI.space.translateBodies();
 
       // initialize Body children positions and scales for rendering
+      console.log('.init(): update Body children');
       KIMCHI.space.updateBodyChildren();
+
+      deferred.resolve();
     });
 
 
 
-    // first person controls
-    KIMCHI.controls = new THREE.PointerLockControls(KIMCHI.camera);
+    KIMCHI.init.promise.done(function () {
+      console.log('.init(): done');
+    });
 
-
-
-    // initialize submodules
-    KIMCHI.config.init();
-    KIMCHI.pointerLock.init();
-    KIMCHI.ui.notice.init();
-    KIMCHI.ui.panel.init();
-    KIMCHI.flight.setMode('menu');
-
-
-
-    return promise;
+    return KIMCHI.init.promise;
   };
+
+
+
+  /**
+   * Call this function after the DOM is ready.
+   * @memberOf module:KIMCHI
+   */
+  KIMCHI.ready = function () {
+    var success;
+
+    console.log('.ready(): start');
+
+    // jQuery objects
+    KIMCHI.$document = $(document);
+    KIMCHI.$window = $(window);
+    KIMCHI.$overlay = $('#overlay');
+
+    KIMCHI.init.promise.done(function () {
+      KIMCHI.size.init();
+      KIMCHI.pointerLock.init();
+      KIMCHI.ui.notice.init();
+      KIMCHI.ui.panel.init();
+      KIMCHI.flight.setMode('menu');
+
+      console.log('.ready(): done');
+    });
+  };
+
+
+
+  KIMCHI.init();
+
+  $(function () {
+    KIMCHI.ready();
+  });
 
   return KIMCHI;
 }(KIMCHI || {}, jQuery));

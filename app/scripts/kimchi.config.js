@@ -107,17 +107,17 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       // set the scale
       if (large) {
         switch (body.type) {
-          case 'star':
-            value = 0.2 / body.radius;
-            break;
-          case 'planet':
-            value = 0.1 / body.radius;
-            break;
-          case 'moon':
-            value = 0.05 / body.radius;
-            break;
-          default:
-            value = 0.1 / body.radius;
+        case 'star':
+          value = 0.2 / body.radius;
+          break;
+        case 'planet':
+          value = 0.1 / body.radius;
+          break;
+        case 'moon':
+          value = 0.05 / body.radius;
+          break;
+        default:
+          value = 0.1 / body.radius;
         }
       }
       body.object3Ds.main.scale.setXYZ(value);

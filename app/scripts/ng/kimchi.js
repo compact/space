@@ -13,11 +13,16 @@ app.factory('Kimchi', function ($rootScope, $q) {
 
   KIMCHI.init.promise.done(function () {
     deferred.resolve();
-    // TODO: got a "$apply already in progress" error here once
-    $rootScope.$digest();
+
+    if (!$rootScope.$$phase) {
+      $rootScope.$digest();
+    }
   }).fail(function () {
     deferred.reject();
-    $rootScope.$digest();
+
+    if (!$rootScope.$$phase) {
+      $rootScope.$digest();
+    }
   });
 
   KIMCHI.init.ngPromise = deferred.promise;

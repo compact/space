@@ -1,10 +1,10 @@
 /**
  * Based on {@link http://threejs.org/examples/misc_controls_fly.html}
  *   Multiple geometries and materials are used for variability in the stars.
- * @constructor THREE.Stars
+ * @constructor Stars
  * @memberOf    THREE
  */
-(function (_, $, THREE) {
+(function (_, THREE) {
   'use strict';
 
   THREE.Stars = function (options) {
@@ -65,4 +65,4 @@
 
     return particleSystems;
   };
-}(_, jQuery, THREE));
+}(_, THREE));

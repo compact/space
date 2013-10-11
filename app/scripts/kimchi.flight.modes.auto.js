@@ -42,8 +42,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     mode.panTo(body).then(function () {
       console.log('.flight.modes.auto: translating to ' + body.name);
       translateTo(body).then(function () {
-        flight.setMode('menu');
-
         deferred.resolve();
       });
     });

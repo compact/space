@@ -153,13 +153,13 @@
    * @memberOf THREE.PointerLockControls
    */
   PointerLockControls.prototype.disable = function () {
-    this.resetStates();
+    this.enabled = false;
 
     document.removeEventListener('mousemove', this.events.mousemove, false);
     document.removeEventListener('keydown', this.events.keydown, false);
     document.removeEventListener('keyup', this.events.keyup, false);
 
-    this.enabled = false;
+    this.resetStates();
   };
 
 

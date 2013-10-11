@@ -500,6 +500,8 @@ THREE.OrbitControls = function (object, domElement) {
     this.domElement.removeEventListener('touchstart', touchstart, false);
     this.domElement.removeEventListener('touchend', touchend, false);
     this.domElement.removeEventListener('touchmove', touchmove, false);
+
+    this.reset();
   };
 
 

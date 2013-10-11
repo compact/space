@@ -1,6 +1,8 @@
 var app = angular.module('kimchi', ['three', '$strap.directives']);
 
-app.factory('Kimchi', function ($rootScope, $q, $document) {
+
+
+app.factory('Kimchi', function ($rootScope, $q, $timeout, $document) {
   var KIMCHI, deferred;
 
   KIMCHI = window.KIMCHI;
@@ -12,17 +14,13 @@ app.factory('Kimchi', function ($rootScope, $q, $document) {
   deferred = $q.defer();
 
   KIMCHI.init.promise.done(function () {
-    deferred.resolve();
-
-    if (!$rootScope.$$phase) {
-      $rootScope.$digest();
-    }
+    $timeout(function () { // $digest: http://stackoverflow.com/a/18996042
+      deferred.resolve();
+    });
   }).fail(function () {
-    deferred.reject();
-
-    if (!$rootScope.$$phase) {
-      $rootScope.$digest();
-    }
+    $timeout(function () {
+      deferred.reject();
+    });
   });
 
   KIMCHI.init.ngPromise = deferred.promise;
@@ -46,4 +44,22 @@ app.factory('Kimchi', function ($rootScope, $q, $document) {
 
 
   return KIMCHI;
+});
+
+
+
+app.controller('KimchiCtrl', function ($scope, Kimchi) {
+  $scope.Kimchi = Kimchi;
+});
+
+
+
+app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
+  $scope.flyTo = function (body) {
+    Kimchi.flight.setMode('auto');
+    Kimchi.flight.modes.auto.flyTo(body).then(function () {
+      $timeout(function () { // $digest to update the current distances
+      });
+    });
+  };
 });

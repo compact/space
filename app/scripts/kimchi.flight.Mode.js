@@ -71,7 +71,7 @@ var KIMCHI = (function (KIMCHI, $) {
     KIMCHI.renderer.animate(function (delta) {
       if (!self.enabled) {
         // this mode is being disabled
-        console.log('stop animating for ' + self.name + ' flight mode');
+        console.log('.flight.Mode: stopping animation for ' + self.name);
         return $.when(false);
       }
 

@@ -252,9 +252,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     }
 
     console.log('.config: set ' + key + ' = ' + value);
-
-    // update the config user interface
-    // KIMCHI.ui.panel.updateConfig(key, value);
   };
 
 

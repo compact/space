@@ -171,6 +171,14 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
+   * @returns  {Number} The distance between the camera and this Body.
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.getCameraDistance = function () {
+    return THREE.Object3D.getDistance(KIMCHI.camera, this.object3Ds.main);
+  };
+
+  /**
    * @returns  {Number} The collision distance between the camera and this Body.
    * @memberOf module:KIMCHI.space.Body
    */

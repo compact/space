@@ -19,7 +19,6 @@ var KIMCHI = (function (KIMCHI, $) {
     Mode.prototype.enable.call(this);
 
     KIMCHI.clock.stop();
-    KIMCHI.ui.panel.update();
     KIMCHI.$overlay.show();
 /*    KIMCHI.$overlay.blurjs({
       source: '#space',

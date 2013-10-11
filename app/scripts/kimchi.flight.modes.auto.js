@@ -18,14 +18,14 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   mode.enable = function () {
     Mode.prototype.enable.call(this);
 
-    KIMCHI.$document.on('keydown', keydown);
+    // KIMCHI.$document.on('keydown', keydown);
   };
 
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
     KIMCHI.ui.notice.clear(); // TODO move this
-    KIMCHI.$document.off('keydown', keydown);
+    // KIMCHI.$document.off('keydown', keydown);
   };
 
   /**
@@ -50,21 +50,21 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @private
    * @memberOf module:KIMCHI.flight.modes.auto
    */
-  keydown = (function () {
-    var keydownInProgress = false;
+  // keydown = (function () {
+  //   var keydownInProgress = false;
 
-    return function (event) {
-      if (event.which === 27) { // Esc
-        keydownInProgress = true;
-        $(this).one('keyup', function (event) {
-          if (event.which === 27 && keydownInProgress) {
-            flight.setMode('menu');
-            keydownInProgress = false;
-          }
-        });
-      }
-    };
-  }());
+  //   return function (event) {
+  //     if (event.which === 27) { // Esc
+  //       keydownInProgress = true;
+  //       $(this).one('keyup', function (event) {
+  //         if (event.which === 27 && keydownInProgress) {
+  //           flight.setMode('menu');
+  //           keydownInProgress = false;
+  //         }
+  //       });
+  //     }
+  //   };
+  // }());
 
   /**
    * Helper function called in every animationFrame() to update space.

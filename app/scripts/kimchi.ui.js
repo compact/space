@@ -56,15 +56,16 @@ var KIMCHI = (function (KIMCHI, $) {
       KIMCHI.$overlay.one('click', '.continue-flying', function () {
         var $this = $(this);
 
-        KIMCHI.pointerLock.request(); // async
+        KIMCHI.flight.setMode('free'); // async
         // this delay is because the button changing before free flight gets
         // enabled is unsightly
         window.setTimeout(function () {
           $this.button('continue');
         }, 250);
 
-        KIMCHI.$overlay.on('click', '.continue-flying',
-          KIMCHI.pointerLock.request);
+        KIMCHI.$overlay.on('click', '.continue-flying', function () {
+          KIMCHI.flight.setMode('free');
+        });
       });
 
       // used by updateConfig()

@@ -174,7 +174,7 @@ var KIMCHI = (function (KIMCHI, $) {
       KIMCHI.pointerLock.init();
       KIMCHI.ui.notice.init();
       KIMCHI.ui.panel.init();
-      KIMCHI.flight.setMode('menu');
+      KIMCHI.flight.init();
 
       console.log('.ready(): done');
     });

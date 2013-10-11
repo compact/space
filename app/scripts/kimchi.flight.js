@@ -28,6 +28,17 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf  module:KIMCHI.flight
    */
   flight.modes = {};
+
+  /**
+   * Any init() functions from the flight modes can be called here. Set the
+   *   initial flight mode.
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.init = function () {
+    flight.modes.free.init();
+    flight.setMode('menu');
+  };
+
   /**
    * @returns  {String|Boolean}
    * @memberOf module:KIMCHI.flight
@@ -35,6 +46,7 @@ var KIMCHI = (function (KIMCHI) {
   flight.getMode = function () {
     return currentMode;
   };
+
   /**
    * @param    {String|Boolean}
    * @memberOf module:KIMCHI.flight

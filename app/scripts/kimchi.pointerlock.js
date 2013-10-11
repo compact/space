@@ -6,19 +6,28 @@
 var KIMCHI = (function (KIMCHI) {
   'use strict';
 
-  var pointerLock = {}, requestPointerLock;
+  var pointerLock = {}, requestPointerLock, exitPointerLock;
   KIMCHI.pointerLock = pointerLock;
 
 
 
   /**
-   * Request pointer lock from the browser. This is called whenever the user
-   *   enters free flight mode.
+   * Request pointer lock from the browser. This is called for the user to
+   *   enter free flight mode.
    * @memberOf module:KIMCHI.pointerLock
    */
   pointerLock.request = function () {
+    console.log('.pointerLock: requesting');
     requestPointerLock.call(document.body);
-    console.log('pointer lock requested');
+  };
+
+  /**
+   * Exit pointer lock.
+   * @memberOf module:KIMCHI.pointerLock
+   */
+  pointerLock.exit = function () {
+    console.log('.pointerLock: exiting');
+    exitPointerLock.call(document);
   };
 
   /**
@@ -26,7 +35,7 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.pointerLock
    */
   pointerLock.init = function () {
-    var havePointerLock, body, change, error;
+    var havePointerLock, body, errorHandler;
 
     // check whether pointer lock is enabled
     havePointerLock = 'pointerLockElement' in document ||
@@ -48,29 +57,41 @@ var KIMCHI = (function (KIMCHI) {
     requestPointerLock = body.requestPointerLock ||
       body.mozRequestPointerLock || body.webkitRequestPointerLock;
 
-    // bind pointer lock change and error handlers
-    change = function () {
-      var on = document.pointerLockElement === body ||
-        document.mozPointerLockElement === body ||
-        document.webkitPointerLockElement === body;
+    /**
+     * The browser's exitPointerLock function, used in exit().
+     * @private
+     * @memberOf module:KIMCHI.pointerLock
+     */
+    exitPointerLock = document.exitPointerLock || document.mozExitPointerLock ||
+      document.webkitExitPointerLock;
 
-      if (on) {
-        KIMCHI.flight.setMode('free');
-      } else if (KIMCHI.flight.getMode() === 'free') {
-        KIMCHI.flight.setMode('menu');
-      }
-    };
-    document.addEventListener('pointerlockchange', change, false);
-    document.addEventListener('mozpointerlockchange', change, false);
-    document.addEventListener('webkitpointerlockchange', change, false);
-
-    error = function (event) {
-      console.log('pointerlockerror:');
+    errorHandler = function (event) {
+      console.log('.pointerLock: error:');
       console.log(event);
     };
-    document.addEventListener('pointerlockerror', error, false);
-    document.addEventListener('mozpointerlockerror', error, false);
-    document.addEventListener('webkitpointerlockerror', error, false);
+    document.addEventListener('pointerlockerror', errorHandler, false);
+    document.addEventListener('mozpointerlockerror', errorHandler, false);
+    document.addEventListener('webkitpointerlockerror', errorHandler, false);
+  };
+
+  /**
+   * @param   {String}   event             'change' or 'error'
+   * @param   {Function} handlerGivenState This handler is given a boolean
+   *   indicating whether pointer lock is currently enabled.
+   * @memberOf module:KIMCHI.pointerLock
+   */
+  pointerLock.on = function (event, handlerGivenState) {
+    var handler = function () {
+      var pointerLocked = document.pointerLockElement === document.body ||
+        document.mozPointerLockElement === document.body ||
+        document.webkitPointerLockElement === document.body;
+
+      handlerGivenState(pointerLocked);
+    };
+
+    document.addEventListener('pointerlock' + event, handler, false);
+    document.addEventListener('mozpointerlock' + event, handler, false);
+    document.addEventListener('webkitpointerlock' + event, handler, false);
   };
 
 

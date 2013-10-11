@@ -66,7 +66,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   // for KIMCHI.ui.notice
   settings.noticePointerLockNotSupported = 'This website does not work in your current browser since it does not support Pointer Lock API. Please use the latest version of Chrome or Firefox.';
   settings.noticeFlyTo = function (body) {
-    return 'Flying to ' + body.name + '...<br />Press Esc to stop.';
+    return 'Flying to ' + body.name + '...';
   };
 
   // language constants

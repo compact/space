@@ -18,12 +18,19 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   mode.enable = function () {
     Mode.prototype.enable.call(this);
 
-    $('#hud1').show();
-    KIMCHI.pointerLockControls.enable();
+    KIMCHI.pointerLock.request();
+    // See the handler in init() for what happens after this request is
+    // successful.
   };
 
   mode.disable = function () {
     Mode.prototype.disable.call(this);
+
+    // When the user exits pointer lock directly by pressing Esc or through
+    // other means, this call is unnecessary; in fact, that exit triggers this
+    // function, disable(). In other cases, when the user disables free flight
+    // by pressing a key, this call is necessary.
+    KIMCHI.pointerLock.exit();
 
     KIMCHI.pointerLockControls.disable();
     $('#hud1').hide();
@@ -63,6 +70,25 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     KIMCHI.space.updateBodyChildren();
 
     return deferred.promise();
+  };
+
+  /**
+   * Bind the pointer lock handler for when free flight gets enabled or
+   *   disabled.
+   * @memberOf module:KIMCHI.flight.modes.free
+   */
+  mode.init = function () {
+    KIMCHI.pointerLock.on('change', function (pointerLocked) {
+      if (pointerLocked) { // enabling
+        $('#hud1').show();
+        KIMCHI.pointerLockControls.enable();
+      } else if (flight.getMode() === 'free') { // disabling
+        // This is the case when the user has exited pointer lock directly [by
+        // pressing Esc or through other means]. In the other cases, the user
+        // has changed to another flight mode directly.
+        KIMCHI.flight.setMode('menu');
+      }
+    });
   };
 
 

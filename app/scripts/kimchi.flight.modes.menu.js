@@ -26,7 +26,7 @@ var KIMCHI = (function (KIMCHI, $) {
       radius: 7,
       overlay: 'rgba(255,255,255,0.4)'
     });*/
-    KIMCHI.$document.on('keydown', keydown);
+    // KIMCHI.$document.on('keydown', keydown);
   };
 
   mode.disable = function () {
@@ -34,7 +34,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
     KIMCHI.$overlay.hide();
     KIMCHI.clock.start();
-    KIMCHI.$document.off('keydown', keydown);
+    // KIMCHI.$document.off('keydown', keydown);
   };
 
   mode.animationFrame = function () {
@@ -52,21 +52,21 @@ var KIMCHI = (function (KIMCHI, $) {
    * @private
    * @memberOf module:KIMCHI.flight.modes.menu
    */
-  keydown = (function () {
-    var keydownInProgress = false;
+  // keydown = (function () {
+  //   var keydownInProgress = false;
 
-    return function (event) {
-      if (event.which === 27) { // Esc
-        keydownInProgress = true;
-        $(this).one('keyup', function (event) {
-          if (event.which === 27 && keydownInProgress) {
-            KIMCHI.pointerLock.request();
-            keydownInProgress = false;
-          }
-        });
-      }
-    };
-  }());
+  //   return function (event) {
+  //     if (event.which === 27) { // Esc
+  //       keydownInProgress = true;
+  //       $(this).one('keyup', function (event) {
+  //         if (event.which === 27 && keydownInProgress) {
+  //           flight.setMode('free');
+  //           keydownInProgress = false;
+  //         }
+  //       });
+  //     }
+  //   };
+  // }());
 
 
 

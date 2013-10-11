@@ -67,8 +67,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   }());
 
   /**
-   * Helper function called in every animationFrame() to update the space
-   *   and the hud.
+   * Helper function called in every animationFrame() to update space.
    * @param    {Number} delta
    * @private
    * @memberOf module:KIMCHI.flight.modes.auto
@@ -76,9 +75,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   update = function (delta) {
     // do not move the Body Meshes themselves
     KIMCHI.space.updateBodyChildren();
-
-    // update hud
-    KIMCHI.ui.hud.update(delta);
   };
 
   /**

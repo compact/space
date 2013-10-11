@@ -1,14 +1,25 @@
 // var hud = angular.module('hud', ['kimchi', 'three']);
 
+angular.module('kimchi').controller('statsCtrl', function ($scope, Kimchi) {
+  var unbind;
+
+  $scope.data = {};
+
+  unbind = Kimchi.watcher.watch(function () {
+    $scope.data.time = Kimchi.format.time();
+    $scope.data.distanceFromSun = Kimchi.format.roundNicely(THREE.Object3D.getDistance(Kimchi.camera, Kimchi.space.getBody('Sun').object3Ds.main), 2, true);
+    $scope.data.speed = Kimchi.format.roundDecimals(Kimchi.flight.getSpeed(), 2, true);
+
+    $scope.$digest();
+  });
+
+  $scope.$on('$destroy', unbind);
+});
+
 angular.module('kimchi').controller('debugCtrl', function ($scope, Kimchi) {
   var unbind, position, rotation;
 
-  $scope.kimchi = Kimchi;
-  // placeholder values that appear before kimchi finishes initializing
   $scope.data = {};
-  $scope.data.delta = 0;
-  $scope.data.position = '0, 0, 0';
-  $scope.data.rotation = '0, 0, 0';
 
   unbind = Kimchi.watcher.watch(function () {
     position = Kimchi.camera.position;

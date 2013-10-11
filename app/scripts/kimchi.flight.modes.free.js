@@ -62,9 +62,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // move the Bodies' children
     KIMCHI.space.updateBodyChildren();
 
-    // update hud
-    KIMCHI.ui.hud.update(delta);
-
     return deferred.promise();
   };
 

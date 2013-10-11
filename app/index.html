@@ -42,10 +42,10 @@
           <li class="active">
             <a href="#about-pane" data-toggle="tab">About</a>
           </li>
-          <li class="">
+          <li>
             <a href="#bodies-pane" data-toggle="tab">Astronomical bodies</a>
           </li>
-          <li class="">
+          <li>
             <a href="#config-pane" data-toggle="tab">Options</a>
           </li>
         </ul>
@@ -187,21 +187,21 @@
     </ul>
   </div>
 
-  <div id="hud2" class="hud">
-    <ul>
+  <div id="hud2" class="hud" ng-controller="statsCtrl">
+    <ul ng-cloak>
       <li>
         <strong>Time: </strong>
-        <div id="hud-time" class="hud-value"></div>
+        <div class="hud-value">{{data.time}}</div>
         <div class="hud-unit"></div>
       </li>
       <li>
         <strong>Distance from the Sun: </strong>
-        <div id="hud-distance-from-sun" class="hud-value"></div>
+        <div class="hud-value">{{data.distanceFromSun}}</div>
         <div class="hud-unit">&nbsp;AU</div>
       </li>
       <li>
         <strong>Speed: </strong>
-        <div id="hud-speed" class="hud-value">0</div>
+        <div class="hud-value">{{data.speed}}</div>
         <div class="hud-unit">&nbsp;AU/s</div>
       </li>
     </ul> 
@@ -214,7 +214,7 @@
       <h4>DEBUG</h4>
     </div>
     <div>
-      <ul>
+      <ul ng-cloak>
         <li>Delta: {{data.delta}}</li>
         <li>Position (px): {{data.position}}</li>
         <li>Rotation (deg): {{data.rotation}}</li>

@@ -98,7 +98,7 @@ var KIMCHI = (function (KIMCHI) {
 
   /**
    * @return   {String} The current {@link module:KIMCHI.time|time} formatted
-   *                    for the {@link module:KIMCHI.ui.hud|hud}.
+   *   for output to the user.
    * @memberOf module:KIMCHI.format
    */
   format.time = function () {

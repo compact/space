@@ -6,43 +6,9 @@
 var KIMCHI = (function (KIMCHI, $) {
   'use strict';
 
-  var ui = {}, hud = {}, notice = {};
-  ui.hud = hud;
+  var ui = {}, notice = {};
   ui.notice = notice;
   KIMCHI.ui = ui;
-
-
-
-  /**
-   * Heads up display during free flight.
-   * @namespace hud
-   * @memberOf  module:KIMCHI.ui
-   */
-  hud.update = function () {
-    $('#hud-distance-from-sun').text(KIMCHI.format.roundDecimals(KIMCHI.camera.position.length(), 2, true));
-    $('#hud-speed').text(KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true));
-    $('#hud-time').text(KIMCHI.format.time());
-
-    if (KIMCHI.config.get('debug')) {
-      // $('#hud4').html(
-      //   '<strong>Debug</strong><br />' +
-      //   'Delta: ' +
-      //     KIMCHI.format.roundDecimals(delta, 4, true) + '<br />' +
-      //   'Camera position (px): ' +
-      //     Math.round(KIMCHI.camera.position.x) + ', ' +
-      //     Math.round(KIMCHI.camera.position.y) + ', ' +
-      //     Math.round(KIMCHI.camera.position.z) + '<br />' +
-      //   'Camera rotation (deg): ' +
-      //     Math.round(KIMCHI.camera.rotation.x * 180 / Math.PI) + ', ' +
-      //     Math.round(KIMCHI.camera.rotation.y * 180 / Math.PI) + ', ' +
-      //     Math.round(KIMCHI.camera.rotation.z * 180 / Math.PI) + '<br />'
-      //   'movement: ' +
-      //     translation.x + ', ' +
-      //     translation.y + ', ' +
-      //     translation.z + '<br />' +
-      // );
-    }
-  };
 
 
 

@@ -6,7 +6,7 @@
 var KIMCHI = (function (KIMCHI, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, keydown, update, panTo, translateTo;
+  var flight, Mode, mode, keydown, update, translateTo;
 
 
 
@@ -29,10 +29,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   };
 
   /**
-   * Fly to the given Body. Two private functions are used sequentially to
-   *   first pan and then translate to it. translateTo(body) is called when
-   *   panTo(body) ends. disable() is called when translateTo(body) ends
-   * @alias    flyTo
+   * Fly to the given Body.
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   mode.flyTo = function (body) {
@@ -42,7 +39,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     KIMCHI.config.set('bodiesSpeed', 0);
 
     console.log('.flight.modes.auto: panning to ' + body.name);
-    panTo(body).then(function () {
+    mode.panTo(body).then(function () {
       console.log('.flight.modes.auto: translating to ' + body.name);
       translateTo(body).then(function () {
         flight.setMode('menu');
@@ -54,49 +51,12 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     return deferred.promise();
   };
 
-
-
   /**
-   * The event handler for pressing Escape to stop auto flight and return to
-   *   menu mode.
-   * @private
+   * Pan (gradually rotate) the camera towards the given Body (without
+   *   translating).
    * @memberOf module:KIMCHI.flight.modes.auto
    */
-  // keydown = (function () {
-  //   var keydownInProgress = false;
-
-  //   return function (event) {
-  //     if (event.which === 27) { // Esc
-  //       keydownInProgress = true;
-  //       $(this).one('keyup', function (event) {
-  //         if (event.which === 27 && keydownInProgress) {
-  //           flight.setMode('menu');
-  //           keydownInProgress = false;
-  //         }
-  //       });
-  //     }
-  //   };
-  // }());
-
-  /**
-   * Helper function called in every animationFrame() to update space.
-   * @param    {Number} delta
-   * @private
-   * @memberOf module:KIMCHI.flight.modes.auto
-   */
-  update = function (delta) {
-    // do not move the Body Meshes themselves
-    KIMCHI.space.updateBodyChildren();
-  };
-
-  /**
-   * Pan (rotate) the camera towards the given Body (without translating).
-   *   Return false to disable auto flight.
-   * @returns  {undefined|false}
-   * @private
-   * @memberOf module:KIMCHI.flight.modes.auto
-   */
-  panTo = (function () {
+  mode.panTo = (function () {
     var deferred, initialQuaternion, rotationMatrix, targetQuaternion, t;
 
     rotationMatrix = new THREE.Matrix4();
@@ -141,6 +101,41 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       return deferred.promise();
     };
   }());
+
+
+
+  /**
+   * The event handler for pressing Escape to stop auto flight and return to
+   *   menu mode.
+   * @private
+   * @memberOf module:KIMCHI.flight.modes.auto
+   */
+  // keydown = (function () {
+  //   var keydownInProgress = false;
+
+  //   return function (event) {
+  //     if (event.which === 27) { // Esc
+  //       keydownInProgress = true;
+  //       $(this).one('keyup', function (event) {
+  //         if (event.which === 27 && keydownInProgress) {
+  //           flight.setMode('menu');
+  //           keydownInProgress = false;
+  //         }
+  //       });
+  //     }
+  //   };
+  // }());
+
+  /**
+   * Helper function called in every animationFrame() to update space.
+   * @param    {Number} delta
+   * @private
+   * @memberOf module:KIMCHI.flight.modes.auto
+   */
+  update = function (delta) {
+    // do not move the Body Meshes themselves
+    KIMCHI.space.updateBodyChildren();
+  };
 
   /**
    * Translate the camera to the given Body until within range of collision.

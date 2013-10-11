@@ -27,6 +27,8 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   };
 
   mode.animationFrame = function (delta) {
+    KIMCHI.orbitControls.update();
+
     // rotate the Bodies
     if (KIMCHI.config.get('rotateBodies')) {
       KIMCHI.space.rotateBodies(delta);

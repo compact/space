@@ -36,10 +36,22 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   mode.flyTo = function (body) {
-    KIMCHI.ui.notice.set(KIMCHI.config.get('noticeFlyTo')(body));
+    var deferred = $.Deferred();
+
+    // KIMCHI.ui.notice.set(KIMCHI.config.get('noticeFlyTo')(body));
     KIMCHI.config.set('bodiesSpeed', 0);
-    panTo(body);
-    // TODO make function queue for successive setTimeout() calls
+
+    console.log('.flight.modes.auto: panning to ' + body.name);
+    panTo(body).then(function () {
+      console.log('.flight.modes.auto: translating to ' + body.name);
+      translateTo(body).then(function () {
+        flight.setMode('menu');
+
+        deferred.resolve();
+      });
+    });
+
+    return deferred.promise();
   };
 
 
@@ -85,12 +97,14 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   panTo = (function () {
-    var initialQuaternion, rotationMatrix, targetQuaternion, t;
+    var deferred, initialQuaternion, rotationMatrix, targetQuaternion, t;
 
     rotationMatrix = new THREE.Matrix4();
     targetQuaternion = new THREE.Quaternion();
 
     return function (body) {
+      deferred = $.Deferred();
+
       initialQuaternion = KIMCHI.camera.quaternion.clone();
 
       rotationMatrix.lookAt(
@@ -117,11 +131,14 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
           update(delta);
 
           t += 0.05;
-        } else {
-          translateTo(body);
-          //return false; // disable
+        } else { // done
+          deferred.resolve();
+          // can't return false here because then the follow-up translateTo()
+          // won't animate
         }
       };
+
+      return deferred.promise();
     };
   }());
 
@@ -131,21 +148,27 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   translateTo = function (body) {
+    var deferred = $.Deferred();
+
     mode.animationFrame = function (delta) {
       var translationZ;
 
-      if (body.isColliding(KIMCHI.camera)) {
-        flight.setMode('menu');
-        // KIMCHI.pointerLock.request();
-        return false;
-      } else {
+      if (!body.isColliding(KIMCHI.camera)) {
         translationZ = KIMCHI.config.get('controlsZSpeed') * delta *
           flight.getTranslationSpeedMultiplier([body]);
+
         this.speed = translationZ / delta;
+
         KIMCHI.camera.translateZ(-translationZ);
+
         update(delta);
+      } else { // done
+        deferred.resolve();
+        // return false; // stop animating
       }
     };
+
+    return deferred.promise();
   };
 
 

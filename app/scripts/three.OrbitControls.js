@@ -52,7 +52,7 @@ THREE.OrbitControls = function (object, domElement) {
   this.minDistance = 0;
   this.maxDistance = Infinity;
 
-  this.keys = [ 65 /*A*/, 83 /*S*/, 68 /*D*/ ];
+  // this.keys = [ 65 /*A*/, 83 /*S*/, 68 /*D*/ ];
 
   // internals
 
@@ -269,34 +269,38 @@ THREE.OrbitControls = function (object, domElement) {
 
   // listeners
 
-  function keydown(event) {
-    if (_this.enabled === false) {
-      return;
-    }
+  // function keydown(event) {
+  //   if (_this.enabled === false) {
+  //     return;
+  //   }
 
-    window.removeEventListener('keydown', keydown);
+  //   window.removeEventListener('keydown', keydown);
 
-    _prevState = _state;
+  //   _prevState = _state;
 
-    if (_state !== STATE.NONE) {
-      return;
-    } else if (event.keyCode === _this.keys[ STATE.ROTATE ] && !_this.noRotate) {
-      _state = STATE.ROTATE;
-    } else if (event.keyCode === _this.keys[ STATE.ZOOM ] && !_this.noZoom) {
-      _state = STATE.ZOOM;
-    } else if (event.keyCode === _this.keys[ STATE.PAN ] && !_this.noPan) {
-      _state = STATE.PAN;
-    }
-  }
+  //   if (_state !== STATE.NONE) {
+  //     return;
+  //   } else if (event.keyCode === _this.keys[ STATE.ROTATE ] && !_this.noRotate) {
+  //     _state = STATE.ROTATE;
+  //   } else if (event.keyCode === _this.keys[ STATE.ZOOM ] && !_this.noZoom) {
+  //     _state = STATE.ZOOM;
+  //   } else if (event.keyCode === _this.keys[ STATE.PAN ] && !_this.noPan) {
+  //     _state = STATE.PAN;
+  //   }
+  // }
 
-  function keyup(event) {
-    if (_this.enabled === false) {
-      return;
-    }
+  // function keyup(event) {
+  //   if (_this.enabled === false) {
+  //     return;
+  //   }
 
-    _state = _prevState;
+  //   _state = _prevState;
 
-    window.addEventListener('keydown', keydown, false);
+  //   window.addEventListener('keydown', keydown, false);
+  // }
+
+  function contextmenu(event) {
+    event.preventDefault();
   }
 
   function mousedown(event) {
@@ -454,22 +458,53 @@ THREE.OrbitControls = function (object, domElement) {
     _state = STATE.NONE;
   }
 
-  this.domElement.addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-  }, false);
 
-  this.domElement.addEventListener('mousedown', mousedown, false);
 
-  this.domElement.addEventListener('mousewheel', mousewheel, false);
-  this.domElement.addEventListener('DOMMouseScroll', mousewheel, false); // firefox
+  /**
+   * Enable the controls. This code was moved out of the constructor because we
+   *   need to be able to unbind the listeners.
+   * @memberOf THREE.OrbitControls
+   */
+  this.enable = function () {
+    this.domElement.addEventListener('contextmenu', contextmenu, false);
 
-  this.domElement.addEventListener('touchstart', touchstart, false);
-  this.domElement.addEventListener('touchend', touchend, false);
-  this.domElement.addEventListener('touchmove', touchmove, false);
+    this.domElement.addEventListener('mousedown', mousedown, false);
 
-  window.addEventListener('keydown', keydown, false);
-  window.addEventListener('keyup', keyup, false);
+    this.domElement.addEventListener('mousewheel', mousewheel, false);
+    this.domElement.addEventListener('DOMMouseScroll', mousewheel, false); // firefox
 
+    this.domElement.addEventListener('touchstart', touchstart, false);
+    this.domElement.addEventListener('touchend', touchend, false);
+    this.domElement.addEventListener('touchmove', touchmove, false);
+
+    // window.addEventListener('keydown', keydown, false);
+    // window.addEventListener('keyup', keyup, false);
+
+    this.enabled = true;
+  };
+
+  /**
+   * Disable the controls.
+   * @memberOf THREE.OrbitControls
+   */
+  this.disable = function () {
+    this.enabled = false;
+
+    this.domElement.removeEventListener('contextmenu', contextmenu, false);
+
+    this.domElement.removeEventListener('mousedown', mousedown, false);
+
+    this.domElement.removeEventListener('mousewheel', mousewheel, false);
+    this.domElement.removeEventListener('DOMMouseScroll', mousewheel, false);
+
+    this.domElement.removeEventListener('touchstart', touchstart, false);
+    this.domElement.removeEventListener('touchend', touchend, false);
+    this.domElement.removeEventListener('touchmove', touchmove, false);
+  };
+
+
+
+  // init
   this.handleResize();
 };
 

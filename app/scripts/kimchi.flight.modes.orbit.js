@@ -17,13 +17,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
   mode.enable = function () {
     Mode.prototype.enable.call(this);
 
-    KIMCHI.orbitControls.enabled = true;
+    KIMCHI.orbitControls.enable();
   };
 
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
-    KIMCHI.orbitControls.enabled = false;
+    KIMCHI.orbitControls.disable();
   };
 
   mode.animationFrame = function (delta) {

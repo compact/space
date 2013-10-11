@@ -149,4 +149,4 @@ KIMCHI.space.data = [
     'labelVisibleDistance': 1000,
     'createOrbit': true
   }
-]
+];

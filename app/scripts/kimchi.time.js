@@ -6,7 +6,7 @@
  * @namespace time
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, Q, $) {
+var KIMCHI = (function (KIMCHI, Q) {
   'use strict';
 
   var time, julian, on, step, julianToGregorian, gregorianToJulian;
@@ -177,4 +177,4 @@ var KIMCHI = (function (KIMCHI, Q, $) {
   };
 
   return KIMCHI;
-}(KIMCHI || {}, Q, jQuery));
+}(KIMCHI || {}, Q));

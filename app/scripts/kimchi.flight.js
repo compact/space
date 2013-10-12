@@ -7,7 +7,7 @@
 var KIMCHI = (function (KIMCHI) {
   'use strict';
 
-  var flight = {}, currentMode, Mode;
+  var flight = {}, currentMode;
   if (typeof KIMCHI.flight === 'object') {
     flight = KIMCHI.flight;
   } else {

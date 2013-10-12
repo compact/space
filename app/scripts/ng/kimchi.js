@@ -3,9 +3,7 @@ var app = angular.module('kimchi', ['three', '$strap.directives']);
 
 
 app.factory('Kimchi', function ($rootScope, $document) {
-  var KIMCHI, deferred;
-
-  KIMCHI = window.KIMCHI;
+  var KIMCHI = window.KIMCHI;
 
 
 

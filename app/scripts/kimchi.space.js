@@ -8,7 +8,7 @@
 var KIMCHI = (function (KIMCHI, _, $, THREE) {
   'use strict';
 
-  var space, Body, bodies;
+  var space, bodies;
   if (typeof KIMCHI.space === 'object') {
     space = KIMCHI.space;
   } else {

@@ -132,7 +132,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
    * @private
    * @memberOf module:KIMCHI.flight.modes.auto
    */
-  update = function (delta) {
+  update = function () {
     // do not move the Body Meshes themselves
     KIMCHI.space.updateBodyChildren();
   };

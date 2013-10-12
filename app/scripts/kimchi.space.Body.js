@@ -26,8 +26,10 @@
  * @memberOf    module:KIMCHI.space
  */
 var KIMCHI = (function (KIMCHI, _, THREE) {
+  'use strict';
+
   var Body = function (options) {
-    var geometry, material, length, curve;
+    var geometry, material;
 
     // further default options appear below in the prototype
     _.assign(this, options);

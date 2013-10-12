@@ -3,7 +3,7 @@
  * @namespace size
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
   var size = {};
@@ -49,4 +49,4 @@ var KIMCHI = (function (KIMCHI, $) {
   };
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery));
+}(KIMCHI || {}));

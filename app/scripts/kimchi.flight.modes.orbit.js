@@ -2,7 +2,7 @@
  * @namespace orbit
  * @memberOf  module:KIMCHI.flight.modes
  */
-var KIMCHI = (function (KIMCHI, _, $, THREE) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
   var flight, Mode, mode;
@@ -41,4 +41,4 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, jQuery, THREE));
+}(KIMCHI || {}));

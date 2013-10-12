@@ -3,7 +3,7 @@
  * @namespace menu
  * @memberOf  module:KIMCHI.flight.modes
  */
-var KIMCHI = (function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
   var flight, Mode, mode, keydown;
@@ -70,4 +70,4 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery));
+}(KIMCHI || {}));

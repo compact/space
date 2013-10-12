@@ -160,8 +160,6 @@ var KIMCHI = (function (KIMCHI, Q, $) {
    * @memberOf module:KIMCHI
    */
   KIMCHI.ready = function () {
-    var success;
-
     console.log('.ready(): start');
 
     // jQuery objects

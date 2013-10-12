@@ -18,10 +18,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   /**
    * Contains instances of Body.
-   * @private
    * @memberOf module:KIMCHI.space
    */
   bodies = {};
+  space.bodies = bodies;
 
 
 
@@ -29,21 +29,13 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * Populate the private bodies object.
    * @memberOf module:KIMCHI.space
    */
-  space.init = function (callback) {
+  space.init = function () {
     _.each(space.data, function (options) {
       bodies[options.name] = new space.Body(options);
     });
   };
 
 
-
-  /**
-   * @returns  {Object} Bodies.
-   * @memberOf module:KIMCHI.space
-   */
-  space.getBodies = function () {
-    return bodies;
-  };
 
   /**
    * TODO check bodies[name] actually exists
@@ -178,7 +170,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    */
   space.getDistances = function (bodies) {
     if (typeof bodies === 'undefined') {
-      bodies = KIMCHI.space.getBodies();
+      bodies = KIMCHI.space.bodies;
     }
 
     return _.map(bodies, function (body, name) {
@@ -187,9 +179,6 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
         'distance': THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main)
       };
     });
-/*    return _.each(bodies, function (body, name) {
-      distances[name] = THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main);
-    });*/
   };
 
   /**

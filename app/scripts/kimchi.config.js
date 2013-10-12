@@ -102,7 +102,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       'near': near
     });
 
-    _.each(KIMCHI.space.getBodies(), function (body) {
+    _.each(KIMCHI.space.bodies, function (body) {
       // set the scale
       if (large) {
         switch (body.type) {

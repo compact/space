@@ -72,7 +72,7 @@
                 <th>Radius</th>
                 <th>Distance from the Sun</th>
               </tr>
-              <tr ng-repeat="body in Kimchi.space.getBodies()">
+              <tr ng-repeat="body in Kimchi.space.bodies">
                 <td>{{body.name}}</td>
                 <td><a ng-click="flyTo(body)">Fly</a></td>
                 <td><a ng-click="panTo(body)">Look</a></td>

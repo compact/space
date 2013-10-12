@@ -63,8 +63,9 @@ angular.module('kimchi').controller('optionsCtrl', function ($scope, Kimchi) {
     ]
   };
 
-  // the config values cannot be set before KIMCHI is initialized
-  Kimchi.init.ngPromise.then(function () {
+  // The config values cannot be set before KIMCHI is initialized because their
+  // set handlers make changes to KIMCHI.
+  Kimchi.init.promise.then(function () {
     // radios
     _.each(radioKeys, function (key) {
       // set the initial value (either default or from localStorage)

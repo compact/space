@@ -8,7 +8,7 @@
  * @module KIMCHI
  */
 
-var KIMCHI = (function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI, Q, $) {
   'use strict';
 
   /**
@@ -20,12 +20,12 @@ var KIMCHI = (function (KIMCHI, $) {
 
     var deferred, rendererSuccess;
 
-    deferred = $.Deferred();
+    deferred = Q.defer();
     /**
      * @type     {Promise}
      * @memberOf module:KIMCHI
      */
-    KIMCHI.init.promise = deferred.promise();
+    KIMCHI.init.promise = deferred.promise;
 
 
 
@@ -117,7 +117,6 @@ var KIMCHI = (function (KIMCHI, $) {
      * @type     {THREE.ParticleSystem[]}
      * @memberOf module:KIMCHI
      */
-    console.log(KIMCHI.config.get('starsCount'));
     KIMCHI.stars = new THREE.Stars({
       'scale': KIMCHI.config.get('starsScale'),
       'count': KIMCHI.config.get('starsCount')
@@ -133,7 +132,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
     // get ephemeris data
-    KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).done(function () {
+    KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).then(function () {
       // initialize Body positions
       console.log('.init(): position Bodies');
       KIMCHI.space.translateBodies();
@@ -147,7 +146,7 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
 
-    KIMCHI.init.promise.done(function () {
+    KIMCHI.init.promise.then(function () {
       console.log('.init(): done');
     });
 
@@ -170,7 +169,7 @@ var KIMCHI = (function (KIMCHI, $) {
     KIMCHI.$window = $(window);
     KIMCHI.$overlay = $('#overlay');
 
-    KIMCHI.init.promise.done(function () {
+    KIMCHI.init.promise.then(function () {
       // add orbit lines
       KIMCHI.space.ready();
       KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
@@ -186,6 +185,9 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
 
+  // turn off in production
+  Q.longStackSupport = true;
+
   KIMCHI.init();
 
   $(function () {
@@ -195,4 +197,4 @@ var KIMCHI = (function (KIMCHI, $) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery));
+}(KIMCHI || {}, Q, jQuery));

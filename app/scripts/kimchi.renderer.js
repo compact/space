@@ -65,7 +65,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     window.setTimeout(function () {
       module.delta = KIMCHI.clock.getDelta();
 
-      callback(module.delta).done(function (proceed) {
+      callback(module.delta).then(function (proceed) {
         module.render();
 
         KIMCHI.watcher.trigger(); // trigger KIMCHI.watcher so observers (specifically angularjs) are aware that kimchi has changed

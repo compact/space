@@ -2,31 +2,14 @@ var app = angular.module('kimchi', ['three', '$strap.directives']);
 
 
 
-app.factory('Kimchi', function ($rootScope, $q, $timeout, $document) {
+app.factory('Kimchi', function ($rootScope, $document) {
   var KIMCHI, deferred;
 
   KIMCHI = window.KIMCHI;
 
 
 
-  // we construct the deferred ourselves because $q.when() didn't work with the
-  // promise returned from KIMCHI
-  deferred = $q.defer();
-
-  KIMCHI.init.promise.done(function () {
-    $timeout(function () { // $digest: http://stackoverflow.com/a/18996042
-      deferred.resolve();
-    });
-  }).fail(function () {
-    $timeout(function () {
-      deferred.reject();
-    });
-  });
-
-  KIMCHI.init.ngPromise = deferred.promise;
-
-
-
+  // flight mode changes
   $document.on('keypress', function (event) {
     switch (event.which) {
     case 49: // 1

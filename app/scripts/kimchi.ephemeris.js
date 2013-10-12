@@ -3,7 +3,7 @@
  * @namespace ephemeris
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI, Q, $) {
   'use strict';
 
   var ephemeris, batch;
@@ -39,14 +39,14 @@ var KIMCHI = (function (KIMCHI, $) {
 
     console.log('.ephemeris: loading batch ' + julian);
 
-    return $.getJSON(file).done(function (data) {
+    return Q($.getJSON(file).then(function (data) {
       console.log('.ephemeris: loaded batch ' + julian);
       batch = data;
       ephemeris.updateLastJulianInBatch();
-    }).fail(function () { // jqXHR, textStatus, error
+    }, function () { // jqXHR, textStatus, error
       console.log('failed to get: ' + file);
       KIMCHI.config.set('bodiesSpeed', 0);
-    }).promise();
+    }));
   };
 
   /**
@@ -60,4 +60,4 @@ var KIMCHI = (function (KIMCHI, $) {
   };
 
   return KIMCHI;
-}(KIMCHI, jQuery));
+}(KIMCHI, Q, jQuery));

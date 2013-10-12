@@ -3,7 +3,7 @@
  * @namespace free
  * @memberOf  module:KIMCHI.flight.modes
  */
-var KIMCHI = (function (KIMCHI, _, $, THREE) {
+var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   'use strict';
 
   var flight, Mode, mode, colliding, getSpeed;
@@ -38,7 +38,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
   mode.animationFrame = function (delta) {
     // resolve true/false to continue/stop animating
-    var deferred = $.Deferred();
+    var deferred = Q.defer();
 
     // move the Camera
     if (!colliding()) {
@@ -51,10 +51,10 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
     // move the Bodies and increment the current time
     if (KIMCHI.config.get('bodiesSpeed')) {
-      KIMCHI.time.increment().done(function () {
+      KIMCHI.time.increment().then(function () {
         KIMCHI.space.translateBodies(delta);
         deferred.resolve(true);
-      }).fail(function () {
+      }, function () {
         deferred.resolve(false);
       });
     } else {
@@ -69,7 +69,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     // move the Bodies' children
     KIMCHI.space.updateBodyChildren();
 
-    return deferred.promise();
+    return deferred.promise;
   };
 
   /**
@@ -165,4 +165,4 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, jQuery, THREE));
+}(KIMCHI || {}, _, Q, jQuery, THREE));

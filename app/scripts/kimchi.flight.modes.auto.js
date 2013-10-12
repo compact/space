@@ -3,7 +3,7 @@
  * @namespace auto
  * @memberOf  module:KIMCHI.flight.modes
  */
-var KIMCHI = (function (KIMCHI, $, THREE) {
+var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   'use strict';
 
   var flight, Mode, mode, keydown, update, translateTo;
@@ -30,10 +30,11 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
   /**
    * Fly to the given Body.
+   * @returns  {Promise}
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   mode.flyTo = function (body) {
-    var deferred = $.Deferred();
+    var deferred = Q.defer();
 
     // KIMCHI.ui.notice.set(KIMCHI.config.get('noticeFlyTo')(body));
     KIMCHI.config.set('bodiesSpeed', 0);
@@ -46,12 +47,13 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       });
     });
 
-    return deferred.promise();
+    return deferred.promise;
   };
 
   /**
    * Pan (gradually rotate) the camera towards the given Body (without
    *   translating).
+   * @returns  {Promise}
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   mode.panTo = (function () {
@@ -61,7 +63,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
     targetQuaternion = new THREE.Quaternion();
 
     return function (body) {
-      deferred = $.Deferred();
+      deferred = Q.defer();
 
       initialQuaternion = KIMCHI.camera.quaternion.clone();
 
@@ -96,7 +98,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
         }
       };
 
-      return deferred.promise();
+      return deferred.promise;
     };
   }());
 
@@ -137,11 +139,12 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
   /**
    * Translate the camera to the given Body until within range of collision.
+   * @returns  {Promise}
    * @private
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   translateTo = function (body) {
-    var deferred = $.Deferred();
+    var deferred = Q.defer();
 
     mode.animationFrame = function (delta) {
       var translationZ;
@@ -161,10 +164,10 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       }
     };
 
-    return deferred.promise();
+    return deferred.promise;
   };
 
 
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery, THREE));
+}(KIMCHI || {}, Q, jQuery, THREE));

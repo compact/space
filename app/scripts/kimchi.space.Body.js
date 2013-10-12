@@ -72,17 +72,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     // set Mesh properties
 //    this.object3Ds.main.rotation.copy(this.rotation);
 
-    // create an orbit Line with a clockwise Curve
-    if (this.createOrbit) {
-      length = this.object3Ds.main.position.length();
-      curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
-      this.object3Ds.orbit = curve.createLine({
-        'color': KIMCHI.config.get('orbitsColor'),
-        'opacity': KIMCHI.config.get('orbitsOpacity'),
-        'lineSegments': KIMCHI.config.get('orbitsLineSegments')
-      });
-    }
-
     // Create a Mesh for the text label. We could do
     // this.object3Ds.main.add(this.object3Ds.label); but then the text Mesh
     // rotates with the body and it is nontrivial to rotate it back.

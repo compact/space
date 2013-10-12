@@ -24,7 +24,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   // for THREE.PerspectiveCamera
   settings.cameraFov = 45;
   settings.cameraNear = 0.001;
-  settings.cameraFar = 1000;
+  settings.cameraFar = 150000;
   settings.cameraInitialPosition = new THREE.Vector3(0, 0, -5);
 
   // for THREE.PointerLockControls

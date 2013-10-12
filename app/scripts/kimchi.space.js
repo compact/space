@@ -35,6 +35,26 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
     });
   };
 
+  /**
+   * Create orbits.
+   * @memberOf module:KIMCHI.space
+   */
+  space.ready = function () {
+    var length, curve;
+
+    _.each(bodies, function (body) {
+      // create an orbit Line with a clockwise Curve
+      if (body.createOrbit) {
+        length = body.object3Ds.main.position.length();
+        curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
+        body.object3Ds.orbit = curve.createLine({
+          'color': KIMCHI.config.get('orbitsColor'),
+          'opacity': KIMCHI.config.get('orbitsOpacity'),
+          'lineSegments': KIMCHI.config.get('orbitsLineSegments')
+        });
+      }
+    });
+  };
 
 
   /**

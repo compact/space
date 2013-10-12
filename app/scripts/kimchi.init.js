@@ -117,6 +117,7 @@ var KIMCHI = (function (KIMCHI, $) {
      * @type     {THREE.ParticleSystem[]}
      * @memberOf module:KIMCHI
      */
+    console.log(KIMCHI.config.get('starsCount'));
     KIMCHI.stars = new THREE.Stars({
       'scale': KIMCHI.config.get('starsScale'),
       'count': KIMCHI.config.get('starsCount')
@@ -170,6 +171,10 @@ var KIMCHI = (function (KIMCHI, $) {
     KIMCHI.$overlay = $('#overlay');
 
     KIMCHI.init.promise.done(function () {
+      // add orbit lines
+      KIMCHI.space.ready();
+      KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
+
       KIMCHI.size.init();
       KIMCHI.pointerLock.init();
       KIMCHI.ui.notice.init();
@@ -186,6 +191,8 @@ var KIMCHI = (function (KIMCHI, $) {
   $(function () {
     KIMCHI.ready();
   });
+
+
 
   return KIMCHI;
 }(KIMCHI || {}, jQuery));

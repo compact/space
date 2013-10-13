@@ -28,7 +28,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.cameraInitialPosition = new THREE.Vector3(0, 0, -5);
 
   // for THREE.PointerLockControls
-  settings.controlsLookSpeed = 0.0002; // pitch/yaw with mouse
+  settings.controlsLookSpeed = 0.001; // pitch/yaw with mouse
   // these three values are determined by base value * multiplier; do not change
   // them directly
   settings.controlsZSpeed = 1; // move forward/backward with keyboard

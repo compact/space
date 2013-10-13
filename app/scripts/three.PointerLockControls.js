@@ -36,9 +36,11 @@
         movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
         movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
+        self.states.rotateAngleX = -movementY * self.options.lookSpeed;
+        self.states.rotateAngleY = -movementX * self.options.lookSpeed;
         // TODO perform the rotation in update() instead of here -Chris
-        self.camera.rotateOnAxis(THREE.unitVectors.x, -movementY * self.options.lookSpeed);
-        self.camera.rotateOnAxis(THREE.unitVectors.y, -movementX * self.options.lookSpeed);
+        // self.camera.rotateOnAxis(THREE.unitVectors.x, -movementY * self.options.lookSpeed);
+        // self.camera.rotateOnAxis(THREE.unitVectors.y, -movementX * self.options.lookSpeed);
       },
       'keydown': function (event) {
         switch (event.which) {
@@ -110,11 +112,17 @@
 
 
   /**
-   * Reset all movement states to false.
+   * Reset all movement states.
    * @memberOf THREE.PointerLockControls
    */
   PointerLockControls.prototype.resetStates = function () {
+    /**
+     * All translation and roll states are stored as booleans. The mousemove movement are stored as numbers
+     * @memberOf THREE.PointerLockControls
+     */
     this.states = {
+      'rotateAngleX': 0,
+      'rotateAngleY': 0,
       'moveForward': false,
       'moveBackward': false,
       'moveLeft': false,
@@ -129,7 +137,8 @@
 
 
   /**
-   * Whether the controls are currently enabled.
+   * Whether the controls are currently enabled. Do not set this directly; use
+   *   enable() and disable().
    * @memberOf THREE.PointerLockControls
    */
   PointerLockControls.prototype.enabled = false;
@@ -184,9 +193,9 @@
       options = this.options;
       moving = false;
 
-      if (!this.enabled) {
-        return;
-      }
+      // if (!this.enabled) {
+      //   return;
+      // }
 
       // translate
       translationVector = this.getLocalTranslationVector();
@@ -200,7 +209,7 @@
         moving = true;
       }
 
-      // rotate
+      // rotate about the z-axis
       if (this.states.rollLeft) {
         angle -= options.rollSpeed * speedMultiplier;
       }
@@ -209,6 +218,19 @@
       }
       if (angle !== 0) {
         camera.rotateOnAxis(THREE.unitVectors.z, angle);
+        moving = true;
+      }
+
+      // Rotate about the x- and y-axes. Mousemove angles get reset immediately
+      // after rotation, unlike the other states.
+      if (this.states.rotateAngleX !== 0) {
+        camera.rotateOnAxis(THREE.unitVectors.x, this.states.rotateAngleX);
+        this.states.rotateAngleX = 0;
+        moving = true;
+      }
+      if (this.states.rotateAngleY !== 0) {
+        camera.rotateOnAxis(THREE.unitVectors.y, this.states.rotateAngleY);
+        this.states.rotateAngleY = 0;
         moving = true;
       }
 

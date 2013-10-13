@@ -22,89 +22,88 @@
 
     this.resetStates();
 
-    // event handlers
-    // not in the propotype because they need to reference self
-    this.events = {
-      'mousemove': function (event) {
-        var movementX, movementY;
+    /**
+     * Event handlers. Not in the propotype because they need to reference self.
+     * @memberOf THREE.PointerLockControls
+     */
+    this.events = {};
 
-        // extra check that we are allowed to move
-/*        if (!self.enabled) {
-          return;
-        }
-*/
-        movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-        movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+    this.events.mousemove = function (event) {
+      var movementX, movementY;
 
-        self.states.rotateAngleX = -movementY * self.options.lookSpeed;
-        self.states.rotateAngleY = -movementX * self.options.lookSpeed;
-        // TODO perform the rotation in update() instead of here -Chris
-        // self.camera.rotateOnAxis(THREE.unitVectors.x, -movementY * self.options.lookSpeed);
-        // self.camera.rotateOnAxis(THREE.unitVectors.y, -movementX * self.options.lookSpeed);
-      },
-      'keydown': function (event) {
-        switch (event.which) {
-        case 38: // up
-        case 87: // W
-          self.states.moveForward = true;
-          break;
-        case 40: // down
-        case 83: // S
-          self.states.moveBackward = true;
-          break;
-        case 37: // left
-        case 65: // A
-          self.states.moveLeft = true;
-          break;
-        case 39: // right
-        case 68: // D
-          self.states.moveRight = true;
-          break;
-        case 82: // R
-          self.states.moveUp = true;
-          break;
-        case 70: // F
-          self.states.moveDown = true;
-          break;
-        case 81: // Q
-          self.states.rollLeft = true;
-          break;
-        case 69: // E
-          self.states.rollRight = true;
-          break;
-        }
-      },
-      'keyup': function (event) {
-        switch (event.which) {
-        case 38: // up
-        case 87: // W
-          self.states.moveForward = false;
-          break;
-        case 40: // down
-        case 83: // S
-          self.states.moveBackward = false;
-          break;
-        case 37: // left
-        case 65: // A
-          self.states.moveLeft = false;
-          break;
-        case 39: // right
-        case 68: // D
-          self.states.moveRight = false;
-          break;
-        case 82: // R
-          self.states.moveUp = false;
-          break;
-        case 70: // F
-          self.states.moveDown = false;
-          break;
-        case 81: // Q
-          self.states.rollLeft = false;
-          break;
-        case 69: // E
-          self.states.rollRight = false;
-          break;
-        }
+      movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+      movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+      self.states.rotateAngleX = -movementY * self.options.lookSpeed;
+      self.states.rotateAngleY = -movementX * self.options.lookSpeed;
+
+      // self.camera.rotateOnAxis(THREE.unitVectors.x, -movementY * self.options.lookSpeed);
+      // self.camera.rotateOnAxis(THREE.unitVectors.y, -movementX * self.options.lookSpeed);
+    };
+
+    this.events.keydown = function (event) {
+      switch (event.which) {
+      case 38: // up
+      case 87: // W
+        self.states.moveForward = true;
+        break;
+      case 40: // down
+      case 83: // S
+        self.states.moveBackward = true;
+        break;
+      case 37: // left
+      case 65: // A
+        self.states.moveLeft = true;
+        break;
+      case 39: // right
+      case 68: // D
+        self.states.moveRight = true;
+        break;
+      case 82: // R
+        self.states.moveUp = true;
+        break;
+      case 70: // F
+        self.states.moveDown = true;
+        break;
+      case 81: // Q
+        self.states.rollLeft = true;
+        break;
+      case 69: // E
+        self.states.rollRight = true;
+        break;
+      }
+    };
+
+    this.events.keyup = function (event) {
+      switch (event.which) {
+      case 38: // up
+      case 87: // W
+        self.states.moveForward = false;
+        break;
+      case 40: // down
+      case 83: // S
+        self.states.moveBackward = false;
+        break;
+      case 37: // left
+      case 65: // A
+        self.states.moveLeft = false;
+        break;
+      case 39: // right
+      case 68: // D
+        self.states.moveRight = false;
+        break;
+      case 82: // R
+        self.states.moveUp = false;
+        break;
+      case 70: // F
+        self.states.moveDown = false;
+        break;
+      case 81: // Q
+        self.states.rollLeft = false;
+        break;
+      case 69: // E
+        self.states.rollRight = false;
+        break;
       }
     };
   };
@@ -184,18 +183,15 @@
    * @memberOf THREE.PointerLockControls
    */
   PointerLockControls.prototype.moveCamera = (function () {
-    var translationVector = new THREE.Vector3(), angle, camera, options, moving;
+    var translationVector, camera, options, rotateAngleZ, moving;
+    translationVector = new THREE.Vector3();
 
     return function (speedMultiplier, translationSpeedMultiplier) {
       translationVector.set(0, 0, 0);
-      angle = 0;
       camera = this.camera;
       options = this.options;
+      rotateAngleZ = 0;
       moving = false;
-
-      // if (!this.enabled) {
-      //   return;
-      // }
 
       // translate
       translationVector = this.getLocalTranslationVector();
@@ -211,13 +207,13 @@
 
       // rotate about the z-axis
       if (this.states.rollLeft) {
-        angle -= options.rollSpeed * speedMultiplier;
+        rotateAngleZ -= options.rollSpeed * speedMultiplier;
       }
       if (this.states.rollRight) {
-        angle += options.rollSpeed * speedMultiplier;
+        rotateAngleZ += options.rollSpeed * speedMultiplier;
       }
-      if (angle !== 0) {
-        camera.rotateOnAxis(THREE.unitVectors.z, angle);
+      if (rotateAngleZ !== 0) {
+        camera.rotateOnAxis(THREE.unitVectors.z, rotateAngleZ);
         moving = true;
       }
 
@@ -254,10 +250,6 @@
     return function () {
       vector.set(0, 0, 0);
 
-      if (!this.enabled) {
-        return vector;
-      }
-
       if (this.states.moveForward) {
         vector.add(THREE.unitVectors.negZ);
       }
@@ -282,7 +274,7 @@
   }());
 
   /**
-   * Not used; can delete.
+   * TODO: Not used, can delete.
    * @returns  {THREE.Vector3}
    * @memberOf THREE.PointerLockControls
    */

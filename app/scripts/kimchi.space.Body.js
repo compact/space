@@ -48,7 +48,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       KIMCHI.config.get('sphereSegments'));
 
     // material
-    if (this.material === 'function') {
+    if (typeof this.material === 'function') {
       material = this.material();
     } else {
       material = new THREE.MeshPhongMaterial({

@@ -99,20 +99,6 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
 
     /**
-     * Lighting.
-     * @memberOf module:KIMCHI
-     */
-    KIMCHI.lights = {};
-    // sunlight
-    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 0);
-    KIMCHI.scene.add(KIMCHI.lights.sun);
-    // ambient light
-    KIMCHI.lights.ambient = new THREE.AmbientLight(0x333333);
-    KIMCHI.scene.add(KIMCHI.lights.ambient);
-
-
-
-    /**
      * Stars in the background.
      * @type     {THREE.ParticleSystem[]}
      * @memberOf module:KIMCHI
@@ -143,6 +129,21 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
       deferred.resolve();
     });
+
+
+
+    /**
+     * Lighting.
+     * @memberOf module:KIMCHI
+     */
+    KIMCHI.lights = {};
+    // sunlight
+    KIMCHI.lights.sun = new THREE.PointLight(0xffffee, 2, 0);
+    KIMCHI.lights.sun.position = KIMCHI.space.getBody('Sun').object3Ds.main.position;
+    KIMCHI.scene.add(KIMCHI.lights.sun);
+    // ambient light
+    KIMCHI.lights.ambient = new THREE.AmbientLight(0x333333);
+    KIMCHI.scene.add(KIMCHI.lights.ambient);
 
 
 

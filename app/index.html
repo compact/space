@@ -225,16 +225,11 @@
   <div id="hud3" class="hud"></div>
 
   <div id="hud4" class="hud" ng-controller="debugCtrl" ng-show="settings.visible">
-    <div>
-      <h4>DEBUG</h4>
-    </div>
-    <div>
-      <ul ng-cloak>
-        <li>Delta: {{data.delta}}</li>
-        <li>Position (px): {{data.position}}</li>
-        <li>Rotation (deg): {{data.rotation}}</li>
-      </ul>
-    </div>
+    <ul ng-cloak>
+      <li>Delta: {{data.delta}}</li>
+      <li>Position (px): {{data.position}}</li>
+      <li>Rotation (deg): {{data.rotation}}</li>
+    </ul>
   </div>
 
   <canvas id="kimchi"></canvas>

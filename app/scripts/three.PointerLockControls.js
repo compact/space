@@ -167,20 +167,22 @@
   /**
    * Move the camera based on the current states.
    * @param    {Number} speedMultiplier            Delta which applies to all
-   *   movements (both translations and rotations).
+   *   movements, i.e. both translations and rotations.
    * @param    {Number} translationSpeedMultiplier Additional multiplier which
    *   applies only to translations.
+   * @returns  {Boolean}                           Whether the camera moves.
    * @function
    * @memberOf THREE.PointerLockControls
    */
   PointerLockControls.prototype.moveCamera = (function () {
-    var translationVector = new THREE.Vector3(), angle, camera, options;
+    var translationVector = new THREE.Vector3(), angle, camera, options, moving;
 
     return function (speedMultiplier, translationSpeedMultiplier) {
       translationVector.set(0, 0, 0);
       angle = 0;
       camera = this.camera;
       options = this.options;
+      moving = false;
 
       if (!this.enabled) {
         return;
@@ -188,12 +190,15 @@
 
       // translate
       translationVector = this.getLocalTranslationVector();
-      camera.translateX(translationVector.x * options.strafeSpeed *
-        speedMultiplier * translationSpeedMultiplier);
-      camera.translateY(translationVector.y * options.strafeSpeed *
-        speedMultiplier * translationSpeedMultiplier);
-      camera.translateZ(translationVector.z * options.zSpeed *
-        speedMultiplier * translationSpeedMultiplier);
+      if (translationVector.length() > 0) {
+        camera.translateX(translationVector.x * options.strafeSpeed *
+          speedMultiplier * translationSpeedMultiplier);
+        camera.translateY(translationVector.y * options.strafeSpeed *
+          speedMultiplier * translationSpeedMultiplier);
+        camera.translateZ(translationVector.z * options.zSpeed *
+          speedMultiplier * translationSpeedMultiplier);
+        moving = true;
+      }
 
       // rotate
       if (this.states.rollLeft) {
@@ -202,7 +207,12 @@
       if (this.states.rollRight) {
         angle += options.rollSpeed * speedMultiplier;
       }
-      camera.rotateOnAxis(THREE.unitVectors.z, angle);
+      if (angle !== 0) {
+        camera.rotateOnAxis(THREE.unitVectors.z, angle);
+        moving = true;
+      }
+
+      return moving;
     };
   }());
 

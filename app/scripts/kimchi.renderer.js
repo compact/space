@@ -44,13 +44,13 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   };
 
   /**
-   * Shortcut for THREE.WebGLRenderer.render() without needing to provide
-   *   the parameters.
+   * Render the scene. Trigger the 'render' event.
    * @alias    render
    * @memberOf module:KIMCHI.renderer
    */
   module.render = function () {
     renderer.render(KIMCHI.scene, KIMCHI.camera);
+    KIMCHI.trigger('render');
   };
 
   /**
@@ -67,8 +67,6 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
 
       callback(module.delta).then(function (proceed) {
         module.render();
-
-        KIMCHI.watcher.trigger(); // trigger KIMCHI.watcher so observers (specifically angularjs) are aware that kimchi has changed
 
         // stop the next frame if the callback returns false
         if (proceed !== false) {

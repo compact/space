@@ -1,8 +1,11 @@
 /**
- * Pointer lock flight mode. The user can move the camera with the mouse and
- *   keyboard using {@link THREE.PointerLockControls}. The cursor is locked to
- *   the screen and not visible. Instance of {@link
- *   module:KIMCHI.flight.Mode|Mode}.
+ * Pointer lock flight mode. Instance of {@link
+ *   module:KIMCHI.flight.Mode|Mode}. The user can move the camera with the
+ *   mouse and keyboard using {@link
+ *   external:THREE.PointerLockControls|THREE.PointerLockControls}. The cursor
+ *   is locked to the screen and not visible. <br> The pointer lock API is not
+ *   handled here, but rather in {@link
+ *   module:KIMCHI.pointerLock|KIMCHI.pointerLock}.
  * @namespace pointerLock
  * @memberOf  module:KIMCHI.flight.modes
  */
@@ -80,8 +83,9 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
 
   /**
+   *
    * @param    {THREE.Vector3} translationVector From {@link
-   *   THREE.PointerLockControls#moveCamera}.
+   *   external:THREE.PointerLockControls#moveCamera|THREE.PointerLockControls#moveCamera}.
    * @returns  {Boolean}       If the camera is to translate with the given
    *   vector, whether it will be within the collision distance of any Body.
    * @private

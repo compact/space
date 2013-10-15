@@ -36,7 +36,12 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
     console.log('.space: constructing ' + this.name);
 
-    // contains all THREE.Object3D objects belonging to this Body
+    /**
+     * Contains all THREE.Object3D objects belonging to this Body.
+     * @alias    object3Ds
+     * @instance
+     * @memberOf module:KIMCHI.space.Body
+     */
     this.object3Ds = {};
 
     // convert the radius back to au (it is stored in km for convenience)
@@ -98,18 +103,61 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     }
   };
 
-  // default values
+  /**
+   * @alias    name
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
   Body.prototype.name = '';
+
+  /**
+   * TODO: Make optional.
+   * @alias    radiusInKm
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
   Body.prototype.radiusInKm = 0;
+
+  /**
+   * @alias    labelVisibleDistance
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
   Body.prototype.labelVisibleDistance = 100;
+
+  /**
+   * @alias    collideable
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
   Body.prototype.collideable = true;
+
+  /**
+   * @alias    createOrbit
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
   Body.prototype.createOrbit = false;
+
+  /**
+   * @alias    hasBumpMap
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
   Body.prototype.hasBumpMap = false;
+
+  /**
+   * @alias    hasSpecularMap
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
   Body.prototype.hasSpecularMap = false;
 
   /**
    * @param    {String} [type]
    * @returns  {String} Path to the given texture type.
+   * @alias    getTexturePath
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getTexturePath = function (type) {
@@ -121,6 +169,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * Bodies do not translate by default; this function can be overwritten for
    *   any Body object.
    * @param    {Number} delta
+   * @alias    translate
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.translate = function () {
@@ -131,6 +181,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * @param    {Array}  Array because this function gets called only with
    *   ephemeris data.
+   * @alias    scalePositionFromArray
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.scalePositionFromArray = function (position) {
@@ -143,6 +195,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * Rotate this Body. Overwriting this function is optional.
    * @param    {Number} delta
+   * @alias    rotate
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.rotate = function () {
@@ -152,6 +206,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * @returns  {Number} The radius of this Body in its current scale.
+   * @alias    getScaledRadius
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getScaledRadius = function () {
@@ -163,6 +219,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * @returns  {Number} The distance between the camera and this Body.
+   * @alias    getCameraDistance
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getCameraDistance = function () {
@@ -171,6 +229,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * @returns  {Number} The collision distance between the camera and this Body.
+   * @alias    getCollisionDistance
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getCollisionDistance = function () {
@@ -180,6 +240,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * @returns  {Number} The distance between the given Object3D and the closest
    *   surface of this Body.
+   * @alias    getSurfaceDistance
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getSurfaceDistance = function (object3D) {
@@ -190,6 +252,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   /**
    * @returns  {Number} Whether this Body is current in collision with the
    *   given objects
+   * @alias    isColliding
+   * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.isColliding = function (object3D) {

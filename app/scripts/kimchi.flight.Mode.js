@@ -13,12 +13,16 @@ var KIMCHI = (function (KIMCHI, $) {
 
   /**
    * Whether this mode is currently enabled.
+   * @alias    enabled
+   * @instance
    * @memberOf module:KIMCHI.flight.Mode
    */
   Mode.prototype.enabled = false;
 
   /**
    * Enable.
+   * @alias    enable
+   * @instance
    * @memberOf module:KIMCHI.flight.Mode
    */
   Mode.prototype.enable = function () {
@@ -28,6 +32,8 @@ var KIMCHI = (function (KIMCHI, $) {
 
   /**
    * Disable.
+   * @alias    disable
+   * @instance
    * @memberOf module:KIMCHI.flight.Mode
    */
   Mode.prototype.disable = function () {
@@ -35,7 +41,9 @@ var KIMCHI = (function (KIMCHI, $) {
   };
 
   /**
-   * Toggle.
+   * Toggle. TODO: Unused.
+   * @alias    toggle
+   * @instance
    * @memberOf module:KIMCHI.flight.Mode
    */
   Mode.prototype.toggle = function (enable) {
@@ -55,6 +63,8 @@ var KIMCHI = (function (KIMCHI, $) {
   /**
    * In this mode, what happens in each animation frame?
    * @param    {Number} delta
+   * @alias    animationFrame
+   * @instance
    * @memberOf module:KIMCHI.flight.Mode
    */
   Mode.prototype.animationFrame = function () {};
@@ -64,6 +74,8 @@ var KIMCHI = (function (KIMCHI, $) {
    *   should only be called once, when this mode is enabled. The animation
    *   stops if either this mode is disabled or this.animationFrame() returns
    *   false.
+   * @alias    animate
+   * @instance
    * @memberOf module:KIMCHI.flight.Mode
    */
   Mode.prototype.animate = function () {
@@ -81,6 +93,8 @@ var KIMCHI = (function (KIMCHI, $) {
 
   /**
    * The current speed.
+   * @alias    speed
+   * @instance
    * @memberOf module:KIMCHI.flight.Mode
    */
   Mode.prototype.speed = 0;

@@ -1,7 +1,11 @@
 /**
- * Based on {@link
- *   http://threejs.org/examples/misc_controls_pointerlock.html}. Requires
- *   THREE.unitVectors, as defined in three.extensions.js.
+ * Based on the three.js example {@link
+ *   http://threejs.org/examples/misc_controls_pointerlock.html}. This class
+ *   handles the controls only. <br> For the pointer lock flight mode, see
+ *   {@link
+ *   module:KIMCHI.flight.modes.pointerLock|KIMCHI.flight.modes.pointerLock}.
+ *   <br> For the pointer lock API handler, see {@link
+ *   module:KIMCHI.pointerLock|KIMCHI.pointerLock}.
  * @author      mrdoob / http://mrdoob.com/
  * @author      Chris
  * @constructor PointerLockControls
@@ -24,6 +28,8 @@
 
     /**
      * Event handlers. Not in the propotype because they need to reference self.
+     * @alias    events
+     * @instance
      * @memberOf external:THREE.PointerLockControls
      */
     this.events = {};
@@ -36,9 +42,6 @@
 
       self.states.baseRotationAngleX = -movementY;
       self.states.baseRotationAngleY = -movementX;
-
-      // self.camera.rotateOnAxis(THREE.unitVectors.x, -movementY * self.options.lookSpeed);
-      // self.camera.rotateOnAxis(THREE.unitVectors.y, -movementX * self.options.lookSpeed);
     };
 
     this.events.keydown = function (event) {
@@ -113,12 +116,16 @@
   /**
    * Reset all movement states; stop all camera movement. To disable the
    *   controls, call disable() instead—it calls this function.
+   * @alias    resetStates
+   * @instance
    * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.resetStates = function () {
     /**
      * All translation and roll states are stored as booleans. The yaw and
      *   pitch angles, based on mousemove, are stored as numbers.
+     * @alias    states
+     * @instance
      * @memberOf external:THREE.PointerLockControls
      */
     this.states = {
@@ -140,12 +147,16 @@
   /**
    * Whether the controls are currently enabled. Do not set this directly; use
    *   enable() and disable().
+   * @alias    enabled
+   * @instance
    * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.enabled = false;
 
   /**
    * Enable the controls.
+   * @alias    enable
+   * @instance
    * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.enable = function () {
@@ -160,6 +171,8 @@
 
   /**
    * Disable the controls.
+   * @alias    disable
+   * @instance
    * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.disable = function () {
@@ -186,6 +199,8 @@
    * @returns  {Number} movement.rotationAngles.x
    * @returns  {Number} movement.rotationAngles.y
    * @returns  {Number} movement.rotationAngles.z
+   * @alias    getCameraMovement
+   * @instance
    * @function
    * @memberOf external:THREE.PointerLockControls
    */
@@ -274,6 +289,8 @@
    * Move the camera.
    * @param    {Object} [movement] Object in the form returned by
    *   getCameraMovement().
+   * @alias    moveCamera
+   * @instance
    * @function
    * @memberOf external:THREE.PointerLockControls
    */

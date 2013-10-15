@@ -1,6 +1,7 @@
 /**
  * Orbit mode. The user can rotate, zoom, and pan with the cursor using {@link
- *   THREE.OrbitControls}. Instance of {@link module:KIMCHI.flight.Mode|Mode}.
+ *   external:THREE.OrbitControls|THREE.OrbitControls}. Instance of {@link
+ *   module:KIMCHI.flight.Mode|Mode}.
  * @namespace orbit
  * @memberOf  module:KIMCHI.flight.modes
  */

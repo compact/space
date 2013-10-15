@@ -161,6 +161,8 @@
   /**
    * Set the x, y, and z values of this vector to all be the given value.
    * @param    {Number} value
+   * @alias    setXYZ
+   * @instance
    * @memberOf external:THREE.Vector3
    */
   THREE.Vector3.prototype.setXYZ = function (value) {

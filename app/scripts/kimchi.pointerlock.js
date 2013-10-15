@@ -1,5 +1,11 @@
 /**
- * Pointer lock state (not controls, which are handled by three.controls.js).
+ * This module handles the browser's pointer lock state. <br> For the pointer
+ *   lock API, see {@link
+ *   https://developer.mozilla.org/en-US/docs/WebAPI/Pointer_Lock}. <br> For
+ *   the pointer lock flight mode in KIMCHI, see {@link
+ *   module:KIMCHI.flight.modes.pointerLock|KIMCHI.flight.modes.pointerLock}.
+ *   <br> For the pointer lock controls in KIMCHI, see {@link
+ *   external:THREE.PointerLockControls|THREE.PointerLockControls}.
  * @namespace pointerLock
  * @memberOf  module:KIMCHI
  */

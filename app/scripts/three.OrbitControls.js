@@ -464,6 +464,8 @@ THREE.OrbitControls = function (object, domElement) {
   /**
    * Enable the controls. This code was moved out of the constructor because we
    *   need to be able to unbind the listeners.
+   * @alias    enable
+   * @instance
    * @memberOf external:THREE.OrbitControls
    */
   this.enable = function () {
@@ -486,6 +488,8 @@ THREE.OrbitControls = function (object, domElement) {
 
   /**
    * Disable the controls.
+   * @alias    disable
+   * @instance
    * @memberOf external:THREE.OrbitControls
    */
   this.disable = function () {

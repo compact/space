@@ -22,7 +22,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
    * @type     {Number}
    * @memberOf module:KIMCHI.ephemeris
    */
-  ephemeris.lastJulianInBatch = 0; // TODO
+  ephemeris.lastJulianInBatch = 0;
 
   ephemeris.updateLastJulianInBatch = function () {
     var keys = Object.keys(batch);

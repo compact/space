@@ -139,7 +139,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    * Without moving the Body Meshes themselves, update the visibility,
    *   position, and size of all Object3Ds associated with the Bodies (such as
    *   text label Meshes). This function should be called whenever the camera
-   *   moves. TODO: Use delta.
+   *   moves.
    * @memberOf module:KIMCHI.space
    */
   space.updateBodyChildren = function () {

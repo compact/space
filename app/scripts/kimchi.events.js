@@ -7,7 +7,7 @@ var KIMCHI = (function (KIMCHI, _) {
 
   /**
    * Bind the given handler to the given event.
-   * @param    {String} event
+   * @param    {String}   event
    * @param    {Function} handler
    * @memberOf module:KIMCHI
    */
@@ -21,7 +21,7 @@ var KIMCHI = (function (KIMCHI, _) {
 
   /**
    * Unbind the given handler from the given event.
-   * @param    {String} event
+   * @param    {String}   event
    * @param    {Function} handler
    * @memberOf module:KIMCHI
    */
@@ -29,11 +29,11 @@ var KIMCHI = (function (KIMCHI, _) {
     var index = _.indexOf(handlers[event], handler);
 
     if (index === -1) {
-      console.warn('.off(): the following handler was not found for event ' + event + ':',
-        handler);
+      console.warn('.off(): the following handler was not found for event ' +
+        event + ':', handler);
+    } else {
+      handlers[event].splice(index, 1);
     }
-
-    handlers[event].splice(index, 1);
   };
 
   /**

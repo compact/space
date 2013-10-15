@@ -3,28 +3,53 @@
  * @namespace notice
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
-  var notices = {}, messages = [];
+  var notices, collection;
+  notices = {};
   KIMCHI.notices = notices;
 
-  notices.get = function (message) {
-    return messages;
+  /**
+   * Contains all current notices.
+   * @private
+   * @memberOf module:KIMCHI.notice
+   */
+  collection = [];
+
+  /**
+   * @returns  {Array} All current notices.
+   * @memberOf module:KIMCHI.notice
+   */
+  notices.get = function () {
+    return collection;
   };
-  notices.add = function (message, type) {
-    messages.push(message);
-    console.log(message);
-    KIMCHI.trigger('noticesChanged', messages);
+
+  /**
+   * @param    {String} notice
+   * @memberOf module:KIMCHI.notice
+   */
+  notices.add = function (notice) {
+    collection.push(notice);
+    KIMCHI.trigger('noticesChanged', collection);
   };
-  notices.remove = function (message) {
-    _.pull(messages, message);
-    KIMCHI.trigger('noticesChanged', messages);
+
+  /**
+   * @param    {String} notice
+   * @memberOf module:KIMCHI.notice
+   */
+  notices.remove = function (notice) {
+    _.pull(collection, notice);
+    KIMCHI.trigger('noticesChanged', collection);
   };
+
+  /**
+   * @memberOf module:KIMCHI.notice
+   */
   notices.clear = function () {
-    messages = [];
-    KIMCHI.trigger('noticesChanged', messages);
+    collection = [];
+    KIMCHI.trigger('noticesChanged', collection);
   };
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery));
+}(KIMCHI || {}));

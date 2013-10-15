@@ -7,7 +7,7 @@
 var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, keydown, update, translateTo;
+  var flight, Mode, mode, update, translateTo;
 
   flight = KIMCHI.flight;
   Mode = flight.Mode;
@@ -21,8 +21,6 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
    */
   mode.enable = function () {
     Mode.prototype.enable.call(this);
-
-    // KIMCHI.$document.on('keydown', keydown);
   };
 
   /**
@@ -30,8 +28,6 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
    */
   mode.disable = function () {
     Mode.prototype.disable.call(this);
-
-    // KIMCHI.$document.off('keydown', keydown);
   };
 
   /**
@@ -115,28 +111,6 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   }());
 
 
-
-  /**
-   * The event handler for pressing Escape to stop auto flight and return to
-   *   menu mode.
-   * @private
-   * @memberOf module:KIMCHI.flight.modes.auto
-   */
-  // keydown = (function () {
-  //   var keydownInProgress = false;
-
-  //   return function (event) {
-  //     if (event.which === 27) { // Esc
-  //       keydownInProgress = true;
-  //       $(this).one('keyup', function (event) {
-  //         if (event.which === 27 && keydownInProgress) {
-  //           flight.setMode('menu');
-  //           keydownInProgress = false;
-  //         }
-  //       });
-  //     }
-  //   };
-  // }());
 
   /**
    * Helper function called in every animationFrame() to update space.

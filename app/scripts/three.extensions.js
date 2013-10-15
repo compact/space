@@ -103,7 +103,7 @@
       y = worldAxis.y;
       z = worldAxis.z;
 
-      scalingMatrix.set( // TODO
+      scalingMatrix.set(
         1, 0, 0,
         0, 1, 0,
         0, 0, 1

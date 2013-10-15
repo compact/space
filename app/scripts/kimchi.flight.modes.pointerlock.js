@@ -9,7 +9,7 @@
 var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, cameraMovement, cameraWillCollide, getSpeed;
+  var flight, Mode, mode, cameraMovement, cameraWillCollide;
 
   flight = KIMCHI.flight;
   Mode = flight.Mode;

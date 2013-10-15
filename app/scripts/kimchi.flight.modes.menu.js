@@ -7,7 +7,7 @@
 var KIMCHI = (function (KIMCHI) {
   'use strict';
 
-  var flight, Mode, mode, keydown;
+  var flight, Mode, mode;
 
   flight = KIMCHI.flight;
   Mode = flight.Mode;
@@ -29,7 +29,6 @@ var KIMCHI = (function (KIMCHI) {
       radius: 7,
       overlay: 'rgba(255,255,255,0.4)'
     });*/
-    // KIMCHI.$document.on('keydown', keydown);
   };
 
   /**
@@ -40,7 +39,6 @@ var KIMCHI = (function (KIMCHI) {
 
     KIMCHI.$overlay.hide();
     KIMCHI.clock.start();
-    // KIMCHI.$document.off('keydown', keydown);
   };
 
   /**
@@ -49,33 +47,6 @@ var KIMCHI = (function (KIMCHI) {
   mode.animationFrame = function () {
     return false;
   };
-
-
-
-  /**
-   * The event handler for pressing Escape to request pointer lock. We request
-   *   pointer lock only on keyup; otherwise, the continued Escape keydown
-   *   event causes the pointer lock to disable immediately, even if one lets
-   *   go of the Escape key asap. Also, the flag keydownInProgress prevents
-   *   multiple handlers of .one('keyup') from being binded.
-   * @private
-   * @memberOf module:KIMCHI.flight.modes.menu
-   */
-  // keydown = (function () {
-  //   var keydownInProgress = false;
-
-  //   return function (event) {
-  //     if (event.which === 27) { // Esc
-  //       keydownInProgress = true;
-  //       $(this).one('keyup', function (event) {
-  //         if (event.which === 27 && keydownInProgress) {
-  //           flight.setMode('pointerLock');
-  //           keydownInProgress = false;
-  //         }
-  //       });
-  //     }
-  //   };
-  // }());
 
 
 

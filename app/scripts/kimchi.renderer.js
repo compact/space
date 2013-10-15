@@ -32,14 +32,11 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
       renderer = new THREE.WebGLRenderer({
         'canvas': document.getElementById('kimchi'),
         'antialias': true
-      });
+      }); // TODO: don't hard code the canvas id
     } catch (error) {
       return false;
     }
 
-    // append to DOM
-    $('body').append(renderer.domElement);
-//    $(renderer.domElement).attr('id', 'space'); // for blurjs
     return true;
   };
 

@@ -19,7 +19,7 @@
   <script type="text/javascript" src="//use.typekit.net/dnq0kor.js"></script>
   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
-<body ng-app="kimchi" ng-controller="KimchiCtrl">
+<body ng-app="kimchi" ng-controller="BodyCtrl">
   <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
@@ -88,7 +88,7 @@
             </table>
           </div>
 
-          <div id="config-pane" class="tab-pane" ng-controller="optionsCtrl">
+          <div id="config-pane" class="tab-pane" ng-controller="OptionsCtrl">
             <h1>Options</h1>
             <h3>Astronomical bodies</h3>
             <div class="config-row clearfix">
@@ -219,7 +219,7 @@
     </div>
   </div>
 
-  <div id="hud2" class="hud" ng-controller="statsCtrl">
+  <div id="hud2" class="hud" ng-controller="StatsCtrl">
     <ul ng-cloak>
       <li>
         <strong>Time: </strong>
@@ -241,7 +241,7 @@
 
   <div id="hud3" class="hud"></div>
 
-  <div id="hud4" class="hud" ng-controller="debugCtrl" ng-show="settings.visible">
+  <div id="hud4" class="hud" ng-controller="DebugCtrl" ng-show="settings.visible">
     <ul ng-cloak>
       <li>Delta: {{data.delta}}</li>
       <li>Position (px): {{data.position}}</li>
@@ -322,9 +322,12 @@
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/ng/ngthree.js"></script>
   <script src="scripts/ng/kimchi.js"></script>
-  <script src="scripts/ng/hud.js"></script>
-  <script src="scripts/ng/options.js"></script>
+  <script src="scripts/ng/BodiesCtrl.js"></script>
+  <script src="scripts/ng/BodyCtrl.js"></script>
+  <script src="scripts/ng/DebugCtrl.js"></script>
   <script src="scripts/ng/NoticesCtrl.js"></script>
+  <script src="scripts/ng/OptionsCtrl.js"></script>
+  <script src="scripts/ng/StatsCtrl.js"></script>
   <!-- endbuild -->
 </body>
 </html>

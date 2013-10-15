@@ -27,23 +27,6 @@
   'use strict';
 
   /**
-   * "Constant" vectors. Take care to not set other variables to these objects
-   *   directly lest their coordinates change (e.g. position or rotation). Clone
-   *   them instead.
-   * @memberOf external:THREE
-   */
-  THREE.unitVectors = {
-    'x': new THREE.Vector3(1, 0, 0),
-    'y': new THREE.Vector3(0, 1, 0),
-    'z': new THREE.Vector3(0, 0, 1),
-    'negX': new THREE.Vector3(-1, 0, 0),
-    'negY': new THREE.Vector3(0, -1, 0),
-    'negZ': new THREE.Vector3(0, 0, -1)
-  };
-
-
-
-  /**
    * @param    {THREE.Object3D} object1
    * @param    {THREE.Object3D} object2
    * @return   {Number}         The distance between the two objects.

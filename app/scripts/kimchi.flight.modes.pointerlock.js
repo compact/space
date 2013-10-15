@@ -107,11 +107,20 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
       }
 
       cameraPosition.copy(KIMCHI.camera.position);
-      translationDirection.copy(translationVector).normalize(); // local
-      KIMCHI.camera.localToWorld(translationDirection).normalize(); // world
 
+      // translationVector is local to the camera
+      translationDirection.copy(translationVector);
+      // set the two vectors to have equal lengths for accuracy; if one is much
+      // longer than the other, errors arise
+      translationDirection.setLength(cameraPosition.length());
+      // world vector from the origin to the endpoint of translationDirection
+      KIMCHI.camera.localToWorld(translationDirection);
+      // direction of translation
+      translationDirection.sub(cameraPosition);
       // the Raycaster direction should be normalized, according to
       // https://github.com/mrdoob/three.js/blob/master/src/core/Raycaster.js
+      translationDirection.normalize();
+
       raycaster.set(cameraPosition, translationDirection);
 
       // get all Object3Ds in the direction of translation
@@ -124,13 +133,13 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
         return false;
       }
 
-      willCollide = false;
       // check whether each Body corresponding to the Object3Ds is within
       // collision distance
+      willCollide = false;
       _.each(intersects, function (intersect) {
         body = KIMCHI.space.getBody(intersect.object.name);
+        // console.log(intersect.distance, body.getCollisionDistance(), translationDirection);
         if (intersect.distance < body.getCollisionDistance()) {
-          // console.log(intersect.distance, body.getCollisionDistance());
           willCollide = true;
           return false; // break the loop
         }

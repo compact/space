@@ -31,7 +31,6 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
-    KIMCHI.notices.clear(); // TODO move this
     // KIMCHI.$document.off('keydown', keydown);
   };
 
@@ -43,7 +42,6 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   mode.flyTo = function (body) {
     var deferred = Q.defer();
 
-    KIMCHI.notices.add(KIMCHI.config.get('noticeFlyTo')(body));
     KIMCHI.config.set('bodiesSpeed', 0);
 
     console.log('.flight.modes.auto: panning to ' + body.name);
@@ -104,6 +102,9 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
           t += 0.05;
         } else { // done
           deferred.resolve();
+
+          KIMCHI.notices.remove(KIMCHI.config.get('noticePanTo')(body));
+
           // can't return false here because then the follow-up translateTo()
           // won't animate
         }
@@ -157,6 +158,8 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   translateTo = function (body) {
     var deferred = Q.defer();
 
+    KIMCHI.notices.add(KIMCHI.config.get('noticeFlyTo')(body));
+
     mode.animationFrame = function (delta) {
       var translationZ;
 
@@ -171,6 +174,9 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
         update(delta);
       } else { // done
         deferred.resolve();
+
+        KIMCHI.notices.remove(KIMCHI.config.get('noticeFlyTo')(body));
+
         // return false; // stop animating
       }
     };

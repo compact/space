@@ -72,6 +72,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.noticePanTo = function (body) {
     return 'Looking at ' + body.name + '...';
   };
+  settings.noticeEndOfTime = 'The clock has stopped and the astronomical bodies have stopped revolving because the ephemeris data we stored only goes up to this point in time!';
 
   // language constants
   settings.langMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

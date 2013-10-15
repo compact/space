@@ -31,13 +31,13 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.controlsLookSpeed = 0.001; // pitch/yaw with mouse
   // these three values are determined by base value * multiplier; do not change
   // them directly
-  settings.controlsZSpeed = 1; // move forward/backward with keyboard
-  settings.controlsStrafeSpeed = 0.5; // move left/right/up/down with keyboard
-  settings.controlsRollSpeed = 2; // roll with keyboard
+  settings.controlsZSpeed = 0; // move forward/backward with keyboard
+  settings.controlsStrafeSpeed = 0; // move left/right/up/down with keyboard
+  settings.controlsRollSpeed = 0; // roll with keyboard
   // base values
   settings.controlsBaseZSpeed = 1;
   settings.controlsBaseStrafeSpeed = 0.5;
-  settings.controlsBaseRollSpeed = 2;
+  settings.controlsBaseRollSpeed = 0.05;
   // multiplier
   settings.controlsKeyboardSpeedMultiplier = 1; // user setting
 

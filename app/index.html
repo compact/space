@@ -191,18 +191,30 @@
     </div>
   </div>
 
-  <div id="hud1" class="hud" style="display: none;">
-    <strong>Controls</strong>
-    <ul>
-      <li>1: Menu</li>
-      <li>2: Fly</li>
-      <li>3: Orbit</li>
-      <li>Mouse: Yaw/Pitch</li>
-      <li>W/S: Move Forward/Back</li>
-      <li>A/D: Strafe Left/Right</li>
-      <li>R/F: Strafe Up/Down</li>
-      <li>Q/E: Roll</li>
-    </ul>
+  <div id="hud1" class="hud" ng-cloak>
+    <div ng-show="Kimchi.flight.getMode() === 'pointerLock'">
+      <strong>Mouse look controls</strong>
+      <ul>
+        <li>1: Menu</li>
+        <li>2: Fly</li>
+        <li>3: Orbit</li>
+        <li>Mouse: Look</li>
+        <li>WASD: Move</li>
+        <li>RF: Move Up/Down</li>
+        <li>QE: Rotate</li>
+      </ul>
+    </div>
+    <div ng-show="Kimchi.flight.getMode() === 'orbit'">
+      <strong>Orbit controls</strong>
+      <ul>
+        <li>1: Menu</li>
+        <li>2: Fly</li>
+        <li>3: Orbit</li>
+        <li>Left click and drag: Rotate</li>
+        <li>Mousewheel: Zoom</li>
+        <li>Right click and drag: Pan</li>
+      </ul>
+    </div>
   </div>
 
   <div id="hud2" class="hud" ng-controller="statsCtrl">

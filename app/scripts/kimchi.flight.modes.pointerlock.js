@@ -42,7 +42,6 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     KIMCHI.pointerLock.exit();
 
     KIMCHI.pointerLockControls.disable();
-    $('#hud1').hide();
   };
 
   /**
@@ -68,7 +67,6 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   mode.init = function () {
     KIMCHI.pointerLock.on('change', function (pointerLocked) {
       if (pointerLocked) { // enabling
-        $('#hud1').show();
         KIMCHI.pointerLockControls.enable();
       } else if (flight.getMode() === 'pointerLock') { // disabling
         // This is the case when the user has exited pointer lock directly [by

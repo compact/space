@@ -66,8 +66,8 @@ var KIMCHI = (function (KIMCHI) {
     flight.modes[name].enable();
     currentMode = name;
 
-    console.log('.flight: mode changed from ' +
-      (prevName ? prevName + ' to ' : '') + name);
+    console.log('.flight: mode changed ' +
+      (prevName ? 'from ' + prevName + ' ': '') + 'to ' + name);
   };
 
   /**

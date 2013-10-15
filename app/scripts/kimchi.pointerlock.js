@@ -42,7 +42,7 @@ var KIMCHI = (function (KIMCHI) {
       'webkitPointerLockElement' in document;
     if (!havePointerLock) {
       // TODO we can use FirstPersonControls here instead
-      KIMCHI.ui.notice.set(KIMCHI.config.get('noticePointerLockNotSupported'));
+      KIMCHI.notices.add(KIMCHI.config.get('noticePointerLockNotSupported'));
       return;
     }
 
@@ -65,8 +65,7 @@ var KIMCHI = (function (KIMCHI) {
       document.webkitExitPointerLock;
 
     errorHandler = function (event) {
-      console.log('.pointerLock: error:');
-      console.log(event);
+      console.warn('.pointerLock: error:', event);
     };
     document.addEventListener('pointerlockerror', errorHandler, false);
     document.addEventListener('mozpointerlockerror', errorHandler, false);

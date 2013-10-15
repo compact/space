@@ -59,7 +59,7 @@ var KIMCHI = (function (KIMCHI) {
   //       keydownInProgress = true;
   //       $(this).one('keyup', function (event) {
   //         if (event.which === 27 && keydownInProgress) {
-  //           flight.setMode('free');
+  //           flight.setMode('pointerLock');
   //           keydownInProgress = false;
   //         }
   //       });

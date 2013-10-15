@@ -12,8 +12,7 @@ var KIMCHI = (function (KIMCHI) {
 
 
   /**
-   * Request pointer lock from the browser. This is called for the user to
-   *   enter free flight mode.
+   * Request pointer lock from the browser.
    * @memberOf module:KIMCHI.pointerLock
    */
   pointerLock.request = function () {

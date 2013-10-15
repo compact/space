@@ -35,7 +35,7 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.flight
    */
   flight.init = function () {
-    flight.modes.free.init();
+    flight.modes.pointerLock.init();
     flight.setMode('menu');
   };
 
@@ -95,7 +95,8 @@ var KIMCHI = (function (KIMCHI) {
   };
 
   /**
-   * Helper function used in animationFrame() of the modes free and orbit.
+   * Helper function used in animationFrame() of the pointer lock and orbit
+   *   modes.
    * @returns {Promise} [description]
    */
   flight.updateSpaceTime = function (delta) {
@@ -108,7 +109,7 @@ var KIMCHI = (function (KIMCHI) {
         KIMCHI.space.translateBodies(delta);
         deferred.resolve(true);
         // we don't resolve false in a rejection handler because we don't want
-        // free flight to end even when time cannot be incremented
+        // the controls to end even when time cannot be incremented
       });
     } else {
       deferred.resolve(true);

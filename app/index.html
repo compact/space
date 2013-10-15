@@ -56,8 +56,11 @@
             <p>
               [TODO: Blurb.]
             </p>
-            <div ng-click="Kimchi.flight.setMode('free')" class="btn btn-lg btn-primary">
+            <div ng-click="Kimchi.flight.setMode('pointerLock')" class="btn btn-lg btn-primary">
               Fly
+            </div>
+            <div ng-click="Kimchi.flight.setMode('orbit')" class="btn btn-lg btn-primary">
+              Orbit
             </div>
           </div>
 
@@ -286,7 +289,7 @@
   <script src="data/kimchi.space.bodies.js"></script>
   <script src="scripts/kimchi.flight.js"></script>
   <script src="scripts/kimchi.flight.Mode.js"></script>
-  <script src="scripts/kimchi.flight.modes.free.js"></script>
+  <script src="scripts/kimchi.flight.modes.pointerlock.js"></script>
   <script src="scripts/kimchi.flight.modes.orbit.js"></script>
   <script src="scripts/kimchi.flight.modes.auto.js"></script>
   <script src="scripts/kimchi.flight.modes.menu.js"></script>

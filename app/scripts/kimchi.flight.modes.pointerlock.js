@@ -1,6 +1,6 @@
 /**
- * Free, user-controlled flight.
- * @namespace free
+ * User-controlled flight with pointer lock.
+ * @namespace pointerLock
  * @memberOf  module:KIMCHI.flight.modes
  */
 var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
@@ -12,8 +12,8 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
   flight = KIMCHI.flight;
   Mode = flight.Mode;
-  mode = new Mode('free');
-  KIMCHI.flight.modes.free = mode;
+  mode = new Mode('pointerLock');
+  KIMCHI.flight.modes.pointerLock = mode;
 
   mode.enable = function () {
     Mode.prototype.enable.call(this);
@@ -28,8 +28,8 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
     // When the user exits pointer lock directly by pressing Esc or through
     // other means, this call is unnecessary; in fact, that exit triggers this
-    // function, disable(). In other cases, when the user disables free flight
-    // by pressing a key, this call is necessary.
+    // function, disable(). In other cases, when the user disables pointer lock
+    // flight by pressing a key, this call is necessary.
     KIMCHI.pointerLock.exit();
 
     KIMCHI.pointerLockControls.disable();
@@ -49,16 +49,16 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   };
 
   /**
-   * Bind the pointer lock handler for when free flight gets enabled or
+   * Bind the pointer lock handler for when pointer lock flight gets enabled or
    *   disabled.
-   * @memberOf module:KIMCHI.flight.modes.free
+   * @memberOf module:KIMCHI.flight.modes.pointerLock
    */
   mode.init = function () {
     KIMCHI.pointerLock.on('change', function (pointerLocked) {
       if (pointerLocked) { // enabling
         $('#hud1').show();
         KIMCHI.pointerLockControls.enable();
-      } else if (flight.getMode() === 'free') { // disabling
+      } else if (flight.getMode() === 'pointerLock') { // disabling
         // This is the case when the user has exited pointer lock directly [by
         // pressing Esc or through other means]. In the other cases, the user
         // has changed to another flight mode directly.
@@ -73,7 +73,7 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
    * @returns  {Boolean} If the camera is to translate with the given vector,
    *   whether it will be within the collision distance of any Body.
    * @private
-   * @memberOf module:KIMCHI.flight.modes.free
+   * @memberOf module:KIMCHI.flight.modes.pointerLock
    */
   cameraWillCollide = (function () {
     var willCollide, raycaster, cameraPosition, translationDirection,

@@ -14,7 +14,7 @@ app.factory('Kimchi', function ($rootScope, $document) {
       KIMCHI.flight.setMode('menu');
       break;
     case 50: // 2
-      KIMCHI.flight.setMode('free');
+      KIMCHI.flight.setMode('pointerLock');
       break;
     case 51: // 3
       KIMCHI.flight.setMode('orbit');
@@ -40,7 +40,8 @@ app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
     Kimchi.flight.setMode('auto');
     Kimchi.flight.modes.auto.flyTo(body).then(function () {
       $timeout(function () { // $digest to update the current distances
-        Kimchi.flight.setMode('free');
+        // TODO: set last mode, whether pointerLock or orbit
+        Kimchi.flight.setMode('pointerLock');
       });
     });
   };
@@ -49,7 +50,7 @@ app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
     Kimchi.flight.setMode('auto');
     Kimchi.flight.modes.auto.panTo(body).then(function () {
       $timeout(function () { // $digest to update the current distances
-        Kimchi.flight.setMode('free');
+        Kimchi.flight.setMode('pointerLock');
       });
     });
   };

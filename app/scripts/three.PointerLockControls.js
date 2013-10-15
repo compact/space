@@ -179,8 +179,8 @@
    *   camera.
    * @param    {Number} [translationSpeedMultiplier=1]
    * @param    {Number} [rotationSpeedMultiplier=1]
-   * @returns  {{'translationVector': THREE.Vector3, 'rotationAngles': {'x':
-   *   Number, 'y': Number, 'z': Number}}}
+   * @returns  {{translationVector: THREE.Vector3, rotationAngles: {x:
+   *   Number, y: Number, z: Number}}}
    * @function
    * @memberOf THREE.PointerLockControls
    */

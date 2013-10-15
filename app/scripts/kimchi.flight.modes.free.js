@@ -6,7 +6,7 @@
 var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, cameraWillCollide, getSpeed;
+  var flight, Mode, mode, cameraMovement, cameraWillCollide, getSpeed;
 
 
 
@@ -36,11 +36,7 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     $('#hud1').hide();
   };
 
-  var translationVector = new THREE.Vector3(), cameraMovement;
   mode.animationFrame = function (delta) {
-    // resolve true/false to continue/stop animating
-    var deferred = Q.defer();
-
     // move the Camera
     cameraMovement = KIMCHI.pointerLockControls.getCameraMovement(
       delta * flight.getTranslationSpeedMultiplier());
@@ -49,27 +45,7 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
       this.speed = cameraMovement.translationVector.length() / delta;
     }
 
-    // move the Bodies and increment the current time
-    if (KIMCHI.config.get('bodiesSpeed')) {
-      KIMCHI.time.increment().then(function () {
-        KIMCHI.space.translateBodies(delta);
-        deferred.resolve(true);
-      }, function () { // TODO: remove because we don't want movement to stop
-        deferred.resolve(false);
-      });
-    } else {
-      deferred.resolve(true);
-    }
-
-    // rotate the Bodies
-    if (KIMCHI.config.get('rotateBodies')) {
-      KIMCHI.space.rotateBodies(delta);
-    }
-
-    // move the Bodies' children
-    KIMCHI.space.updateBodyChildren();
-
-    return deferred.promise;
+    return flight.updateSpaceTime(delta);
   };
 
   /**

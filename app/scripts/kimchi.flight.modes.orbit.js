@@ -27,15 +27,10 @@ var KIMCHI = (function (KIMCHI) {
   };
 
   mode.animationFrame = function (delta) {
+    // update the controls to move the space
     KIMCHI.orbitControls.update();
 
-    // rotate the Bodies
-    if (KIMCHI.config.get('rotateBodies')) {
-      KIMCHI.space.rotateBodies(delta);
-    }
-
-    // move the Bodies' children
-    KIMCHI.space.updateBodyChildren();
+    return flight.updateSpaceTime(delta);
   };
 
 

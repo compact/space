@@ -94,5 +94,36 @@ var KIMCHI = (function (KIMCHI) {
     return flight.modes[currentMode].speed;
   };
 
+  /**
+   * Helper function used in animationFrame() of the modes free and orbit.
+   * @returns {Promise} [description]
+   */
+  flight.updateSpaceTime = function (delta) {
+    // resolve true or false to continue or stop animating
+    var deferred = Q.defer();
+
+    // increment the current time and move the Bodies
+    if (KIMCHI.config.get('bodiesSpeed')) {
+      KIMCHI.time.increment().then(function () {
+        KIMCHI.space.translateBodies(delta);
+        deferred.resolve(true);
+        // we don't resolve false in a rejection handler because we don't want
+        // free flight to end even when time cannot be incremented
+      });
+    } else {
+      deferred.resolve(true);
+    }
+
+    // rotate the Bodies
+    if (KIMCHI.config.get('rotateBodies')) {
+      KIMCHI.space.rotateBodies(delta);
+    }
+
+    // move the Bodies' children
+    KIMCHI.space.updateBodyChildren();
+
+    return deferred.promise;
+  };
+
   return KIMCHI;
 }(KIMCHI || {}));

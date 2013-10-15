@@ -1,5 +1,6 @@
 /**
- * Automatically guided flight.
+ * Automatically guided flight. Instance of {@link
+ *   module:KIMCHI.flight.Mode|Mode}.
  * @namespace auto
  * @memberOf  module:KIMCHI.flight.modes
  */
@@ -8,19 +9,25 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
 
   var flight, Mode, mode, keydown, update, translateTo;
 
-
-
   flight = KIMCHI.flight;
   Mode = flight.Mode;
   mode = new Mode('auto');
   KIMCHI.flight.modes.auto = mode;
 
+
+
+  /**
+   * @memberOf module:KIMCHI.flight.modes.auto
+   */
   mode.enable = function () {
     Mode.prototype.enable.call(this);
 
     // KIMCHI.$document.on('keydown', keydown);
   };
 
+  /**
+   * @memberOf module:KIMCHI.flight.modes.auto
+   */
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
@@ -54,6 +61,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
    * Pan (gradually rotate) the camera towards the given Body (without
    *   translating).
    * @returns  {Promise}
+   * @function
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   mode.panTo = (function () {

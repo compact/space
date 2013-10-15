@@ -4,7 +4,7 @@
  *   THREE.unitVectors, as defined in three.extensions.js.
  * @author      mrdoob / http://mrdoob.com/
  * @author      Chris
- * @constructor Controls
+ * @constructor PointerLockControls
  * @memberOf    THREE
  */
 (function (_, THREE) {
@@ -111,7 +111,8 @@
 
 
   /**
-   * Reset all movement states.
+   * Reset all movement states; stop all camera movement. To disable the
+   *   controls, call disable() instead—it calls this function.
    * @memberOf THREE.PointerLockControls
    */
   PointerLockControls.prototype.resetStates = function () {
@@ -179,8 +180,12 @@
    *   camera.
    * @param    {Number} [translationSpeedMultiplier=1]
    * @param    {Number} [rotationSpeedMultiplier=1]
-   * @returns  {{translationVector: THREE.Vector3, rotationAngles: {x:
-   *   Number, y: Number, z: Number}}}
+   * @returns  {Object} movement
+   * @returns  {THREE.Vector3} movement.translationVector
+   * @returns  {Object} movement.rotationAngles
+   * @returns  {Number} movement.rotationAngles.x
+   * @returns  {Number} movement.rotationAngles.y
+   * @returns  {Number} movement.rotationAngles.z
    * @function
    * @memberOf THREE.PointerLockControls
    */
@@ -266,6 +271,7 @@
   }());
 
   /**
+   * Move the camera.
    * @param    {Object} [movement] Object in the form returned by
    *   getCameraMovement().
    * @memberOf THREE.PointerLockControls

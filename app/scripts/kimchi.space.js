@@ -182,7 +182,7 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
 
 
 
-  /**fly-
+  /**
    * @param    {Object} [bodies]
    * @returns  {Array}  Objects with keys 'name' and 'distance', with the latter
    *   being the distance between the camera and the Body.

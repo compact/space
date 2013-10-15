@@ -1,5 +1,8 @@
 /**
- * User-controlled flight with pointer lock.
+ * Pointer lock flight mode. The user can move the camera with the mouse and
+ *   keyboard using {@link THREE.PointerLockControls}. The cursor is locked to
+ *   the screen and not visible. Instance of {@link
+ *   module:KIMCHI.flight.Mode|Mode}.
  * @namespace pointerLock
  * @memberOf  module:KIMCHI.flight.modes
  */
@@ -8,13 +11,16 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
   var flight, Mode, mode, cameraMovement, cameraWillCollide, getSpeed;
 
-
-
   flight = KIMCHI.flight;
   Mode = flight.Mode;
   mode = new Mode('pointerLock');
   KIMCHI.flight.modes.pointerLock = mode;
 
+
+
+  /**
+   * @memberOf module:KIMCHI.flight.modes.pointerLock
+   */
   mode.enable = function () {
     Mode.prototype.enable.call(this);
 
@@ -23,6 +29,9 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     // successful.
   };
 
+  /**
+   * @memberOf module:KIMCHI.flight.modes.pointerLock
+   */
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
@@ -36,6 +45,9 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     $('#hud1').hide();
   };
 
+  /**
+   * @memberOf module:KIMCHI.flight.modes.pointerLock
+   */
   mode.animationFrame = function (delta) {
     // move the Camera
     cameraMovement = KIMCHI.pointerLockControls.getCameraMovement(
@@ -70,9 +82,11 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
 
   /**
+   * @param    {THREE.Vector3} translationVector
    * @returns  {Boolean} If the camera is to translate with the given vector,
    *   whether it will be within the collision distance of any Body.
    * @private
+   * @function
    * @memberOf module:KIMCHI.flight.modes.pointerLock
    */
   cameraWillCollide = (function () {

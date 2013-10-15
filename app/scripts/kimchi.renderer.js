@@ -19,7 +19,7 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   /**
    * Call after the DOM is ready.
    * @returns  {Boolean} Whether the renderer is successfully created.
-   * @alias    initdeltadelta
+   * @alias    init
    * @memberOf module:KIMCHI.renderer
    */
   module.init = function () {

@@ -1,5 +1,6 @@
 /**
- * Flight is paused and the menu is shown.
+ * In this mode, flight is paused and the menu is shown. Instance of {@link
+ *   module:KIMCHI.flight.Mode|Mode}.
  * @namespace menu
  * @memberOf  module:KIMCHI.flight.modes
  */
@@ -8,13 +9,16 @@ var KIMCHI = (function (KIMCHI) {
 
   var flight, Mode, mode, keydown;
 
-
-
   flight = KIMCHI.flight;
   Mode = flight.Mode;
   mode = new Mode('menu');
   KIMCHI.flight.modes.menu = mode;
 
+
+
+  /**
+   * @memberOf module:KIMCHI.flight.modes.menu
+   */
   mode.enable = function () {
     Mode.prototype.enable.call(this);
 
@@ -28,6 +32,9 @@ var KIMCHI = (function (KIMCHI) {
     // KIMCHI.$document.on('keydown', keydown);
   };
 
+  /**
+   * @memberOf module:KIMCHI.flight.modes.menu
+   */
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
@@ -36,6 +43,9 @@ var KIMCHI = (function (KIMCHI) {
     // KIMCHI.$document.off('keydown', keydown);
   };
 
+  /**
+   * @memberOf module:KIMCHI.flight.modes.menu
+   */
   mode.animationFrame = function () {
     return false;
   };

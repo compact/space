@@ -7,16 +7,17 @@
 var KIMCHI = (function (KIMCHI, _, THREE) {
   'use strict';
 
-  var config = {}, settings = {}, handlers = {}, parse;
+  var config, settings, handlers, parse;
+  config = {};
   KIMCHI.config = config;
 
 
   /**
    * An object storing all the config values by key.
-   * @alias    settings
    * @private
    * @memberOf module:KIMCHI.config
    */
+  settings = {};
 
   // for dev testing
   settings.debug = true;
@@ -78,12 +79,13 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   /**
-   * Handlers for config setting value changes. A handler is not required for
-   *   each config setting.
-   * @alias    handlers
+   * An object containing handlers for config setting value changes. The keys
+   *   match those for settings. A handler is not required for each setting.
    * @private
    * @memberOf module:KIMCHI.config
    */
+  handlers = {};
+
   handlers.bodiesSpeed = function (value) {
     KIMCHI.time.setStep(value);
   };
@@ -170,7 +172,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * Since HTML and localStorage process strings only, this function parses
-   *   the given value into the correct type.
+   *   the given value into the correct type. Booleans and numbers are
+   *   converted from strings.
    * @param    {*} value
    * @returns  {*}
    * @private
@@ -193,17 +196,17 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * Keys of settings that can be changed by the user.
    * @memberOf module:KIMCHI.config
    */
-  config.userConfigurableKeys = [
-    'bodiesSpeed',
-    'rotateBodies',
-    'bodiesSizeScale',
-    'ambientLight',
-    'showLabels',
-    'showOrbits',
-    'showStars',
-    'controlsKeyboardSpeedMultiplier',
-    'controlsLookSpeed'
-  ];
+  // config.userConfigurableKeys = [
+  //   'bodiesSpeed',
+  //   'rotateBodies',
+  //   'bodiesSizeScale',
+  //   'ambientLight',
+  //   'showLabels',
+  //   'showOrbits',
+  //   'showStars',
+  //   'controlsKeyboardSpeedMultiplier',
+  //   'controlsLookSpeed'
+  // ];
 
   /**
    * User configurable settings are stored in localStorage. This function sets
@@ -235,8 +238,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * @param    {String} key
-   * @param    {String} value May be 'true' or 'false', which get converted to
-   *   Boolean.
+   * @param    {String} value The value gets passed through parse().
    * @memberOf module:KIMCHI.config
    */
   config.set = function (key, value) {

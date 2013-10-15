@@ -1,6 +1,4 @@
-/**
- * Custom event handling.
- */
+// Custom event handling.
 var KIMCHI = (function (KIMCHI, _) {
   'use strict';
 

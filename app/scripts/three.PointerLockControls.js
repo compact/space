@@ -5,7 +5,7 @@
  * @author      mrdoob / http://mrdoob.com/
  * @author      Chris
  * @constructor PointerLockControls
- * @memberOf    THREE
+ * @memberOf    external:THREE
  */
 (function (_, THREE) {
   'use strict';
@@ -24,7 +24,7 @@
 
     /**
      * Event handlers. Not in the propotype because they need to reference self.
-     * @memberOf THREE.PointerLockControls
+     * @memberOf external:THREE.PointerLockControls
      */
     this.events = {};
 
@@ -113,13 +113,13 @@
   /**
    * Reset all movement states; stop all camera movement. To disable the
    *   controls, call disable() instead—it calls this function.
-   * @memberOf THREE.PointerLockControls
+   * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.resetStates = function () {
     /**
      * All translation and roll states are stored as booleans. The yaw and
      *   pitch angles, based on mousemove, are stored as numbers.
-     * @memberOf THREE.PointerLockControls
+     * @memberOf external:THREE.PointerLockControls
      */
     this.states = {
       'baseRotationAngleX': 0,
@@ -140,13 +140,13 @@
   /**
    * Whether the controls are currently enabled. Do not set this directly; use
    *   enable() and disable().
-   * @memberOf THREE.PointerLockControls
+   * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.enabled = false;
 
   /**
    * Enable the controls.
-   * @memberOf THREE.PointerLockControls
+   * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.enable = function () {
     // can't use jQuery for this.events.mousemove, because we need the
@@ -160,7 +160,7 @@
 
   /**
    * Disable the controls.
-   * @memberOf THREE.PointerLockControls
+   * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.disable = function () {
     this.enabled = false;
@@ -187,7 +187,7 @@
    * @returns  {Number} movement.rotationAngles.y
    * @returns  {Number} movement.rotationAngles.z
    * @function
-   * @memberOf THREE.PointerLockControls
+   * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.getCameraMovement = (function () {
     var getTranslationVector, translationVector, getRotationAngles,
@@ -275,7 +275,7 @@
    * @param    {Object} [movement] Object in the form returned by
    *   getCameraMovement().
    * @function
-   * @memberOf THREE.PointerLockControls
+   * @memberOf external:THREE.PointerLockControls
    */
   PointerLockControls.prototype.moveCamera = (function () {
     var translationDirection = new THREE.Vector3(), translationDistance;

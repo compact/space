@@ -2,7 +2,7 @@
  * Based on {@link http://threejs.org/examples/misc_controls_fly.html}
  *   Multiple geometries and materials are used for variability in the stars.
  * @constructor Stars
- * @memberOf    THREE
+ * @memberOf    external:THREE
  */
 (function (_, THREE) {
   'use strict';

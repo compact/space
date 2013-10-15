@@ -1,13 +1,14 @@
 /**
  * Based on THREE.TrackballControls from the threejs.org examples, not
  *   THREE.OrbitControls. We call this OrbitControls because it is a more
- *   accurate name. Script: {@link
+ *   accurate name. <br> Script: {@link
  *   https://github.com/mrdoob/three.js/blob/master/examples/js/controls/TrackballControls.js}
- *   HTML: {@link
+ *   <br> HTML: {@link
  *   https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_trackball.html}
- *   Demo: {@link http://threejs.org/examples/misc_controls_trackball.html}
+ *   <br> Demo: {@link
+ *   http://threejs.org/examples/misc_controls_trackball.html}
  * @constructor OrbitControls
- * @memberOf    THREE
+ * @memberOf    external:THREE
  * @author      Eberhard Graether / http://egraether.com/
  * @author      Chris 2013-10-11
  */
@@ -463,7 +464,7 @@ THREE.OrbitControls = function (object, domElement) {
   /**
    * Enable the controls. This code was moved out of the constructor because we
    *   need to be able to unbind the listeners.
-   * @memberOf THREE.OrbitControls
+   * @memberOf external:THREE.OrbitControls
    */
   this.enable = function () {
     this.domElement.addEventListener('contextmenu', contextmenu, false);
@@ -485,7 +486,7 @@ THREE.OrbitControls = function (object, domElement) {
 
   /**
    * Disable the controls.
-   * @memberOf THREE.OrbitControls
+   * @memberOf external:THREE.OrbitControls
    */
   this.disable = function () {
     this.enabled = false;

@@ -175,7 +175,6 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
       KIMCHI.size.init();
       KIMCHI.pointerLock.init();
-      KIMCHI.ui.notice.init();
       KIMCHI.flight.init();
 
       console.log('.ready(): done');

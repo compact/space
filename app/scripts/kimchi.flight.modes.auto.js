@@ -31,7 +31,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   mode.disable = function () {
     Mode.prototype.disable.call(this);
 
-    KIMCHI.ui.notice.clear(); // TODO move this
+    KIMCHI.notices.clear(); // TODO move this
     // KIMCHI.$document.off('keydown', keydown);
   };
 
@@ -43,7 +43,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   mode.flyTo = function (body) {
     var deferred = Q.defer();
 
-    // KIMCHI.ui.notice.set(KIMCHI.config.get('noticeFlyTo')(body));
+    KIMCHI.notices.add(KIMCHI.config.get('noticeFlyTo')(body));
     KIMCHI.config.set('bodiesSpeed', 0);
 
     console.log('.flight.modes.auto: panning to ' + body.name);
@@ -71,6 +71,9 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
     targetQuaternion = new THREE.Quaternion();
 
     return function (body) {
+      KIMCHI.notices.add(KIMCHI.config.get('noticePanTo')(body));
+      KIMCHI.config.set('bodiesSpeed', 0);
+
       deferred = Q.defer();
 
       initialQuaternion = KIMCHI.camera.quaternion.clone();

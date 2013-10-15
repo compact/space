@@ -69,6 +69,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.noticeFlyTo = function (body) {
     return 'Flying to ' + body.name + '...';
   };
+  settings.noticePanTo = function (body) {
+    return 'Looking at ' + body.name + '...';
+  };
 
   // language constants
   settings.langMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

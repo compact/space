@@ -2,7 +2,8 @@
  * Based on {@link
  *   http://threejs.org/examples/misc_controls_pointerlock.html}. Requires
  *   THREE.unitVectors, as defined in three.extensions.js.
- * @author      mrdoob / http://mrdoob.com/ Edited by Chris.
+ * @author      mrdoob / http://mrdoob.com/
+ * @author      Chris
  * @constructor Controls
  * @memberOf    THREE
  */
@@ -19,7 +20,6 @@
       'strafeSpeed': 500,
       'rollSpeed': 2
     }, options);
-
     this.resetStates();
 
     /**
@@ -34,8 +34,8 @@
       movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
       movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-      self.states.rotateAngleX = -movementY * self.options.lookSpeed;
-      self.states.rotateAngleY = -movementX * self.options.lookSpeed;
+      self.states.baseRotationAngleX = -movementY;
+      self.states.baseRotationAngleY = -movementX;
 
       // self.camera.rotateOnAxis(THREE.unitVectors.x, -movementY * self.options.lookSpeed);
       // self.camera.rotateOnAxis(THREE.unitVectors.y, -movementX * self.options.lookSpeed);
@@ -116,12 +116,13 @@
    */
   PointerLockControls.prototype.resetStates = function () {
     /**
-     * All translation and roll states are stored as booleans. The mousemove movement are stored as numbers
+     * All translation and roll states are stored as booleans. The yaw and
+     *   pitch angles, based on mousemove, are stored as numbers.
      * @memberOf THREE.PointerLockControls
      */
     this.states = {
-      'rotateAngleX': 0,
-      'rotateAngleY': 0,
+      'baseRotationAngleX': 0,
+      'baseRotationAngleY': 0,
       'moveForward': false,
       'moveBackward': false,
       'moveLeft': false,
@@ -173,114 +174,121 @@
 
 
   /**
-   * Move the camera based on the current states.
-   * @param    {Number} speedMultiplier            Delta which applies to all
-   *   movements, i.e. both translations and rotations.
-   * @param    {Number} translationSpeedMultiplier Additional multiplier which
-   *   applies only to translations.
-   * @returns  {Boolean}                           Whether the camera moves.
+   * Get the translation vector and rotation angles for the camera, were it to
+   *   move right now based on the current state. The values are local to the
+   *   camera.
+   * @param    {Number} [translationSpeedMultiplier=1]
+   * @param    {Number} [rotationSpeedMultiplier=1]
+   * @returns  {{'translationVector': THREE.Vector3, 'rotationAngles': {'x':
+   *   Number, 'y': Number, 'z': Number}}}
    * @function
    * @memberOf THREE.PointerLockControls
    */
-  PointerLockControls.prototype.moveCamera = (function () {
-    var translationVector, camera, options, rotateAngleZ, moving;
-    translationVector = new THREE.Vector3();
+  PointerLockControls.prototype.getCameraMovement = (function () {
+    var getTranslationVector, translationVector, getRotationAngles,
+      rotationAngles;
 
-    return function (speedMultiplier, translationSpeedMultiplier) {
-      translationVector.set(0, 0, 0);
-      camera = this.camera;
-      options = this.options;
-      rotateAngleZ = 0;
-      moving = false;
+    getTranslationVector = (function () {
+      var vector = new THREE.Vector3();
 
-      // translate
-      translationVector = this.getLocalTranslationVector();
-      if (translationVector.length() > 0) {
-        camera.translateX(translationVector.x * options.strafeSpeed *
-          speedMultiplier * translationSpeedMultiplier);
-        camera.translateY(translationVector.y * options.strafeSpeed *
-          speedMultiplier * translationSpeedMultiplier);
-        camera.translateZ(translationVector.z * options.zSpeed *
-          speedMultiplier * translationSpeedMultiplier);
-        moving = true;
-      }
+      return function (multiplier) {
+        vector.set(0, 0, 0);
 
-      // rotate about the z-axis
-      if (this.states.rollLeft) {
-        rotateAngleZ -= options.rollSpeed * speedMultiplier;
-      }
-      if (this.states.rollRight) {
-        rotateAngleZ += options.rollSpeed * speedMultiplier;
-      }
-      if (rotateAngleZ !== 0) {
-        camera.rotateOnAxis(THREE.unitVectors.z, rotateAngleZ);
-        moving = true;
-      }
+        if (this.states.moveForward) {
+          vector.z -= this.options.zSpeed * multiplier;
+        }
+        if (this.states.moveBackward) {
+          vector.z += this.options.zSpeed * multiplier;
+        }
+        if (this.states.moveLeft) {
+          vector.x -= this.options.strafeSpeed * multiplier;
+        }
+        if (this.states.moveRight) {
+          vector.x += this.options.strafeSpeed * multiplier;
+        }
+        if (this.states.moveUp) {
+          vector.y += this.options.strafeSpeed * multiplier;
+        }
+        if (this.states.moveDown) {
+          vector.y -= this.options.strafeSpeed * multiplier;
+        }
 
-      // Rotate about the x- and y-axes. Mousemove angles get reset immediately
-      // after rotation, unlike the other states.
-      if (this.states.rotateAngleX !== 0) {
-        camera.rotateOnAxis(THREE.unitVectors.x, this.states.rotateAngleX);
-        this.states.rotateAngleX = 0;
-        moving = true;
-      }
-      if (this.states.rotateAngleY !== 0) {
-        camera.rotateOnAxis(THREE.unitVectors.y, this.states.rotateAngleY);
-        this.states.rotateAngleY = 0;
-        moving = true;
-      }
+        return vector;
+      };
+    }());
 
-      return moving;
-    };
-  }());
+    getRotationAngles = (function () {
+      var angles = {};
 
+      return function (multiplier) {
+        angles.x = this.states.baseRotationAngleX * this.options.lookSpeed *
+          multiplier;
 
+        angles.y = this.states.baseRotationAngleY * this.options.lookSpeed *
+          multiplier;
 
-  /**
-   * To check whether the camera is currently moving, check
-   *   .getTranslationVector().length() > 0.
-   * @returns  {THREE.Vector3} A vector corresponding to the current local
-   *   movement direction(s).
-   * @function
-   * @memberOf THREE.PointerLockControls
-   */
-  PointerLockControls.prototype.getLocalTranslationVector = (function () {
-    var vector = new THREE.Vector3();
+        angles.z = 0;
+        if (this.states.rollLeft) {
+          angles.z -= this.options.rollSpeed * multiplier;
+        }
+        if (this.states.rollRight) {
+          angles.z += this.options.rollSpeed * multiplier;
+        }
 
-    return function () {
-      vector.set(0, 0, 0);
+        return angles;
+      };
+    }());
 
-      if (this.states.moveForward) {
-        vector.add(THREE.unitVectors.negZ);
+    return function (translationSpeedMultiplier, rotationSpeedMultiplier) {
+      if (typeof translationSpeedMultiplier === 'undefined') {
+        translationSpeedMultiplier = 1;
       }
-      if (this.states.moveBackward) {
-        vector.add(THREE.unitVectors.z);
-      }
-      if (this.states.moveLeft) {
-        vector.add(THREE.unitVectors.negX);
-      }
-      if (this.states.moveRight) {
-        vector.add(THREE.unitVectors.x);
-      }
-      if (this.states.moveUp) {
-        vector.add(THREE.unitVectors.y);
-      }
-      if (this.states.moveDown) {
-        vector.add(THREE.unitVectors.negY);
+      if (typeof rotationSpeedMultiplier === 'undefined') {
+        rotationSpeedMultiplier = 1;
       }
 
-      return vector;
+      // get translation vector
+      translationVector = getTranslationVector.call(this,
+        translationSpeedMultiplier);
+
+      // get rotation angles
+      rotationAngles = getRotationAngles.call(this, rotationSpeedMultiplier);
+
+      // mousemove angles get reset immediately, unlike the other states
+      this.states.baseRotationAngleX = 0;
+      this.states.baseRotationAngleY = 0;
+
+      return {
+        'translationVector': translationVector,
+        'rotationAngles': rotationAngles
+      };
     };
   }());
 
   /**
-   * TODO: Not used, can delete.
-   * @returns  {THREE.Vector3}
+   * @param    {Object} [movement] Object in the form returned by
+   *   getCameraMovement().
    * @memberOf THREE.PointerLockControls
    */
-  PointerLockControls.prototype.getWorldTranslationVector = function () {
-    return this.camera.localToWorld(this.getLocalTranslationVector());
+  PointerLockControls.prototype.moveCamera = function (movement) {
+    if (typeof movement === 'undefined') {
+      movement = this.getCameraMovement();
+    }
+
+    // translate
+    this.camera.translateOnAxis(
+      movement.translationVector.clone().normalize(),
+      movement.translationVector.length()
+    );
+
+    // rotate
+    // TODO: consider a composition of the three rotations, like for translation
+    this.camera.rotateX(movement.rotationAngles.x);
+    this.camera.rotateY(movement.rotationAngles.y);
+    this.camera.rotateZ(movement.rotationAngles.z);
   };
+
+
 
   THREE.PointerLockControls = PointerLockControls;
 }(_, THREE));

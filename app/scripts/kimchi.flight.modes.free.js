@@ -6,7 +6,7 @@
 var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, colliding, getSpeed;
+  var flight, Mode, mode, cameraWillCollide, getSpeed;
 
 
 
@@ -36,17 +36,17 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     $('#hud1').hide();
   };
 
+  var translationVector = new THREE.Vector3(), cameraMovement;
   mode.animationFrame = function (delta) {
     // resolve true/false to continue/stop animating
     var deferred = Q.defer();
 
     // move the Camera
-    if (!colliding()) {
-      KIMCHI.pointerLockControls.moveCamera(
-        delta,
-        flight.getTranslationSpeedMultiplier()
-      );
-      this.speed = getSpeed(delta);
+    cameraMovement = KIMCHI.pointerLockControls.getCameraMovement(
+      delta * flight.getTranslationSpeedMultiplier());
+    if (!cameraWillCollide(cameraMovement.translationVector)) {
+      KIMCHI.pointerLockControls.moveCamera(cameraMovement);
+      this.speed = cameraMovement.translationVector.length() / delta;
     }
 
     // move the Bodies and increment the current time
@@ -54,7 +54,7 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
       KIMCHI.time.increment().then(function () {
         KIMCHI.space.translateBodies(delta);
         deferred.resolve(true);
-      }, function () {
+      }, function () { // TODO: remove because we don't want movement to stop
         deferred.resolve(false);
       });
     } else {
@@ -94,73 +94,62 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
 
   /**
-   * @returns  {Boolean} Whether the camera is current in collision, i.e.
-   *   within any Body's collision distance.
+   * @returns  {Boolean} If the camera is to translate with the given vector,
+   *   whether it will be within the collision distance of any Body.
    * @private
    * @memberOf module:KIMCHI.flight.modes.free
    */
-  colliding = (function () {
-    var translationVector, raycaster, intersects, returnValue;
+  cameraWillCollide = (function () {
+    var willCollide, raycaster, cameraPosition, translationDirection,
+      intersects, body;
 
     raycaster = new THREE.Raycaster();
     // the default precision, 0.0001, is not low enough for our 1x scale
+    // TODO: consider basing precision on the scale config value
     raycaster.precision = 0.000001;
 
-    return function () {
-      translationVector = KIMCHI.pointerLockControls.getLocalTranslationVector();
+    // use these to avoid having to create new clones every call
+    cameraPosition = new THREE.Vector3();
+    translationDirection = new THREE.Vector3();
 
-      // scaling may be necessary if translationVector's magnitude is much
-      // larger or smaller than the camera position
-      // translationVector.multiplyScalar(1000);
-
-      if (translationVector.length() === 0) { // not moving, can't be colliding
+    return function (translationVector) {
+      if (translationVector.length() === 0) {
+        // not translating, so won't be colliding
         return false;
       }
 
-      raycaster.set(
-        KIMCHI.camera.position.clone(),
-        // calculation based on http://stackoverflow.com/questions/11473755/how-to-detect-collision-in-three-js
-        KIMCHI.camera.localToWorld(translationVector)
-          .sub(KIMCHI.camera.position)
-          // KIMCHI.camera.position.clone().sub(translationVector.applyMatrix4(KIMCHI.camera.matrix)),
-      );
+      cameraPosition.copy(KIMCHI.camera.position);
+      translationDirection.copy(translationVector).normalize(); // local
+      KIMCHI.camera.localToWorld(translationDirection).normalize(); // world
 
+      // the Raycaster direction should be normalized, according to
+      // https://github.com/mrdoob/three.js/blob/master/src/core/Raycaster.js
+      raycaster.set(cameraPosition, translationDirection);
+
+      // get all Object3Ds in the direction of translation
       intersects = raycaster.intersectObjects(
         KIMCHI.space.getCollideableObject3Ds()
       );
 
-      // no objects are in the current direction of translation, so not
-      // colliding
       if (intersects.length === 0) {
+        // no Object3Ds, so won't be colliding
         return false;
       }
 
-      returnValue = false;
+      willCollide = false;
+      // check whether each Body corresponding to the Object3Ds is within
+      // collision distance
       _.each(intersects, function (intersect) {
-        // TODO take into account the object's Body's radius
-        var body = KIMCHI.space.getBody(intersect.object.name);
+        body = KIMCHI.space.getBody(intersect.object.name);
         if (intersect.distance < body.getCollisionDistance()) {
-          returnValue = true;
+          // console.log(intersect.distance, body.getCollisionDistance());
+          willCollide = true;
           return false; // break the loop
         }
       });
-      return returnValue;
+      return willCollide;
     };
   }());
-
-  /**
-   * @returns  {Number} The current speed.
-   * @private
-   * @memberOf module:KIMCHI.flight.modes.free
-   */
-  getSpeed = function (delta) {
-    var translation = KIMCHI.pointerLockControls.getLocalTranslationVector();
-    return (new THREE.Vector3(
-        translation.x * KIMCHI.config.get('controlsStrafeSpeed'),
-        translation.y * KIMCHI.config.get('controlsStrafeSpeed'),
-        translation.z * KIMCHI.config.get('controlsZSpeed')
-      )).length() * flight.getTranslationSpeedMultiplier() / delta;
-  };
 
 
 

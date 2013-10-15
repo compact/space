@@ -274,25 +274,29 @@
    * Move the camera.
    * @param    {Object} [movement] Object in the form returned by
    *   getCameraMovement().
+   * @function
    * @memberOf THREE.PointerLockControls
    */
-  PointerLockControls.prototype.moveCamera = function (movement) {
-    if (typeof movement === 'undefined') {
-      movement = this.getCameraMovement();
-    }
+  PointerLockControls.prototype.moveCamera = (function () {
+    var translationDirection = new THREE.Vector3(), translationDistance;
 
-    // translate
-    this.camera.translateOnAxis(
-      movement.translationVector.clone().normalize(),
-      movement.translationVector.length()
-    );
+    return function (movement) {
+      if (typeof movement === 'undefined') {
+        movement = this.getCameraMovement();
+      }
 
-    // rotate
-    // TODO: consider a composition of the three rotations, like for translation
-    this.camera.rotateX(movement.rotationAngles.x);
-    this.camera.rotateY(movement.rotationAngles.y);
-    this.camera.rotateZ(movement.rotationAngles.z);
-  };
+      // translate
+      translationDistance = movement.translationVector.length();
+      translationDirection.copy(movement.translationVector).normalize();
+      this.camera.translateOnAxis(translationDirection, translationDistance);
+
+      // rotate
+      // TODO: consider a composition of the three rotations, like for translation
+      this.camera.rotateX(movement.rotationAngles.x);
+      this.camera.rotateY(movement.rotationAngles.y);
+      this.camera.rotateZ(movement.rotationAngles.z);
+    };
+  }());
 
 
 

@@ -91,7 +91,7 @@
    * @memberOf external:THREE.Object3D
    */
   THREE.Object3D.prototype.orbit = (function () {
-    var position, sin, cos, x, y, z, rotationMatrix, scalingMatrix;
+    var sin, cos, x, y, z, rotationMatrix, scalingMatrix;
     rotationMatrix = new THREE.Matrix3();
     scalingMatrix = new THREE.Matrix3();
 
@@ -120,11 +120,9 @@
         cos + z * z * (1 - cos)
       );
 
-      position = this.position.clone();
-      position.applyMatrix3(scalingMatrix)
+      this.applyMatrix3(scalingMatrix)
         .applyMatrix3(rotationMatrix)
         .applyMatrix3(scalingMatrix.inverse());
-      this.position.copy(position);
     };
   }());
 

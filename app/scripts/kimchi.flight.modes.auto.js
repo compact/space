@@ -59,8 +59,11 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   mode.panTo = (function () {
-    var deferred, initialQuaternion, rotationMatrix, targetQuaternion, t;
+    var deferred, initialQuaternion, initialQuaternionClone, rotationMatrix,
+      targetQuaternion, t;
 
+    initialQuaternion = new THREE.Quaternion();
+    initialQuaternionClone = new THREE.Quaternion();
     rotationMatrix = new THREE.Matrix4();
     targetQuaternion = new THREE.Quaternion();
 
@@ -70,7 +73,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
 
       deferred = Q.defer();
 
-      initialQuaternion = KIMCHI.camera.quaternion.clone();
+      initialQuaternion.copy(KIMCHI.camera.quaternion);
 
       rotationMatrix.lookAt(
         KIMCHI.camera.position,
@@ -90,9 +93,14 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
         }
 
         if (t <= 1) {
-          KIMCHI.camera.quaternion.copy(
-            initialQuaternion.clone().slerp(targetQuaternion, t)
-          );
+          // this extra clone avoids having to call .clone() in each frame,
+          // which would be more expensive than copy()
+          initialQuaternionClone.copy(initialQuaternion);
+
+          // slerp is spherical linear interpolation for 3D rotation
+          initialQuaternionClone.slerp(targetQuaternion, t);
+          KIMCHI.camera.quaternion.copy(initialQuaternionClone);
+
           update(delta);
 
           t += 0.05;

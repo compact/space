@@ -140,45 +140,56 @@ var KIMCHI = (function (KIMCHI, _, $, THREE) {
    *   position, and size of all Object3Ds associated with the Bodies (such as
    *   text label Meshes). This function should be called whenever the camera
    *   moves.
+   * @function
    * @memberOf module:KIMCHI.space
    */
-  space.updateBodyChildren = function () {
-    _.each(bodies, function (body) {
-      var bodyDistance, label, labelDistance, labelLocalLength,
-        labelLocalVector, labelWorldVector;
+  space.updateBodyChildren = (function () {
+    var bodyDistance, label, labelDistance, labelLocalLength,
+      labelLocalVector, labelWorldVector, cameraPosition, bodyPosition;
 
-      // update the text label Mesh
+    cameraPosition = new THREE.Vector3();
+    bodyPosition = new THREE.Vector3();
+
+    return function () {
+      // update the label Meshes
       if (KIMCHI.config.get('showLabels')) {
-        bodyDistance = THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main);
-        label = body.object3Ds.label;
+        _.each(bodies, function (body) {
 
-        if (bodyDistance > body.labelVisibleDistance) {
-          label.visible = false;
-        } else {
-          label.visible = true;
+          bodyDistance = THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main);
+          label = body.object3Ds.label;
 
-          // rotate to face the camera
-          label.quaternion.copy(KIMCHI.camera.quaternion.clone());
+          if (bodyDistance > body.labelVisibleDistance) {
+            label.visible = false;
+          } else {
+            // store positions for the calculations below
+            cameraPosition.copy(KIMCHI.camera.position);
+            bodyPosition.copy(body.object3Ds.main.position);
 
-          // distance between the label to the camera
-          labelDistance = (bodyDistance - body.getScaledRadius()) / 2;
-          // distance between the center of the Body Mesh and the label
-          labelLocalLength = labelDistance + body.getScaledRadius();
-          // vector from the center of the Body Mesh to the label
-          labelLocalVector = KIMCHI.camera.position.clone()
-            .sub(body.object3Ds.main.position).setLength(labelLocalLength);
-          // vector from the origin of the world to the label
-          labelWorldVector = body.object3Ds.main.position.clone()
-            .add(labelLocalVector);
-          // move it in front of the Body Mesh so it's not hidden inside
-          label.position.copy(labelWorldVector);
+            // rotate to face the camera
+            label.quaternion.copy(KIMCHI.camera.quaternion);
 
-          // scale
-          label.scale.setXYZ(labelDistance / 1000);
-        }
+            // distance between the label to the camera
+            labelDistance = (bodyDistance - body.getScaledRadius()) / 2;
+            // distance between the center of the Body Mesh and the label
+            labelLocalLength = labelDistance + body.getScaledRadius();
+            // vector from the center of the Body Mesh to the label
+            labelLocalVector = cameraPosition.sub(bodyPosition)
+              .setLength(labelLocalLength);
+            // vector from the origin of the world to the label
+            labelWorldVector = bodyPosition.add(labelLocalVector);
+            // move it in front of the Body Mesh so it's not hidden inside
+            label.position.copy(labelWorldVector);
+
+            // scale
+            label.scale.setXYZ(labelDistance / 1000);
+
+            // show
+            label.visible = true;
+          }
+        });
       }
-    });
-  };
+    };
+  }());
 
 
 

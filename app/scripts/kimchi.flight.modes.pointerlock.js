@@ -9,7 +9,7 @@
 var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, cameraMovement, cameraWillCollide;
+  var flight, Mode, mode, cameraMovement, cameraWillCollide, getDirection;
 
   flight = KIMCHI.flight;
   Mode = flight.Mode;
@@ -80,9 +80,10 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
 
   /**
-   * @param    {THREE.Vector3} translationVector
-   * @returns  {Boolean} If the camera is to translate with the given vector,
-   *   whether it will be within the collision distance of any Body.
+   * @param    {THREE.Vector3} translationVector From {@link
+   *   THREE.PointerLockControls#moveCamera}.
+   * @returns  {Boolean}       If the camera is to translate with the given
+   *   vector, whether it will be within the collision distance of any Body.
    * @private
    * @function
    * @memberOf module:KIMCHI.flight.modes.pointerLock
@@ -96,9 +97,8 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     // TODO: consider basing precision on the scale config value
     raycaster.precision = 0.000001;
 
-    // use these to avoid having to create new clones every call
+    // these two Vector3s are passed into the raycaster
     cameraPosition = new THREE.Vector3();
-    translationDirection = new THREE.Vector3();
 
     return function (translationVector) {
       if (translationVector.length() === 0) {
@@ -106,21 +106,10 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
         return false;
       }
 
+      willCollide = false;
+
       cameraPosition.copy(KIMCHI.camera.position);
-
-      // translationVector is local to the camera
-      translationDirection.copy(translationVector);
-      // set the two vectors to have equal lengths for accuracy; if one is much
-      // longer than the other, errors arise
-      translationDirection.setLength(cameraPosition.length());
-      // world vector from the origin to the endpoint of translationDirection
-      KIMCHI.camera.localToWorld(translationDirection);
-      // direction of translation
-      translationDirection.sub(cameraPosition);
-      // the Raycaster direction should be normalized, according to
-      // https://github.com/mrdoob/three.js/blob/master/src/core/Raycaster.js
-      translationDirection.normalize();
-
+      translationDirection = getDirection(cameraPosition, translationVector);
       raycaster.set(cameraPosition, translationDirection);
 
       // get all Object3Ds in the direction of translation
@@ -135,7 +124,6 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
       // check whether each Body corresponding to the Object3Ds is within
       // collision distance
-      willCollide = false;
       _.each(intersects, function (intersect) {
         body = KIMCHI.space.getBody(intersect.object.name);
         // console.log(intersect.distance, body.getCollisionDistance(), translationDirection);
@@ -145,6 +133,39 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
         }
       });
       return willCollide;
+    };
+  }());
+
+  /**
+   * This function is written generally, but it is currently used only as a
+   *   helper for cameraWillCollide(). Can be moved into
+   *   THREE.Vector3.prototype if needed elsewhere.
+   * @param   {THREE.Vector3} startingPosition
+   * @param   {THREE.Vector3} localVector A vector local to startingPosition.
+   * @returns {THREE.Vector3} A normalized world direction vector for
+   *   localVector.
+   * @private
+   * @function
+   * @memberOf module:KIMCHI.flight.modes.pointerLock
+   */
+  getDirection = (function () {
+    var direction = new THREE.Vector3();
+
+    return function (startingPosition, localVector) {
+      // local vector from the camera
+      direction.copy(localVector);
+      // set the two vectors to have equal lengths for accuracy; if one is
+      // much longer than the other, errors arise
+      direction.setLength(startingPosition.length());
+      // world vector from the origin to the endpoint of the local vector
+      KIMCHI.camera.localToWorld(direction);
+      // world direction vector
+      direction.sub(startingPosition);
+      // the Raycaster direction should be normalized, according to
+      // https://github.com/mrdoob/three.js/blob/master/src/core/Raycaster.js
+      direction.normalize();
+
+      return direction;
     };
   }());
 

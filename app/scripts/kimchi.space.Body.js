@@ -218,7 +218,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * @returns  {Number} The distance between the camera and this Body.
+   * @returns  {Number} The distance between the camera and the center of this
+   *   Body.
    * @alias    getCameraDistance
    * @instance
    * @memberOf module:KIMCHI.space.Body
@@ -228,12 +229,24 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * @returns  {Number} The collision distance between the camera and this Body.
+   * @returns  {Number} The collision distance between the camera and the
+   *   center of this Body.
    * @alias    getCollisionDistance
    * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getCollisionDistance = function () {
+    return this.getScaledRadius() + this.getSurfaceCollisionDistance();
+  };
+
+  /**
+   * @returns  {Number} The collision distance between the camera and the
+   *   surface of this Body.
+   * @alias    getSurfaceCollisionDistance
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.getSurfaceCollisionDistance = function () {
     return this.getScaledRadius();
   };
 
@@ -257,7 +270,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.isColliding = function (object3D) {
-    return this.getSurfaceDistance(object3D) < this.getCollisionDistance();
+    return this.getSurfaceDistance(object3D) < this.getSurfaceCollisionDistance();
   };
 
   KIMCHI.space = KIMCHI.space || {};

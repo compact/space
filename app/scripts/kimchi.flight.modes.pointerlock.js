@@ -139,8 +139,8 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
       // collision distance
       _.each(intersects, function (intersect) {
         body = KIMCHI.space.getBody(intersect.object.name);
-        // console.log(intersect.distance, body.getCollisionDistance(), translationDirection);
-        if (intersect.distance < body.getCollisionDistance()) {
+        // console.log(intersect.distance, body.getSurfaceCollisionDistance(), translationDirection);
+        if (intersect.distance < body.getSurfaceCollisionDistance()) {
           willCollide = true;
           return false; // break the loop
         }

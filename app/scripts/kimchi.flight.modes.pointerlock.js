@@ -12,7 +12,7 @@
 var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, cameraMovement, cameraWillCollide, getDirection;
+  var flight, Mode, mode, willCollide, getDirection;
 
   flight = KIMCHI.flight;
   Mode = flight.Mode;
@@ -51,13 +51,22 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
    * @memberOf module:KIMCHI.flight.modes.pointerLock
    */
   mode.animationFrame = function (delta) {
-    // move the Camera
-    cameraMovement = KIMCHI.pointerLockControls.getCameraMovement(
-      delta * flight.getTranslationSpeedMultiplier());
-    if (!cameraWillCollide(cameraMovement.translationVector)) {
-      KIMCHI.pointerLockControls.moveCamera(cameraMovement);
-      this.speed = cameraMovement.translationVector.length() / delta;
-    }
+    var self = this;
+
+    // move the camera, but only if it won't be in collision
+    KIMCHI.pointerLockControls.move(function (movement) {
+      // scale the translation speed
+      movement.translationVector.multiplyScalar(
+        delta * flight.getTranslationSpeedMultiplier()
+      );
+
+      if (!willCollide(movement.translationVector)) {
+        self.speed = movement.translationVector.length() / delta;
+        return true; // move
+      } else {
+        return false; // don't move
+      }
+    });
 
     return flight.updateSpaceTime(delta);
   };
@@ -83,16 +92,16 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
 
   /**
-   *
+   * Helper for animationFrame().
    * @param    {THREE.Vector3} translationVector From {@link
-   *   external:THREE.PointerLockControls#moveCamera|THREE.PointerLockControls#moveCamera}.
+   *   external:THREE.PointerLockControls#move|THREE.PointerLockControls#move}.
    * @returns  {Boolean}       If the camera is to translate with the given
    *   vector, whether it will be within the collision distance of any Body.
    * @private
    * @function
    * @memberOf module:KIMCHI.flight.modes.pointerLock
    */
-  cameraWillCollide = (function () {
+  willCollide = (function () {
     var willCollide, raycaster, cameraPosition, translationDirection,
       intersects, body;
 
@@ -141,9 +150,8 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   }());
 
   /**
-   * This function is written generally, but it is currently used only as a
-   *   helper for cameraWillCollide(). Can be moved into
-   *   THREE.Vector3.prototype if needed elsewhere.
+   * Helper for willCollide(). Can be moved into THREE.Vector3.prototype if
+   *   needed elsewhere.
    * @param   {THREE.Vector3} startingPosition
    * @param   {THREE.Vector3} localVector A vector local to startingPosition.
    * @returns {THREE.Vector3} A normalized world direction vector for

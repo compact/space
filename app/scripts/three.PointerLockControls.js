@@ -188,91 +188,95 @@
 
 
   /**
-   * Get the translation vector and rotation angles for the camera, were it to
-   *   move right now based on the current state. The values are local to the
-   *   camera.
-   * @param    {Number} [translationSpeedMultiplier=1]
-   * @param    {Number} [rotationSpeedMultiplier=1]
-   * @returns  {Object} movement
-   * @returns  {THREE.Vector3} movement.translationVector
-   * @returns  {Object} movement.rotationAngles
-   * @returns  {Number} movement.rotationAngles.x
-   * @returns  {Number} movement.rotationAngles.y
-   * @returns  {Number} movement.rotationAngles.z
-   * @alias    getCameraMovement
+   * Move the camera, unless the callback returns false.
+   * @param    {Function} [callback] If given, the callback must return a
+   *   boolean to determine whether the move should occur.
+   * @alias    move
    * @instance
    * @function
    * @memberOf external:THREE.PointerLockControls
    */
-  PointerLockControls.prototype.getCameraMovement = (function () {
-    var getTranslationVector, translationVector, getRotationAngles,
-      rotationAngles;
+  PointerLockControls.prototype.move = (function () {
+    var getNextMovement, getTranslationVector, getRotationAngles,
+      translationVector, rotationAngles, translationDirection;
 
-    getTranslationVector = (function () {
+    /**
+     * Helper function in move().
+     * @returns  {THREE.Vector3}
+     * @private
+     * @instance
+     * @memberOf external:THREE.PointerLockControls
+     */
+    getTranslationVector = function () {
       var vector = new THREE.Vector3();
 
-      return function (multiplier) {
-        vector.set(0, 0, 0);
+      if (this.states.moveForward) {
+        vector.z -= this.options.zSpeed;
+      }
+      if (this.states.moveBackward) {
+        vector.z += this.options.zSpeed;
+      }
+      if (this.states.moveLeft) {
+        vector.x -= this.options.strafeSpeed;
+      }
+      if (this.states.moveRight) {
+        vector.x += this.options.strafeSpeed;
+      }
+      if (this.states.moveUp) {
+        vector.y += this.options.strafeSpeed;
+      }
+      if (this.states.moveDown) {
+        vector.y -= this.options.strafeSpeed;
+      }
 
-        if (this.states.moveForward) {
-          vector.z -= this.options.zSpeed * multiplier;
-        }
-        if (this.states.moveBackward) {
-          vector.z += this.options.zSpeed * multiplier;
-        }
-        if (this.states.moveLeft) {
-          vector.x -= this.options.strafeSpeed * multiplier;
-        }
-        if (this.states.moveRight) {
-          vector.x += this.options.strafeSpeed * multiplier;
-        }
-        if (this.states.moveUp) {
-          vector.y += this.options.strafeSpeed * multiplier;
-        }
-        if (this.states.moveDown) {
-          vector.y -= this.options.strafeSpeed * multiplier;
-        }
+      return vector;
+    };
 
-        return vector;
-      };
-    }());
-
-    getRotationAngles = (function () {
+    /**
+     * Helper function in move().
+     * @returns  {Object}
+     * @private
+     * @instance
+     * @memberOf external:THREE.PointerLockControls
+     */
+    getRotationAngles = function () {
       var angles = {};
 
-      return function (multiplier) {
-        angles.x = this.states.baseRotationAngleX * this.options.lookSpeed *
-          multiplier;
+      angles.x = this.states.baseRotationAngleX * this.options.lookSpeed;
+      angles.y = this.states.baseRotationAngleY * this.options.lookSpeed;
 
-        angles.y = this.states.baseRotationAngleY * this.options.lookSpeed *
-          multiplier;
-
-        angles.z = 0;
-        if (this.states.rollLeft) {
-          angles.z -= this.options.rollSpeed * multiplier;
-        }
-        if (this.states.rollRight) {
-          angles.z += this.options.rollSpeed * multiplier;
-        }
-
-        return angles;
-      };
-    }());
-
-    return function (translationSpeedMultiplier, rotationSpeedMultiplier) {
-      if (typeof translationSpeedMultiplier === 'undefined') {
-        translationSpeedMultiplier = 1;
+      angles.z = 0;
+      if (this.states.rollLeft) {
+        angles.z -= this.options.rollSpeed;
       }
-      if (typeof rotationSpeedMultiplier === 'undefined') {
-        rotationSpeedMultiplier = 1;
+      if (this.states.rollRight) {
+        angles.z += this.options.rollSpeed;
       }
 
+      return angles;
+    };
+
+    /**
+     * Helper function in move(). Get the translation vector and rotation
+     *   angles for the camera, were it to move right now based on the current
+     *   state. The values are local to the camera. The returned object is
+     *   passed into the optional callback given to move().
+     * @returns  {Object}        movement
+     * @returns  {THREE.Vector3} movement.translationVector
+     * @returns  {Object}        movement.rotationAngles
+     * @returns  {Number}        movement.rotationAngles.x
+     * @returns  {Number}        movement.rotationAngles.y
+     * @returns  {Number}        movement.rotationAngles.z
+     * @private
+     * @instance
+     * @memberOf external:THREE.PointerLockControls
+     */
+    getNextMovement = function () {
       // get translation vector
-      translationVector = getTranslationVector.call(this,
-        translationSpeedMultiplier);
+      translationVector = getTranslationVector.call(this);
 
       // get rotation angles
-      rotationAngles = getRotationAngles.call(this, rotationSpeedMultiplier);
+      rotationAngles = getRotationAngles.call(this);
 
       // mousemove angles get reset immediately, unlike the other states
       this.states.baseRotationAngleX = 0;
@@ -283,35 +287,33 @@
         'rotationAngles': rotationAngles
       };
     };
-  }());
 
-  /**
-   * Move the camera.
-   * @param    {Object} [movement] Object in the form returned by
-   *   getCameraMovement().
-   * @alias    moveCamera
-   * @instance
-   * @function
-   * @memberOf external:THREE.PointerLockControls
-   */
-  PointerLockControls.prototype.moveCamera = (function () {
-    var translationDirection = new THREE.Vector3(), translationDistance;
+    translationDirection = new THREE.Vector3();
 
-    return function (movement) {
-      if (typeof movement === 'undefined') {
-        movement = this.getCameraMovement();
+    return function (callback) {
+      var movement, move, translationDistance;
+
+      movement = getNextMovement.call(this);
+      move = true;
+
+      // callback
+      if (typeof callback === 'function') {
+        move = callback(movement);
       }
 
-      // translate
-      translationDistance = movement.translationVector.length();
-      translationDirection.copy(movement.translationVector).normalize();
-      this.camera.translateOnAxis(translationDirection, translationDistance);
+      // move
+      if (move) {
+        // translate
+        translationDistance = movement.translationVector.length();
+        translationDirection.copy(movement.translationVector).normalize();
+        this.camera.translateOnAxis(translationDirection, translationDistance);
 
-      // rotate
-      // TODO: consider a composition of the three rotations, like for translation
-      this.camera.rotateX(movement.rotationAngles.x);
-      this.camera.rotateY(movement.rotationAngles.y);
-      this.camera.rotateZ(movement.rotationAngles.z);
+        // rotate; TODO: consider a composition of the three rotations, like for
+        // translation
+        this.camera.rotateX(movement.rotationAngles.x);
+        this.camera.rotateY(movement.rotationAngles.y);
+        this.camera.rotateZ(movement.rotationAngles.z);
+      }
     };
   }());
 

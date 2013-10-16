@@ -68,12 +68,13 @@
    * @param    {THREE.Vector3} worldAxis Not local based on the object, but
    *                                     but global in the world.
    * @param    {Number}        angle     In Radians.
+   * @returns  {THREE.Vector3}           this
    * @alias    orbit
    * @instance
    * @function
-   * @memberOf external:THREE.Object3D
+   * @memberOf external:THREE.Matrix3
    */
-  THREE.Object3D.prototype.orbit = (function () {
+  THREE.Vector3.prototype.orbit = (function () {
     var sin, cos, x, y, z, rotationMatrix, scalingMatrix;
     rotationMatrix = new THREE.Matrix3();
     scalingMatrix = new THREE.Matrix3();
@@ -103,7 +104,7 @@
         cos + z * z * (1 - cos)
       );
 
-      this.applyMatrix3(scalingMatrix)
+      return this.applyMatrix3(scalingMatrix)
         .applyMatrix3(rotationMatrix)
         .applyMatrix3(scalingMatrix.inverse());
     };

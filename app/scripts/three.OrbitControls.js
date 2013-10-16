@@ -53,8 +53,6 @@ THREE.OrbitControls = function (object, domElement) {
   this.minDistance = 0;
   this.maxDistance = Infinity;
 
-  // this.keys = [ 65 /*A*/, 83 /*S*/, 68 /*D*/ ];
-
   // internals
 
   this.target = new THREE.Vector3();
@@ -270,36 +268,6 @@ THREE.OrbitControls = function (object, domElement) {
 
   // listeners
 
-  // function keydown(event) {
-  //   if (_this.enabled === false) {
-  //     return;
-  //   }
-
-  //   window.removeEventListener('keydown', keydown);
-
-  //   _prevState = _state;
-
-  //   if (_state !== STATE.NONE) {
-  //     return;
-  //   } else if (event.keyCode === _this.keys[ STATE.ROTATE ] && !_this.noRotate) {
-  //     _state = STATE.ROTATE;
-  //   } else if (event.keyCode === _this.keys[ STATE.ZOOM ] && !_this.noZoom) {
-  //     _state = STATE.ZOOM;
-  //   } else if (event.keyCode === _this.keys[ STATE.PAN ] && !_this.noPan) {
-  //     _state = STATE.PAN;
-  //   }
-  // }
-
-  // function keyup(event) {
-  //   if (_this.enabled === false) {
-  //     return;
-  //   }
-
-  //   _state = _prevState;
-
-  //   window.addEventListener('keydown', keydown, false);
-  // }
-
   function contextmenu(event) {
     event.preventDefault();
   }
@@ -479,9 +447,6 @@ THREE.OrbitControls = function (object, domElement) {
     this.domElement.addEventListener('touchstart', touchstart, false);
     this.domElement.addEventListener('touchend', touchend, false);
     this.domElement.addEventListener('touchmove', touchmove, false);
-
-    // window.addEventListener('keydown', keydown, false);
-    // window.addEventListener('keyup', keyup, false);
 
     this.enabled = true;
   };

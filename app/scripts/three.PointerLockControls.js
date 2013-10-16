@@ -15,7 +15,9 @@
   'use strict';
 
   var PointerLockControls = function (camera, options) {
-    var self = this;
+    var self, setStatesByKey;
+
+    self = this;
 
     this.camera = camera;
     this.options = _.assign({
@@ -44,70 +46,46 @@
       self.states.baseRotationAngleY = -movementX;
     };
 
-    this.events.keydown = function (event) {
-      switch (event.which) {
+    // helper for keydown and keyup
+    setStatesByKey = function (which, on) {
+      switch (which) {
       case 38: // up
       case 87: // W
-        self.states.moveForward = true;
+        this.states.moveForward = on;
         break;
       case 40: // down
       case 83: // S
-        self.states.moveBackward = true;
+        this.states.moveBackward = on;
         break;
       case 37: // left
       case 65: // A
-        self.states.moveLeft = true;
+        this.states.moveLeft = on;
         break;
       case 39: // right
       case 68: // D
-        self.states.moveRight = true;
+        this.states.moveRight = on;
         break;
       case 82: // R
-        self.states.moveUp = true;
+        this.states.moveUp = on;
         break;
       case 70: // F
-        self.states.moveDown = true;
+        this.states.moveDown = on;
         break;
       case 81: // Q
-        self.states.rollLeft = true;
+        this.states.rollLeft = on;
         break;
       case 69: // E
-        self.states.rollRight = true;
+        this.states.rollRight = on;
         break;
       }
     };
 
+    this.events.keydown = function (event) {
+      setStatesByKey.call(self, event.which, true);
+    };
+
     this.events.keyup = function (event) {
-      switch (event.which) {
-      case 38: // up
-      case 87: // W
-        self.states.moveForward = false;
-        break;
-      case 40: // down
-      case 83: // S
-        self.states.moveBackward = false;
-        break;
-      case 37: // left
-      case 65: // A
-        self.states.moveLeft = false;
-        break;
-      case 39: // right
-      case 68: // D
-        self.states.moveRight = false;
-        break;
-      case 82: // R
-        self.states.moveUp = false;
-        break;
-      case 70: // F
-        self.states.moveDown = false;
-        break;
-      case 81: // Q
-        self.states.rollLeft = false;
-        break;
-      case 69: // E
-        self.states.rollRight = false;
-        break;
-      }
+      setStatesByKey.call(self, event.which, false);
     };
   };
 

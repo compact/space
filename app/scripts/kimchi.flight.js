@@ -8,6 +8,7 @@ var KIMCHI = (function (KIMCHI) {
   'use strict';
 
   var flight = {}, currentMode;
+
   if (typeof KIMCHI.flight === 'object') {
     flight = KIMCHI.flight;
   } else {
@@ -97,7 +98,8 @@ var KIMCHI = (function (KIMCHI) {
   /**
    * Helper function used in animationFrame() of the pointer lock and orbit
    *   modes.
-   * @returns {Promise} [description]
+   * @returns  {Promise} Resolves as true only.
+   * @memberOf module:KIMCHI.flight
    */
   flight.updateSpaceTime = function (delta) {
     // resolve true or false to continue or stop animating

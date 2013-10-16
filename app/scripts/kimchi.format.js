@@ -103,6 +103,14 @@ var KIMCHI = (function (KIMCHI) {
    */
   format.time = function () {
     var dmy = KIMCHI.time.getDMY();
+
+    if (dmy[1] < 10) { // month
+      dmy[1] = '0' + dmy[1];
+    }
+    if (dmy[2] < 10) { // day
+      dmy[2] = '0' + dmy[2];
+    }
+
     return dmy[0] + '-' + dmy[1] + '-' + dmy[2];
   };
 

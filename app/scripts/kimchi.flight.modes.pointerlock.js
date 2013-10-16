@@ -12,7 +12,7 @@
 var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   'use strict';
 
-  var flight, Mode, mode, cameraWillCollide, getDirection;
+  var flight, Mode, mode, cameraMovement, cameraWillCollide, getDirection;
 
   flight = KIMCHI.flight;
   Mode = flight.Mode;
@@ -27,7 +27,6 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
   mode.enable = function () {
     Mode.prototype.enable.call(this);
 
-    KIMCHI.keyboardControls.enable();
     KIMCHI.pointerLock.request();
     // See the handler in init() for what happens after this request is
     // successful.
@@ -45,31 +44,23 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     // flight by pressing a key, this call is necessary.
     KIMCHI.pointerLock.exit();
 
-    KIMCHI.keyboardControls.disable();
     KIMCHI.pointerLockControls.disable();
   };
 
   /**
    * @memberOf module:KIMCHI.flight.modes.pointerLock
    */
-  mode.animationFrame = (function () {
-    var translationVector;
+  mode.animationFrame = function (delta) {
+    // move the Camera
+    cameraMovement = KIMCHI.pointerLockControls.getCameraMovement(
+      delta * flight.getTranslationSpeedMultiplier());
+    if (!cameraWillCollide(cameraMovement.translationVector)) {
+      KIMCHI.pointerLockControls.moveCamera(cameraMovement);
+      this.speed = cameraMovement.translationVector.length() / delta;
+    }
 
-    return function (delta) {
-      // yaw and pitch the camera
-      KIMCHI.pointerLockControls.moveCamera();
-
-      // translate and roll the camera, but only if it won't be in collision
-      translationVector = KIMCHI.keyboardControls.getCameraTranslationVector(
-        delta * flight.getTranslationSpeedMultiplier());
-      if (!cameraWillCollide(translationVector)) {
-        KIMCHI.keyboardControls.moveCamera(translationVector);
-        this.speed = translationVector.length() / delta;
-      }
-
-      return flight.updateSpaceTime(delta);
-    };
-  }());
+    return flight.updateSpaceTime(delta);
+  };
 
   /**
    * Bind the pointer lock handler for when pointer lock flight gets enabled or

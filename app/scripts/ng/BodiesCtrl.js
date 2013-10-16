@@ -1,4 +1,13 @@
 app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
+  $scope.panTo = function (body) {
+    Kimchi.flight.setMode('auto');
+    Kimchi.flight.modes.auto.panTo(body).then(function () {
+      $timeout(function () {
+        Kimchi.flight.setMode('pointerLock');
+      });
+    });
+  };
+
   $scope.flyTo = function (body) {
     Kimchi.flight.setMode('auto');
     Kimchi.flight.modes.auto.flyTo(body).then(function () {
@@ -9,11 +18,13 @@ app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
     });
   };
 
-  $scope.panTo = function (body) {
+  $scope.orbit = function (body) {
+    Kimchi.orbitControls.target = body.object3Ds.main.position.clone();
+    Kimchi.orbitControls.minDistance = body.getCollisionDistance();
     Kimchi.flight.setMode('auto');
-    Kimchi.flight.modes.auto.panTo(body).then(function () {
-      $timeout(function () { // $digest to update the current distances
-        Kimchi.flight.setMode('pointerLock');
+    Kimchi.flight.modes.auto.flyTo(body).then(function () {
+      $timeout(function () {
+        Kimchi.flight.setMode('orbit');
       });
     });
   };

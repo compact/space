@@ -18,10 +18,8 @@ THREE.OrbitControls = function (object, domElement) {
     'NONE': -1,
     'ROTATE': 0,
     'ZOOM': 1,
-    'PAN': 2,
     'TOUCH_ROTATE': 3,
-    'TOUCH_ZOOM': 4,
-    'TOUCH_PAN': 5
+    'TOUCH_ZOOM': 4
   };
 
   this.object = object;
@@ -40,11 +38,9 @@ THREE.OrbitControls = function (object, domElement) {
 
   this.rotateSpeed = 1.0;
   this.zoomSpeed = 1.2;
-  this.panSpeed = 0.3;
 
   this.noRotate = false;
   this.noZoom = false;
-  this.noPan = false;
   this.noRoll = false;
 
   this.staticMoving = false;
@@ -71,10 +67,7 @@ THREE.OrbitControls = function (object, domElement) {
   _zoomEnd = new THREE.Vector2(),
 
   _touchZoomDistanceStart = 0,
-  _touchZoomDistanceEnd = 0,
-
-  _panStart = new THREE.Vector2(),
-  _panEnd = new THREE.Vector2();
+  _touchZoomDistanceEnd = 0;
 
   // for reset
 
@@ -190,28 +183,8 @@ THREE.OrbitControls = function (object, domElement) {
     }
   };
 
-  this.panCamera = function () {
-    var mouseChange = _panEnd.clone().sub(_panStart);
-
-    if (mouseChange.lengthSq()) {
-      mouseChange.multiplyScalar(_eye.length() * _this.panSpeed);
-
-      var pan = _eye.clone().cross(_this.object.up).setLength(mouseChange.x);
-      pan.add(_this.object.up.clone().setLength(mouseChange.y));
-
-      _this.object.position.add(pan);
-      _this.target.add(pan);
-
-      if (_this.staticMoving) {
-        _panStart = _panEnd;
-      } else {
-        _panStart.add(mouseChange.subVectors(_panEnd, _panStart).multiplyScalar(_this.dynamicDampingFactor));
-      }
-    }
-  };
-
   this.checkDistances = function () {
-    if (!_this.noZoom || !_this.noPan) {
+    if (!_this.noZoom) {
       if (_eye.lengthSq() > _this.maxDistance * _this.maxDistance) {
         _this.object.position.addVectors(_this.target, _eye.setLength(_this.maxDistance));
       }
@@ -230,10 +203,6 @@ THREE.OrbitControls = function (object, domElement) {
 
     if (!_this.noZoom) {
       _this.zoomCamera();
-    }
-
-    if (!_this.noPan) {
-      _this.panCamera();
     }
 
     _this.object.position.addVectors(_this.target, _eye);
@@ -286,9 +255,6 @@ THREE.OrbitControls = function (object, domElement) {
     } else if (_state === STATE.ZOOM && !_this.noZoom) {
       _zoomStart = _this.getMouseOnScreen(event.clientX, event.clientY);
       _zoomEnd.copy(_zoomStart);
-    } else if (_state === STATE.PAN && !_this.noPan) {
-      _panStart = _this.getMouseOnScreen(event.clientX, event.clientY);
-      _panEnd.copy(_panStart);
     }
 
     document.addEventListener('mousemove', mousemove, false);
@@ -303,8 +269,6 @@ THREE.OrbitControls = function (object, domElement) {
       _rotateEnd = _this.getMouseProjectionOnBall(event.clientX, event.clientY);
     } else if (_state === STATE.ZOOM && !_this.noZoom) {
       _zoomEnd = _this.getMouseOnScreen(event.clientX, event.clientY);
-    } else if (_state === STATE.PAN && !_this.noPan) {
-      _panEnd = _this.getMouseOnScreen(event.clientX, event.clientY);
     }
   }
 
@@ -347,11 +311,6 @@ THREE.OrbitControls = function (object, domElement) {
       _touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt(dx * dx + dy * dy);
       break;
 
-    case 3:
-      _state = STATE.TOUCH_PAN;
-      _panStart = _panEnd = _this.getMouseOnScreen(event.touches[ 0 ].pageX, event.touches[ 0 ].pageY);
-      break;
-
     default:
       _state = STATE.NONE;
     }
@@ -372,10 +331,6 @@ THREE.OrbitControls = function (object, domElement) {
       _touchZoomDistanceEnd = Math.sqrt(dx * dx + dy * dy);
       break;
 
-    case 3:
-      _panEnd = _this.getMouseOnScreen(event.touches[ 0 ].pageX, event.touches[ 0 ].pageY);
-      break;
-
     default:
       _state = STATE.NONE;
     }
@@ -389,10 +344,6 @@ THREE.OrbitControls = function (object, domElement) {
 
     case 2:
       _touchZoomDistanceStart = _touchZoomDistanceEnd = 0;
-      break;
-
-    case 3:
-      _panStart = _panEnd = _this.getMouseOnScreen(event.touches[ 0 ].pageX, event.touches[ 0 ].pageY);
       break;
     }
 

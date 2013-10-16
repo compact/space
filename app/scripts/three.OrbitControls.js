@@ -273,10 +273,6 @@ THREE.OrbitControls = function (object, domElement) {
   }
 
   function mousedown(event) {
-    if (_this.enabled === false) {
-      return;
-    }
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -300,10 +296,6 @@ THREE.OrbitControls = function (object, domElement) {
   }
 
   function mousemove(event) {
-    if (_this.enabled === false) {
-      return;
-    }
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -317,10 +309,6 @@ THREE.OrbitControls = function (object, domElement) {
   }
 
   function mouseup(event) {
-    if (_this.enabled === false) {
-      return;
-    }
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -331,10 +319,6 @@ THREE.OrbitControls = function (object, domElement) {
   }
 
   function mousewheel(event) {
-    if (_this.enabled === false) {
-      return;
-    }
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -350,10 +334,6 @@ THREE.OrbitControls = function (object, domElement) {
   }
 
   function touchstart(event) {
-    if (_this.enabled === false) {
-      return;
-    }
-
     switch (event.touches.length) {
     case 1:
       _state = STATE.TOUCH_ROTATE;
@@ -378,10 +358,6 @@ THREE.OrbitControls = function (object, domElement) {
   }
 
   function touchmove(event) {
-    if (_this.enabled === false) {
-      return;
-    }
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -406,10 +382,6 @@ THREE.OrbitControls = function (object, domElement) {
   }
 
   function touchend(event) {
-    if (_this.enabled === false) {
-      return;
-    }
-
     switch (event.touches.length) {
     case 1:
       _rotateStart = _rotateEnd = _this.getMouseProjectionOnBall(event.touches[ 0 ].pageX, event.touches[ 0 ].pageY);

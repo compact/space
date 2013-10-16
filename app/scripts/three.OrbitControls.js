@@ -223,7 +223,7 @@ THREE.OrbitControls = function (object, domElement) {
     _state = STATE.NONE;
     _prevState = STATE.NONE;
 
-    _this.target.copy(_this.target0);
+    // _this.target.copy(_this.target0);
     // _this.object.position.copy(_this.position0);
     _this.object.up.copy(_this.up0);
 

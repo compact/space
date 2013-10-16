@@ -1,7 +1,8 @@
 /**
  * Based on THREE.TrackballControls from the threejs.org examples, not
  *   THREE.OrbitControls. We call this OrbitControls because it is a more
- *   accurate name. <br> Script: {@link
+ *   accurate name. Note that KIMCHI.camera.up gets changed when rotating.
+ *   <br> Script: {@link
  *   https://github.com/mrdoob/three.js/blob/master/examples/js/controls/TrackballControls.js}
  *   <br> HTML: {@link
  *   https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_trackball.html}
@@ -223,12 +224,12 @@ THREE.OrbitControls = function (object, domElement) {
     _prevState = STATE.NONE;
 
     _this.target.copy(_this.target0);
-    _this.object.position.copy(_this.position0);
+    // _this.object.position.copy(_this.position0);
     _this.object.up.copy(_this.up0);
 
     _eye.subVectors(_this.object.position, _this.target);
 
-    _this.object.lookAt(_this.target);
+    // _this.object.lookAt(_this.target);
 
     _this.dispatchEvent(changeEvent);
 

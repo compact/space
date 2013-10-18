@@ -32,6 +32,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
 
   /**
    * Fly to the given Body.
+   * @param    {Body}    body
    * @returns  {Promise}
    * @memberOf module:KIMCHI.flight.modes.auto
    */
@@ -54,6 +55,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   /**
    * Pan (gradually rotate) the camera towards the given Body (without
    *   translating).
+   * @param    {Body}    body
    * @returns  {Promise}
    * @function
    * @memberOf module:KIMCHI.flight.modes.auto
@@ -132,7 +134,9 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
   };
 
   /**
-   * Translate the camera to the given Body until within range of collision.
+   * Translate the camera to the given Body until within
+   *   body.getCollisionDistance() * 3 (TODO).
+   * @param    {Body}    body
    * @returns  {Promise}
    * @private
    * @memberOf module:KIMCHI.flight.modes.auto
@@ -145,7 +149,7 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
     mode.animationFrame = function (delta) {
       var translationZ;
 
-      if (!body.isColliding(KIMCHI.camera)) {
+      if (body.getDistance(KIMCHI.camera) >= body.getCollisionDistance() * 3) {
         translationZ = KIMCHI.config.get('controlsZSpeed') * delta *
           flight.getTranslationSpeedMultiplier([body]);
 

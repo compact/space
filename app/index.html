@@ -85,7 +85,7 @@
                 <td><a ng-click="panTo(body)">Look</a></td>
                 <td><a ng-click="flyTo(body)">Fly</a></td>
                 <td><a ng-click="orbit(body)">Orbit</a></td>
-                <td>{{Kimchi.format.au(body.getCameraDistance())}}</td>
+                <td>{{Kimchi.format.au(body.getDistance(Kimchi.camera))}}</td>
                 <td>{{Kimchi.format.km(body.radiusInKm)}}</td>
                 <td>{{Kimchi.format.au(body.distanceFromSun)}}</td>
               </tr>

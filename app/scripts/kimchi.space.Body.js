@@ -218,19 +218,19 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * @returns  {Number} The distance between the camera and the center of this
-   *   Body.
-   * @alias    getCameraDistance
+   * @returns  {Number}         The distance between the given object and the
+   *   center of this Body.
+   * @param    {THREE.Object3D} object3D
+   * @alias    getDistance
    * @instance
    * @memberOf module:KIMCHI.space.Body
    */
-  Body.prototype.getCameraDistance = function () {
-    return THREE.Object3D.getDistance(KIMCHI.camera, this.object3Ds.main);
+  Body.prototype.getDistance = function (object3D) {
+    return THREE.Object3D.getDistance(this.object3Ds.main, object3D);
   };
 
   /**
-   * @returns  {Number} The collision distance between the camera and the
-   *   center of this Body.
+   * @returns  {Number} The collision distance to the center of this Body.
    * @alias    getCollisionDistance
    * @instance
    * @memberOf module:KIMCHI.space.Body
@@ -240,19 +240,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * @returns  {Number} The collision distance between the camera and the
-   *   surface of this Body.
-   * @alias    getSurfaceCollisionDistance
-   * @instance
-   * @memberOf module:KIMCHI.space.Body
-   */
-  Body.prototype.getSurfaceCollisionDistance = function () {
-    return this.getScaledRadius();
-  };
-
-  /**
-   * @returns  {Number} The distance between the given Object3D and the closest
-   *   surface of this Body.
+   * @returns  {Number}         The distance between the given object and the
+   *   closest surface of this Body.
+   * @param    {THREE.Object3D} object3D
    * @alias    getSurfaceDistance
    * @instance
    * @memberOf module:KIMCHI.space.Body
@@ -263,14 +253,25 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * @returns  {Number} Whether this Body is current in collision with the
-   *   given objects
+   * @returns  {Number} The collision distance to the surface of this Body.
+   * @alias    getSurfaceCollisionDistance
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.getSurfaceCollisionDistance = function () {
+    return this.getScaledRadius();
+  };
+
+  /**
+   * @returns  {Number}         Whether this Body is current in collision with
+   *   the given object.
+   * @param    {THREE.Object3D} object3D
    * @alias    isColliding
    * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.isColliding = function (object3D) {
-    return this.getSurfaceDistance(object3D) < this.getSurfaceCollisionDistance();
+    return this.getDistance(object3D) < this.getCollisionDistance();
   };
 
   KIMCHI.space = KIMCHI.space || {};

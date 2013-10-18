@@ -80,7 +80,7 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
     KIMCHI.pointerLock.on('change', function (pointerLocked) {
       if (pointerLocked) { // enabling
         KIMCHI.pointerLockControls.enable();
-      } else if (flight.getMode() === 'pointerLock') { // disabling
+      } else if (flight.getModeName() === 'pointerLock') { // disabling
         // This is the case when the user has exited pointer lock directly [by
         // pressing Esc or through other means]. In the other cases, the user
         // has changed to another flight mode directly.

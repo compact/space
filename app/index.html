@@ -198,7 +198,7 @@
   </div>
 
   <div id="hud1" class="hud" ng-cloak>
-    <div ng-show="Kimchi.flight.getMode() === 'pointerLock'">
+    <div ng-show="Kimchi.flight.getModeName() === 'pointerLock'">
       <strong>Mouse look controls</strong>
       <ul>
         <li>1: Menu</li>
@@ -210,7 +210,7 @@
         <li>QE: Rotate</li>
       </ul>
     </div>
-    <div ng-show="Kimchi.flight.getMode() === 'orbit'">
+    <div ng-show="Kimchi.flight.getModeName() === 'orbit'">
       <strong>Orbit controls</strong>
       <ul>
         <li>1: Menu</li>

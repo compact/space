@@ -7,7 +7,7 @@
 var KIMCHI = (function (KIMCHI) {
   'use strict';
 
-  var flight = {}, currentMode;
+  var flight = {}, currentModeName;
 
   if (typeof KIMCHI.flight === 'object') {
     flight = KIMCHI.flight;
@@ -21,7 +21,7 @@ var KIMCHI = (function (KIMCHI) {
    * @private
    * @memberOf module:KIMCHI.flight
    */
-  currentMode = '';
+  currentModeName = '';
 
   /**
    * The available flight modes, each an instance of {@link Mode}.
@@ -44,16 +44,17 @@ var KIMCHI = (function (KIMCHI) {
    * @returns  {String|Boolean}
    * @memberOf module:KIMCHI.flight
    */
-  flight.getMode = function () {
-    return currentMode;
+  flight.getModeName = function () {
+    return currentModeName;
   };
 
   /**
    * @param    {String|Boolean}
+   * @return   {Mode}           The Mode being set.
    * @memberOf module:KIMCHI.flight
    */
   flight.setMode = function (name) {
-    var prevName = currentMode;
+    var prevName = currentModeName;
 
     if (prevName === name) {
       // the given mode is already the current mode; do nothing
@@ -65,10 +66,12 @@ var KIMCHI = (function (KIMCHI) {
       flight.modes[prevName].disable();
     }
     flight.modes[name].enable();
-    currentMode = name;
+    currentModeName = name;
 
     console.log('.flight: mode changed ' +
       (prevName ? 'from ' + prevName + ' ': '') + 'to ' + name);
+
+    return flight.modes[name];
   };
 
   /**
@@ -92,7 +95,7 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.flight
    */
   flight.getSpeed = function () {
-    return flight.modes[currentMode].speed;
+    return flight.modes[currentModeName].speed;
   };
 
   /**

@@ -45,6 +45,17 @@ var KIMCHI = (function (KIMCHI) {
     return flight.updateSpaceTime(delta);
   };
 
+  /**
+   * This function is here instead of in THREE.OrbitControls because that
+   *   class is KIMCHI-independent. Call this before flight.setMode('orbit').
+   * @param    {Body} body
+   * @memberOf module:KIMCHI.flight.modes.orbit
+   */
+  mode.setTargetBody = function (body) {
+    KIMCHI.orbitControls.target = body.object3Ds.main.position.clone();
+    KIMCHI.orbitControls.minDistance = body.getCollisionDistance();
+  };
+
 
 
   return KIMCHI;

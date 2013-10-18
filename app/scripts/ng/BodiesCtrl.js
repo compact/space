@@ -17,8 +17,7 @@ app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
   };
 
   $scope.orbit = function (body) {
-    Kimchi.orbitControls.target = body.object3Ds.main.position.clone();
-    Kimchi.orbitControls.minDistance = body.getCollisionDistance();
+    Kimchi.flight.modes.orbit.setTargetBody(body);
     Kimchi.flight.setMode('auto').flyTo(body).then(function () {
       $timeout(function () {
         Kimchi.flight.setMode('orbit');

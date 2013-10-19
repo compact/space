@@ -123,15 +123,18 @@ var KIMCHI = (function (KIMCHI, Q) {
     if (newJulian <= KIMCHI.ephemeris.lastJulianInBatch) {
       // "Empty" promise to match the return type in the case below.
       julian = newJulian;
-      return Q.when(newJulian);
+      return Q.when(julian);
     } else {
+      // if step > 1, then newJulian may be too large and we won't be able to
+      // get the next batch with it; TODO: this is not the cleanest solution
+      julian = KIMCHI.ephemeris.lastJulianInBatch + 1;
+
       // We are at the last of the current batch, so we have to load the next
       // batch before incrementing the date. The Deferred object is used to
       // return the position after loading the next batch.
       deferred = Q.defer();
 
-      KIMCHI.ephemeris.loadBatch(newJulian).then(function (data) {
-        julian = newJulian;
+      KIMCHI.ephemeris.loadBatch(julian).then(function (data) {
         deferred.resolve(data);
       });
 

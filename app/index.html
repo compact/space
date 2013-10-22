@@ -39,163 +39,155 @@
     <div ng-repeat="notice in notices">{{notice}}</div>
   </div>
 
-  <div id="overlay">
-    <div class="panel col-xs-12">
-      <div class="panel-body">
-        <ul class="nav nav-tabs">
-          <li class="active">
-            <a href="#about-pane" data-toggle="tab">About</a>
-          </li>
-          <li>
-            <a href="#bodies-pane" data-toggle="tab">Astronomical bodies</a>
-          </li>
-          <li>
-            <a href="#config-pane" data-toggle="tab">Options</a>
-          </li>
-        </ul>
-        <div class="tab-content">
+  <div id="overlay" ng-controller="PanelsCtrl">
+    <ul>
+      <li>
+        <a ng-click="panels.about = !panels.about">About</a>
+      </li>
+      <li>
+        <a ng-click="panels.bodies = !panels.bodies">Astronomical bodies</a>
+      </li>
+      <li>
+        <a ng-click="panels.options = !panels.options">Options</a>
+      </li>
+    </ul>
 
-          <div id="about-pane" class="tab-pane active">
-            <h1>Explore the Solar System</h1>
-            <p>
-              [TODO: Blurb.]
-            </p>
-            <div ng-click="Kimchi.flight.setMode('pointerLock')" class="btn btn-lg btn-primary">
-              Fly
-            </div>
-            <div ng-click="Kimchi.flight.setMode('orbit')" class="btn btn-lg btn-primary">
-              Orbit
+    <panel key="about" title="Explore the Solar System">
+      <p>
+        [TODO: Blurb.]
+      </p>
+      <div ng-click="Kimchi.flight.setMode('pointerLock')" class="btn btn-lg btn-primary">
+        Fly
+      </div>
+      <div ng-click="Kimchi.flight.setMode('orbit')" class="btn btn-lg btn-primary">
+        Orbit
+      </div>
+    </panel>
+
+    <panel key="bodies" title="Astronomical bodies">
+      <table ng-controller="BodiesCtrl" class="table table-striped table-hover table-condensed table-responsive">
+        <tr>
+          <th>Name</th>
+          <th>Look</th>
+          <th>Fly</th>
+          <th>Orbit</th>
+          <th>Current distance</th>
+          <th>Radius</th>
+          <th>Distance from the Sun</th>
+        </tr>
+        <tr ng-repeat="body in Kimchi.space.bodies">
+          <td>{{body.name}}</td>
+          <td><a ng-click="panTo(body)">Look</a></td>
+          <td><a ng-click="flyTo(body)">Fly</a></td>
+          <td><a ng-click="orbit(body)">Orbit</a></td>
+          <td>{{Kimchi.format.au(body.getDistance(Kimchi.camera))}}</td>
+          <td>{{Kimchi.format.km(body.radiusInKm)}}</td>
+          <td>{{Kimchi.format.au(body.distanceFromSun)}}</td>
+        </tr>
+      </table>
+    </panel>
+
+    <panel key="options" title="Options">
+      <div ng-controller="OptionsCtrl">
+        <h3>Astronomical bodies</h3>
+        <div class="config-row clearfix">
+          <div class="config btn-group">
+            <select ng-model="bodiesSpeed" ng-options="option.label for option in options.bodiesSpeed" data-style="btn-primary btn-sm" bs-select></select>
+          </div>
+          <div class="config-description">
+            Revolution speed
+          </div>
+        </div>
+        <div class="config-row clearfix">
+          <div data-toggle="buttons" class="config btn-group">
+            <div class="btn-group" ng-model="rotateBodies" bs-buttons-radio>
+              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
+              <button type="button" class="btn btn-default btn-sm" value="false" ng-click="l()">Off</button>
             </div>
           </div>
-
-          <div id="bodies-pane" class="tab-pane">
-            <h1>Astronomical bodies</h1>
-            <table ng-controller="BodiesCtrl" class="table table-striped table-hover table-condensed table-responsive">
-              <tr>
-                <th>Name</th>
-                <th>Look</th>
-                <th>Fly</th>
-                <th>Orbit</th>
-                <th>Current distance</th>
-                <th>Radius</th>
-                <th>Distance from the Sun</th>
-              </tr>
-              <tr ng-repeat="body in Kimchi.space.bodies">
-                <td>{{body.name}}</td>
-                <td><a ng-click="panTo(body)">Look</a></td>
-                <td><a ng-click="flyTo(body)">Fly</a></td>
-                <td><a ng-click="orbit(body)">Orbit</a></td>
-                <td>{{Kimchi.format.au(body.getDistance(Kimchi.camera))}}</td>
-                <td>{{Kimchi.format.km(body.radiusInKm)}}</td>
-                <td>{{Kimchi.format.au(body.distanceFromSun)}}</td>
-              </tr>
-            </table>
+          <div class="config-description">
+            Rotation
           </div>
-
-          <div id="config-pane" class="tab-pane" ng-controller="OptionsCtrl">
-            <h1>Options</h1>
-            <h3>Astronomical bodies</h3>
-            <div class="config-row clearfix">
-              <div class="config btn-group">
-                <select ng-model="bodiesSpeed" ng-options="option.label for option in options.bodiesSpeed" data-style="btn-primary btn-sm" bs-select></select>
-              </div>
-              <div class="config-description">
-                Revolution speed
-              </div>
+        </div>
+        <div class="config-row clearfix">
+          <div class="config btn-group">
+            <select ng-model="bodiesSizeScale" ng-options="option.label for option in options.bodiesSizeScale" data-style="btn-primary btn-sm" bs-select></select>
             </div>
-            <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="rotateBodies" bs-buttons-radio>
-                  <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-                  <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
-                </div>
-              </div>
-              <div class="config-description">
-                Rotation
-              </div>
-            </div>
-            <div class="config-row clearfix">
-              <div class="config btn-group">
-                <select ng-model="bodiesSizeScale" ng-options="option.label for option in options.bodiesSizeScale" data-style="btn-primary btn-sm" bs-select></select>
-                </div>
-              <div class="config-description">
-                Scaled size
-              </div>
-            </div>
-            <h3>Visuals</h3>
-            <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="ambientLight" bs-buttons-radio>
-                  <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-                  <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
-                </div>
-              </div>
-              <div class="config-description">
-                Ambient lighting
-              </div>
-            </div> 
-            <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="showLabels" bs-buttons-radio>
-                  <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-                  <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
-                </div>
-              </div>
-              <div class="config-description">
-                Show text labels
-              </div>
-            </div>
-            <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="showOrbits" bs-buttons-radio>
-                  <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-                  <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
-                </div>
-              </div>
-              <div class="config-description">
-                Show orbit curves
-              </div>
-            </div>
-            <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="showStars" bs-buttons-radio>
-                  <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-                  <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
-                </div>
-              </div>
-              <div class="config-description">
-                Show stars in the background
-              </div>
-            </div>
-            <h3>Flight</h3>
-            <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="controlsKeyboardSpeedMultiplier" bs-buttons-radio>
-                  <button type="button" class="btn btn-default btn-sm" value="1">Fast</button>
-                  <button type="button" class="btn btn-default btn-sm" value="2">Faster</button>
-                </div>
-              </div>
-              <div class="config-description">
-                Flight speed
-              </div>
-            </div>
-            <div class="config-row clearfix">
-              <div data-toggle="buttons" class="config btn-group">
-                <div class="btn-group" ng-model="controlsLookSpeed" bs-buttons-radio>
-                  <button type="button" class="btn btn-default btn-sm" value="0.001">Low</button>
-                  <button type="button" class="btn btn-default btn-sm" value="0.002">High</button>
-                </div>
-              </div>
-              <div class="config-description">
-                Mouse sensitivity
-              </div>
+          <div class="config-description">
+            Scaled size
+          </div>
+        </div>
+        <h3>Visuals</h3>
+        <div class="config-row clearfix">
+          <div data-toggle="buttons" class="config btn-group">
+            <div class="btn-group" ng-model="ambientLight" bs-buttons-radio>
+              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
+              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
             </div>
           </div>
-
+          <div class="config-description">
+            Ambient lighting
+          </div>
+        </div> 
+        <div class="config-row clearfix">
+          <div data-toggle="buttons" class="config btn-group">
+            <div class="btn-group" ng-model="showLabels" bs-buttons-radio>
+              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
+              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
+            </div>
+          </div>
+          <div class="config-description">
+            Show text labels
+          </div>
+        </div>
+        <div class="config-row clearfix">
+          <div data-toggle="buttons" class="config btn-group">
+            <div class="btn-group" ng-model="showOrbits" bs-buttons-radio>
+              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
+              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
+            </div>
+          </div>
+          <div class="config-description">
+            Show orbit curves
+          </div>
+        </div>
+        <div class="config-row clearfix">
+          <div data-toggle="buttons" class="config btn-group">
+            <div class="btn-group" ng-model="showStars" bs-buttons-radio>
+              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
+              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
+            </div>
+          </div>
+          <div class="config-description">
+            Show stars in the background
+          </div>
+        </div>
+        <h3>Flight</h3>
+        <div class="config-row clearfix">
+          <div data-toggle="buttons" class="config btn-group">
+            <div class="btn-group" ng-model="controlsKeyboardSpeedMultiplier" bs-buttons-radio>
+              <button type="button" class="btn btn-default btn-sm" value="1">Fast</button>
+              <button type="button" class="btn btn-default btn-sm" value="2">Faster</button>
+            </div>
+          </div>
+          <div class="config-description">
+            Flight speed
+          </div>
+        </div>
+        <div class="config-row clearfix">
+          <div data-toggle="buttons" class="config btn-group">
+            <div class="btn-group" ng-model="controlsLookSpeed" bs-buttons-radio>
+              <button type="button" class="btn btn-default btn-sm" value="0.001">Low</button>
+              <button type="button" class="btn btn-default btn-sm" value="0.002">High</button>
+            </div>
+          </div>
+          <div class="config-description">
+            Mouse sensitivity
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </panel>
 
   <div id="hud1" class="hud" ng-cloak>
     <div ng-show="Kimchi.flight.getModeName() === 'pointerLock'">
@@ -315,6 +307,8 @@
   <script src="scripts/ng/DebugCtrl.js"></script>
   <script src="scripts/ng/NoticesCtrl.js"></script>
   <script src="scripts/ng/OptionsCtrl.js"></script>
+  <script src="scripts/ng/PanelsCtrl.js"></script>
+  <script src="scripts/ng/panelDirective.js"></script>
   <script src="scripts/ng/StatsCtrl.js"></script>
   <!-- endbuild -->
 </body>

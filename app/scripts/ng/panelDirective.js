@@ -11,7 +11,7 @@ app.directive('panel', function () {
         '</div>' +
         '<div class="panel-body" ng-transclude></div>' +
       '</div>',
-    'link': function (scope, iElement, iAttrs, controller) {
+    'link': function (scope, iElement, iAttrs) {
       scope.key = iAttrs.key;
       scope.title = iAttrs.title;
     }

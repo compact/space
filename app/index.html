@@ -39,7 +39,7 @@
     <div ng-repeat="notice in notices">{{notice}}</div>
   </div>
 
-  <div id="overlay" ng-controller="PanelsCtrl">
+  <div id="overlay" ng-controller="PanelsCtrl" ng-cloak>
     <ul>
       <li>
         <a ng-click="panels.about = !panels.about">About</a>

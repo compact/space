@@ -40,15 +40,15 @@
   </div>
 
   <div id="overlay" ng-controller="PanelsCtrl" ng-cloak>
-    <ul>
+    <ul id="panel-menu" class="horizontal clearfix">
       <li>
-        <a ng-click="panels.about = !panels.about">About</a>
+        <a ng-click="panels.about = !panels.about" ng-class="{'active': panels.about}" class="btn btn-xs btn-success">About</a>
       </li>
       <li>
-        <a ng-click="panels.bodies = !panels.bodies">Astronomical bodies</a>
+        <a ng-click="panels.bodies = !panels.bodies" ng-class="{'active': panels.bodies}" class="btn btn-xs btn-success">Astronomical bodies</a>
       </li>
       <li>
-        <a ng-click="panels.options = !panels.options">Options</a>
+        <a ng-click="panels.options = !panels.options" ng-class="{'active': panels.options}" class="btn btn-xs btn-success">Options</a>
       </li>
     </ul>
 

@@ -11,6 +11,10 @@ ul {
   padding: 0;
 }
 
+ul.horizontal li {
+  display: inline;
+}
+
 a {
   cursor: pointer;
   color: #006600;
@@ -24,10 +28,12 @@ a {
 }
 
 /************************************************************************ hud */
+
 .hud {
   position: absolute;
   z-index: 100;
 }
+
 .hud-value {
   display: inline-block;
   width: 100px;
@@ -38,6 +44,7 @@ a {
   width: 50px;
   text-align: left;
 }
+
 #hud1 {
   top: 0;
   left: 0;
@@ -55,22 +62,25 @@ a {
   bottom: 0;
   right: 0;
   text-align: right;
+  font-family: "omnes-pro", sans-serif;
 }
 
-/********************************* overlay that appears when flying is paused */
+/********************************************************* overlay for panels */
+
 #overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 15px;
-  background-color: rgba(240, 255, 240, 0.75);
+  padding: 16px;
+  background-color: transparent;
   color: #000;
   z-index: 300;
 }
-.nav-tabs {
-  margin-bottom: 16px;
+
+#panel-menu {
+  margin-bottom: 20px;
 }
 
 .config-row {
@@ -87,19 +97,14 @@ a {
   line-height: 30px;
 }
 
-/*********************************** some random hud stylings etc - temporary */
-
-#hud4 {
-  font-family: "omnes-pro", sans-serif;
-}
-
-/************************************ bootstrap overwrites */
+/****************************************************************** Bootstrap */
 
 .pull-left {
   float: none !important;
 }
 
 /******************************************************************** Angular */
+
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }

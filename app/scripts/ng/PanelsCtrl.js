@@ -1,4 +1,6 @@
 app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
+  var hidePanels, panelsAreHidden;
+
   // whether to show each panel
   $scope.panels = {
     'about': true,
@@ -7,13 +9,16 @@ app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
   };
 
   // this is a helper function because we need to hide all panels in addition to
-  // setting the flight mode
+  // setting the given flight mode
   $scope.setMode = function (name) {
-    angular.forEach($scope.panels, function (value, key) {
-      $scope.panels[key] = false;
-    });
-
+    hidePanels();
     return Kimchi.flight.setMode(name);
+  };
+
+  // show the given panel
+  $scope.showPanel = function (key) {
+    hidePanels();
+    $scope.panels[key] = !$scope.panels[key];
   };
 
   // bind keys for flight mode changes
@@ -21,8 +26,10 @@ app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
     switch (event.which) {
     case 49: // 1
       // case not covered by $scope.setMode()
-      Kimchi.flight.setMode('orbit');
-      $scope.panels.about = true;
+      if (panelsAreHidden()) {
+        Kimchi.flight.setMode('orbit');
+        $scope.panels.about = true;
+      }
       break;
     case 50: // 2
       $scope.setMode('pointerLock');
@@ -32,4 +39,23 @@ app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
       break;
     }
   });
+
+  // hide all panels
+  hidePanels = function () {
+    _.each($scope.panels, function (value, key) {
+      $scope.panels[key] = false;
+    });
+  };
+
+  // return whether all panels are hidden
+  panelsAreHidden = function () {
+    var hidden = true;
+    _.each($scope.panels, function (value) {
+      if (value) {
+        hidden = false;
+        return false; // break
+      }
+    });
+    return hidden;
+  };
 });

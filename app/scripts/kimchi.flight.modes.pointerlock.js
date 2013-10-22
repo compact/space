@@ -84,7 +84,7 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
         // This is the case when the user has exited pointer lock directly [by
         // pressing Esc or through other means]. In the other cases, the user
         // has changed to another flight mode directly.
-        KIMCHI.flight.setMode('menu');
+        KIMCHI.flight.setMode('orbit');
       }
     });
   };

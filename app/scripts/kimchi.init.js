@@ -58,7 +58,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
      * @type     {THREE.Clock}
      * @memberOf module:KIMCHI
      */
-    KIMCHI.clock = new THREE.Clock(false); // do not autostart
+    KIMCHI.clock = new THREE.Clock();
 
     /**
      * @type     {THREE.Scene}

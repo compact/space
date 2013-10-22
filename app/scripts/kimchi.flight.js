@@ -37,7 +37,7 @@ var KIMCHI = (function (KIMCHI) {
    */
   flight.init = function () {
     flight.modes.pointerLock.init();
-    flight.setMode('menu');
+    flight.setMode('orbit');
   };
 
   /**
@@ -56,20 +56,20 @@ var KIMCHI = (function (KIMCHI) {
   flight.setMode = function (name) {
     var prevName = currentModeName;
 
-    if (prevName === name) {
-      // the given mode is already the current mode; do nothing
-      return;
-    }
+    if (prevName !== name) {
+      // disable the previous mode
+      if (typeof flight.modes[prevName] === 'object') {
+        // on the first call, there is no previous mode
+        flight.modes[prevName].disable();
+      }
 
-    if (typeof flight.modes[prevName] === 'object') {
-      // on the first call to setMode(), there is no previous mode
-      flight.modes[prevName].disable();
-    }
-    flight.modes[name].enable();
-    currentModeName = name;
+      // enable the new mode
+      flight.modes[name].enable();
+      currentModeName = name;
 
-    console.log('.flight: mode changed ' +
-      (prevName ? 'from ' + prevName + ' ': '') + 'to ' + name);
+      console.log('.flight: mode changed ' +
+        (prevName ? 'from ' + prevName + ' ': '') + 'to ' + name);
+    }
 
     return flight.modes[name];
   };

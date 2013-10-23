@@ -17,7 +17,7 @@ app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
   };
 
   $scope.orbit = function (body) {
-    Kimchi.flight.modes.orbit.setTargetBody(body);
+    Kimchi.flight.modes.orbit.updateTargetBody(body);
     $scope.setMode('auto').flyTo(body).then(function () {
       $timeout(function () {
         $scope.setMode('orbit');

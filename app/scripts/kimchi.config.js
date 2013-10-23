@@ -136,6 +136,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       }
     });
 
+    KIMCHI.flight.modes.orbit.updateTargetBody();
+
     KIMCHI.renderer.render();
   };
   handlers.ambientLight = function (value) {

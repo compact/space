@@ -18,7 +18,8 @@ var KIMCHI = (function (KIMCHI) {
 
 
   /**
-   * setTargetBody() must be called at least once before enabling orbit mode.
+   * updateTargetBody(body) must be called at least once before enabling orbit
+   *   mode.
    * @memberOf module:KIMCHI.flight.modes.orbit
    */
   mode.enable = function () {
@@ -45,7 +46,6 @@ var KIMCHI = (function (KIMCHI) {
     if (KIMCHI.config.get('bodiesSpeed') > 0) {
       KIMCHI.orbitControls.target = targetBody.object3Ds.main.position.clone();
     }
-    
 
     // update the controls to move the space
     KIMCHI.orbitControls.update();
@@ -53,16 +53,29 @@ var KIMCHI = (function (KIMCHI) {
     return flight.updateSpaceTime(delta);
   };
 
+
+
+  /**
+   * Set the Sun as the initial target.
+   * @memberOf module:KIMCHI.flight.modes.orbit
+   */
+  mode.init = function () {
+    mode.updateTargetBody(KIMCHI.space.getBody('Sun'));
+  };
+
   /**
    * This function is here instead of in THREE.OrbitControls because that
    *   class is KIMCHI-independent. Call this before flight.setMode('orbit').
-   * @param    {Body} body
+   * @param    {Body} [body]
    * @memberOf module:KIMCHI.flight.modes.orbit
    */
-  mode.setTargetBody = function (body) {
-    targetBody = body;
-    KIMCHI.orbitControls.target = body.object3Ds.main.position.clone();
-    KIMCHI.orbitControls.minDistance = body.getCollisionDistance();
+  mode.updateTargetBody = function (body) {
+    if (typeof body === 'object') {
+      targetBody = body;
+    }
+
+    KIMCHI.orbitControls.target = targetBody.object3Ds.main.position.clone();
+    KIMCHI.orbitControls.minDistance = targetBody.getCollisionDistance();
   };
 
 

@@ -36,6 +36,7 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.flight
    */
   flight.init = function () {
+    flight.modes.orbit.init();
     flight.modes.pointerLock.init();
     flight.setMode('orbit');
   };

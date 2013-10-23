@@ -49,13 +49,8 @@ app.controller('PanelsCtrl', function ($scope, $document, KIMCHI) {
 
   // return whether all panels are hidden
   panelsAreHidden = function () {
-    var hidden = true;
-    _.each($scope.panels, function (value) {
-      if (value) {
-        hidden = false;
-        return false; // break
-      }
+    return _.every($scope.panels, function (value) {
+      return !value;
     });
-    return hidden;
   };
 });

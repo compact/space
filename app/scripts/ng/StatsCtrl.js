@@ -1,3 +1,7 @@
+/**
+ * This controller handles the part of the hud that displays statistics to the
+ *   user.
+ */
 angular.module('kimchi').controller('StatsCtrl', function ($scope, $timeout, Kimchi, Three) {
   var handler;
 

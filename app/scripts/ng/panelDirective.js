@@ -1,3 +1,8 @@
+/**
+ * Bootstrap-styled panel. Usage:
+ *   <panel key="" title="">content</panel>
+ * For values of key, see PanelsCtrl. Title appears in the panel heading.
+ */
 app.directive('panel', function () {
   return {
     'restrict': 'E',

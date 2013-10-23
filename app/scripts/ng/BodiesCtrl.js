@@ -1,3 +1,7 @@
+/**
+ * This controller handles the bodies panel, where actions can be taken on
+ *   Bodies.
+ */
 app.controller('BodiesCtrl', function ($scope, Kimchi, $timeout) {
   $scope.panTo = function (body) {
     $scope.setMode('auto').panTo(body).then(function () {

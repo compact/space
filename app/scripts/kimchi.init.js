@@ -2,8 +2,8 @@
  * Extensible module for KIMCHI.
  * <br>
  * <br> Conventions:
- * <br> Movement consists of translation and rotation. If you are only
- *        translating or rotating, do not use the word 'move'.
+ * <br> Movement consists of translation and rotation. When only translating or
+ *        rotating, do not use the word 'move'.
  * <br> "Bodies" refer to astronomical bodies.
  * @module KIMCHI
  */
@@ -16,7 +16,8 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
 
   /**
-   * This function can be called before the DOM is ready.
+   * The first part of two in KIMCHI's initialization process, this function
+   *   can be called before the DOM is ready.
    * @memberOf module:KIMCHI
    */
   KIMCHI.init = function () {
@@ -152,7 +153,8 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
 
   /**
-   * Call this function after the DOM is ready.
+   * The second part of KIMCHI's initialization process. Call after the DOM is
+   *   ready.
    * @memberOf module:KIMCHI
    */
   KIMCHI.ready = function () {

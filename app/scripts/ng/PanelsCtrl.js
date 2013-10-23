@@ -1,7 +1,7 @@
 app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
   var hidePanels, panelsAreHidden;
 
-  // whether to show each panel
+  // whether to show each panel; these keys are used in panelDirective
   $scope.panels = {
     'about': true,
     'bodies': false,

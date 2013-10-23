@@ -35,11 +35,15 @@
   <!-- <div class="container" ng-view="">
   </div> -->
 
-  <div id="notice" ng-controller="NoticesCtrl" ng-cloak>
+  <div id="loading" ng-hide="loaded">
+    Loading…
+  </div>
+
+  <div id="notice" ng-controller="NoticesCtrl">
     <div ng-repeat="notice in notices">{{notice}}</div>
   </div>
 
-  <div id="overlay" ng-controller="PanelsCtrl" ng-cloak>
+  <div id="overlay" ng-controller="PanelsCtrl">
     <ul id="panel-menu" class="horizontal clearfix">
       <li>
         <a ng-click="showPanel('about')" ng-class="{'active': panels.about}" class="btn btn-xs btn-success">About</a>
@@ -192,7 +196,7 @@
   <div id="hud1" class="hud"></div>
 
   <div id="hud2" class="hud" ng-controller="StatsCtrl">
-    <ul ng-cloak>
+    <ul>
       <li>
         <strong>Time: </strong>
         <div class="hud-value">{{data.time}}</div>
@@ -211,7 +215,7 @@
     </ul> 
   </div>
 
-  <div id="hud3" class="hud" ng-cloak>
+  <div id="hud3" class="hud">
     <div ng-show="Kimchi.flight.getModeName() === 'pointerLock'">
       <strong>Mouse look controls</strong>
       <ul>
@@ -237,7 +241,7 @@
   </div>
 
   <div id="hud4" class="hud" ng-controller="DebugCtrl" ng-show="settings.visible">
-    <ul ng-cloak>
+    <ul>
       <li>Delta: {{data.delta}}</li>
       <li>Position (px): {{data.position}}</li>
       <li>Rotation (deg): {{data.rotation}}</li>

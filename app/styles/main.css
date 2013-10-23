@@ -65,16 +65,28 @@ a {
   font-family: "omnes-pro", sans-serif;
 }
 
+/******************************************************** overlay for loading */
+
+#loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  color: #fff;
+  font-size: 72px;
+  font-weight: bold;
+  z-index: 900;
+}
+
 /********************************************************* overlay for panels */
 
 #overlay {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   padding: 16px;
-  background-color: transparent;
   color: #000;
   z-index: 300;
 }
@@ -101,10 +113,4 @@ a {
 
 .pull-left {
   float: none !important;
-}
-
-/******************************************************************** Angular */
-
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
 }

@@ -11,6 +11,10 @@
 var KIMCHI = (function (KIMCHI, Q, $) {
   'use strict';
 
+  var initDeferred = Q.defer(), readyDeferred = Q.defer();
+
+
+
   /**
    * This function can be called before the DOM is ready.
    * @memberOf module:KIMCHI
@@ -18,14 +22,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
   KIMCHI.init = function () {
     console.log('.init(): start');
 
-    var deferred, rendererSuccess;
-
-    deferred = Q.defer();
-    /**
-     * @type     {Promise}
-     * @memberOf module:KIMCHI
-     */
-    KIMCHI.init.promise = deferred.promise;
+    var rendererSuccess;
 
 
 
@@ -125,7 +122,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
       console.log('.init(): update Body children');
       KIMCHI.space.updateBodyChildren();
 
-      deferred.resolve();
+      initDeferred.resolve(80);
     });
 
 
@@ -175,14 +172,34 @@ var KIMCHI = (function (KIMCHI, Q, $) {
       KIMCHI.pointerLock.init();
       KIMCHI.flight.init();
 
+      readyDeferred.resolve();
+
       console.log('.ready(): done');
     });
+
+    return KIMCHI.ready.promise;
   };
+
+
+
+  /**
+   * @type     {Promise}
+   * @memberOf module:KIMCHI
+   */
+  KIMCHI.init.promise = initDeferred.promise;
+
+  /**
+   * @type     {Promise}
+   * @memberOf module:KIMCHI
+   */
+  KIMCHI.ready.promise = readyDeferred.promise;
 
 
 
   // turn off in production
   Q.longStackSupport = true;
+
+
 
   KIMCHI.init();
 

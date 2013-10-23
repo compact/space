@@ -4,7 +4,7 @@
  * @constructor Mode
  * @memberOf    module:KIMCHI.flight
  */
-var KIMCHI = (function (KIMCHI, $) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
   var Mode = function (name) {
@@ -84,10 +84,10 @@ var KIMCHI = (function (KIMCHI, $) {
       if (!self.enabled) {
         // this mode is being disabled
         console.log('.flight.Mode: stopping animation for ' + self.name);
-        return $.when(false);
+        return Q.when(false);
       }
 
-      return $.when(self.animationFrame(delta));
+      return Q.when(self.animationFrame(delta));
     });
   };
 
@@ -102,4 +102,4 @@ var KIMCHI = (function (KIMCHI, $) {
   KIMCHI.flight = KIMCHI.flight || {};
   KIMCHI.flight.Mode = Mode;
   return KIMCHI;
-}(KIMCHI || {}, jQuery));
+}(KIMCHI || {}));

@@ -8,7 +8,7 @@
  * @module KIMCHI
  */
 
-var KIMCHI = (function (KIMCHI, Q, $) {
+var KIMCHI = (function (KIMCHI, Q) {
   'use strict';
 
   var initDeferred = Q.defer(), readyDeferred = Q.defer();
@@ -71,7 +71,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
      */
     KIMCHI.camera = new THREE.PerspectiveCamera(
       KIMCHI.config.get('cameraFov'),
-      1, // placeholder, set with KIMCHI.size.init()
+      1, // placeholder, set in KIMCHI.size
       KIMCHI.config.get('cameraNear'),
       KIMCHI.config.get('cameraFar')
     );
@@ -160,11 +160,6 @@ var KIMCHI = (function (KIMCHI, Q, $) {
   KIMCHI.ready = function () {
     console.log('.ready(): start');
 
-    // jQuery objects
-    KIMCHI.$document = $(document);
-    KIMCHI.$window = $(window);
-    KIMCHI.$overlay = $('#overlay');
-
     KIMCHI.init.promise.then(function () {
       // add orbit lines
       KIMCHI.space.ready();
@@ -205,11 +200,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
   KIMCHI.init();
 
-  $(function () {
-    KIMCHI.ready();
-  });
-
 
 
   return KIMCHI;
-}(KIMCHI || {}, Q, jQuery));
+}(KIMCHI || {}, Q));

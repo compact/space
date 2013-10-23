@@ -3,7 +3,7 @@
  * @namespace renderer
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, $, THREE) {
+var KIMCHI = (function (KIMCHI, THREE) {
   'use strict';
 
   var module = {}, renderer;
@@ -87,4 +87,4 @@ var KIMCHI = (function (KIMCHI, $, THREE) {
   };
 
   return KIMCHI;
-}(KIMCHI || {}, jQuery, THREE));
+}(KIMCHI || {}, THREE));

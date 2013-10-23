@@ -19,17 +19,12 @@ var KIMCHI = (function (KIMCHI) {
   size.height = 0;
 
   /**
-   * Initialize the camera and renderer dimensions. Bind the window resize
-   *   event handler.
+   * Initialize the camera and renderer dimensions. The window resize event
+   *   handler gets binded in Angular.
    * @memberOf module:KIMCHI.size
    */
   size.init = function () {
     size.update();
-
-    KIMCHI.$window.on('resize', function () {
-      size.update();
-      KIMCHI.renderer.render();
-    });
   };
 
   /**
@@ -37,8 +32,8 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.size
    */
   size.update = function () {
-    size.width = KIMCHI.$window.width();
-    size.height = KIMCHI.$window.height() - 5; // TODO
+    size.width = window.innerWidth;
+    size.height = window.innerHeight;
     KIMCHI.camera.update({
       'width': size.width,
       'height': size.height

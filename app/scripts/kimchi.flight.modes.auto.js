@@ -4,7 +4,7 @@
  * @namespace auto
  * @memberOf  module:KIMCHI.flight.modes
  */
-var KIMCHI = (function (KIMCHI, Q, $, THREE) {
+var KIMCHI = (function (KIMCHI, Q, THREE) {
   'use strict';
 
   var flight, Mode, mode, update, translateTo;
@@ -173,4 +173,4 @@ var KIMCHI = (function (KIMCHI, Q, $, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, Q, jQuery, THREE));
+}(KIMCHI || {}, Q, THREE));

@@ -9,7 +9,7 @@
  * @namespace pointerLock
  * @memberOf  module:KIMCHI.flight.modes
  */
-var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
+var KIMCHI = (function (KIMCHI, _, Q, THREE) {
   'use strict';
 
   var flight, Mode, mode, willCollide, getDirection;
@@ -184,4 +184,4 @@ var KIMCHI = (function (KIMCHI, _, Q, $, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, Q, jQuery, THREE));
+}(KIMCHI || {}, _, Q, THREE));

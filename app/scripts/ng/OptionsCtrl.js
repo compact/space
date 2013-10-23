@@ -1,4 +1,4 @@
-app.controller('OptionsCtrl', function ($scope, KIMCHI) {
+app.controller('OptionsCtrl', function ($scope, $document, KIMCHI) {
   var keys, radioKeys, dropdownKeys;
 
   // Radio settings and dropdown settings are handled differently. When editing
@@ -88,5 +88,18 @@ app.controller('OptionsCtrl', function ($scope, KIMCHI) {
     });
 
     KIMCHI.renderer.render();
+  });
+
+  // bind toggling of body movement
+  $document.on('keypress', function (event) {
+    switch (event.which) {
+    case 32: // space
+      if (KIMCHI.config.get('bodiesSpeed') > 0) {
+        KIMCHI.config.set('bodiesSpeed', 0);
+      } else {
+        KIMCHI.config.set('bodiesSpeed', 1); // TODO: remember the last speed
+      }
+      break;
+    }
   });
 });

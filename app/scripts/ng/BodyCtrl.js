@@ -1,10 +1,10 @@
-app.controller('BodyCtrl', function ($scope, Kimchi) {
-  $scope.Kimchi = Kimchi;
+app.controller('BodyCtrl', function ($scope, KIMCHI) {
+  $scope.KIMCHI = KIMCHI;
 
   // whether to hide the loading overlay
   $scope.loaded = false;
 
-  Kimchi.ready.promise.then(function () {
+  KIMCHI.ready.promise.then(function () {
     $scope.loaded = true;
   });
 });

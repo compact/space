@@ -1,16 +1,20 @@
-var app = angular.module('kimchi', ['three', '$strap.directives']);
+var app = angular.module('kimchi', ['$strap.directives']);
 
-app.factory('Kimchi', function () {
+app.factory('KIMCHI', function () {
   return window.KIMCHI;
 });
 
-app.run(function ($window, Kimchi) {
+app.factory('THREE', function () {
+  return window.THREE;
+});
+
+app.run(function ($window, KIMCHI) {
   // initialize KIMCHI, step 2 of 2; see kimchi.init.js
-  Kimchi.ready();
+  KIMCHI.ready();
 
   // bind window resize
   angular.element($window).bind('resize', function () {
-    Kimchi.size.update();
-    Kimchi.renderer.render();
+    KIMCHI.size.update();
+    KIMCHI.renderer.render();
   });
 });

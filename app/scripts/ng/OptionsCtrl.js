@@ -1,4 +1,4 @@
-angular.module('kimchi').controller('OptionsCtrl', function ($scope, Kimchi) {
+app.controller('OptionsCtrl', function ($scope, KIMCHI) {
   var keys, radioKeys, dropdownKeys;
 
   // Radio settings and dropdown settings are handled differently. When editing
@@ -63,15 +63,15 @@ angular.module('kimchi').controller('OptionsCtrl', function ($scope, Kimchi) {
 
   // The config values cannot be set before KIMCHI is initialized because their
   // set handlers make changes to KIMCHI.
-  Kimchi.init.promise.then(function () {
+  KIMCHI.init.promise.then(function () {
     // radios
     _.each(radioKeys, function (key) {
       // set the initial value (either default or from localStorage)
-      $scope[key] = Kimchi.config.get(key);
+      $scope[key] = KIMCHI.config.get(key);
 
       // watch for changes, and set the new value accordingly
       $scope.$watch(key, function (value) {
-        Kimchi.config.set(key, value);
+        KIMCHI.config.set(key, value);
       });
     });
 
@@ -79,14 +79,14 @@ angular.module('kimchi').controller('OptionsCtrl', function ($scope, Kimchi) {
     _.each(dropdownKeys, function (key) {
       // set the initial value, which is an object
       $scope[key] = _.find($scope.options[key], {
-        'value': Kimchi.config.get(key)
+        'value': KIMCHI.config.get(key)
       });
 
       $scope.$watch(key, function (option) {
-        Kimchi.config.set(key, option.value);
+        KIMCHI.config.set(key, option.value);
       });
     });
 
-    Kimchi.renderer.render();
+    KIMCHI.renderer.render();
   });
 });

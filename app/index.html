@@ -79,14 +79,14 @@
           <th>Radius</th>
           <th>Distance from the Sun</th>
         </tr>
-        <tr ng-repeat="body in Kimchi.space.bodies">
+        <tr ng-repeat="body in KIMCHI.space.bodies">
           <td>{{body.name}}</td>
           <td><a ng-click="panTo(body)">Look</a></td>
           <td><a ng-click="flyTo(body)">Fly</a></td>
           <td><a ng-click="orbit(body)">Orbit</a></td>
-          <td>{{Kimchi.format.au(body.getDistance(Kimchi.camera))}}</td>
-          <td>{{Kimchi.format.km(body.radiusInKm)}}</td>
-          <td>{{Kimchi.format.au(body.distanceFromSun)}}</td>
+          <td>{{KIMCHI.format.au(body.getDistance(KIMCHI.camera))}}</td>
+          <td>{{KIMCHI.format.km(body.radiusInKm)}}</td>
+          <td>{{KIMCHI.format.au(body.distanceFromSun)}}</td>
         </tr>
       </table>
     </panel>
@@ -216,7 +216,7 @@
   </div>
 
   <div id="hud3" class="hud">
-    <div ng-show="Kimchi.flight.getModeName() === 'pointerLock'">
+    <div ng-show="KIMCHI.flight.getModeName() === 'pointerLock'">
       <strong>Mouse look controls</strong>
       <ul>
         <li>1: Menu</li>
@@ -228,7 +228,7 @@
         <li>QE: Rotate</li>
       </ul>
     </div>
-    <div ng-show="Kimchi.flight.getModeName() === 'orbit'">
+    <div ng-show="KIMCHI.flight.getModeName() === 'orbit'">
       <strong>Orbit controls</strong>
       <ul>
         <li>1: Menu</li>
@@ -303,7 +303,6 @@
   <!-- endbuild -->
 
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
-  <script src="scripts/ng/ngthree.js"></script>
   <script src="scripts/ng/kimchi.js"></script>
   <script src="scripts/ng/BodiesCtrl.js"></script>
   <script src="scripts/ng/BodyCtrl.js"></script>

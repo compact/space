@@ -1,5 +1,5 @@
-app.controller('NoticesCtrl', function ($scope, Kimchi) {
-  Kimchi.on('noticesChanged', function (notices) {
+app.controller('NoticesCtrl', function ($scope, KIMCHI) {
+  KIMCHI.on('noticesChanged', function (notices) {
     $scope.notices = notices;
   });
 });

@@ -1,4 +1,4 @@
-app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
+app.controller('PanelsCtrl', function ($scope, $document, KIMCHI) {
   var hidePanels, panelsAreHidden;
 
   // whether to show each panel; these keys are used in panelDirective
@@ -12,7 +12,7 @@ app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
   // setting the given flight mode
   $scope.setMode = function (name) {
     hidePanels();
-    return Kimchi.flight.setMode(name);
+    return KIMCHI.flight.setMode(name);
   };
 
   // show the given panel
@@ -27,7 +27,7 @@ app.controller('PanelsCtrl', function ($scope, $document, Kimchi) {
     case 49: // 1
       // case not covered by $scope.setMode()
       if (panelsAreHidden()) {
-        Kimchi.flight.setMode('orbit');
+        KIMCHI.flight.setMode('orbit');
         $scope.panels.about = true;
       }
       break;

@@ -3,7 +3,7 @@
  *   user.
  */
 angular.module('kimchi').controller('StatsCtrl', function ($scope, $timeout,
-    KIMCHI, THREE) {
+    KIMCHI) {
   var handler;
 
   $scope.data = {};

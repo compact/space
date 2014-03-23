@@ -236,12 +236,9 @@ THREE.OrbitControls = function (object, domElement) {
     lastPosition.copy(_this.object.position);
   };
 
+
+
   // listeners
-
-  function contextmenu(event) {
-    event.preventDefault();
-  }
-
   function mousedown(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -361,8 +358,6 @@ THREE.OrbitControls = function (object, domElement) {
    * @memberOf external:THREE.OrbitControls
    */
   this.enable = function () {
-    // this.domElement.addEventListener('contextmenu', contextmenu, false);
-
     this.domElement.addEventListener('mousedown', mousedown, false);
 
     this.domElement.addEventListener('mousewheel', mousewheel, false);
@@ -383,8 +378,6 @@ THREE.OrbitControls = function (object, domElement) {
    */
   this.disable = function () {
     this.enabled = false;
-
-    // this.domElement.removeEventListener('contextmenu', contextmenu, false);
 
     this.domElement.removeEventListener('mousedown', mousedown, false);
 

@@ -274,14 +274,18 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * @returns  {Boolean}        Whether the label of this Body is currently
-   *   visible.
-   * @alias    hasVisibleLabel
+   * @returns  {Boolean} Whether this Body is visible in the current view.
+   * @alias    isVisible
    * @instance
    * @memberOf module:KIMCHI.space.Body
    */
-  Body.prototype.hasVisibleLabel = function () {
-    return this.getDistance(KIMCHI.camera) < this.labelVisibleDistance;
+  Body.prototype.isVisible = function () {
+    var frustum = new THREE.Frustum();
+    frustum.setFromMatrix(new THREE.Matrix4().multiplyMatrices(
+      KIMCHI.camera.projectionMatrix,
+      KIMCHI.camera.matrixWorldInverse
+    ));
+    return frustum.intersectsObject(this.object3Ds.main);
   };
 
   /**
@@ -293,19 +297,27 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getCanvasCoords = function () {
-    if (!this.hasVisibleLabel()) {
+    // check that this Body's Mesh isn't farther away from the camera than the
+    // distance specified by our custom property
+    if (this.getDistance(KIMCHI.camera) > this.labelVisibleDistance) {
       return false;
     }
 
-    var projector = new THREE.Projector();
-    var canvasVector = projector.projectVector(
+    // check that this Body's Mesh is visible in the current view, i.e. don't
+    // show the label if the Mesh is behind the camera
+    if (!this.isVisible()) {
+      return false;
+    }
+
+    // "Normalized Device Coordinates"
+    var coords = new THREE.Projector().projectVector(
       this.object3Ds.main.position.clone(),
       KIMCHI.camera
     );
 
     return {
-      'x': (canvasVector.x + 1) / 2 * KIMCHI.size.width,
-      'y': (1 - canvasVector.y) / 2 * KIMCHI.size.height
+      'x': (coords.x + 1) / 2 * KIMCHI.size.width,
+      'y': (1 - coords.y) / 2 * KIMCHI.size.height
     };
   };
 

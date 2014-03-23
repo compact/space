@@ -249,8 +249,7 @@
   </div>
 
   <div id="labels" ng-controller="LabelsCtrl">
-    <div ng-repeat="label in labels"
-        style="left: {{label.left}}; top: {{label.top}};">
+    <div ng-repeat="label in labels" ng-style="label.css">
       {{label.name}}
     </div>
   </div>

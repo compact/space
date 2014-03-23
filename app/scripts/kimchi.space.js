@@ -155,7 +155,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       if (KIMCHI.config.get('showLabels')) {
         _.each(bodies, function (body) {
 
-          bodyDistance = THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main);
+          bodyDistance = body.getDistance(KIMCHI.camera);
           label = body.object3Ds.label;
 
           if (bodyDistance > body.labelVisibleDistance) {
@@ -207,7 +207,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     return _.map(bodies, function (body, name) {
       return {
         'name': name,
-        'distance': THREE.Object3D.getDistance(KIMCHI.camera, body.object3Ds.main)
+        'distance': body.getDistance(KIMCHI.camera)
       };
     });
   };

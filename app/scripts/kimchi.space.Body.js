@@ -248,8 +248,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getSurfaceDistance = function (object3D) {
-    return THREE.Object3D.getDistance(this.object3Ds.main, object3D) -
-      this.getScaledRadius();
+    return this.getDistance(object3D) - this.getScaledRadius();
   };
 
   /**

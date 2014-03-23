@@ -11,7 +11,11 @@ angular.module('kimchi').controller('StatsCtrl', function ($scope, $timeout,
   handler = function () {
     $timeout(function () { // $digest
       $scope.data.time = KIMCHI.format.time();
-      $scope.data.distanceFromSun = KIMCHI.format.roundNicely(THREE.Object3D.getDistance(KIMCHI.camera, KIMCHI.space.getBody('Sun').object3Ds.main), 2, true);
+      $scope.data.distanceFromSun = KIMCHI.format.roundNicely(
+        KIMCHI.space.getBody('Sun').getDistance(KIMCHI.camera),
+        2,
+        true
+      );
       $scope.data.speed = KIMCHI.format.roundDecimals(KIMCHI.flight.getSpeed(), 2, true);
     });
   };

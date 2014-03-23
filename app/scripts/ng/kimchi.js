@@ -1,14 +1,14 @@
-var app = angular.module('kimchi', ['$strap.directives']);
+angular.module('kimchi', ['$strap.directives']);
 
-app.factory('KIMCHI', function () {
+angular.module('kimchi').factory('KIMCHI', function () {
   return window.KIMCHI;
 });
 
-app.factory('THREE', function () {
+angular.module('kimchi').factory('THREE', function () {
   return window.THREE;
 });
 
-app.run(function ($window, KIMCHI) {
+angular.module('kimchi').run(function ($window, KIMCHI) {
   // initialize KIMCHI, step 2 of 2; see kimchi.init.js
   KIMCHI.ready();
 

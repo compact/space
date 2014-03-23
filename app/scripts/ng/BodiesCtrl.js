@@ -2,7 +2,8 @@
  * This controller handles the bodies panel, where actions can be taken on
  *   Bodies.
  */
-app.controller('BodiesCtrl', function ($scope, $timeout, KIMCHI) {
+angular.module('kimchi').controller('BodiesCtrl', function ($scope, $timeout,
+    KIMCHI) {
   $scope.panTo = function (body) {
     KIMCHI.flight.modes.orbit.updateTargetBody(body);
     $scope.setMode('auto').panTo(body).then(function () {

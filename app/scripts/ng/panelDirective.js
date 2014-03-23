@@ -3,7 +3,7 @@
  *   <panel key="" title="">content</panel>
  * For values of key, see PanelsCtrl. Title appears in the panel heading.
  */
-app.directive('panel', function () {
+angular.module('kimchi').directive('panel', function () {
   return {
     'restrict': 'E',
     'transclude': true,

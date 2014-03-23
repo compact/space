@@ -1,4 +1,5 @@
-app.controller('PanelsCtrl', function ($scope, $document, KIMCHI) {
+angular.module('kimchi').controller('PanelsCtrl', function ($scope, $document,
+    KIMCHI) {
   var hidePanels, panelsAreHidden;
 
   // whether to show each panel; these keys are used in panelDirective

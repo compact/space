@@ -1,4 +1,5 @@
-app.controller('OptionsCtrl', function ($scope, $document, KIMCHI) {
+angular.module('kimchi').controller('OptionsCtrl', function ($scope, $document,
+    KIMCHI) {
   var keys, radioKeys, dropdownKeys;
 
   // Radio settings and dropdown settings are handled differently. When editing

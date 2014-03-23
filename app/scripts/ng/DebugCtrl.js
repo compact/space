@@ -1,4 +1,5 @@
-app.controller('DebugCtrl', function ($scope, $timeout, KIMCHI) {
+angular.module('kimchi').controller('DebugCtrl', function ($scope, $timeout,
+    KIMCHI) {
   var handler, position, rotation;
 
   $scope.data = {};

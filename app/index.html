@@ -248,6 +248,13 @@
     </ul>
   </div>
 
+  <div id="labels" ng-controller="LabelsCtrl">
+    <div ng-repeat="label in labels"
+        style="left: {{label.left}}; top: {{label.top}};">
+      {{label.name}}
+    </div>
+  </div>
+
   <canvas id="kimchi"></canvas>
 
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -307,6 +314,7 @@
   <script src="scripts/ng/BodiesCtrl.js"></script>
   <script src="scripts/ng/BodyCtrl.js"></script>
   <script src="scripts/ng/DebugCtrl.js"></script>
+  <script src="scripts/ng/LabelsCtrl.js"></script>
   <script src="scripts/ng/NoticesCtrl.js"></script>
   <script src="scripts/ng/OptionsCtrl.js"></script>
   <script src="scripts/ng/PanelsCtrl.js"></script>

@@ -274,6 +274,42 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     return this.getDistance(object3D) < this.getCollisionDistance();
   };
 
+  /**
+   * @returns  {Boolean}        Whether the label of this Body is currently
+   *   visible.
+   * @alias    hasVisibleLabel
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.hasVisibleLabel = function () {
+    return this.getDistance(KIMCHI.camera) < this.labelVisibleDistance;
+  };
+
+  /**
+   * @returns  {false|Object}  The x and y coordinates of this Body as it
+   *   appears in the window (assuming the canvas starts at the top left
+   *   corner of the window).
+   * @alias    getCanvasCoords
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.getCanvasCoords = function () {
+    if (!this.hasVisibleLabel()) {
+      return false;
+    }
+
+    var projector = new THREE.Projector();
+    var canvasVector = projector.projectVector(
+      this.object3Ds.main.position.clone(),
+      KIMCHI.camera
+    );
+
+    return {
+      'x': (canvasVector.x + 1) / 2 * KIMCHI.size.width,
+      'y': (1 - canvasVector.y) / 2 * KIMCHI.size.height
+    };
+  };
+
   KIMCHI.space = KIMCHI.space || {};
   KIMCHI.space.Body = Body;
   return KIMCHI;

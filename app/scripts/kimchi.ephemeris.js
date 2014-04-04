@@ -52,12 +52,18 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
   /**
    * @param    {Number} index
-   * @returns  {Number} The current position [x, y, z] of the body
-   *   corresponding to the given index.
+   * @param    {Number} [julianOffset=0]
+   * @returns  {Array}  The [x, y, z] position of the body with the given
+   *   index on the julian date with the given offset.
    * @memberOf module:KIMCHI.ephemeris
    */
-  ephemeris.getCurrentPosition = function (index) {
-    return batch[KIMCHI.time.getJulian()][index];
+  ephemeris.getPositionArray = function (index, julianOffset) {
+    if (typeof julianOffset !== 'number') {
+      julianOffset = 0;
+    }
+
+    var julian = KIMCHI.time.getJulian() + julianOffset;
+    return typeof batch[julian] !== 'undefined' ? batch[julian][index] : null;
   };
 
   return KIMCHI;

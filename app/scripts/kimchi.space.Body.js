@@ -12,7 +12,7 @@
  *   remains visible.
  * @param {Boolean}  [options.collideable=true] Whether this Body is to be
  *   collideable with the camera.
- * @param {Boolean}  [options.createOrbit=false] Whether to create an orbit
+ * @param {Boolean}  [options.hasOrbitLine=false] Whether to create an orbit
  *   for this Body.
  * @param {Boolean}  [options.hasBumpMap=false] Whether this Body has a bump
  *   map.
@@ -133,11 +133,11 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   Body.prototype.collideable = true;
 
   /**
-   * @alias    createOrbit
+   * @alias    hasOrbitLine
    * @instance
    * @memberOf module:KIMCHI.space.Body
    */
-  Body.prototype.createOrbit = false;
+  Body.prototype.hasOrbitLine = false;
 
   /**
    * @alias    hasBumpMap
@@ -166,6 +166,45 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
+   * Create a Line for this Body's orbit (provided it has an orbit).
+   * @alias    createOrbit
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.createOrbit = function () {
+    if (this.hasOrbitLine) {
+      // create the geometry
+      var geometry = new THREE.Geometry();
+      var limit = KIMCHI.config.get('orbitsLineSegments');
+      var position, positionArray;
+      for (var julianOffset = -limit; julianOffset <= limit; julianOffset++) {
+        position = new THREE.Vector3();
+        positionArray = KIMCHI.ephemeris.getPositionArray(
+          this.ephemerisIndex, julianOffset
+        );
+
+        if (positionArray !== null) {
+          position.fromArray(positionArray);
+        } else {
+          position.copy(this.object3Ds.main.position);
+        }
+
+        geometry.vertices.push(position);
+      }
+
+      // create the material
+      var material = new THREE.LineBasicMaterial({
+        'color': KIMCHI.config.get('orbitsColor'),
+        'transparent': KIMCHI.config.get('orbitsOpacity') < 1,
+        'opacity': KIMCHI.config.get('orbitsOpacity')
+      });
+
+      // create the orbit line
+      this.object3Ds.orbit = new THREE.Line(geometry, material);
+    }
+  };
+
+  /**
    * Bodies do not translate by default; this function can be overwritten for
    *   any Body object.
    * @param    {Number} delta
@@ -175,7 +214,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   Body.prototype.translate = function () {
     this.scalePositionFromArray(
-      KIMCHI.ephemeris.getCurrentPosition(this.ephemerisIndex));
+      KIMCHI.ephemeris.getPositionArray(this.ephemerisIndex));
   };
 
   /**

@@ -27,7 +27,7 @@ KIMCHI.space.data = [
     'radiusInKm': 2439.64,
     'distanceFromSun': 0.38709893,
     'labelVisibleDistance': 20,
-    'createOrbit': true
+    'hasOrbitLine': true
   },
   {
     'name': 'Venus',
@@ -36,7 +36,7 @@ KIMCHI.space.data = [
     'radiusInKm': 6051.59,
     'distanceFromSun': 0.72333199,
     'labelVisibleDistance': 20,
-    'createOrbit': true
+    'hasOrbitLine': true
   },
   {
     'name': 'Earth',
@@ -47,7 +47,7 @@ KIMCHI.space.data = [
     'labelVisibleDistance': 50,
     'rotationArray': [1, 2, 3],
     'rotationAngle': 0.2,
-    'createOrbit': true,
+    'hasOrbitLine': true,
     'hasBumpMap': true,
     // 'hasSpecularMap': true,
     'callback': function () {
@@ -81,7 +81,7 @@ KIMCHI.space.data = [
     'radiusInKm': 3397,
     'distanceFromSun': 1.52366231,
     'labelVisibleDistance': 50,
-    'createOrbit': true
+    'hasOrbitLine': true
   },
   {
     'name': 'Jupiter',
@@ -90,7 +90,7 @@ KIMCHI.space.data = [
     'radiusInKm': 71492,
     'distanceFromSun': 5.20336301,
     'labelVisibleDistance': 250,
-    'createOrbit': true
+    'hasOrbitLine': true
   },
   {
     'name': 'Saturn',
@@ -99,7 +99,7 @@ KIMCHI.space.data = [
     'radiusInKm': 60267,
     'distanceFromSun': 9.53707032,
     'labelVisibleDistance': 250,
-    'createOrbit': true,
+    'hasOrbitLine': true,
     'callback': function () {
       var curve = new THREE.EllipseCurve(0, 0, this.radius + 0.2, this.radius + 0.2, 0, 2 * Math.PI);
       var curvePath = new THREE.CurvePath();
@@ -129,7 +129,7 @@ KIMCHI.space.data = [
     'radiusInKm': 25557.25,
     'distanceFromSun': 19.19126393,
     'labelVisibleDistance': 500,
-    'createOrbit': true
+    'hasOrbitLine': true
   },
   {
     'name': 'Neptune',
@@ -138,7 +138,7 @@ KIMCHI.space.data = [
     'radiusInKm': 24766,
     'distanceFromSun': 30.06896348,
     'labelVisibleDistance': 1000,
-    'createOrbit': true
+    'hasOrbitLine': true
   },
   {
     'name': 'Pluto',
@@ -147,6 +147,6 @@ KIMCHI.space.data = [
     'radiusInKm': 1148.07,
     'distanceFromSun': 39.482,
     'labelVisibleDistance': 1000,
-    'createOrbit': true
+    'hasOrbitLine': true
   }
 ];

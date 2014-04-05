@@ -40,19 +40,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @memberOf module:KIMCHI.space
    */
   space.ready = function () {
-    var length, curve;
-
     _.each(bodies, function (body) {
-      // create an orbit Line with a clockwise Curve
-      if (body.createOrbit) {
-        length = body.object3Ds.main.position.length();
-        curve = new THREE.EllipseCurve(0, 0, length, length, 0, 2 * Math.PI);
-        body.object3Ds.orbit = curve.createLine({
-          'color': KIMCHI.config.get('orbitsColor'),
-          'opacity': KIMCHI.config.get('orbitsOpacity'),
-          'lineSegments': KIMCHI.config.get('orbitsLineSegments')
-        });
-      }
+      body.createOrbit();
     });
   };
 
@@ -185,6 +174,32 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
             // show
             label.visible = true;
+          }
+        });
+      }
+
+      // update orbit lines
+      if (KIMCHI.config.get('bodiesSpeed') > 0) {
+        _.each(bodies, function (body) {
+          if (body.hasOrbitLine) {
+            var geometry = body.object3Ds.orbit.geometry;
+            var limit = KIMCHI.config.get('orbitsLineSegments');
+
+            // move all vertices forward, except for the last vertex
+            for (var i = 0; i <= limit * 2 - 1; i++) {
+              geometry.vertices[i].copy(geometry.vertices[i + 1]);
+            }
+
+            // set the last vertex to the next position
+            var positionArray = KIMCHI.ephemeris.getPositionArray(
+              body.ephemerisIndex, limit
+            );
+            if (positionArray !== null) {
+              geometry.vertices[limit * 2].fromArray(positionArray);
+            }
+
+            // this property needs to be set to update the vertices
+            geometry.verticesNeedUpdate = true;
           }
         });
       }

@@ -57,7 +57,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.showOrbits = true;
   settings.orbitsColor = 0xffffcc;
   settings.orbitsOpacity = 0.5;
-  settings.orbitsLineSegments = 1080; // how many lines make up each orbit?
+  settings.orbitsLineSegments = 49; // how many lines make up each orbit?
 
   // for THREE.Stars
   settings.showStars = true;

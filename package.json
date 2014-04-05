@@ -53,6 +53,7 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma": "~0.12",
     "karma-ng-html2js-preprocessor": "~0.1.0",
-    "jshint": "~2.4"
+    "jshint": "~2.4",
+    "grunt-htmlrefs": "~0.5"
   }
 }

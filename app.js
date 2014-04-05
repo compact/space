@@ -23,7 +23,10 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('appsecretLoL'));
 app.use(express.cookieSession({ secret: 'appsecretLoL', cookie: { maxAge: 60 * 60 * 1000 }}));
 //app.use(app.router);
-app.use(express.static(path.join(__dirname, 'app')));
+
+console.log('current environment:', app.get('env'));
+var staticDir = app.get('env') === 'development' ? 'app' : 'dist';
+app.use(express.static(path.join(__dirname, staticDir)));
 
 // development only
 if ('development' == app.get('env')) {

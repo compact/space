@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title></title>
+  <title>Space</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -47,13 +47,22 @@
   <div id="overlay" ng-controller="PanelsCtrl">
     <ul id="panel-menu" class="horizontal clearfix">
       <li>
-        <a ng-click="showPanel('about')" ng-class="{'active': panels.about}" class="btn btn-xs btn-success">About</a>
+        <a ng-click="showPanel('about')" ng-class="{'active': panels.about}"
+            class="btn btn-xs btn-success">
+          About
+        </a>
       </li>
       <li>
-        <a ng-click="showPanel('bodies')" ng-class="{'active': panels.bodies}" class="btn btn-xs btn-success">Astronomical bodies</a>
+        <a ng-click="showPanel('bodies')" ng-class="{'active': panels.bodies}"
+            class="btn btn-xs btn-success">
+          Astronomical bodies
+        </a>
       </li>
       <li>
-        <a ng-click="showPanel('options')" ng-class="{'active': panels.options}" class="btn btn-xs btn-success">Options</a>
+        <a ng-click="showPanel('options')" ng-class="{'active': panels.options}"
+            class="btn btn-xs btn-success">
+          Options
+        </a>
       </li>
     </ul>
 
@@ -70,7 +79,9 @@
     </panel>
 
     <panel key="bodies" title="Astronomical bodies">
-      <table ng-controller="BodiesCtrl" class="table table-striped table-hover table-condensed table-responsive">
+      <table ng-controller="BodiesCtrl"
+          class="table table-striped table-hover table-condensed
+            table-responsive">
         <tr>
           <th>Name</th>
           <th>Look</th>
@@ -127,7 +138,8 @@
         <div class="config-row clearfix">
           <div class="config">
             <select ng-model="bodiesSizeScale"
-                ng-options="option.label for option in options.bodiesSizeScale" class="form-control input-sm">
+                ng-options="option.label for option in options.bodiesSizeScale"
+                class="form-control input-sm">
             </select>
           </div>
           <div class="config-description">
@@ -241,8 +253,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </panel>
+    </panel>
+  </div>
 
   <div id="hud1" class="hud"></div>
 
@@ -291,7 +303,8 @@
     </div>
   </div>
 
-  <div id="hud4" class="hud" ng-controller="DebugCtrl" ng-show="settings.visible">
+  <div id="hud4" class="hud" ng-controller="DebugCtrl"
+      ng-show="settings.visible">
     <ul>
       <li>Delta: {{data.delta}}</li>
       <li>Position (au): {{data.position}}</li>

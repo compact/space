@@ -11,8 +11,11 @@
   <meta name="viewport" content="width=device-width">
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
+  <!-- ref:js http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <!-- endref -->
+
   <!-- build:css styles/main.css -->
-  <link rel="stylesheet" href="bower_components/bootstrap3/dist/css/bootstrap.css">
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild -->
 
@@ -92,19 +95,29 @@
     <panel key="options" title="Options">
       <div ng-controller="OptionsCtrl">
         <h3>Astronomical bodies</h3>
+
         <div class="config-row clearfix">
-          <div class="config btn-group">
-            <select ng-model="bodiesSpeed" ng-options="option.label for option in options.bodiesSpeed" data-style="btn-primary btn-sm" bs-select></select>
+          <div class="config">
+            <select ng-model="bodiesSpeed"
+                ng-options="option.label for option in options.bodiesSpeed"
+                class="form-control input-sm">
+            </select>
           </div>
           <div class="config-description">
             Revolution speed
           </div>
         </div>
         <div class="config-row clearfix">
-          <div data-toggle="buttons" class="config btn-group">
-            <div class="btn-group" ng-model="rotateBodies" bs-buttons-radio>
-              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-              <button type="button" class="btn btn-default btn-sm" value="false" ng-click="l()">Off</button>
+          <div class="config">
+            <div class="btn-group">
+              <label ng-model="rotateBodies" btn-radio="true"
+                  class="btn btn-default btn-sm">
+                On
+              </label>
+              <label ng-model="rotateBodies" btn-radio="false"
+                  class="btn btn-default btn-sm">
+                Off
+              </label>
             </div>
           </div>
           <div class="config-description">
@@ -112,19 +125,27 @@
           </div>
         </div>
         <div class="config-row clearfix">
-          <div class="config btn-group">
-            <select ng-model="bodiesSizeScale" ng-options="option.label for option in options.bodiesSizeScale" data-style="btn-primary btn-sm" bs-select></select>
-            </div>
+          <div class="config">
+            <select ng-model="bodiesSizeScale"
+                ng-options="option.label for option in options.bodiesSizeScale" class="form-control input-sm">
+            </select>
+          </div>
           <div class="config-description">
             Scaled size
           </div>
         </div>
         <h3>Visuals</h3>
         <div class="config-row clearfix">
-          <div data-toggle="buttons" class="config btn-group">
-            <div class="btn-group" ng-model="ambientLight" bs-buttons-radio>
-              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
+          <div class="config">
+            <div class="btn-group">
+              <label ng-model="ambientLight" btn-radio="true"
+                  class="btn btn-default btn-sm">
+                On
+              </label>
+              <label ng-model="ambientLight" btn-radio="false"
+                  class="btn btn-default btn-sm">
+                Off
+              </label>
             </div>
           </div>
           <div class="config-description">
@@ -132,10 +153,16 @@
           </div>
         </div> 
         <div class="config-row clearfix">
-          <div data-toggle="buttons" class="config btn-group">
-            <div class="btn-group" ng-model="showLabels" bs-buttons-radio>
-              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
+          <div class="config">
+            <div class="btn-group">
+              <label ng-model="showLabels" btn-radio="true"
+                  class="btn btn-default btn-sm">
+                On
+              </label>
+              <label ng-model="showLabels" btn-radio="false"
+                  class="btn btn-default btn-sm">
+                Off
+              </label>
             </div>
           </div>
           <div class="config-description">
@@ -143,10 +170,16 @@
           </div>
         </div>
         <div class="config-row clearfix">
-          <div data-toggle="buttons" class="config btn-group">
-            <div class="btn-group" ng-model="showOrbits" bs-buttons-radio>
-              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
+          <div class="config">
+            <div class="btn-group">
+              <label ng-model="showOrbits" btn-radio="true"
+                  class="btn btn-default btn-sm">
+                On
+              </label>
+              <label ng-model="showOrbits" btn-radio="false"
+                  class="btn btn-default btn-sm">
+                Off
+              </label>
             </div>
           </div>
           <div class="config-description">
@@ -154,22 +187,36 @@
           </div>
         </div>
         <div class="config-row clearfix">
-          <div data-toggle="buttons" class="config btn-group">
-            <div class="btn-group" ng-model="showStars" bs-buttons-radio>
-              <button type="button" class="btn btn-default btn-sm" value="true">On</button>
-              <button type="button" class="btn btn-default btn-sm" value="false">Off</button>
+          <div class="config">
+            <div class="btn-group">
+              <label ng-model="showStars" btn-radio="true"
+                  class="btn btn-default btn-sm">
+                On
+              </label>
+              <label ng-model="showStars" btn-radio="false"
+                  class="btn btn-default btn-sm">
+                Off
+              </label>
             </div>
           </div>
           <div class="config-description">
             Show stars in the background
           </div>
         </div>
+
         <h3>Flight</h3>
+
         <div class="config-row clearfix">
-          <div data-toggle="buttons" class="config btn-group">
-            <div class="btn-group" ng-model="controlsKeyboardSpeedMultiplier" bs-buttons-radio>
-              <button type="button" class="btn btn-default btn-sm" value="1">Fast</button>
-              <button type="button" class="btn btn-default btn-sm" value="2">Faster</button>
+          <div class="config">
+            <div class="btn-group">
+              <label ng-model="controlsKeyboardSpeedMultiplier" btn-radio="1"
+                  class="btn btn-default btn-sm">
+                Fast
+              </label>
+              <label ng-model="controlsKeyboardSpeedMultiplier" btn-radio="2"
+                  class="btn btn-default btn-sm">
+                Faster
+              </label>
             </div>
           </div>
           <div class="config-description">
@@ -177,10 +224,16 @@
           </div>
         </div>
         <div class="config-row clearfix">
-          <div data-toggle="buttons" class="config btn-group">
-            <div class="btn-group" ng-model="controlsLookSpeed" bs-buttons-radio>
-              <button type="button" class="btn btn-default btn-sm" value="0.001">Low</button>
-              <button type="button" class="btn btn-default btn-sm" value="0.002">High</button>
+          <div class="config">
+            <div class="btn-group">
+              <label ng-model="controlsLookSpeed" btn-radio="0.001"
+                  class="btn btn-default btn-sm">
+                Low
+              </label>
+              <label ng-model="controlsLookSpeed" btn-radio="0.002"
+                  class="btn btn-default btn-sm">
+                High
+              </label>
             </div>
           </div>
           <div class="config-description">
@@ -271,12 +324,10 @@
   <!-- endref -->
 
   <!-- build:js scripts/main.js -->
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="bower_components/lodash/dist/lodash.js"></script>
   <script src="bower_components/q/q.js"></script>
   <script src="bower_components/threejs/build/three.js"></script>
-  <script src="bower_components/bootstrap/docs/assets/js/bootstrap.js"></script>
-  <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
-  <script src="bower_components/angular-strap/vendor/bootstrap-select.js"></script>
   <script src="lib/fonts/helvetiker_regular.typeface.js"></script>
 
   <script src="scripts/three.extensions.js"></script>

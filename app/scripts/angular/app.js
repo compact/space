@@ -1,11 +1,13 @@
-angular.module('kimchi', ['$strap.directives']);
+angular.module('kimchi', [
+  'ui.bootstrap'
+]);
 
-angular.module('kimchi').factory('KIMCHI', function () {
-  return window.KIMCHI;
+angular.module('kimchi').factory('KIMCHI', function ($window) {
+  return $window.KIMCHI;
 });
 
-angular.module('kimchi').factory('THREE', function () {
-  return window.THREE;
+angular.module('kimchi').factory('THREE', function ($window) {
+  return $window.THREE;
 });
 
 angular.module('kimchi').run(function ($window, KIMCHI) {

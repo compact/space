@@ -3,8 +3,35 @@
  * @namespace ephemeris
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, Q, $) {
+var KIMCHI = (function (KIMCHI, Q) {
   'use strict';
+
+  /**
+   * Helper method from {@link
+   *   http://mathiasbynens.be/notes/xhr-responsetype-json}.
+   * @param     {String}   url
+   * @param     {Function} successHandler
+   * @param     {Function} errorHandler namespace ephemeris
+   * @memberOf  module:KIMCHI
+   */
+  var getJSON = function (url, successHandler, errorHandler) {
+    var deferred = Q.defer();
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status === 200) {
+        deferred.resolve(xhr.response);
+      } else {
+        deferred.reject(status);
+      }
+    };
+    xhr.send();
+
+    return deferred.promise;
+  };
 
   var ephemeris, batch;
   ephemeris = {};
@@ -39,7 +66,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
 
     console.log('.ephemeris: loading batch ' + julian);
 
-    return Q($.getJSON(file).then(function (data) {
+    return getJSON(file).then(function (data) {
       console.log('.ephemeris: loaded batch ' + julian);
       batch = data;
       ephemeris.updateLastJulianInBatch();
@@ -47,7 +74,7 @@ var KIMCHI = (function (KIMCHI, Q, $) {
       console.warn('.ephemeris: failed to GET batch ' + file);
       KIMCHI.notices.add(KIMCHI.config.get('noticeEndOfTime'));
       KIMCHI.config.set('bodiesSpeed', 0);
-    }));
+    });
   };
 
   /**
@@ -67,4 +94,4 @@ var KIMCHI = (function (KIMCHI, Q, $) {
   };
 
   return KIMCHI;
-}(KIMCHI, Q, jQuery));
+}(KIMCHI, Q));

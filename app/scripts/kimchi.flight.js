@@ -132,5 +132,94 @@ var KIMCHI = (function (KIMCHI) {
     return deferred.promise;
   };
 
+  /**
+   * Helper for mode.animationFrame().
+   * @param    {THREE.Vector3} translationVector From {@link
+   *   external:THREE.PointerLockControls#move|THREE.PointerLockControls#move}.
+   * @returns  {Boolean}       If the camera is to translate with the given
+   *   vector, whether it will be within the collision distance of any Body.
+   * @function
+   * @memberOf module:KIMCHI.flight
+   */
+  flight.willCollide = (function () {
+    var willCollide, getDirection, raycaster, cameraPosition,
+      translationDirection, intersects, body;
+
+    /**
+     * Helper for willCollide(). Can be moved into THREE.Vector3.prototype if
+     *   needed elsewhere.
+     * @param   {THREE.Vector3} startingPosition
+     * @param   {THREE.Vector3} localVector A vector local to startingPosition.
+     * @returns {THREE.Vector3} A normalized world direction vector for
+     *   localVector.
+     * @private
+     * @function
+     * @memberOf module:KIMCHI.flight
+     */
+    getDirection = (function () {
+      var direction = new THREE.Vector3();
+
+      return function (startingPosition, localVector) {
+        // local vector from the camera
+        direction.copy(localVector);
+        // set the two vectors to have equal lengths for accuracy; if one is
+        // much longer than the other, errors arise
+        direction.setLength(startingPosition.length());
+        // world vector from the origin to the endpoint of the local vector
+        KIMCHI.camera.localToWorld(direction);
+        // world direction vector
+        direction.sub(startingPosition);
+        // the Raycaster direction should be normalized, according to
+        // https://github.com/mrdoob/three.js/blob/master/src/core/Raycaster.js
+        direction.normalize();
+
+        return direction;
+      };
+    }());
+
+    raycaster = new THREE.Raycaster();
+    // the default precision, 0.0001, is not low enough for our 1x scale
+    // TODO: consider basing precision on the scale config value
+    raycaster.precision = 0.000001;
+
+    // these two Vector3s are passed into the raycaster
+    cameraPosition = new THREE.Vector3();
+
+    return function (translationVector) {
+      if (translationVector.length() === 0) {
+        // not translating, so won't be colliding
+        return false;
+      }
+
+      willCollide = false;
+
+      cameraPosition.copy(KIMCHI.camera.position);
+      translationDirection = getDirection(cameraPosition, translationVector);
+      raycaster.set(cameraPosition, translationDirection);
+
+      // get all Object3Ds in the direction of translation
+      intersects = raycaster.intersectObjects(
+        KIMCHI.space.getCollideableObject3Ds()
+      );
+
+      if (intersects.length === 0) {
+        // no Object3Ds, so won't be colliding
+        return false;
+      }
+
+      // check whether each Body corresponding to the Object3Ds is within
+      // collision distance
+      _.each(intersects, function (intersect) {
+        body = KIMCHI.space.getBody(intersect.object.name);
+        // console.log(intersect.distance, body.getSurfaceCollisionDistance(), translationDirection);
+        if (intersect.distance < body.getSurfaceCollisionDistance()) {
+          willCollide = true;
+          return false; // break the loop
+        }
+      });
+      return willCollide;
+    };
+  }());
+
   return KIMCHI;
 }(KIMCHI || {}));

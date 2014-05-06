@@ -82,6 +82,11 @@ var KIMCHI = (function (KIMCHI, Q) {
 
 
     /**
+     * @type     {THREE.KeyboardControls}
+     * @memberOf module:KIMCHI
+     */
+    KIMCHI.keyboardControls = new THREE.KeyboardControls(KIMCHI.camera);
+    /**
      * @type     {THREE.PointerLockControls}
      * @memberOf module:KIMCHI
      */

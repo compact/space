@@ -26,6 +26,7 @@ var KIMCHI = (function (KIMCHI) {
     Mode.prototype.enable.call(this);
 
     KIMCHI.orbitControls.enable();
+    KIMCHI.keyboardControls.enable();
   };
 
   /**
@@ -35,6 +36,7 @@ var KIMCHI = (function (KIMCHI) {
     Mode.prototype.disable.call(this);
 
     KIMCHI.orbitControls.disable();
+    KIMCHI.keyboardControls.disable();
   };
 
   /**
@@ -46,6 +48,21 @@ var KIMCHI = (function (KIMCHI) {
     if (KIMCHI.config.get('bodiesSpeed') > 0) {
       KIMCHI.orbitControls.target = targetBody.object3Ds.main.position.clone();
     }
+
+    // KeyboardControls: move the camera, but only if it won't be in collision
+    KIMCHI.keyboardControls.move(function (movement) {
+      // scale the translation speed
+      movement.translationVector.multiplyScalar(
+        delta * flight.getTranslationSpeedMultiplier()
+      );
+
+      if (!flight.willCollide(movement.translationVector)) {
+        self.speed = movement.translationVector.length() / delta;
+        return true; // move
+      } else {
+        return false; // don't move
+      }
+    });
 
     // update the controls to move the space
     KIMCHI.orbitControls.update();

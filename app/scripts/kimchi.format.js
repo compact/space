@@ -74,12 +74,16 @@ var KIMCHI = (function (KIMCHI) {
 
   /**
    * @param    {Number} [number]
-   * @returns  {String} The number formatted in astronomical units.
+   * @returns  {String} The number formatted in astronomical units, unless
+   *   it's less than 0.01 au, in which case it's converted to km.
    * @memberOf module:KIMCHI.format
    */
   format.au = function (number) {
     if (typeof number === 'undefined') {
       return '';
+    }
+    if (number < 0.01) {
+      return format.km(number * constants.kmPerAu);
     }
     return format.roundNicely(number) + ' au';
   };

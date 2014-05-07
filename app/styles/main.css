@@ -36,6 +36,7 @@ a {
 .hud {
   position: absolute;
   z-index: 100;
+  padding: 1em;
 }
 
 .hud-value {
@@ -77,8 +78,10 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
+  padding: 1em;
   background-color: #000;
   color: #fff;
+  text-align: center;
   font-size: 72px;
   font-weight: bold;
   z-index: 900;
@@ -90,7 +93,7 @@ a {
   position: absolute;
   top: 0;
   left: 0;
-  padding: 16px;
+  padding: 1em;
   color: #000;
   z-index: 300;
 }

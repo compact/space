@@ -79,9 +79,9 @@
       </li>
     </ul>
 
-    <panel key="about" title="Explore the Solar System">
+    <panel key="about" title="Space">
       <p>
-        [TODO: Blurb.]
+        Use your keyboard and mouse to explore the universe!
       </p>
       <div ng-click="setMode('pointerLock')" class="btn btn-lg btn-primary">
         Fly
@@ -293,27 +293,30 @@
 
   <div id="hud3" class="hud">
     <div ng-show="KIMCHI.flight.getModeName() === 'pointerLock'">
-      <strong>Mouse look controls</strong>
+      <strong>Flying controls</strong>
       <ul>
-        <li>1: Menu</li>
-        <li>2: Fly</li>
-        <li>3: Orbit</li>
         <li>Mouse: Look</li>
         <li>WASD: Move</li>
         <li>RF: Move Up/Down</li>
         <li>QE: Rotate</li>
       </ul>
     </div>
+
     <div ng-show="KIMCHI.flight.getModeName() === 'orbit'">
-      <strong>Orbit controls</strong>
+      <strong>Orbiting controls</strong>
       <ul>
-        <li>1: Menu</li>
-        <li>2: Fly</li>
-        <li>3: Orbit</li>
         <li>Left click and drag: Rotate</li>
         <li>Mousewheel: Zoom</li>
       </ul>
     </div>
+
+    <br>
+    <strong>Mode controls</strong>
+    <ul>
+      <li>1: Menu</li>
+      <li>2: Fly</li>
+      <li>3: Orbit</li>
+    </ul>
   </div>
 
   <div id="hud4" class="hud" ng-controller="DebugCtrl"

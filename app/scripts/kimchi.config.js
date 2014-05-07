@@ -144,12 +144,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     KIMCHI.lights.ambient.visible = value;
     KIMCHI.renderer.render();
   };
-  handlers.showLabels = function (value) {
-    _.each(KIMCHI.space.getObject3Ds('label'), function (mesh) {
-      mesh.visible = value;
-    });
-    KIMCHI.renderer.render();
-  };
   handlers.showOrbits = function (value) {
     _.each(KIMCHI.space.getObject3Ds('orbit'), function (line) {
       line.visible = value;

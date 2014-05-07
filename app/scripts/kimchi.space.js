@@ -5,7 +5,7 @@
  * @namespace space
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, _, THREE) {
+var KIMCHI = (function (KIMCHI, _) {
   'use strict';
 
   var space, bodies;
@@ -57,8 +57,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * Each Body may have more than one Object3D, e.g. for orbit lines and text
-   *   labels. The parameter can be used to restrict the array returned.
+   * Each Body may have more than one Object3D, e.g. for orbit lines. The
+   *   parameter can be used to restrict the array returned.
    * @param    {String} [type]
    * @returns  {Array}  Object3Ds from the Bodies.
    * @memberOf module:KIMCHI.space
@@ -126,85 +126,38 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   /**
    * Without moving the Body Meshes themselves, update the visibility,
-   *   position, and size of all Object3Ds associated with the Bodies (such as
-   *   text label Meshes). This function should be called whenever the camera
-   *   moves.
+   *   position, and size of all Object3Ds associated with the Bodies. This
+   *   function should be called whenever the camera moves.
    * @function
    * @memberOf module:KIMCHI.space
    */
-  space.updateBodyChildren = (function () {
-    var bodyDistance, label, labelDistance, labelLocalLength,
-      labelLocalVector, labelWorldVector, cameraPosition, bodyPosition;
+  space.updateBodyChildren = function () {
+    // update orbit lines
+    if (KIMCHI.config.get('bodiesSpeed') > 0) {
+      _.each(bodies, function (body) {
+        if (body.hasOrbitLine) {
+          var geometry = body.object3Ds.orbit.geometry;
+          var limit = KIMCHI.config.get('orbitsLineSegments');
 
-    cameraPosition = new THREE.Vector3();
-    bodyPosition = new THREE.Vector3();
-
-    return function () {
-      // update the label Meshes
-      if (KIMCHI.config.get('showLabels')) {
-        _.each(bodies, function (body) {
-
-          bodyDistance = body.getDistance(KIMCHI.camera);
-          label = body.object3Ds.label;
-
-          if (bodyDistance > body.labelVisibleDistance) {
-            label.visible = false;
-          } else {
-            // store positions for the calculations below
-            cameraPosition.copy(KIMCHI.camera.position);
-            bodyPosition.copy(body.object3Ds.main.position);
-
-            // rotate to face the camera
-            label.quaternion.copy(KIMCHI.camera.quaternion);
-
-            // distance between the label to the camera
-            labelDistance = (bodyDistance - body.getScaledRadius()) / 2;
-            // distance between the center of the Body Mesh and the label
-            labelLocalLength = labelDistance + body.getScaledRadius();
-            // vector from the center of the Body Mesh to the label
-            labelLocalVector = cameraPosition.sub(bodyPosition)
-              .setLength(labelLocalLength);
-            // vector from the origin of the world to the label
-            labelWorldVector = bodyPosition.add(labelLocalVector);
-            // move it in front of the Body Mesh so it's not hidden inside
-            label.position.copy(labelWorldVector);
-
-            // scale
-            label.scale.setXYZ(labelDistance / 1000);
-
-            // show
-            label.visible = true;
+          // move all vertices forward, except for the last vertex
+          for (var i = 0; i <= limit * 2 - 1; i++) {
+            geometry.vertices[i].copy(geometry.vertices[i + 1]);
           }
-        });
-      }
 
-      // update orbit lines
-      if (KIMCHI.config.get('bodiesSpeed') > 0) {
-        _.each(bodies, function (body) {
-          if (body.hasOrbitLine) {
-            var geometry = body.object3Ds.orbit.geometry;
-            var limit = KIMCHI.config.get('orbitsLineSegments');
-
-            // move all vertices forward, except for the last vertex
-            for (var i = 0; i <= limit * 2 - 1; i++) {
-              geometry.vertices[i].copy(geometry.vertices[i + 1]);
-            }
-
-            // set the last vertex to the next position
-            var positionArray = KIMCHI.ephemeris.getPositionArray(
-              body.ephemerisIndex, limit
-            );
-            if (positionArray !== null) {
-              geometry.vertices[limit * 2].fromArray(positionArray);
-            }
-
-            // this property needs to be set to update the vertices
-            geometry.verticesNeedUpdate = true;
+          // set the last vertex to the next position
+          var positionArray = KIMCHI.ephemeris.getPositionArray(
+            body.ephemerisIndex, limit
+          );
+          if (positionArray !== null) {
+            geometry.vertices[limit * 2].fromArray(positionArray);
           }
-        });
-      }
-    };
-  }());
+
+          // this property needs to be set to update the vertices
+          geometry.verticesNeedUpdate = true;
+        }
+      });
+    }
+  };
 
 
 
@@ -252,4 +205,4 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
 
   return KIMCHI;
-}(KIMCHI || {}, _, THREE));
+}(KIMCHI || {}, _));

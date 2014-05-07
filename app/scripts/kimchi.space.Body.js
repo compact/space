@@ -3,8 +3,7 @@
  *   constructed inside kimchi.space.js. Raw data for each Body is stored in
  *   /data/kimchi.space.bodies.js for passing into this constructor.
  * @param {Object}   options
- * @param {String}   options.name Used to generate a label that is displayed
- *   to users.
+ * @param {String}   options.name
  * @param {Number}   [options.ephemerisIndex] The index for {@link
  *   module:KIMCHI.ephemeris|ephemeris}.
  * @param {Number}  options.radiusInKm TODO: Make optional.
@@ -78,24 +77,6 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
     // set Mesh properties
 //    this.object3Ds.main.rotation.copy(this.rotation);
-
-    // Create a Mesh for the text label. We could do
-    // this.object3Ds.main.add(this.object3Ds.label); but then the text Mesh
-    // rotates with the body and it is nontrivial to rotate it back.
-    this.object3Ds.label = new THREE.Mesh(
-      new THREE.TextGeometry(this.name, {
-        'size': 10,
-        'height': 0.01,
-        'curveSegments': 20,
-        'font': 'helvetiker',
-        'bevelEnabled': true,
-        'bevelThickness': 0.5,
-        'bevelSize': 0.5
-      }),
-      new THREE.MeshBasicMaterial({
-        'color': 0xeeeeff
-      })
-    );
 
     // optional callback
     if (typeof this.callback === 'function') {

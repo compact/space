@@ -6,9 +6,9 @@ var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
-  , mongoose = require('mongoose')
-  , passport = require('passport')
-  , db = require('./modules/db')(mongoose);
+  // , mongoose = require('mongoose')
+  // , passport = require('passport')
+  // , db = require('./modules/db')(mongoose);
 
 var app = express();
 

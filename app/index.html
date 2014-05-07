@@ -43,7 +43,7 @@
   <div id="notice" ng-controller="NoticesCtrl">
     <div class="container">
       <div ng-repeat="notice in notices" ng-hide="notice.hide"
-          class="alert" ng-class="notice.class">
+          class="alert" ng-class="notice.class" stop-propagation="mousedown">
 
         <!-- hide button -->
         <button type="button" class="close" aria-hidden="true"

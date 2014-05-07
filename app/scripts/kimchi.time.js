@@ -123,6 +123,15 @@ var KIMCHI = (function (KIMCHI, Q) {
     if (newJulian <= KIMCHI.ephemeris.lastJulianInBatch) {
       // "Empty" promise to match the return type in the case below.
       julian = newJulian;
+
+      // preload the next batch, which serves two purposes: the next coordinates
+      // will be needed for orbit lines, and prevent choppiness in the animation
+      // that can result if it has to wait for the load
+      if (newJulian === KIMCHI.ephemeris.lastJulianInBatch -
+          KIMCHI.config.get('orbitsLineSegments') * 2) { // TODO
+        KIMCHI.ephemeris.loadBatch(KIMCHI.ephemeris.lastJulianInBatch + 1);
+      }
+
       return Q.when(julian);
     } else {
       // if step > 1, then newJulian may be too large and we won't be able to

@@ -3,18 +3,17 @@
  * @namespace ephemeris
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, Q) {
+var KIMCHI = (function (KIMCHI, _, Q) {
   'use strict';
 
   /**
    * Helper method from {@link
    *   http://mathiasbynens.be/notes/xhr-responsetype-json}.
-   * @param     {String}   url
-   * @param     {Function} successHandler
-   * @param     {Function} errorHandler namespace ephemeris
+   * @param     {String} url
+   * @private
    * @memberOf  module:KIMCHI
    */
-  var getJSON = function (url, successHandler, errorHandler) {
+  var getJSON = function (url) {
     var deferred = Q.defer();
 
     var xhr = new XMLHttpRequest();
@@ -68,7 +67,7 @@ var KIMCHI = (function (KIMCHI, Q) {
 
     return getJSON(file).then(function (data) {
       console.log('.ephemeris: loaded batch ' + julian);
-      batch = data;
+      _.assign(batch, data);
       ephemeris.updateLastJulianInBatch();
     }, function () { // jqXHR, textStatus, error
       console.warn('.ephemeris: failed to GET batch ' + file);
@@ -94,4 +93,4 @@ var KIMCHI = (function (KIMCHI, Q) {
   };
 
   return KIMCHI;
-}(KIMCHI, Q));
+}(KIMCHI, _, Q));

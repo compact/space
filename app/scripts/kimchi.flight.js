@@ -68,6 +68,9 @@ var KIMCHI = (function (KIMCHI) {
       flight.modes[name].enable();
       currentModeName = name;
 
+      // trigger an event
+      KIMCHI.trigger('modeChanged', name);
+
       console.log('.flight: mode changed ' +
         (prevName ? 'from ' + prevName + ' ': '') + 'to ' + name);
     }

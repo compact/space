@@ -74,8 +74,25 @@ var KIMCHI = (function (KIMCHI) {
       document.webkitExitPointerLock;
 
     errorHandler = function (event) {
+      // show a notice to the user
+      var notice = {
+        'message': KIMCHI.config.get('noticePointerLockError'),
+        'type': 'error'
+      };
+      KIMCHI.notices.add(notice);
+
+      // remove the notice when the user changes the flight mode
+      KIMCHI.on('modeChanged', function (modeName) {
+        if (modeName !== 'pointerLock') {
+          KIMCHI.notices.remove(notice);
+        }
+      });
+
+      // for debugging
       console.warn('.pointerLock: error:', event);
     };
+
+    // bind the error handler
     document.addEventListener('pointerlockerror', errorHandler, false);
     document.addEventListener('mozpointerlockerror', errorHandler, false);
     document.addEventListener('webkitpointerlockerror', errorHandler, false);

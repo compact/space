@@ -22,10 +22,13 @@ a {
 
 #notice {
   position: absolute;
+  z-index: 400;
   left: 0;
   right: 0;
   bottom: 0;
   text-align: center;
+  font-size: 2em;
+  font-weight: bold;
 }
 
 /************************************************************************ hud */

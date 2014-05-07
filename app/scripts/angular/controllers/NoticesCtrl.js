@@ -6,11 +6,8 @@ angular.module('kimchi').controller('NoticesCtrl', function ($scope, KIMCHI) {
         case 'error':
           notice.class = 'alert-danger';
           break;
-        case 'success':
-          notice.class = 'alert-success';
-          break;
         case 'notice':
-          notice.class = 'alert-info';
+          notice.class = 'alert-success';
           break;
       }
     });

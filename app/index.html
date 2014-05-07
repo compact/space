@@ -330,7 +330,10 @@
 
   <div id="labels" ng-controller="LabelsCtrl">
     <div ng-repeat="label in labels" ng-style="label.css">
-      {{label.name}}
+      <label ng-mouseenter="label.show = true" ng-mouseleave="label.show = false">
+        {{label.name}}
+      </label>
+      <div class="details" ng-show="label.show">{{label.name}}</div>
     </div>
   </div>
 

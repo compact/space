@@ -122,14 +122,24 @@ a {
   position: relative;
 }
 
-#labels div { /* left and top given in html */
+#labels > div { /* left and top given in html */
   position: absolute;
+  z-index: 200;
+}
+
+#labels label {
+  display: block;
+  padding: 0.1em 0.3em;
   border: 2px solid #fff;
-  padding: 2px 4px;
   -webkit-transform: translate(-50%, -50%); /* center over the left and top values */
   background-color: rgba(255, 255, 255, 0.95);
   color: #080;
   font-weight: bold;
+  cursor: pointer;
+}
+
+#labels .details {
+  background-color: #0f0;
 }
 
 /****************************************************************** Bootstrap */

@@ -131,7 +131,7 @@ var KIMCHI = (function (KIMCHI, Q) {
       console.log('.init(): update Body children');
       KIMCHI.space.updateBodyChildren();
 
-      initDeferred.resolve(80);
+      initDeferred.resolve();
     });
 
 
@@ -201,7 +201,7 @@ var KIMCHI = (function (KIMCHI, Q) {
 
 
 
-  // turn off in production
+  // TODO: turn off in production
   Q.longStackSupport = true;
 
 

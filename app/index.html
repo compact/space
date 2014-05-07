@@ -41,7 +41,20 @@
   </div>
 
   <div id="notice" ng-controller="NoticesCtrl">
-    <div ng-repeat="notice in notices">{{notice}}</div>
+    <div class="container">
+      <div ng-repeat="notice in notices" ng-hide="notice.hide"
+          class="alert" ng-class="notice.class">
+
+        <!-- hide button -->
+        <button type="button" class="close" aria-hidden="true"
+            ng-if="notice.hideable" ng-click="notice.hide = true">
+          ×
+        </button>
+
+        <!-- message -->
+        <div ng-bind-html="notice.message"></div>
+      </div>
+    </div>
   </div>
 
   <div id="overlay" ng-controller="PanelsCtrl">
@@ -323,16 +336,16 @@
 
 
   <script src="bower_components/jquery/dist/jquery.js"></script>
-  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js -->
+  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js -->
   <script src="bower_components/angular/angular.js"></script>
   <!-- endref -->
-  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js -->
+  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.min.js -->
   <script src="bower_components/angular-resource/angular-resource.js"></script>
   <!-- endref -->
-  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-cookies.min.js -->
+  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-cookies.min.js -->
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
   <!-- endref -->
-  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-sanitize.min.js -->
+  <!-- ref:js http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.min.js -->
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
   <!-- endref -->
 

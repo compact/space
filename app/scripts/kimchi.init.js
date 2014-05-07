@@ -31,7 +31,11 @@ var KIMCHI = (function (KIMCHI, Q) {
     if (typeof window.WebGLRenderingContext !== 'function') {
       // WebGL is not supported by the browser
       console.warn('.init(): WebGL is not supported by the browser');
-      KIMCHI.notices.add(KIMCHI.config.get('langWebGLNotSupported'));
+      KIMCHI.notices.add({
+        'message': KIMCHI.config.get('langWebGLNotSupported'),
+        'type': 'error',
+        'hideable': false
+      });
       return false;
     }
 
@@ -40,7 +44,11 @@ var KIMCHI = (function (KIMCHI, Q) {
     if (!rendererSuccess) {
       // the renderer failed to initialize
       console.warn('.init(): the renderer failed to initialize');
-      KIMCHI.notices.add(KIMCHI.config.get('langWebGLError'));
+      KIMCHI.notices.add({
+        'message': KIMCHI.config.get('langWebGLError'),
+        'type': 'error',
+        'hideable': false
+      });
       return false;
     }
 

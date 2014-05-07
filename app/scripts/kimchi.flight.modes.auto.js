@@ -70,7 +70,11 @@ var KIMCHI = (function (KIMCHI, Q, THREE) {
     targetQuaternion = new THREE.Quaternion();
 
     return function (body) {
-      KIMCHI.notices.add(KIMCHI.config.get('noticePanTo')(body));
+      var notice = {
+        'message': KIMCHI.config.get('noticePanTo')(body),
+        'hideable': false
+      };
+      KIMCHI.notices.add(notice);
       KIMCHI.config.set('bodiesSpeed', 0);
 
       deferred = Q.defer();
@@ -109,7 +113,7 @@ var KIMCHI = (function (KIMCHI, Q, THREE) {
         } else { // done
           deferred.resolve();
 
-          KIMCHI.notices.remove(KIMCHI.config.get('noticePanTo')(body));
+          KIMCHI.notices.remove(notice);
 
           // can't return false here because then the follow-up translateTo()
           // won't animate
@@ -144,7 +148,12 @@ var KIMCHI = (function (KIMCHI, Q, THREE) {
   translateTo = function (body) {
     var deferred = Q.defer();
 
-    KIMCHI.notices.add(KIMCHI.config.get('noticeFlyTo')(body));
+    // add a notice for the user
+    var notice = {
+      'message': KIMCHI.config.get('noticeFlyTo')(body),
+      'hideable':  false
+    };
+    KIMCHI.notices.add(notice);
 
     mode.animationFrame = function (delta) {
       var translationZ;
@@ -161,7 +170,8 @@ var KIMCHI = (function (KIMCHI, Q, THREE) {
       } else { // done
         deferred.resolve();
 
-        KIMCHI.notices.remove(KIMCHI.config.get('noticeFlyTo')(body));
+        // remove the notice
+        KIMCHI.notices.remove(notice);
 
         // return false; // stop animating
       }

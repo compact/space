@@ -26,10 +26,21 @@ var KIMCHI = (function (KIMCHI) {
   };
 
   /**
-   * @param    {String} notice
+   * @param    {String|Object} notice
    * @memberOf module:KIMCHI.notice
    */
   notices.add = function (notice) {
+    if (typeof notice === 'string') {
+      notice = {
+        'message': notice
+      };
+    }
+
+    _.defaults(notice, {
+      'type': 'notice',
+      'hideable': true
+    });
+
     collection.push(notice);
     KIMCHI.trigger('noticesChanged', collection);
   };
@@ -39,7 +50,7 @@ var KIMCHI = (function (KIMCHI) {
    * @memberOf module:KIMCHI.notice
    */
   notices.remove = function (notice) {
-    _.pull(collection, notice);
+    _.remove(collection, {'message': notice.message});
     KIMCHI.trigger('noticesChanged', collection);
   };
 

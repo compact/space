@@ -1,4 +1,5 @@
 angular.module('kimchi', [
+  'ngSanitize',
   'ui.bootstrap'
 ]);
 

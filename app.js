@@ -23,12 +23,14 @@ app.use(express.cookieParser('appsecretLoL'));
 app.use(express.cookieSession({ secret: 'appsecretLoL', cookie: { maxAge: 60 * 60 * 1000 }}));
 //app.use(app.router);
 
-console.log('current environment:', app.get('env'));
-var staticDir = app.get('env') === 'development' ? 'app' : 'dist';
-app.use(express.static(path.join(__dirname, staticDir)));
+// set the static dir, which defaults to dist
+app.use(express.static(path.join(
+  __dirname,
+  process.env.NODE_ENV === 'development' ? 'app' : 'dist'
+)));
 
 // development only
-if ('development' == app.get('env')) {
+if (process.env.NODE_ENV === 'development') {
   app.use(express.errorHandler());
 }
 

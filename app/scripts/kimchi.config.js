@@ -48,7 +48,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   // for the astronomical bodies in KIMCHI.space
   settings.rotateBodies = true;
   settings.bodiesSpeed = 0;
-  settings.showLabels = false;
+  settings.showLabels = true;
   settings.sphereSegments = 64;
   settings.bodiesSizeScale = 1;
   settings.bodiesPositionScale = 1;

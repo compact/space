@@ -104,12 +104,12 @@
           <th>Radius</th>
           <th>Distance from the Sun</th>
         </tr>
-        <tr ng-repeat="body in KIMCHI.space.bodies">
+        <tr ng-repeat="body in bodies | orderBy: distanceToCamera">
           <td>{{body.name}}</td>
           <td><a ng-click="panTo(body)">Look</a></td>
           <td><a ng-click="flyTo(body)">Fly</a></td>
           <td><a ng-click="orbit(body)">Orbit</a></td>
-          <td>{{KIMCHI.format.au(body.getDistance(KIMCHI.camera))}}</td>
+          <td>{{KIMCHI.format.au(distanceToCamera(body))}}</td>
           <td>{{KIMCHI.format.km(body.radiusInKm)}}</td>
           <td>{{KIMCHI.format.au(body.distanceFromSun)}}</td>
         </tr>

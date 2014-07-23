@@ -1,15 +1,15 @@
 {
   "name": "kimchi",
   "dependencies": {
-    "angular": "~1.2.16",
+    "angular": "^1.2.20",
     "angular-resource": "~1.2",
     "angular-cookies": "~1.2",
     "angular-sanitize": "~1.2",
     "angular-bootstrap": "~0.11",
-    "bootstrap": "~3.1",
+    "bootstrap": "~3.2",
     "json3": "~3.3",
-    "es5-shim": "~3.1",
-    "threejs": "r67",
+    "es5-shim": "~4.0",
+    "threejs": "r68",
     "lodash": "~2.4",
     "q": "~1.0"
   },

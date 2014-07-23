@@ -152,8 +152,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     KIMCHI.renderer.render();
   };
   handlers.showStars = function (value) {
-    _.each(KIMCHI.stars, function (particleSystem) {
-      particleSystem.visible = value;
+    _.each(KIMCHI.stars, function (pointCloud) {
+      pointCloud.visible = value;
     });
     KIMCHI.renderer.render();
   };

@@ -8,10 +8,10 @@
   'use strict';
 
   THREE.Stars = function (options) {
-    var i, vertex, particleSystem, // iterators
-      geometries, counts, materials, particleSystems;
+    var i, vertex, pointCloud, // iterators
+      geometries, counts, materials, pointClouds;
 
-    particleSystems = [];
+    pointClouds = [];
 
     options = _.assign({
       'scale': 1000,
@@ -40,29 +40,29 @@
     }
 
     materials = [
-      new THREE.ParticleBasicMaterial({ color: 0x555555, size: 2, sizeAttenuation: false }),
-      new THREE.ParticleBasicMaterial({ color: 0x555555, size: 1, sizeAttenuation: false }),
-      new THREE.ParticleBasicMaterial({ color: 0x333333, size: 2, sizeAttenuation: false }),
-      new THREE.ParticleBasicMaterial({ color: 0x3a3a3a, size: 1, sizeAttenuation: false }),
-      new THREE.ParticleBasicMaterial({ color: 0x1a1a1a, size: 2, sizeAttenuation: false }),
-      new THREE.ParticleBasicMaterial({ color: 0x1a1a1a, size: 1, sizeAttenuation: false })
+      new THREE.PointCloudMaterial({ color: 0x555555, size: 2, sizeAttenuation: false }),
+      new THREE.PointCloudMaterial({ color: 0x555555, size: 1, sizeAttenuation: false }),
+      new THREE.PointCloudMaterial({ color: 0x333333, size: 2, sizeAttenuation: false }),
+      new THREE.PointCloudMaterial({ color: 0x3a3a3a, size: 1, sizeAttenuation: false }),
+      new THREE.PointCloudMaterial({ color: 0x1a1a1a, size: 2, sizeAttenuation: false }),
+      new THREE.PointCloudMaterial({ color: 0x1a1a1a, size: 1, sizeAttenuation: false })
     ];
 
     for (i = 10; i < 30; i ++) {
-      particleSystem = new THREE.ParticleSystem(geometries[i % 2], materials[i % 6]);
+      pointCloud = new THREE.PointCloud(geometries[i % 2], materials[i % 6]);
 
-      particleSystem.rotation.x = Math.random() * 2 * Math.PI;
-      particleSystem.rotation.y = Math.random() * Math.PI;
-      particleSystem.rotation.z = Math.random() * 2 * Math.PI;
+      pointCloud.rotation.x = Math.random() * 2 * Math.PI;
+      pointCloud.rotation.y = Math.random() * Math.PI;
+      pointCloud.rotation.z = Math.random() * 2 * Math.PI;
 
-      particleSystem.scale.setXYZ(i * options.scale);
+      pointCloud.scale.setXYZ(i * options.scale);
 
-      particleSystem.matrixAutoUpdate = false;
-      particleSystem.updateMatrix();
+      pointCloud.matrixAutoUpdate = false;
+      pointCloud.updateMatrix();
 
-      particleSystems.push(particleSystem);
+      pointClouds.push(pointCloud);
     }
 
-    return particleSystems;
+    return pointClouds;
   };
 }(_, THREE));

@@ -329,11 +329,12 @@
   </div>
 
   <div id="labels" ng-controller="LabelsCtrl">
-    <div ng-repeat="label in labels" ng-style="label.css">
-      <label ng-mouseenter="label.show = true" ng-mouseleave="label.show = false">
+    <div ng-repeat="label in labels" ng-show="label.show" ng-style="label.css">
+      <label ng-mouseenter="label.showDetails = true"
+          ng-mouseleave="label.showDetails = false">
         {{label.name}}
       </label>
-      <div class="details" ng-show="label.show">{{label.name}}</div>
+      <div class="details" ng-show="label.showDetails">{{label.name}}</div>
     </div>
   </div>
 

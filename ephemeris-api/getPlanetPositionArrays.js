@@ -382,9 +382,9 @@ var getPlanetPositionArrays = function (T, elements) {
 
 // compute each planet's position on the J2000.0 ecliptic plane on the given
 // Julian Day Number
-module.exports = function (jdn) {
+module.exports = function (julian) {
   // compute the time in centuries past J2000.0
-  var T = (jdn - 2451545) / 36525;
+  var T = (julian - 2451545) / 36525;
 
   // choose the appropriate set of elements
   var elementsAtT = -2 <= T && T <= 0.5 ? elements['1800ADTo2050AD'] :

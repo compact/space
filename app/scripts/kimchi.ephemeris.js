@@ -63,7 +63,7 @@ var KIMCHI = (function (KIMCHI, _, Q) {
   ephemeris.loadBatch = function (julian) {
     console.log('.ephemeris: loading batch ' + julian);
 
-    var url = '/ephemeris?startJDN=' + julian +
+    var url = '/ephemeris?start=' + julian +
       '&limit=' + KIMCHI.config.get('ephemerisBatchLimit');
 
     return getJSON(url).then(function (data) {

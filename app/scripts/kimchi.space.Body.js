@@ -194,8 +194,10 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.translate = function () {
-    this.scalePositionFromArray(
-      KIMCHI.ephemeris.getPositionArray(this.ephemerisIndex));
+    if ('ephemerisIndex' in this) {
+      this.scalePositionFromArray(
+        KIMCHI.ephemeris.getPositionArray(this.ephemerisIndex));
+    }
   };
 
   /**

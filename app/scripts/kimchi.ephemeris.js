@@ -42,7 +42,7 @@ var KIMCHI = (function (KIMCHI, _, Q) {
    * @private
    * @memberOf module:KIMCHI.ephemeris
    */
-  batch = [];
+  batch = {};
 
   /**
    * @type     {Number}
@@ -61,13 +61,17 @@ var KIMCHI = (function (KIMCHI, _, Q) {
    * @memberOf module:KIMCHI.ephemeris
    */
   ephemeris.loadBatch = function (julian) {
-    var file = 'data/de405/' + julian + '.json';
-
     console.log('.ephemeris: loading batch ' + julian);
 
-    return getJSON(file).then(function (data) {
+    var url = '/ephemeris?startJDN=' + julian + '&limit=100';
+
+    return getJSON(url).then(function (data) {
+      if (!('planetPositionArrays' in data)) {
+        throw 'Ephemeris API output error.';
+      }
+
       console.log('.ephemeris: loaded batch ' + julian);
-      _.assign(batch, data);
+      _.assign(batch, data.planetPositionArrays);
       ephemeris.updateLastJulianInBatch();
     }, function () { // jqXHR, textStatus, error
       console.warn('.ephemeris: failed to GET batch ' + file);

@@ -11,7 +11,6 @@ KIMCHI.space.data = [
   {
     'name': 'Sun',
     'type': 'star',
-    'ephemerisIndex': 10,
     'radiusInKm': 696000,
     'labelVisibleDistance': 1000000,
     'material': function () {
@@ -69,7 +68,6 @@ KIMCHI.space.data = [
   {
     'name': 'Moon',
     'type': 'moon',
-    'ephemerisIndex': 9,
     'radiusInKm': 1737,
     'labelVisibleDistance': 10,
     'hasBumpMap': true

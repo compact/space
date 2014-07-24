@@ -132,6 +132,8 @@ var KIMCHI = (function (KIMCHI, Q) {
       KIMCHI.space.updateBodyChildren();
 
       initDeferred.resolve();
+    }, function (error) {
+      console.warn(error);
     });
 
 
@@ -169,11 +171,17 @@ var KIMCHI = (function (KIMCHI, Q) {
 
     KIMCHI.init.promise.then(function () {
       // add orbit lines
+      console.log('.space.ready(): start');
       KIMCHI.space.ready();
       KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
 
+      console.log('.size.init(): start');
       KIMCHI.size.init();
+
+      console.log('.pointerLock.init(): start');
       KIMCHI.pointerLock.init();
+
+      console.log('.flight.init(): start');
       KIMCHI.flight.init();
 
       readyDeferred.resolve();

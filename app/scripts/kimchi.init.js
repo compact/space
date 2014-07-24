@@ -130,8 +130,9 @@ var KIMCHI = (function (KIMCHI, Q) {
       KIMCHI.space.translateBodies();
 
       // initialize Body children positions and scales for rendering
-      console.log('.init(): update Body children');
-      KIMCHI.space.updateBodyChildren();
+      console.log('.init(): create and update Body children (orbits)');
+      KIMCHI.space.createBodyChildren();
+      KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
 
       initDeferred.resolve();
     }, function (error) {
@@ -172,11 +173,6 @@ var KIMCHI = (function (KIMCHI, Q) {
     console.log('.ready(): start');
 
     KIMCHI.init.promise.then(function () {
-      // add orbit lines
-      console.log('.space.ready(): start');
-      KIMCHI.space.ready();
-      KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
-
       console.log('.size.init(): start');
       KIMCHI.size.init();
 

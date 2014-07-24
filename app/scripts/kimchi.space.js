@@ -35,15 +35,6 @@ var KIMCHI = (function (KIMCHI, _) {
     });
   };
 
-  /**
-   * Create orbits.
-   * @memberOf module:KIMCHI.space
-   */
-  space.ready = function () {
-    _.each(bodies, function (body) {
-      body.createOrbit();
-    });
-  };
 
 
   /**
@@ -121,6 +112,18 @@ var KIMCHI = (function (KIMCHI, _) {
   space.rotateBodies = function (delta) {
     _.each(bodies, function (body) {
       body.rotate(delta);
+    });
+  };
+
+
+
+  /**
+   * Create all children of all Bodies.
+   * @memberOf module:KIMCHI.space
+   */
+  space.createBodyChildren = function () {
+    _.each(bodies, function (body) {
+      body.createOrbit();
     });
   };
 

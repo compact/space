@@ -9,7 +9,7 @@
   "immed": true,
   "indent": 2,
   "latedef": true,
-  "newcap": false,
+  "newcap": true,
   "noarg": true,
   "quotmark": "single",
   "regexp": true,
@@ -22,7 +22,6 @@
     "angular": false,
     "_": false,
     "Q": false,
-    "jQuery": false,
     "THREE": false
   }
 }

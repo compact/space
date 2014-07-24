@@ -128,7 +128,7 @@ var KIMCHI = (function (KIMCHI, Q) {
       // will be needed for orbit lines, and prevent choppiness in the animation
       // that can result if it has to wait for the load
       if (newJulian === KIMCHI.ephemeris.lastJulianInBatch -
-          KIMCHI.config.get('orbitsLineSegments') * 2) { // TODO
+          KIMCHI.config.get('ephemerisJulianOffsetForBatchPreload')) {
         KIMCHI.ephemeris.loadBatch(KIMCHI.ephemeris.lastJulianInBatch + 1);
       }
 

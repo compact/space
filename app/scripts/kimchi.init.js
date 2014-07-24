@@ -122,7 +122,9 @@ var KIMCHI = (function (KIMCHI, Q) {
 
 
     // get ephemeris data
-    KIMCHI.ephemeris.loadBatch(KIMCHI.time.getJulian()).then(function () {
+    KIMCHI.ephemeris.loadBatch(
+      KIMCHI.time.getJulian() - KIMCHI.config.get('orbitsMaxJulianOffset')
+    ).then(function () {
       // initialize Body positions
       console.log('.init(): position Bodies');
       KIMCHI.space.translateBodies();

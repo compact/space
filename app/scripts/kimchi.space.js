@@ -137,19 +137,19 @@ var KIMCHI = (function (KIMCHI, _) {
       _.each(bodies, function (body) {
         if (body.hasOrbitLine) {
           var geometry = body.object3Ds.orbit.geometry;
-          var limit = KIMCHI.config.get('orbitsLineSegments');
+          var maxJulianOffset = body.getMaxJulianOffsetInOrbit();
 
           // move all vertices forward, except for the last vertex
-          for (var i = 0; i <= limit * 2 - 1; i++) {
+          for (var i = 0; i < maxJulianOffset * 2; i++) {
             geometry.vertices[i].copy(geometry.vertices[i + 1]);
           }
 
           // set the last vertex to the next position
           var positionArray = KIMCHI.ephemeris.getPositionArray(
-            body.ephemerisIndex, limit
+            body.ephemerisIndex, maxJulianOffset
           );
           if (positionArray !== null) {
-            geometry.vertices[limit * 2].fromArray(positionArray);
+            geometry.vertices[maxJulianOffset * 2].fromArray(positionArray);
           }
 
           // this property needs to be set to update the vertices

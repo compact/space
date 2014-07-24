@@ -26,7 +26,8 @@ KIMCHI.space.data = [
     'radiusInKm': 2439.64,
     'distanceFromSun': 0.38709893,
     'labelVisibleDistance': 20,
-    'hasOrbitLine': true
+    'hasOrbitLine': true,
+    'orbitalPeriod': 0.2408467 * 365.25
   },
   {
     'name': 'Venus',
@@ -35,7 +36,8 @@ KIMCHI.space.data = [
     'radiusInKm': 6051.59,
     'distanceFromSun': 0.72333199,
     'labelVisibleDistance': 20,
-    'hasOrbitLine': true
+    'hasOrbitLine': true,
+    'orbitalPeriod': 0.61519726 * 365.25
   },
   {
     'name': 'Earth',
@@ -47,6 +49,7 @@ KIMCHI.space.data = [
     'rotationArray': [1, 2, 3],
     'rotationAngle': 0.2,
     'hasOrbitLine': true,
+    'orbitalPeriod': 1.0000174 * 365.25,
     'hasBumpMap': true,
     // 'hasSpecularMap': true,
     'callback': function () {
@@ -79,7 +82,8 @@ KIMCHI.space.data = [
     'radiusInKm': 3397,
     'distanceFromSun': 1.52366231,
     'labelVisibleDistance': 50,
-    'hasOrbitLine': true
+    'hasOrbitLine': true,
+    'orbitalPeriod': 1.8808476 * 365.25
   },
   {
     'name': 'Jupiter',
@@ -88,7 +92,8 @@ KIMCHI.space.data = [
     'radiusInKm': 71492,
     'distanceFromSun': 5.20336301,
     'labelVisibleDistance': 250,
-    'hasOrbitLine': true
+    'hasOrbitLine': true,
+    'orbitalPeriod': 11.862615 * 365.25
   },
   {
     'name': 'Saturn',
@@ -98,6 +103,7 @@ KIMCHI.space.data = [
     'distanceFromSun': 9.53707032,
     'labelVisibleDistance': 250,
     'hasOrbitLine': true,
+    'orbitalPeriod': 29.447498 * 365.25,
     'callback': function () {
       var curve = new THREE.EllipseCurve(0, 0, this.radius + 0.2, this.radius + 0.2, 0, 2 * Math.PI);
       var curvePath = new THREE.CurvePath();
@@ -127,7 +133,8 @@ KIMCHI.space.data = [
     'radiusInKm': 25557.25,
     'distanceFromSun': 19.19126393,
     'labelVisibleDistance': 500,
-    'hasOrbitLine': true
+    'hasOrbitLine': true,
+    'orbitalPeriod': 84.016846 * 365.25
   },
   {
     'name': 'Neptune',
@@ -136,7 +143,8 @@ KIMCHI.space.data = [
     'radiusInKm': 24766,
     'distanceFromSun': 30.06896348,
     'labelVisibleDistance': 1000,
-    'hasOrbitLine': true
+    'hasOrbitLine': true,
+    'orbitalPeriod': 164.79132 * 365.25
   },
   {
     'name': 'Pluto',
@@ -145,6 +153,7 @@ KIMCHI.space.data = [
     'radiusInKm': 1148.07,
     'distanceFromSun': 39.482,
     'labelVisibleDistance': 1000,
-    'hasOrbitLine': true
+    'hasOrbitLine': true,
+    'orbitalPeriod': 247.92065 * 365.25
   }
 ];

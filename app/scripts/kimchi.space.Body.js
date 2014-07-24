@@ -13,6 +13,8 @@
  *   collideable with the camera.
  * @param {Boolean}  [options.hasOrbitLine=false] Whether to create an orbit
  *   for this Body.
+ * @param {Boolean}  [options.orbitalPeriod] The orbital period of this body,
+ *   in days. Must be set if hasOrbitLine is true.
  * @param {Boolean}  [options.hasBumpMap=false] Whether this Body has a bump
  *   map.
  * @param {Boolean}  [options.hasSpecularMap=false] Whether this Body has a
@@ -156,9 +158,10 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
     if (this.hasOrbitLine) {
       // create the geometry
       var geometry = new THREE.Geometry();
-      var limit = KIMCHI.config.get('orbitsLineSegments');
       var position, positionArray;
-      for (var julianOffset = -limit; julianOffset <= limit; julianOffset++) {
+      var maxJulianOffset = this.getMaxJulianOffsetInOrbit();
+      for (var julianOffset = -maxJulianOffset; julianOffset <= maxJulianOffset;
+          julianOffset++) {
         position = new THREE.Vector3();
         positionArray = KIMCHI.ephemeris.getPositionArray(
           this.ephemerisIndex, julianOffset
@@ -167,7 +170,11 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
         if (positionArray !== null) {
           position.fromArray(positionArray);
         } else {
+          // this case should never occur because we load enough data from the
+          // ephemeris to cover the entire orbit
           position.copy(this.object3Ds.main.position);
+          console.warn('.space.Body.createOrbit(): position not found for ' +
+            this.name);
         }
 
         geometry.vertices.push(position);
@@ -183,6 +190,23 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
       // create the orbit line
       this.object3Ds.orbit = new THREE.Line(geometry, material);
     }
+  };
+
+  /**
+   * An orbit comprises vertices each corresponding to this Body's position on
+   *   a particular Julian Day Number. The indexes of the vertices are offsets
+   *   relative to the current JDN, and they extend equally into the future
+   *   and the past. Thus, the total number of vertices in the orbit is the
+   *   return value of this method multiplied by 2, plus 1.
+   * @alias    getMaxJulianOffsetInOrbit
+   * @instance
+   * @return {Number}
+   */
+  Body.prototype.getMaxJulianOffsetInOrbit = function () {
+    return Math.min(
+      Math.round(this.orbitalPeriod / 2),
+      KIMCHI.config.get('orbitsMaxJulianOffset')
+    );
   };
 
   /**

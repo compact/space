@@ -39,7 +39,7 @@ var KIMCHI = (function (KIMCHI, Q, THREE) {
   mode.flyTo = function (body) {
     var deferred = Q.defer();
 
-    KIMCHI.config.set('bodiesSpeed', 0);
+    KIMCHI.config.set('daysPerSecond', 0);
 
     console.log('.flight.modes.auto: panning to ' + body.name);
     mode.panTo(body).then(function () {
@@ -75,7 +75,7 @@ var KIMCHI = (function (KIMCHI, Q, THREE) {
         'hideable': false
       };
       KIMCHI.notices.add(notice);
-      KIMCHI.config.set('bodiesSpeed', 0);
+      KIMCHI.config.set('daysPerSecond', 0);
 
       deferred = Q.defer();
 
@@ -133,8 +133,6 @@ var KIMCHI = (function (KIMCHI, Q, THREE) {
    * @memberOf module:KIMCHI.flight.modes.auto
    */
   update = function () {
-    // do not move the Body Meshes themselves
-    KIMCHI.space.updateBodyChildren();
   };
 
   /**

@@ -14,29 +14,41 @@ angular.module('kimchi').controller('OptionsCtrl', function ($scope, $document,
     'controlsLookSpeed'
   ];
   dropdownKeys = [
-    'bodiesSpeed',
+    'daysPerSecond',
     'bodiesSizeScale'
   ];
   keys = radioKeys.concat(dropdownKeys);
 
   $scope.options = {
-    'bodiesSpeed': [
+    'daysPerSecond': [
       {
         'value': 0,
-        'label': 'Off'
+        'label': 'Pause'
       },
       {
         'value': 1,
-        'label': 'Fast'
+        'label': '1'
       },
       {
-        'value': 2,
-        'label': 'Faster'
+        'value': 7,
+        'label': '7'
       },
       {
-        'value': 8,
-        'label': 'Fastest'
-      }
+        'value': 20,
+        'label': '20'
+      },
+      {
+        'value': 60,
+        'label': '60'
+      },
+      {
+        'value': 365,
+        'label': '365'
+      },
+      {
+        'value': 3650,
+        'label': '3650'
+      },
     ],
     'bodiesSizeScale': [
       {
@@ -95,10 +107,11 @@ angular.module('kimchi').controller('OptionsCtrl', function ($scope, $document,
   $document.on('keypress', function (event) {
     switch (event.which) {
     case 32: // space
-      if (KIMCHI.config.get('bodiesSpeed') > 0) {
-        KIMCHI.config.set('bodiesSpeed', 0);
+      if (KIMCHI.config.get('daysPerSecond') > 0) {
+        KIMCHI.config.set('daysPerSecond', 0);
       } else {
-        KIMCHI.config.set('bodiesSpeed', 1); // TODO: remember the last speed
+        KIMCHI.config.set('daysPerSecond',
+          KIMCHI.config.get('prevDaysPerSecond'));
       }
       break;
     }

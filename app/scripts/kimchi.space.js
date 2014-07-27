@@ -118,45 +118,27 @@ var KIMCHI = (function (KIMCHI, _) {
 
 
   /**
-   * Create all children of all Bodies.
+   * Create the orbits of all Bodies that have orbits.
    * @memberOf module:KIMCHI.space
    */
-  space.createBodyChildren = function () {
+  space.createOrbits = function () {
     _.each(bodies, function (body) {
-      body.createOrbit();
+      if (body.hasOrbitLine) {
+        body.createOrbit();
+      }
     });
   };
 
   /**
-   * Without moving the Body Meshes themselves, update the visibility,
-   *   position, and size of all Object3Ds associated with the Bodies. This
-   *   function should be called whenever the camera moves.
-   * @function
+   * Move the orbits. This method should be called whenever the Bodies move.
    * @memberOf module:KIMCHI.space
    */
-  space.updateBodyChildren = function () {
+  space.updateOrbits = function () {
     // update orbit lines
-    if (KIMCHI.config.get('bodiesSpeed') > 0) {
+    if (KIMCHI.config.get('daysPerSecond') > 0) {
       _.each(bodies, function (body) {
         if (body.hasOrbitLine) {
-          var geometry = body.object3Ds.orbit.geometry;
-          var maxJulianOffset = body.getMaxJulianOffsetInOrbit();
-
-          // move all vertices forward, except for the last vertex
-          for (var i = 0; i < maxJulianOffset * 2; i++) {
-            geometry.vertices[i].copy(geometry.vertices[i + 1]);
-          }
-
-          // set the last vertex to the next position
-          var positionArray = KIMCHI.ephemeris.getPositionArray(
-            body.ephemerisIndex, maxJulianOffset
-          );
-          if (positionArray !== null) {
-            geometry.vertices[maxJulianOffset * 2].fromArray(positionArray);
-          }
-
-          // this property needs to be set to update the vertices
-          geometry.verticesNeedUpdate = true;
+          body.updateOrbit();
         }
       });
     }

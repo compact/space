@@ -108,32 +108,41 @@ var KIMCHI = (function (KIMCHI) {
    * @returns  {Promise} Resolves as true only.
    * @memberOf module:KIMCHI.flight
    */
-  flight.updateSpaceTime = function (delta) {
-    // resolve true or false to continue or stop animating
-    var deferred = Q.defer();
+  flight.updateSpaceTime = (function () {
+    var frameCounter = 0;
 
-    // increment the current time and move the Bodies
-    if (KIMCHI.config.get('bodiesSpeed')) {
-      KIMCHI.time.increment().then(function () {
-        KIMCHI.space.translateBodies(delta);
+    return function (delta) {
+      // resolve true or false to continue or stop animating
+      var deferred = Q.defer();
+
+      frameCounter++;
+      // if framesPerDay > 1, Bodies are not to be moved until that many frames
+      // have passed
+      if (frameCounter % KIMCHI.config.get('framesPerDay') === 0) {
+        // increment the current time
+        KIMCHI.time.increment().then(function () {
+          // move the Bodies to their new positions
+          KIMCHI.space.translateBodies(delta);
+
+          // move the Bodies' orbits accordingly
+          KIMCHI.space.updateOrbits();
+
+          deferred.resolve(true);
+          // we don't resolve false in a rejection handler because we don't want
+          // the controls to end even when time cannot be incremented
+        });
+      } else {
         deferred.resolve(true);
-        // we don't resolve false in a rejection handler because we don't want
-        // the controls to end even when time cannot be incremented
-      });
-    } else {
-      deferred.resolve(true);
+      }
+
+      // rotate the Bodies
+      if (KIMCHI.config.get('rotateBodies')) {
+        KIMCHI.space.rotateBodies(delta);
+      }
+
+      return deferred.promise;
     }
-
-    // rotate the Bodies
-    if (KIMCHI.config.get('rotateBodies')) {
-      KIMCHI.space.rotateBodies(delta);
-    }
-
-    // move the Bodies' children
-    KIMCHI.space.updateBodyChildren();
-
-    return deferred.promise;
-  };
+  }());
 
   return KIMCHI;
 }(KIMCHI || {}));

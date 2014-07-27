@@ -149,64 +149,92 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * Create a Line for this Body's orbit (provided it has an orbit).
-   * @alias    createOrbit
-   * @instance
-   * @memberOf module:KIMCHI.space.Body
-   */
-  Body.prototype.createOrbit = function () {
-    if (this.hasOrbitLine) {
-      // create the geometry
-      var geometry = new THREE.Geometry();
-      var position, positionArray;
-      var maxJulianOffset = this.getMaxJulianOffsetInOrbit();
-      for (var julianOffset = -maxJulianOffset; julianOffset <= maxJulianOffset;
-          julianOffset++) {
-        position = new THREE.Vector3();
-        positionArray = KIMCHI.ephemeris.getPositionArray(
-          this.ephemerisIndex, julianOffset
-        );
-
-        if (positionArray !== null) {
-          position.fromArray(positionArray);
-        } else {
-          // this case should never occur because we load enough data from the
-          // ephemeris to cover the entire orbit
-          position.copy(this.object3Ds.main.position);
-          console.warn('.space.Body.createOrbit(): position not found for ' +
-            this.name);
-        }
-
-        geometry.vertices.push(position);
-      }
-
-      // create the material
-      var material = new THREE.LineBasicMaterial({
-        'color': KIMCHI.config.get('orbitsColor'),
-        'transparent': KIMCHI.config.get('orbitsOpacity') < 1,
-        'opacity': KIMCHI.config.get('orbitsOpacity')
-      });
-
-      // create the orbit line
-      this.object3Ds.orbit = new THREE.Line(geometry, material);
-    }
-  };
-
-  /**
    * An orbit comprises vertices each corresponding to this Body's position on
    *   a particular Julian Day Number. The indexes of the vertices are offsets
    *   relative to the current JDN, and they extend equally into the future
    *   and the past. Thus, the total number of vertices in the orbit is the
    *   return value of this method multiplied by 2, plus 1.
    * @alias    getMaxJulianOffsetInOrbit
+   * @return   {Number}
    * @instance
-   * @return {Number}
+   * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.getMaxJulianOffsetInOrbit = function () {
     return Math.min(
       Math.round(this.orbitalPeriod / 2),
       KIMCHI.config.get('orbitsMaxJulianOffset')
     );
+  };
+
+  /**
+   * Create a Line for this Body's orbit. Do not call this method if the Body
+   *   does not have an orbit.
+   * @alias    createOrbit
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.createOrbit = function () {
+    // create the geometry
+    var geometry = new THREE.Geometry();
+    var position, positionArray;
+    var maxJulianOffset = this.getMaxJulianOffsetInOrbit();
+    for (var julianOffset = -maxJulianOffset; julianOffset <= maxJulianOffset;
+        julianOffset++) {
+      position = new THREE.Vector3();
+      positionArray = KIMCHI.ephemeris.getPositionArray(
+        this.ephemerisIndex, julianOffset
+      );
+
+      if (positionArray !== null) {
+        position.fromArray(positionArray);
+      } else {
+        // this case should never occur because we load enough data from the
+        // ephemeris to cover the entire orbit
+        position.copy(this.object3Ds.main.position);
+        console.warn('.space.Body.createOrbit(): position not found for ' +
+          this.name);
+      }
+
+      geometry.vertices.push(position);
+    }
+
+    // create the material
+    var material = new THREE.LineBasicMaterial({
+      'color': KIMCHI.config.get('orbitsColor'),
+      'transparent': KIMCHI.config.get('orbitsOpacity') < 1,
+      'opacity': KIMCHI.config.get('orbitsOpacity')
+    });
+
+    // create the orbit line
+    this.object3Ds.orbit = new THREE.Line(geometry, material);
+  };
+
+  /**
+   * Move the vertices of the orbit. Do not call this method if the Body does
+   *   not have an orbit.
+   * @alias    updateOrbit
+   * @instance
+   * @memberOf module:KIMCHI.space.Body
+   */
+  Body.prototype.updateOrbit = function () {
+    var geometry = this.object3Ds.orbit.geometry;
+    var maxJulianOffset = this.getMaxJulianOffsetInOrbit();
+
+    var dayStep = KIMCHI.config.get('dayStep');
+    for (var i = 0; i < dayStep; i++) {
+      geometry.vertices.shift();
+
+      var positionArray = KIMCHI.ephemeris.getPositionArray(
+        this.ephemerisIndex, maxJulianOffset + i
+      );
+      var position = new THREE.Vector3();
+      if (positionArray !== null) {
+        geometry.vertices.push(position.fromArray(positionArray));
+      }
+    }
+
+    // this property needs to be set to update the vertices
+    geometry.verticesNeedUpdate = true;
   };
 
   /**

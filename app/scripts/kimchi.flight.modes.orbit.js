@@ -43,7 +43,7 @@ var KIMCHI = (function (KIMCHI) {
   mode.animationFrame = function (delta) {
     // if the target Body is moving, the OrbitControls target Vector3 (where it
     // is looking) has to be updated
-    if (KIMCHI.config.get('bodiesSpeed') > 0) {
+    if (KIMCHI.config.get('daysPerSecond') > 0) {
       KIMCHI.orbitControls.target = targetBody.object3Ds.main.position.clone();
     }
 

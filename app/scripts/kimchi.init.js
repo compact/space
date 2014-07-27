@@ -125,13 +125,13 @@ var KIMCHI = (function (KIMCHI, Q) {
     KIMCHI.ephemeris.loadBatch(
       KIMCHI.time.getJulian() - KIMCHI.config.get('orbitsMaxJulianOffset')
     ).then(function () {
-      // initialize Body positions
+      // move the Bodies to their initial positions
       console.log('.init(): position Bodies');
       KIMCHI.space.translateBodies();
 
-      // initialize Body children positions and scales for rendering
-      console.log('.init(): create and update Body children (orbits)');
-      KIMCHI.space.createBodyChildren();
+      // create orbits for the Bodies that have orbits
+      console.log('.init(): create orbits');
+      KIMCHI.space.createOrbits();
       KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
 
       initDeferred.resolve();

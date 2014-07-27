@@ -58,7 +58,6 @@ var KIMCHI = (function (KIMCHI, THREE) {
    * @memberOf  module:KIMCHI.renderer
    */
   module.animate = function (callback) {
-    // TODO: consider removing this delay for production
     window.setTimeout(function () {
       module.delta = KIMCHI.clock.getDelta();
 
@@ -72,7 +71,7 @@ var KIMCHI = (function (KIMCHI, THREE) {
           });
         }
       });
-    }, 50);
+    }, KIMCHI.config.get('frameDelay'));
   };
 
   /**

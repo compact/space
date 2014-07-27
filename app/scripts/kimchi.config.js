@@ -45,9 +45,23 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   // lighting
   settings.ambientLight = false;
 
+  // the delay after each animation frame, in milliseconds
+  settings.frameDelay = 50;
+
+  // this setting can be changed by the user
+  settings.daysPerSecond = 0;
+  // used for when the user pauses and unpauses, in order to return to this
+  // previous value
+  settings.prevDaysPerSecond = 20;
+  // the number of days to increment whenever the day is to be incremented; this
+  // value is determined by daysPerSecond
+  settings.dayStep = null;
+  // the number of frames that each day takes up; this value is determined by
+  // daysPerSecond
+  settings.framesPerDay = null;
+
   // for the astronomical bodies in KIMCHI.space
   settings.rotateBodies = true;
-  settings.bodiesSpeed = 0;
   settings.showLabels = true;
   settings.sphereSegments = 64;
   settings.bodiesSizeScale = 1;
@@ -57,7 +71,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.showOrbits = true;
   settings.orbitsColor = 0xffffcc;
   settings.orbitsOpacity = 0.5;
-  // see Body.getMaxJulianOffsetInOrbit(); this number creates 10-year orbits
+  // see Body.getMaxJulianOffsetInOrbit(); this number results in 10-year orbits
   settings.orbitsMaxJulianOffset = 1826;
 
   // for the ephemeris
@@ -99,8 +113,42 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    */
   handlers = {};
 
-  handlers.bodiesSpeed = function (value) {
-    KIMCHI.time.setStep(value);
+  handlers.daysPerSecond = function (value) {
+    if (value > 0) {
+      settings.prevDaysPerSecond = value;
+    }
+
+    switch (value) {
+      case 0:
+        settings.dayStep = 0;
+        settings.framesPerDay = 0;
+        break;
+      case 1:
+        settings.dayStep = 1;
+        settings.framesPerDay = 20;
+        break;
+      case 7:
+        settings.dayStep = 1;
+        settings.framesPerDay = 3;
+        break;
+      case 20:
+        settings.dayStep = 1;
+        settings.framesPerDay = 1;
+        break;
+      case 60:
+        settings.dayStep = 3;
+        settings.framesPerDay = 1;
+        break;
+      case 365:
+        settings.dayStep = 18;
+        settings.framesPerDay = 1;
+        break;
+      case 3650:
+        settings.dayStep = 183;
+        settings.framesPerDay = 1;
+        break;
+    }
+    KIMCHI.time.setStep(settings.dayStep);
   };
   handlers.bodiesSizeScale = function (value) {
     var large, near, bumpScale;
@@ -206,7 +254,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @memberOf module:KIMCHI.config
    */
   // config.userConfigurableKeys = [
-  //   'bodiesSpeed',
+  //   'daysPerSecond',
   //   'rotateBodies',
   //   'bodiesSizeScale',
   //   'ambientLight',

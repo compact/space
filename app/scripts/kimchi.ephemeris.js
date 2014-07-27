@@ -77,7 +77,7 @@ var KIMCHI = (function (KIMCHI, _, Q) {
     }, function () { // jqXHR, textStatus, error
       console.warn('.ephemeris: failed to GET batch ' + file);
       KIMCHI.notices.add(KIMCHI.config.get('noticeEndOfTime'));
-      KIMCHI.config.set('bodiesSpeed', 0);
+      KIMCHI.config.set('daysPerSecond', 0);
     });
   };
 

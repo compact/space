@@ -71,15 +71,8 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   settings.showOrbits = true;
   settings.orbitsColor = 0xffffcc;
   settings.orbitsOpacity = 0.5;
-  // see Body.getMaxJulianOffsetInOrbit(); this number results in 10-year orbits
-  settings.orbitsMaxJulianOffset = 1826;
-
-  // for the ephemeris
-  // the size of each batch to load
-  settings.ephemerisBatchLimit = 4000;
-  // preload the next batch when the current Julian Day Number is this number
-  // less than the last JDN in the currenct batch
-  settings.ephemerisJulianOffsetForBatchPreload = 1000;
+  // the maximum number of Vertices in an orbit
+  settings.maxVertexCountInOrbits = 720;
 
   // for THREE.Stars
   settings.showStars = true;

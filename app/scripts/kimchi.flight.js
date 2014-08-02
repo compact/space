@@ -112,27 +112,20 @@ var KIMCHI = (function (KIMCHI) {
     var frameCounter = 0;
 
     return function (delta) {
-      // resolve true or false to continue or stop animating
-      var deferred = Q.defer();
+      var framesPerDay = KIMCHI.config.get('framesPerDay');
 
-      frameCounter++;
       // if framesPerDay > 1, Bodies are not to be moved until that many frames
       // have passed
-      if (frameCounter % KIMCHI.config.get('framesPerDay') === 0) {
+      frameCounter = framesPerDay > 0 ? (frameCounter + 1) % framesPerDay : 1;
+      if (frameCounter === 0) {
         // increment the current time
-        KIMCHI.time.increment().then(function () {
-          // move the Bodies to their new positions
-          KIMCHI.space.translateBodies(delta);
+        KIMCHI.time.increment();
 
-          // move the Bodies' orbits accordingly
-          KIMCHI.space.updateOrbits();
+        // move the Bodies to their new positions
+        KIMCHI.space.translateBodies(delta);
 
-          deferred.resolve(true);
-          // we don't resolve false in a rejection handler because we don't want
-          // the controls to end even when time cannot be incremented
-        });
-      } else {
-        deferred.resolve(true);
+        // move the Bodies' orbits accordingly
+        KIMCHI.space.updateOrbits();
       }
 
       // rotate the Bodies
@@ -140,8 +133,9 @@ var KIMCHI = (function (KIMCHI) {
         KIMCHI.space.rotateBodies(delta);
       }
 
-      return deferred.promise;
-    }
+      // continue animating
+      return true;
+    };
   }());
 
   return KIMCHI;

@@ -1,5 +1,6 @@
 /**
- * This algorithm is from http://ssd.jpl.nasa.gov/txt/aprx_pos_planets.pdf
+ * Deprecated. This algorithm is from {@link
+ *   http://ssd.jpl.nasa.gov/txt/aprx_pos_planets.pdf}.
  */
 
 var _ = require('lodash');

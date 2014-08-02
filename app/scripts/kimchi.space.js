@@ -95,8 +95,6 @@ var KIMCHI = (function (KIMCHI, _) {
 
   /**
    * Translate the Bodies. Does not move their children.
-   *   TODO: In the future, for optimization, consider first storing the
-   *   ephemeris batch array element in one variable for all bodies.
    * @memberOf module:KIMCHI.space
    */
   space.translateBodies = function (delta) {
@@ -124,7 +122,11 @@ var KIMCHI = (function (KIMCHI, _) {
   space.createOrbits = function () {
     _.each(bodies, function (body) {
       if (body.hasOrbitLine) {
-        body.createOrbit();
+        body.orbit = new space.Orbit({
+          'name': body.name,
+          'orbitalPeriod': body.orbitalPeriod
+        });
+        body.object3Ds.orbit = body.orbit.line;
       }
     });
   };
@@ -134,11 +136,10 @@ var KIMCHI = (function (KIMCHI, _) {
    * @memberOf module:KIMCHI.space
    */
   space.updateOrbits = function () {
-    // update orbit lines
     if (KIMCHI.config.get('daysPerSecond') > 0) {
       _.each(bodies, function (body) {
         if (body.hasOrbitLine) {
-          body.updateOrbit();
+          body.orbit.update();
         }
       });
     }

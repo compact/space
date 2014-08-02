@@ -117,27 +117,18 @@ var KIMCHI = (function (KIMCHI, Q) {
 
     // add astronomical bodies
     KIMCHI.space.init();
-    KIMCHI.scene.add(KIMCHI.space.getObject3Ds());
+    KIMCHI.scene.add(KIMCHI.space.getObject3Ds('main'));
 
 
 
-    // get ephemeris data
-    KIMCHI.ephemeris.loadBatch(
-      KIMCHI.time.getJulian() - KIMCHI.config.get('orbitsMaxJulianOffset')
-    ).then(function () {
-      // move the Bodies to their initial positions
-      console.log('.init(): position Bodies');
-      KIMCHI.space.translateBodies();
+    // move the Bodies to their initial positions
+    console.log('.init(): position Bodies');
+    KIMCHI.space.translateBodies();
 
-      // create orbits for the Bodies that have orbits
-      console.log('.init(): create orbits');
-      KIMCHI.space.createOrbits();
-      KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
-
-      initDeferred.resolve();
-    }, function (error) {
-      console.warn(error);
-    });
+    // create orbits for the Bodies that have orbits
+    console.log('.init(): create orbits');
+    KIMCHI.space.createOrbits();
+    KIMCHI.scene.add(KIMCHI.space.getObject3Ds('orbit'));
 
 
 
@@ -158,6 +149,8 @@ var KIMCHI = (function (KIMCHI, Q) {
     KIMCHI.init.promise.then(function () {
       console.log('.init(): done');
     });
+
+    initDeferred.resolve();
 
     return KIMCHI.init.promise;
   };

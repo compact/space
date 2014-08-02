@@ -22,7 +22,7 @@ KIMCHI.space.data = [
   {
     'name': 'Mercury',
     'type': 'planet',
-    'ephemerisIndex': 0,
+    'inEphemeris': true,
     'radiusInKm': 2439.64,
     'distanceFromSun': 0.38709893,
     'labelVisibleDistance': 20,
@@ -32,7 +32,7 @@ KIMCHI.space.data = [
   {
     'name': 'Venus',
     'type': 'planet',
-    'ephemerisIndex': 1,
+    'inEphemeris': true,
     'radiusInKm': 6051.59,
     'distanceFromSun': 0.72333199,
     'labelVisibleDistance': 20,
@@ -42,7 +42,7 @@ KIMCHI.space.data = [
   {
     'name': 'Earth',
     'type': 'planet',
-    'ephemerisIndex': 2,
+    'inEphemeris': true,
     'radiusInKm': 6378,
     'distanceFromSun': 1.00000011,
     'labelVisibleDistance': 50,
@@ -78,7 +78,7 @@ KIMCHI.space.data = [
   {
     'name': 'Mars',
     'type': 'planet',
-    'ephemerisIndex': 3,
+    'inEphemeris': true,
     'radiusInKm': 3397,
     'distanceFromSun': 1.52366231,
     'labelVisibleDistance': 50,
@@ -88,7 +88,7 @@ KIMCHI.space.data = [
   {
     'name': 'Jupiter',
     'type': 'planet',
-    'ephemerisIndex': 4,
+    'inEphemeris': true,
     'radiusInKm': 71492,
     'distanceFromSun': 5.20336301,
     'labelVisibleDistance': 250,
@@ -98,7 +98,7 @@ KIMCHI.space.data = [
   {
     'name': 'Saturn',
     'type': 'planet',
-    'ephemerisIndex': 5,
+    'inEphemeris': true,
     'radiusInKm': 60267,
     'distanceFromSun': 9.53707032,
     'labelVisibleDistance': 250,
@@ -129,7 +129,7 @@ KIMCHI.space.data = [
   {
     'name': 'Uranus',
     'type': 'planet',
-    'ephemerisIndex': 6,
+    'inEphemeris': true,
     'radiusInKm': 25557.25,
     'distanceFromSun': 19.19126393,
     'labelVisibleDistance': 500,
@@ -139,7 +139,7 @@ KIMCHI.space.data = [
   {
     'name': 'Neptune',
     'type': 'planet',
-    'ephemerisIndex': 7,
+    'inEphemeris': true,
     'radiusInKm': 24766,
     'distanceFromSun': 30.06896348,
     'labelVisibleDistance': 1000,
@@ -149,7 +149,7 @@ KIMCHI.space.data = [
   {
     'name': 'Pluto',
     'type': 'planet',
-    'ephemerisIndex': 8,
+    'inEphemeris': true,
     'radiusInKm': 1148.07,
     'distanceFromSun': 39.482,
     'labelVisibleDistance': 1000,

@@ -38,7 +38,7 @@ app.use(express.static(path.join(
 )));
 
 // start the ephemeris API
-require('./ephemeris-api')(app);
+// require('./ephemeris-api')(app);
 
 // development only
 if (process.env.NODE_ENV === 'development') {

@@ -1,11 +1,12 @@
 /**
- * Class for astronomical bodies. All spheres for now. Should only be
- *   constructed inside kimchi.space.js. Raw data for each Body is stored in
- *   /data/kimchi.space.bodies.js for passing into this constructor.
+ * Constructor for an astronomical body. All Bodies are spheres for now.
+ *   Should only be constructed inside kimchi.space.js. Raw data for each Body
+ *   is stored in /data/kimchi.space.bodies.js for passing into this
+ *   constructor.
  * @param {Object}   options
  * @param {String}   options.name
- * @param {Number}   [options.ephemerisIndex] The index for {@link
- *   module:KIMCHI.ephemeris|ephemeris}.
+ * @param {Boolean}  [options.inEphemeris] Whether the {@link
+ *   module:KIMCHI.ephemeris|ephemeris} can return this Body's positions.
  * @param {Number}  options.radiusInKm TODO: Make optional.
  * @param {Number}   [options.labelVisibleDistance=100] How far away the label
  *   remains visible.
@@ -149,92 +150,96 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
   };
 
   /**
-   * An orbit comprises vertices each corresponding to this Body's position on
-   *   a particular Julian Day Number. The indexes of the vertices are offsets
-   *   relative to the current JDN, and they extend equally into the future
-   *   and the past. Thus, the total number of vertices in the orbit is the
-   *   return value of this method multiplied by 2, plus 1.
-   * @alias    getMaxJulianOffsetInOrbit
-   * @return   {Number}
-   * @instance
-   * @memberOf module:KIMCHI.space.Body
-   */
-  Body.prototype.getMaxJulianOffsetInOrbit = function () {
-    return Math.min(
-      Math.round(this.orbitalPeriod / 2),
-      KIMCHI.config.get('orbitsMaxJulianOffset')
-    );
-  };
-
-  /**
-   * Create a Line for this Body's orbit. Do not call this method if the Body
-   *   does not have an orbit.
+   * Create a Line for this Body's orbit. An orbit comprises Vertices each
+   *   corresponding to this Body's position on a particular Julian Day
+   *   Number. The positions start not at the current position of Body, but
+   *   rather at some percentage of the orbit behind the current position. The
+   *   reason for this is to prevent visual discrepancy at the Body, as the
+   *   positions vary slightly through each successive orbit. Do not call this
+   *   method if the Body does not have an orbit.
    * @alias    createOrbit
    * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.createOrbit = function () {
-    // create the geometry
-    var geometry = new THREE.Geometry();
-    var position, positionArray;
-    var maxJulianOffset = this.getMaxJulianOffsetInOrbit();
-    for (var julianOffset = -maxJulianOffset; julianOffset <= maxJulianOffset;
-        julianOffset++) {
-      position = new THREE.Vector3();
-      positionArray = KIMCHI.ephemeris.getPositionArray(
-        this.ephemerisIndex, julianOffset
-      );
+    // // set the Julian offsets
+    // var vertexCount = Math.min(
+    //   // add an extra day to the orbital period to ensure there is no tiny gap
+    //   // in the orbit
+    //   Math.ceil(this.orbitalPeriod) + 1,
+    //   KIMCHI.config.get('maxVertexCountInOrbits')
+    // );
+    // this.julianOffsetsInOrbit = [];
+    // for (var i = 0; i < vertexCount; i++) {
+    //   this.julianOffsetsInOrbit.push(Math.round(
+    //     // -0.25 is an arbitrary offset for where the orbit loops back to
+    //     // itself; it is not 0 to prevent visual discrepancy at the Body
+    //     this.orbitalPeriod * (i / (vertexCount - 1) - 0.25)
+    //   ));
+    // }
 
-      if (positionArray !== null) {
-        position.fromArray(positionArray);
-      } else {
-        // this case should never occur because we load enough data from the
-        // ephemeris to cover the entire orbit
-        position.copy(this.object3Ds.main.position);
-        console.warn('.space.Body.createOrbit(): position not found for ' +
-          this.name);
-      }
+    // // create the geometry
+    // var geometry = new THREE.Geometry();
+    // var getPositionArray = _.partial(
+    //   KIMCHI.ephemeris.getPositionArray,
+    //   this.name
+    // );
+    // var julian = KIMCHI.time.getJulian();
+    // var position;
 
-      geometry.vertices.push(position);
-    }
+    // _.each(this.julianOffsetsInOrbit, function (julianOffset) {
+    //   position = new THREE.Vector3();
+    //   geometry.vertices.push(position.fromArray(
+    //     getPositionArray(julian + julianOffset)
+    //   ));
+    // });
 
-    // create the material
-    var material = new THREE.LineBasicMaterial({
-      'color': KIMCHI.config.get('orbitsColor'),
-      'transparent': KIMCHI.config.get('orbitsOpacity') < 1,
-      'opacity': KIMCHI.config.get('orbitsOpacity')
-    });
+    // // create the material
+    // var material = new THREE.LineBasicMaterial({
+    //   'color': KIMCHI.config.get('orbitsColor'),
+    //   'transparent': KIMCHI.config.get('orbitsOpacity') < 1,
+    //   'opacity': KIMCHI.config.get('orbitsOpacity')
+    // });
 
-    // create the orbit line
-    this.object3Ds.orbit = new THREE.Line(geometry, material);
+    // // create the orbit line
+    // this.object3Ds.orbit = new THREE.Line(geometry, material);
   };
 
   /**
-   * Move the vertices of the orbit. Do not call this method if the Body does
-   *   not have an orbit.
+   * Update the Vertices of the orbit for the current Julian Day Number. More
+   *   precisely, remove Vertices corresponding to old JDNs and add Vertices
+   *   corresponding to new JDNs. The number of Vertices removed and added is
+   *   the current JDN increment. Do not call this method if the Body does not
+   *   have an orbit.
    * @alias    updateOrbit
    * @instance
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.updateOrbit = function () {
-    var geometry = this.object3Ds.orbit.geometry;
-    var maxJulianOffset = this.getMaxJulianOffsetInOrbit();
+    // var geometry = this.object3Ds.orbit.geometry;
 
-    var dayStep = KIMCHI.config.get('dayStep');
-    for (var i = 0; i < dayStep; i++) {
-      geometry.vertices.shift();
+    // var dayStep = KIMCHI.config.get('dayStep');
 
-      var positionArray = KIMCHI.ephemeris.getPositionArray(
-        this.ephemerisIndex, maxJulianOffset + i
-      );
-      var position = new THREE.Vector3();
-      if (positionArray !== null) {
-        geometry.vertices.push(position.fromArray(positionArray));
-      }
-    }
+    // // remove Vertices representing old Julian Day Numbers
+    // geometry.vertices = geometry.vertices.slice(dayStep);
 
-    // this property needs to be set to update the vertices
-    geometry.verticesNeedUpdate = true;
+    // var getPositionArray = _.partial(
+    //   KIMCHI.ephemeris.getPositionArray,
+    //   this.name
+    // );
+    // var julian = KIMCHI.time.getJulian();
+    // var position;
+
+    // // add Vertices representing new Julian Day Numbers
+    // _.each(this.julianOffsetsInOrbit.slice(-dayStep), function (julianOffset) {
+    //   position = new THREE.Vector3();
+    //   geometry.vertices.push(position.fromArray(
+    //     getPositionArray(julian + julianOffset)
+    //   ));
+    // });
+
+    // // this property needs to be set to update the vertices
+    // geometry.verticesNeedUpdate = true;
   };
 
   /**
@@ -246,9 +251,9 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
    * @memberOf module:KIMCHI.space.Body
    */
   Body.prototype.translate = function () {
-    if ('ephemerisIndex' in this) {
+    if (this.inEphemeris) {
       this.scalePositionFromArray(
-        KIMCHI.ephemeris.getPositionArray(this.ephemerisIndex));
+        KIMCHI.ephemeris.getPositionArray(this.name, KIMCHI.time.getJulian()));
     }
   };
 

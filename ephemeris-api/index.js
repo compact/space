@@ -1,5 +1,5 @@
 /**
- * Ephemeris API.
+ * Ephemeris API. Deprecated.
  */
 
 var getPlanetPositionArrays = require('./getPlanetPositionArrays');

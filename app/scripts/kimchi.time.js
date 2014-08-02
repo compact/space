@@ -1,12 +1,12 @@
 /**
- * Time controller. When the time is on, the Bodies move; when the time is
- *   off, the Bodies stop moving. We use "on"/"off"/"isOn" rather than
- *   "start"/"stop"/"isEnabled" for a better adjective and to avoid
- *   confusion with THREE.Clock.
+ * Time controller. When the time is on, as in incrementing, the Bodies move;
+ *   when the time is off, the Bodies stop moving. We use "on"/"off"/"isOn"
+ *   rather than "start"/"stop"/"isEnabled" for a better adjective and to
+ *   avoid confusion with THREE.Clock.
  * @namespace time
  * @memberOf  module:KIMCHI
  */
-var KIMCHI = (function (KIMCHI, Q) {
+var KIMCHI = (function (KIMCHI) {
   'use strict';
 
   var time, julian, on, step, julianToGregorian, gregorianToJulian;
@@ -110,45 +110,12 @@ var KIMCHI = (function (KIMCHI, Q) {
   };
 
   /**
-   * Increment the current time based on delta. TODO: Not implemented yet.
+   * Increment the current time. TODO: Maybe adjust the step depending on delta.
    * @param    {Number} delta
-   * @returns  {Promise}
    * @memberOf module:KIMCHI.time
    */
   time.increment = function () {
-    var newJulian, deferred;
-
-    newJulian = julian + step;
-
-    if (newJulian <= KIMCHI.ephemeris.lastJulianInBatch) {
-      // "Empty" promise to match the return type in the case below.
-      julian = newJulian;
-
-      // preload the next batch, which serves two purposes: the next coordinates
-      // will be needed for orbit lines, and prevent choppiness in the animation
-      // that can result if it has to wait for the load
-      if (newJulian === KIMCHI.ephemeris.lastJulianInBatch -
-          KIMCHI.config.get('ephemerisJulianOffsetForBatchPreload')) {
-        KIMCHI.ephemeris.loadBatch(KIMCHI.ephemeris.lastJulianInBatch + 1);
-      }
-
-      return Q.when(julian);
-    } else {
-      // if step > 1, then newJulian may be too large and we won't be able to
-      // get the next batch with it; TODO: this is not the cleanest solution
-      julian = KIMCHI.ephemeris.lastJulianInBatch + 1;
-
-      // We are at the last of the current batch, so we have to load the next
-      // batch before incrementing the date. The Deferred object is used to
-      // return the position after loading the next batch.
-      deferred = Q.defer();
-
-      KIMCHI.ephemeris.loadBatch(julian).then(function (data) {
-        deferred.resolve(data);
-      });
-
-      return deferred.promise;
-    }
+    julian += step;
   };
 
   /**
@@ -189,4 +156,4 @@ var KIMCHI = (function (KIMCHI, Q) {
   };
 
   return KIMCHI;
-}(KIMCHI || {}, Q));
+}(KIMCHI || {}));

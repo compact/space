@@ -1,7 +1,6 @@
-node_modules
-dist
-.tmp
-.sass-cache
-app/bower_components
-app/docs
-npm-debug.log
+/.sass-cache/
+/.tmp/
+/app/bower_components/
+/app/docs/
+/node_modules/
+/npm-debug.log

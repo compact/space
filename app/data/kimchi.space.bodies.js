@@ -68,13 +68,13 @@ KIMCHI.space.data = [
       this.object3Ds.main.add(cloud);
     }
   },
-  {
-    'name': 'Moon',
-    'type': 'moon',
-    'radiusInKm': 1737,
-    'labelVisibleDistance': 10,
-    'hasBumpMap': true
-  },
+  // {
+  //   'name': 'Moon',
+  //   'type': 'moon',
+  //   'radiusInKm': 1737,
+  //   'labelVisibleDistance': 10,
+  //   'hasBumpMap': true
+  // },
   {
     'name': 'Mars',
     'type': 'planet',

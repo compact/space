@@ -1,14 +1,14 @@
-# Explore space in your browser
+# Space exploration web app
 
-This project uses [three.js](http://threejs.org/) to render astronomical bodies.
+http://compact.github.io/space/
+
+This app allows you to navigate through space in your browser. It uses [three.js](http://threejs.org/) to render astronomical bodies.
 
 ## Workflow
 
 ### Develop
 
 ```
-git clone git@github.com:joshacheson/kimchi.git
-cd kimchi
 npm install
 bower install
 node app.js

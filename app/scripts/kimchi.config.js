@@ -81,7 +81,7 @@ var KIMCHI = (function (KIMCHI, _, THREE) {
 
   // for KIMCHI.ui.notice
   settings.noticePointerLockNotSupported = 'Your browser does not support Pointer Lock API, which means it does not allow you to use your mouse to look around the universe. For that feature, please use the latest version of Chrome or Firefox.';
-  settings.noticePointerLockError = 'There is an error with the Pointer Lock in your browser, which means you may not be able to use your mouse to look around the universe.';
+  settings.noticePointerLockError = 'There is an error with the pointer Lock in your browser. Press 3 to switch to orbit mode.';
   settings.noticeFlyTo = function (body) {
     return 'Flying to ' + body.name + '...';
   };
